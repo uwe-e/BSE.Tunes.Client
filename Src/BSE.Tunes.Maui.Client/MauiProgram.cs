@@ -1,8 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.ViewModels;
-using BSE.Tunes.Maui.Client.Views;
+﻿using BSE.Tunes.Maui.Client.Views;
 using Microsoft.Extensions.Logging;
-using Prism;
-using Prism.Ioc;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -18,9 +15,7 @@ namespace BSE.Tunes.Maui.Client
                 {
                     prism.OnAppStart(async navigationService =>
                     {
-                        var result = await navigationService.NavigateAsync("SplashPage");
-                        //navigationService.CreateBuilder()
-                        //.AddSegment<SplashPageViewModel>();
+                        var result = await navigationService.NavigateAsync("MainPage");
                     })
                     .RegisterTypes(container =>
                     {

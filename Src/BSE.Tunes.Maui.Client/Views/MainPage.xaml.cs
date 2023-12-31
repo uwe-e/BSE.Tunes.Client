@@ -1,4 +1,4 @@
-﻿namespace BSE.Tunes.Maui.Client
+﻿namespace BSE.Tunes.Maui.Client.Views
 {
     public partial class MainPage : ContentPage
     {
