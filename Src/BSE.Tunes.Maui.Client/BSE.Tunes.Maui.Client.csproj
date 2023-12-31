@@ -59,6 +59,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Prism.DryIoc.Maui" Version="9.0.271-pre" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -67,6 +68,12 @@
 
 	<ItemGroup>
 	  <None Include="C:\Git\Maui\BSE.Tunes.Client\Src\BSE.Tunes.Maui.Client\.editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\SplashPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>
