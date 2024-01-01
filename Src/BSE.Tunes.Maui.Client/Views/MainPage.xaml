@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
+<controls:ExtendedTabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+                             xmlns:views="clr-namespace:BSE.Tunes.Maui.Client.Views"
+                             x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
 
-    <ScrollView>
+    <!--<ScrollView>
         <VerticalStackLayout
             Padding="30,0"
             Spacing="25">
@@ -31,6 +33,13 @@
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
         </VerticalStackLayout>
-    </ScrollView>
-
-</ContentPage>
+    </ScrollView>-->
+    <controls:ExtendedTabbedPage.Children>
+        <NavigationPage Title="tile">
+            <x:Arguments>
+                <views:HomePage/>
+            </x:Arguments>
+        </NavigationPage>
+    </controls:ExtendedTabbedPage.Children>
+    
+</controls:ExtendedTabbedPage>

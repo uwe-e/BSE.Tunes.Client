@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Views;
+using BSE.Tunes.Maui.Client.Controls;
 using Microsoft.Extensions.Logging;
 
 namespace BSE.Tunes.Maui.Client
@@ -27,6 +28,11 @@ namespace BSE.Tunes.Maui.Client
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                }).ConfigureMauiHandlers((handlers)=>
+                {
+#if IOS
+                    handlers.AddHandler(typeof(ExtendedTabbedPage), typeof(BSE.Tunes.Maui.Client.Platforms.iOS.Renderers.ExtendedTabbedRenderer));
+#endif
                 });
 
 #if DEBUG
