@@ -28,6 +28,7 @@ namespace BSE.Tunes.Maui.Client
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("ionicons.ttf", "ionicons");
                 }).ConfigureMauiHandlers((handlers)=>
                 {
 #if IOS

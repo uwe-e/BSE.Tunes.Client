@@ -65,7 +65,11 @@
 	<ItemGroup>
 	  <EditorConfigFiles Remove="C:\Git\Maui\BSE.Tunes.Client\Src\BSE.Tunes.Maui.Client\.editorconfig" />
 	</ItemGroup>
-
+  <!--
+	<ItemGroup>
+	  <None Remove="Resources\Fonts\ionicons.ttf" />
+	</ItemGroup>
+-->
 	<ItemGroup>
 	  <None Include="C:\Git\Maui\BSE.Tunes.Client\Src\BSE.Tunes.Maui.Client\.editorconfig" />
 	</ItemGroup>
