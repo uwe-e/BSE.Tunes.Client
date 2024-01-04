@@ -5,25 +5,20 @@
                              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
                              xmlns:views="clr-namespace:BSE.Tunes.Maui.Client.Views"
                              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+                             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
                              ios:TabbedPage.TranslucencyMode="Opaque"
+                             android:TabbedPage.ToolbarPlacement="Bottom"
+                             SelectedTabColor="{AppThemeBinding Dark={StaticResource PrimaryDarkLabelColor}, Light={StaticResource PrimaryLabelColor}}"
+                             UnselectedTabColor="{AppThemeBinding Dark={StaticResource SecondaryDarkLabelColor}, Light={StaticResource SecondaryLabelColor}}"
                              x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
 
-    <controls:ExtendedTabbedPage.Resources>
-        <ResourceDictionary>
-            <FontImage x:Key="icon_home" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Glyph="&#xf144;"/>
-            <FontImage x:Key="icon_playlist" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Glyph="&#xf453;"/>
-
-        </ResourceDictionary>
-        
-    </controls:ExtendedTabbedPage.Resources>
-    
     <controls:ExtendedTabbedPage.Children>
-        <NavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="{StaticResource icon_home}">
+        <NavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png">
             <x:Arguments>
                 <views:HomePage/>
             </x:Arguments>
         </NavigationPage>
-        <NavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="{StaticResource icon_playlist}">
+        <NavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
             <x:Arguments>
                 <views:HomePage/>
             </x:Arguments>

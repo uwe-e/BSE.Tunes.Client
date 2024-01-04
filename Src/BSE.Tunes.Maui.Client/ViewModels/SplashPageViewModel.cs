@@ -11,10 +11,10 @@
 
         public void OnAppearing()
         {
-            //_navigationService.CreateBuilder()
-            //    .UseAbsoluteNavigation()
-            //    .AddSegment<RootPageViewModel>()
-            //    .Navigate();
+            _navigationService.CreateBuilder()
+                .UseAbsoluteNavigation()
+                .AddSegment<MainPageViewModel>()
+                .Navigate();
         }
 
         public void OnDisappearing()

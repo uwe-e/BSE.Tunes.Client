@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Views;
 using BSE.Tunes.Maui.Client.Controls;
 using Microsoft.Extensions.Logging;
+using BSE.Tunes.Maui.Client.ViewModels;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -14,15 +15,20 @@ namespace BSE.Tunes.Maui.Client
                 .UseMauiApp<App>()
                 .UsePrism(prism =>
                 {
-                    prism.OnAppStart(async navigationService =>
-                    {
-                        var result = await navigationService.NavigateAsync("MainPage");
-                    })
-                    .RegisterTypes(container =>
+                    //prism.OnAppStart(async navigationService =>
+                    //{
+                    //    var result = await navigationService.NavigateAsync("SplashPage");
+                    //})
+                    //prism.OnAppStart(navigationService => navigationService.CreateBuilder()
+                    //.AddSegment<SplashPageViewModel>())
+                    prism.RegisterTypes(container =>
                     {
                         container.RegisterForNavigation<MainPage>();
                         container.RegisterForNavigation<SplashPage>();
-                    });
+                    })
+                    .OnAppStart(navigationService => navigationService.CreateBuilder()
+                    .AddSegment<SplashPageViewModel>()
+                    .NavigateAsync(HandleNavigationError));
                 })
                 .ConfigureFonts(fonts =>
                 {
@@ -41,6 +47,12 @@ namespace BSE.Tunes.Maui.Client
 #endif
 
             return builder.Build();
+        }
+
+        private static void HandleNavigationError(Exception ex)
+        {
+            Console.WriteLine(ex);
+            System.Diagnostics.Debugger.Break();
         }
     }
 }

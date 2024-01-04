@@ -4,9 +4,8 @@
              x:Class="BSE.Tunes.Maui.Client.Views.SplashPage"
              Title="SplashPage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Label Text="Loading..."
+           VerticalOptions="Center" 
+           HorizontalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>

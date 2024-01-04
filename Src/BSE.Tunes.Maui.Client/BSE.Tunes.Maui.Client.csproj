@@ -42,11 +42,13 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\bsesplash.svg" Color="#ffffff" BaseSize="1024,1024" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+    <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -65,11 +67,13 @@
 	<ItemGroup>
 	  <EditorConfigFiles Remove="C:\Git\Maui\BSE.Tunes.Client\Src\BSE.Tunes.Maui.Client\.editorconfig" />
 	</ItemGroup>
-  <!--
+
 	<ItemGroup>
-	  <None Remove="Resources\Fonts\ionicons.ttf" />
+	  <None Remove="Resources\Images\home.svg" />
+	  <None Remove="Resources\Images\library.svg" />
+	  <None Remove="Resources\Images\playlist.svg" />
 	</ItemGroup>
--->
+
 	<ItemGroup>
 	  <None Include="C:\Git\Maui\BSE.Tunes.Client\Src\BSE.Tunes.Maui.Client\.editorconfig" />
 	</ItemGroup>
@@ -86,12 +90,11 @@
 	    <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
-
 	<ItemGroup>
-	  <MauiXaml Update="Views\HomePage.xaml">
+	  <MauiXaml Update="Resources\Styles\DarkTheme.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\SplashPage.xaml">
+	  <MauiXaml Update="Resources\Styles\LightTheme.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
