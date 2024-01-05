@@ -1,4 +1,6 @@
-﻿using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Tunes.Maui.Client.Models;
+using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
@@ -25,6 +27,31 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 var isAccessible = await _dataService.IsEndPointAccessibleAsync(_settingsService.ServiceEndPoint);
                 {
+                    if (_settingsService.User is User user)
+                    {
+                        try
+                        {
+                            await _authenticationService.RequestRefreshTokenAsync(user.Token);
+                            _navigationService.CreateBuilder()
+                                .UseAbsoluteNavigation()
+                                .AddSegment<MainPage>()
+                                .Navigate();
+                        }
+                        catch (Exception)
+                        {
+                            _navigationService.CreateBuilder()
+                                 .UseAbsoluteNavigation()
+                                 .AddSegment<LoginWizzardPage>()
+                                 .Navigate();
+                        }
+                    }
+                    else
+                    {
+                        _navigationService.CreateBuilder()
+                                .UseAbsoluteNavigation()
+                                .AddSegment<LoginWizzardPage>()
+                                .Navigate();
+                    }
                 }
             }
             catch (Exception)
@@ -34,15 +61,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                                 .AddSegment<ServiceEndpointWizzardPageViewModel>()
                                 .Navigate();
             }
-            //_navigationService.CreateBuilder()
-            //.UseAbsoluteNavigation()
-            //.AddSegment<MainPageViewModel>()
-            //.Navigate();
         }
 
         public void OnDisappearing()
         {
-
         }
     }
 }

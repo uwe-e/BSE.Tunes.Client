@@ -27,7 +27,9 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<MainPage>();
                         container.RegisterForNavigation<SplashPage>();
                         container.RegisterForNavigation<ServiceEndpointWizzardPage>();
+                        container.RegisterForNavigation<LoginWizzardPage>();
                         container.Register<IRequestService, RequestService>();
+                        container.Register<IResourceService, ResourceService>();
                         container.Register<IDataService, DataService>(); 
                         container.Register<ISettingsService, SettingsService>();
                         container.Register<IAuthenticationService, AuthenticationService>();

@@ -6,6 +6,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public class ServiceEndpointWizzardPageViewModel : ViewModelBase
     {
+        private readonly IResourceService _resourceService;
         private readonly IPageDialogService _pageDialogService;
         private readonly ISettingsService _settingsService;
         private readonly IDataService _dataService;
@@ -27,12 +28,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ServiceEndpointWizzardPageViewModel(
             INavigationService navigationService,
-            //IResourceService resourceService,
+            IResourceService resourceService,
             IPageDialogService pageDialogService,
             ISettingsService settingsService,
             IDataService dataService,
             IAuthenticationService authenticationService) : base(navigationService)
         {
+            _resourceService = resourceService;
             _pageDialogService = pageDialogService;
             _settingsService = settingsService;
             _dataService = dataService;
@@ -77,27 +79,36 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     try
                     {
                         await _authenticationService.RequestRefreshTokenAsync(user.Token);
-                        await NavigationService.NavigateAsync(nameof(MainPage));
+                        NavigationService.CreateBuilder()
+                                .UseAbsoluteNavigation()
+                                .AddSegment<MainPage>()
+                                .Navigate();
                     }
                     catch (Exception)
                     {
-                        //await NavigationService.NavigateAsync(nameof(LoginWizzardPage));
+                        NavigationService.CreateBuilder()
+                                .UseAbsoluteNavigation()
+                                .AddSegment<LoginWizzardPage>()
+                                .Navigate();
                     }
                 }
                 else
                 {
-                    //await NavigationService.NavigateAsync(nameof(LoginWizzardPage));
+                    NavigationService.CreateBuilder()
+                                .UseAbsoluteNavigation()
+                                .AddSegment<LoginWizzardPage>()
+                                .Navigate();
                 }
             }
             catch (Exception exception)
             {
-                //var title = ResourceService.GetString("AlertDialog_Error_Title_Text");
-                //var dialogResult = ResourceService.GetString("Dialog_Result_Cancel");
+                var title = _resourceService.GetString("AlertDialog_Error_Title_Text");
+                var dialogResult = _resourceService.GetString("Dialog_Result_Cancel");
 
-                //await _pageDialogService.DisplayAlertAsync(
-                //    title,
-                //    exception.Message,
-                //    dialogResult);
+                await _pageDialogService.DisplayAlertAsync(
+                    title,
+                    exception.Message,
+                    dialogResult);
             }
         }
     }
