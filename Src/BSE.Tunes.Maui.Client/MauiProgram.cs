@@ -1,7 +1,8 @@
-﻿using BSE.Tunes.Maui.Client.Views;
-using BSE.Tunes.Maui.Client.Controls;
-using Microsoft.Extensions.Logging;
+﻿using BSE.Tunes.Maui.Client.Controls;
+using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
+using BSE.Tunes.Maui.Client.Views;
+using Microsoft.Extensions.Logging;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -25,6 +26,11 @@ namespace BSE.Tunes.Maui.Client
                     {
                         container.RegisterForNavigation<MainPage>();
                         container.RegisterForNavigation<SplashPage>();
+                        container.RegisterForNavigation<ServiceEndpointWizzardPage>();
+                        container.Register<IRequestService, RequestService>();
+                        container.Register<IDataService, DataService>(); 
+                        container.Register<ISettingsService, SettingsService>();
+                        container.Register<IAuthenticationService, AuthenticationService>();
                     })
                     .OnAppStart(navigationService => navigationService.CreateBuilder()
                     .AddSegment<SplashPageViewModel>()

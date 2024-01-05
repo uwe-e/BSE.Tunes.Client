@@ -1,20 +1,43 @@
-﻿namespace BSE.Tunes.Maui.Client.ViewModels
+﻿using BSE.Tunes.Maui.Client.Services;
+
+namespace BSE.Tunes.Maui.Client.ViewModels
 {
     internal class SplashPageViewModel : IPageLifecycleAware
     {
-        private INavigationService _navigationService { get; }
+        private readonly ISettingsService _settingsService;
+        private readonly IDataService _dataService;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly INavigationService _navigationService;
 
-        public SplashPageViewModel(INavigationService navigationService)
+        public SplashPageViewModel(INavigationService navigationService,
+            ISettingsService settingsService,
+            IDataService dataService,
+            IAuthenticationService authenticationService)
         {
             _navigationService = navigationService;
+            _settingsService = settingsService;
+            _dataService = dataService;
+            _authenticationService = authenticationService;
         }
-
-        public void OnAppearing()
+        public async void OnAppearing()
         {
-            _navigationService.CreateBuilder()
-                .UseAbsoluteNavigation()
-                .AddSegment<MainPageViewModel>()
-                .Navigate();
+            try
+            {
+                var isAccessible = await _dataService.IsEndPointAccessibleAsync(_settingsService.ServiceEndPoint);
+                {
+                }
+            }
+            catch (Exception)
+            {
+                _navigationService.CreateBuilder()
+                                .UseAbsoluteNavigation()
+                                .AddSegment<ServiceEndpointWizzardPageViewModel>()
+                                .Navigate();
+            }
+            //_navigationService.CreateBuilder()
+            //.UseAbsoluteNavigation()
+            //.AddSegment<MainPageViewModel>()
+            //.Navigate();
         }
 
         public void OnDisappearing()
