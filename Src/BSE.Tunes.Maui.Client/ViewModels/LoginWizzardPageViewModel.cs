@@ -8,7 +8,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IResourceService _resourceService;
         private readonly IPageDialogService _pageDialogService;
         private readonly IAuthenticationService _authenticationService;
-        private DelegateCommand _saveCommand;
+        private DelegateCommand? _saveCommand;
         private string? _userName;
         private string? _password;
 
@@ -61,9 +61,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
             catch (Exception)
             {
-                var title = _resourceService.GetString("AlertDialog_Error_Title_Text");
-                var message = _resourceService.GetString("LoginPageViewModel_LoginException");
-                var dialogResult = _resourceService.GetString("Dialog_Result_Cancel");
+                string? title = _resourceService.GetString("AlertDialog_Error_Title_Text");
+                string? message = _resourceService.GetString("LoginPageViewModel_LoginException");
+                string? dialogResult = _resourceService.GetString("Dialog_Result_Cancel");
 
                 await _pageDialogService.DisplayAlertAsync(
                     title,

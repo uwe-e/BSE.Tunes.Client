@@ -20,7 +20,7 @@
         </NavigationPage>
         <NavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
             <x:Arguments>
-                <views:HomePage/>
+                <views:PlaylistsPage/>
             </x:Arguments>
         </NavigationPage>
     </controls:ExtendedTabbedPage.Children>

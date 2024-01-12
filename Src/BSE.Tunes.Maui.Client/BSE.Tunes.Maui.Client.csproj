@@ -61,7 +61,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Prism.DryIoc.Maui" Version="9.0.271-pre" />
+    <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.271-pre" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -77,6 +77,7 @@
 	<ItemGroup>
 	  <None Include="C:\Git\Maui\BSE.Tunes.Client\Src\BSE.Tunes.Maui.Client\.editorconfig" />
 	</ItemGroup>
+
 	<ItemGroup>
 	  <Compile Update="Resources\Strings\AppResources.Designer.cs">
 	    <DesignTime>True</DesignTime>
@@ -100,10 +101,22 @@
 	  <MauiXaml Update="Resources\Styles\LightTheme.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\AlbumsCarouselView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FeaturedAlbumsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\LoginWizzardPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\PlaylistsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ServiceEndpointWizzardPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Templates\SlidePanelTemplate.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

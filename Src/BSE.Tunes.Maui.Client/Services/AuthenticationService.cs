@@ -8,8 +8,8 @@ namespace BSE.Tunes.Maui.Client.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly ISettingsService settingsService;
-        public TokenResponse TokenResponse
+        private readonly ISettingsService _settingsService;
+        public TokenResponse? TokenResponse
         {
             get;
             private set;
@@ -17,7 +17,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public AuthenticationService(ISettingsService settingsService)
         {
-            this.settingsService = settingsService;
+            _settingsService = settingsService;
         }
 
         public async Task<bool> LoginAsync(string userName, string password)
@@ -32,8 +32,8 @@ namespace BSE.Tunes.Maui.Client.Services
 
             try
             {
-                this.TokenResponse = await RequestAsync(fields);
-                this.settingsService.User = new Models.User
+                TokenResponse = await RequestAsync(fields);
+                _settingsService.User = new Models.User
                 {
                     UserName = userName,
                     Token = this.TokenResponse.RefreshToken
@@ -58,21 +58,21 @@ namespace BSE.Tunes.Maui.Client.Services
 
             try
             {
-                this.TokenResponse = await RequestAsync(fields);
-                this.settingsService.Token = TokenResponse.RefreshToken;
+                TokenResponse = await RequestAsync(fields);
+                _settingsService.Token = TokenResponse.RefreshToken;
             }
             catch (Exception)
             {
                 throw;
             }
             
-            return this.TokenResponse;
+            return TokenResponse;
         }
 
         private async Task<TokenResponse> RequestAsync(Dictionary<string, string> fields)
         {
             TokenResponse tokenResponse = null;
-            var builder = new UriBuilder(this.settingsService.ServiceEndPoint);
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
             builder.AppendToPath("token");
 
             var request = new HttpRequestMessage(HttpMethod.Post, builder.Uri)

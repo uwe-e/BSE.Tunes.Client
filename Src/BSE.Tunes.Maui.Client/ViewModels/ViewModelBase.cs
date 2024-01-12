@@ -2,28 +2,41 @@
 {
     public abstract class ViewModelBase : BindableBase, INavigationAware, IPageLifecycleAware
     {
+        private readonly INavigationService _navigationService;
+        private bool _isBusy;
+
         public INavigationService NavigationService => _navigationService;
 
-        private readonly INavigationService _navigationService;
+        public bool IsBusy
+        {
+            get
+            {
+                return _isBusy;
+            }
+            set
+            {
+                SetProperty<bool>(ref _isBusy, value);
+            }
+        }
 
         protected ViewModelBase(INavigationService navigationService)
         {
             _navigationService = navigationService;
         }
 
-        public void OnAppearing()
+        public virtual void OnAppearing()
         {
         }
 
-        public void OnDisappearing()
+        public virtual void OnDisappearing()
         {
         }
 
-        public void OnNavigatedFrom(INavigationParameters parameters)
+        public virtual void OnNavigatedFrom(INavigationParameters parameters)
         {
         }
 
-        public void OnNavigatedTo(INavigationParameters parameters)
+        public virtual void OnNavigatedTo(INavigationParameters parameters)
         {
         }
     }

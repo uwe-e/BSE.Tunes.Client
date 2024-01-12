@@ -24,16 +24,28 @@ namespace BSE.Tunes.Maui.Client
                     //.AddSegment<SplashPageViewModel>())
                     prism.RegisterTypes(container =>
                     {
+                        
+
                         container.RegisterForNavigation<MainPage>();
                         container.RegisterForNavigation<SplashPage>();
                         container.RegisterForNavigation<ServiceEndpointWizzardPage>();
                         container.RegisterForNavigation<LoginWizzardPage>();
+                        container.RegisterForNavigation<HomePage>();
                         container.Register<IRequestService, RequestService>();
                         container.Register<IResourceService, ResourceService>();
                         container.Register<IDataService, DataService>(); 
-                        container.Register<ISettingsService, SettingsService>();
-                        container.Register<IAuthenticationService, AuthenticationService>();
+                        container.RegisterSingleton<ISettingsService, SettingsService>();
+                        container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
+                        container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
+                        container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
+
                     })
+                    //.OnInitialized(containerProvider =>
+                    //{
+                    //    var regionManager = containerProvider.Resolve<IRegionManager>();
+                    //    regionManager.RequestNavigate("AlbumsCarousel", nameof(AlbumsCarouselView));
+                    //    //regionManager.RegisterViewWithRegion("AlbumsCarouselView", nameof(AlbumsCarouselView));
+                    //})
                     .OnAppStart(navigationService => navigationService.CreateBuilder()
                     .AddSegment<SplashPageViewModel>()
                     .NavigateAsync(HandleNavigationError));

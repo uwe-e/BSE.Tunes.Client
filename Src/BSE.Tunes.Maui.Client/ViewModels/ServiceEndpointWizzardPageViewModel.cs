@@ -11,7 +11,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IDataService _dataService;
         private readonly IAuthenticationService _authenticationService;
-        private DelegateCommand _saveCommand;
+        private DelegateCommand? _saveCommand;
         private string? _serviceEndPoint;
 
         public DelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(Save, CanSave);
@@ -48,7 +48,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async void Save()
         {
-            string serviceEndPoint = null;
+            string? serviceEndPoint = null;
 
             /* 
              * if theres a valid url, use it.
