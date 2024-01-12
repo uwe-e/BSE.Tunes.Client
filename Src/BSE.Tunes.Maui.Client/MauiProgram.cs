@@ -33,8 +33,10 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<HomePage>();
                         container.Register<IRequestService, RequestService>();
                         container.Register<IResourceService, ResourceService>();
-                        container.Register<IDataService, DataService>(); 
+                        container.RegisterSingleton<IDataService, DataService>(); 
                         container.RegisterSingleton<ISettingsService, SettingsService>();
+                        container.RegisterSingleton<IStorageService, StorageService>();
+                        container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
                         container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
                         container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();

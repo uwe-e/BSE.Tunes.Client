@@ -71,7 +71,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private async Task<TokenResponse> RequestAsync(Dictionary<string, string> fields)
         {
-            TokenResponse tokenResponse = null;
+            TokenResponse? tokenResponse = null;
             var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
             builder.AppendToPath("token");
 

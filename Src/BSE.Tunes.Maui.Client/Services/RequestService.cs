@@ -27,7 +27,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public async Task<TResult> PostAsync<TResult, TRequest>(Uri uri, TRequest from)
         {
-            TResult result = default;
+            TResult? result = default;
             using (var client = await GetHttpClient())
             {
                 var serialized = await Task.Run(() => JsonSerializer.Serialize(from));

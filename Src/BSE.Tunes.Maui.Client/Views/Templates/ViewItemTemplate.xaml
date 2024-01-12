@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BSE.Tunes.Maui.Client.Views.Templates.ViewItemTemplate">
+    
+    <ContentView.Resources>
+        <Style TargetType="StackLayout" x:Key="ViewItemTemplateStyle">
+            <Setter Property="HeightRequest">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="200" Tablet="300"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="WidthRequest">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Image" x:Key="ViewItemImageStyle">
+            <Setter Property="HeightRequest">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <StackLayout Style="{StaticResource ViewItemTemplateStyle}" Margin="3,0,3,0">
+            <Frame Padding="0"
+               CornerRadius="3"
+               IsClippedToBounds="True"
+               HasShadow="False">
+                <Image Style="{StaticResource ViewItemImageStyle}"
+                   Source="{Binding ImageSource, Mode=TwoWay}"
+                   Aspect="AspectFill"
+                   WidthRequest="160"/>
+            </Frame>
+            <Label Text="{Binding Title}"
+               Margin="0,-5,0,0"
+               TextColor="{DynamicResource PrimaryLabelColor}"
+               LineBreakMode="TailTruncation"/>
+            <Label Text="{Binding SubTitle}"
+               Margin="0,-5,0,0"
+               FontSize="13"
+               TextColor="{DynamicResource SecondaryLabelColor}"
+               LineBreakMode="TailTruncation"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>
