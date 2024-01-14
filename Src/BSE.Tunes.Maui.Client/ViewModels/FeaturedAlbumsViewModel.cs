@@ -2,12 +2,7 @@
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -22,8 +17,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ObservableCollection<GridPanel> Items => _items ??= [];
 
-        public ICommand SelectItemCommand => _selectItemCommand
-            ?? (_selectItemCommand = new Command<GridPanel>(SelectItem));
+        public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(SelectItem);
 
         public FeaturedAlbumsViewModel(
             INavigationService navigationService,

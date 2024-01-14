@@ -5,6 +5,7 @@
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:prism="http://prismlibrary.com"
              x:Class="BSE.Tunes.Maui.Client.Views.HomePage"
+             BackgroundColor="{DynamicResource BackgroundColor}"
              Title="{x:Static strings:AppResources.HomePage_Title}">
     <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <ScrollView>

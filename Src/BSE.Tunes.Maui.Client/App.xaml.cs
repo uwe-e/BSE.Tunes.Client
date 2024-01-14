@@ -11,10 +11,12 @@ namespace BSE.Tunes.Maui.Client
         public App()
         {
             RequestedThemeChanged += (s, a) => ConfigureTheme(a.RequestedTheme);
+
+            InitializeComponent();
+
             _currentTheme = Current.RequestedTheme;
             SetTheme(_currentTheme);
-            
-            InitializeComponent();
+
         }
 
         private void ConfigureTheme(AppTheme requestedTheme)
@@ -28,20 +30,23 @@ namespace BSE.Tunes.Maui.Client
 
         private void SetTheme(AppTheme theme)
         {
-            var mergedDictionaries = Application.Current.Resources.MergedDictionaries;
-            if (mergedDictionaries != null)
+            if (Current is not null)
             {
-                mergedDictionaries.Clear();
-
-                switch (theme)
+                var mergedDictionaries = Current.Resources.MergedDictionaries;
+                if (mergedDictionaries != null)
                 {
-                    case AppTheme.Dark:
-                        mergedDictionaries.Add(new DarkTheme());
-                        break;
-                    case AppTheme.Light:
-                    default:
-                        mergedDictionaries.Add(new LightTheme());
-                        break;
+                    mergedDictionaries.Clear();
+
+                    switch (theme)
+                    {
+                        case AppTheme.Dark:
+                            mergedDictionaries.Add(new DarkTheme());
+                            break;
+                        case AppTheme.Light:
+                        default:
+                            mergedDictionaries.Add(new LightTheme());
+                            break;
+                    }
                 }
             }
         }

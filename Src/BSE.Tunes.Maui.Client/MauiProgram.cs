@@ -24,22 +24,22 @@ namespace BSE.Tunes.Maui.Client
                     //.AddSegment<SplashPageViewModel>())
                     prism.RegisterTypes(container =>
                     {
-                        
-
                         container.RegisterForNavigation<MainPage>();
                         container.RegisterForNavigation<SplashPage>();
                         container.RegisterForNavigation<ServiceEndpointWizzardPage>();
                         container.RegisterForNavigation<LoginWizzardPage>();
                         container.RegisterForNavigation<HomePage>();
-                        container.Register<IRequestService, RequestService>();
-                        container.Register<IResourceService, ResourceService>();
+                        container.RegisterForNavigation<AlbumDetailPage>();
+                        container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
+                        container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
+                        container.RegisterSingleton<IRequestService, RequestService>();
+                        container.RegisterSingleton<IResourceService, ResourceService>();
                         container.RegisterSingleton<IDataService, DataService>(); 
                         container.RegisterSingleton<ISettingsService, SettingsService>();
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
-                        container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
-                        container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
+                        container.RegisterSingleton<IFlyoutNavigationService, FlyoutNavigationService>();
 
                     })
                     //.OnInitialized(containerProvider =>

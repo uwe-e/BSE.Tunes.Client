@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             x:Class="BSE.Tunes.Maui.Client.Controls.HeaderedCollectionView">
+
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout VerticalOptions="Start" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+                    <controls:SectionHeaderButton x:Name="PART_SectionHeaderButton"
+                                                  Text="{TemplateBinding Title}"
+                                                  Style="{TemplateBinding HeaderButtonStyle}"
+                                                  HorizontalOptions="Start"/>
+                    <CollectionView ItemsSource="{TemplateBinding ItemsSource}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{TemplateBinding SelectedItem}"
+                                    SelectionChangedCommand="{TemplateBinding SelectionChangedCommand}"
+                                    SelectionChangedCommandParameter="{TemplateBinding SelectionChangedCommandParameter}"
+                                    RemainingItemsThreshold="{TemplateBinding RemainingItemsThreshold}"
+                                    RemainingItemsThresholdReachedCommand="{TemplateBinding RemainingItemsThresholdReachedCommand}"
+                                    ItemsLayout="HorizontalList" ItemTemplate="{TemplateBinding ItemTemplate}">
+                    </CollectionView>
+                </StackLayout>
+                <StackLayout IsVisible="{TemplateBinding IsBusy}" Padding="12"
+                             AbsoluteLayout.LayoutFlags="PositionProportional"
+                             AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+                    <ActivityIndicator x:Name="PART_ActivityIndicator"
+                                       IsRunning="{TemplateBinding IsBusy}" Color ="{TemplateBinding ActivityIndicatorColor}"/>
+                </StackLayout>
+            </AbsoluteLayout>
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
+
+</ContentView>

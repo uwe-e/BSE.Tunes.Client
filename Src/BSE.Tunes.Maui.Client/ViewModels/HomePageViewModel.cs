@@ -1,4 +1,6 @@
-﻿using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Models.Contract;
+using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Windows.Input;
 
@@ -37,7 +39,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _resourceService = resourceService;
             _eventAggregator = eventAggregator;
 
+            _eventAggregator.GetEvent<AlbumSelectedEvent>().Subscribe(SelectAlbum, ThreadOption.UIThread);
+
         }
+
+        
 
         private void RefreshView()
         {
@@ -49,6 +55,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             _regionManager.RequestNavigate("AlbumsCarousel", nameof(AlbumsCarouselView));
             _regionManager.RequestNavigate("FeaturedAlbums", nameof(FeaturedAlbumsView));
+        }
+        
+        private async void SelectAlbum(Album album)
+        {
+            var navigationParams = new NavigationParameters
+            {
+                { "album", album }
+            };
+            await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
         }
     }
 }

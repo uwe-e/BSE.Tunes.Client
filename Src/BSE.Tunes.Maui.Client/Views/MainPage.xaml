@@ -9,8 +9,8 @@
                              ios:TabbedPage.TranslucencyMode="Opaque"
                              android:TabbedPage.ToolbarPlacement="Bottom"
                              android:TabbedPage.IsSwipePagingEnabled="False"
-                             SelectedTabColor="{AppThemeBinding Dark={StaticResource PrimaryDarkLabelColor}, Light={StaticResource PrimaryLabelColor}}"
-                             UnselectedTabColor="{AppThemeBinding Dark={StaticResource SecondaryDarkLabelColor}, Light={StaticResource SecondaryLabelColor}}"
+                             SelectedTabColor="{DynamicResource PrimaryLabelColor}"
+                             UnselectedTabColor="{DynamicResource SecondaryLabelColor}"
                              x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
 
     <controls:ExtendedTabbedPage.Children>

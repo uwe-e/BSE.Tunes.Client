@@ -10,18 +10,19 @@
             <StackLayout VerticalOptions="Start" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
 
                 <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}"
-                                          Style="{DynamicResource SectionHeaderButtonStyle}"
-                                          HorizontalOptions="Start"/>
+                                              Style="{DynamicResource SectionHeaderButtonStyle}"
+                                              HorizontalOptions="Start"/>
 
                 <CollectionView x:Name="featuredAlbumssView"
-                            ItemsSource="{Binding Items}"
-                            ItemsLayout="HorizontalList">
+                                ItemsSource="{Binding Items}"
+                                ItemsLayout="HorizontalList">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <templates:ViewItemTemplate Padding="0,0,10,0">
                                 <templates:ViewItemTemplate.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=featuredAlbumssView}}"
                                                       CommandParameter="{Binding}"/>
+                                    
                                 </templates:ViewItemTemplate.GestureRecognizers>
                             </templates:ViewItemTemplate>
                         </DataTemplate>
@@ -30,8 +31,8 @@
 
             </StackLayout>
             <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
-             AbsoluteLayout.LayoutFlags="PositionProportional"
-             AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                         AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
                 <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{Binding PrimaryLabelColor}"/>
             </StackLayout>
         </AbsoluteLayout>

@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
+using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -17,7 +18,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public ObservableCollection<GridPanel> Items => _items ??= [];
 
         public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(SelectItem);
-
 
         public AlbumsCarouselViewModel(
             INavigationService navigationService,
@@ -63,11 +63,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void SelectItem(GridPanel panel)
         {
-
+            if (panel?.Data is Album album)
+            {
+                _eventAggregator.GetEvent<AlbumSelectedEvent>().Publish(album);
+            }
         }
-
-       
-
               
     }
 }
