@@ -16,11 +16,7 @@
                             <StackLayout VerticalOptions="StartAndExpand" Orientation="Horizontal" Margin="3,0,3,0">
                                 <Image Aspect="AspectFit"
                                        HeightRequest="{OnIdiom Default=150, Tablet=250}" 
-                                       WidthRequest="{OnIdiom Default=150, Tablet=250}">
-                                    <Image.Source>
-                                        <UriImageSource CacheValidity="5" CachingEnabled="True" Uri="{Binding ImageSource}"/>
-                                    </Image.Source>
-                                </Image>
+                                       WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>

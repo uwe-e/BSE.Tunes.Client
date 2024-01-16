@@ -22,8 +22,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private int _pageSize;
         private bool _hasItems;
         private ObservableCollection<GridPanel>? _albums;
-        private ICommand _selectAlbumCommand;
-        private ICommand _loadMoreAlbumssCommand;
+        private ICommand? _selectAlbumCommand;
+        private ICommand? _loadMoreAlbumssCommand;
 
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ?? (
            _loadMoreAlbumssCommand = new DelegateCommand(() =>
@@ -104,24 +104,27 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             if (album != null)
             {
                 Album = await _dataService.GetAlbumById(album.Id);
-                foreach (Track track in Album.Tracks)
+                ImageSource = _imageService.GetBitmapSource(Album.AlbumId ?? Guid.Empty);
+                if (Album.Tracks != null)
                 {
-                    track.Album = new Album
+                    foreach (Track track in Album.Tracks)
                     {
-                        AlbumId = Album.AlbumId,
-                        Id = Album.Id,
-                        Title = Album.Title,
-                        Artist = Album.Artist
-                    };
-                    Items.Add(new GridPanel
-                    {
-                        Number = track.TrackNumber,
-                        Title = track.Name,
-                        Data = track
+                        track.Album = new Album
+                        {
+                            AlbumId = Album.AlbumId,
+                            Id = Album.Id,
+                            Title = Album.Title,
+                            Artist = Album.Artist
+                        };
+                        Items.Add(new GridPanel
+                        {
+                            Number = track.TrackNumber,
+                            Title = track.Name,
+                            Data = track
 
-                    });
+                        });
+                    }
                 }
-                ImageSource = _imageService.GetBitmapSource(Album.AlbumId);
                 //PlayAllCommand.RaiseCanExecuteChanged();
                 //PlayAllRandomizedCommand.RaiseCanExecuteChanged();
                 IsBusy = false;
@@ -153,8 +156,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             Albums.Add(new GridPanel
                             {
                                 Title = album.Title,
-                                SubTitle = album.Artist.Name,
-                                ImageSource = _imageService.GetBitmapSource(album.AlbumId),
+                                SubTitle = album.Artist?.Name,
+                                ImageSource = _imageService.GetBitmapSource(album.AlbumId ?? Guid.Empty),
                                 Data = album
                             });
                         }

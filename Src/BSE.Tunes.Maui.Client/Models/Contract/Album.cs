@@ -7,12 +7,12 @@
             get; set;
         }
 
-        public Artist Artist
+        public Artist? Artist
         {
             get; set;
         }
 
-        public string Title
+        public string?Title
         {
             get; set;
         }
@@ -22,27 +22,27 @@
             get; set;
         }
 
-        public byte[] Thumbnail
+        public byte[]? Thumbnail
         {
             get; set;
         }
 
-        public byte[] Cover
+        public byte[]? Cover
         {
             get; set;
         }
-        public Genre Genre
+        public Genre? Genre
 
         {
             get; set;
         }
 
-        public Track[] Tracks
+        public Track[]? Tracks
         {
             get; set;
         }
 
-        public Guid AlbumId
+        public Guid? AlbumId
         {
             get; set;
         }

@@ -5,14 +5,8 @@
     <Grid>
 
         <!--<ffimageLoading:CachedImage Source="{Binding ImageSource}" Aspect="AspectFill"/>-->
-        <Image Aspect="AspectFill">
-            <Image.Source>
-                <UriImageSource CacheValidity="5"
-                                CachingEnabled="True"
-                                Uri="{Binding ImageSource}"/>
-            </Image.Source>
-        </Image>
-        
+        <Image Aspect="AspectFill" Source="{Binding ImageSource}" />
+
         <StackLayout BackgroundColor="#A0000000" VerticalOptions="End" HorizontalOptions="FillAndExpand">
             <Label HorizontalTextAlignment="Center"
                    Text="{Binding Title}"

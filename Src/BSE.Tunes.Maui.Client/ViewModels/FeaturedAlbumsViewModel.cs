@@ -51,8 +51,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         Items.Add(new GridPanel
                         {
                             Title = album.Title,
-                            SubTitle = album.Artist.Name,
-                            ImageSource = _imageService.GetBitmapSource(album.AlbumId),
+                            SubTitle = album.Artist?.Name,
+                            ImageSource = _imageService.GetBitmapSource(album.AlbumId ?? Guid.Empty, true),
                             Data = album
                         });
                     }

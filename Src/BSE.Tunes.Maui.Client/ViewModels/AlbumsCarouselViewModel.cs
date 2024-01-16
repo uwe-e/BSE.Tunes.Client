@@ -12,6 +12,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IResourceService _resourceService;
         private readonly IDataService _dataService;
+        private readonly IImageService _imageService;
         private ObservableCollection<GridPanel>? _items;
         private ICommand? _selectItemCommand;
 
@@ -23,12 +24,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             INavigationService navigationService,
             IEventAggregator eventAggregator,
             IResourceService resourceService,
-            IDataService dataService) : base(navigationService)
+            IDataService dataService,
+            IImageService imageService) : base(navigationService)
         {
             _eventAggregator = eventAggregator;
             _resourceService = resourceService;
             _dataService = dataService;
-
+            _imageService = imageService;
             _eventAggregator.GetEvent<HomePageRefreshEvent>().Subscribe(() =>
             {
                 IsBusy = true;
@@ -51,8 +53,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         Items.Add(new GridPanel
                         {
                             Title = album.Title,
-                            SubTitle = album.Artist.Name,
-                            ImageSource = _dataService.GetImage(album.AlbumId)?.AbsoluteUri,
+                            SubTitle = album.Artist?.Name,
+                            ImageSource = _imageService.GetBitmapSource(album.AlbumId ?? Guid.Empty, true),
                             Data = album
                         });
                     }
