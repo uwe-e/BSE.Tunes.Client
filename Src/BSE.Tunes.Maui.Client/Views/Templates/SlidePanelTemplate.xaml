@@ -4,7 +4,6 @@
              x:Class="BSE.Tunes.Maui.Client.Views.Templates.SlidePanelTemplate">
     <Grid>
 
-        <!--<ffimageLoading:CachedImage Source="{Binding ImageSource}" Aspect="AspectFill"/>-->
         <Image Aspect="AspectFill" Source="{Binding ImageSource}" />
 
         <StackLayout BackgroundColor="#A0000000" VerticalOptions="End" HorizontalOptions="FillAndExpand">

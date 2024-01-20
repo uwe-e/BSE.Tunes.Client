@@ -5,9 +5,9 @@
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.FeaturedAlbumsView">
-    <ContentView.Content>
-        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <StackLayout VerticalOptions="Start" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+
+        <Grid>
+            <StackLayout >
 
                 <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}"
                                               Style="{DynamicResource SectionHeaderButtonStyle}"
@@ -35,6 +35,6 @@
                          AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
                 <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{Binding PrimaryLabelColor}"/>
             </StackLayout>
-        </AbsoluteLayout>
-    </ContentView.Content>
+        </Grid>
+
 </ContentView>

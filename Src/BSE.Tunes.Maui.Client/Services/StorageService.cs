@@ -13,7 +13,17 @@ namespace BSE.Tunes.Maui.Client.Services
         
         public Task DeleteCachedImagesAsync(string searchPattern = null)
         {
-            throw new NotImplementedException();
+            string imageFolderPath = GetImageFolder();
+            DirectoryInfo directoryInfo = new DirectoryInfo(imageFolderPath);
+            if (directoryInfo.Exists)
+            {
+                //var files = directoryInfo.GetFiles(searchPattern ?? "*");
+                foreach (var fileInfo in directoryInfo.GetFiles(searchPattern ?? "*"))
+                {
+                    fileInfo.Delete();
+                }
+            }
+            return Task.CompletedTask;
         }
 
         public string GetImageFolder()
@@ -29,12 +39,25 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public long GetUsedDiskSpace()
         {
-            throw new NotImplementedException();
+            long length = default;
+            string imageFolderPath = GetImageFolder();
+            DirectoryInfo directoryInfo = new DirectoryInfo(imageFolderPath);
+            if (directoryInfo.Exists)
+            {
+                foreach (var fileInfo in directoryInfo.GetFiles())
+                {
+                    length += fileInfo.Length;
+                }
+            }
+            return length;
         }
 
         public Task<long> GetUsedDiskSpaceAsync()
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                return GetUsedDiskSpace();
+            });
         }
 
         public bool TryToGetImagePath(string fileName, out string filePath)

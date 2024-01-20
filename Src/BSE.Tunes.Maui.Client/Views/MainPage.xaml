@@ -14,7 +14,7 @@
                              x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
 
     <controls:ExtendedTabbedPage.Children>
-        <NavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png">
+        <NavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarBackgroundColor="{DynamicResource BackgroundColor}">
             <x:Arguments>
                 <views:HomePage/>
             </x:Arguments>
@@ -22,6 +22,11 @@
         <NavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
             <x:Arguments>
                 <views:PlaylistsPage/>
+            </x:Arguments>
+        </NavigationPage>
+        <NavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png">
+            <x:Arguments>
+                <views:SettingsPage/>
             </x:Arguments>
         </NavigationPage>
     </controls:ExtendedTabbedPage.Children>

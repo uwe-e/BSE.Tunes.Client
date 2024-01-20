@@ -277,7 +277,7 @@ namespace BSE.Tunes.Maui.Client.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do you want to delete your account for this BSETunes?.
+        ///   Looks up a localized string similar to Do you want to delete your account for this BSEtunes?.
         /// </summary>
         internal static string LoginSettingsPage_ActionSheet_Title {
             get {

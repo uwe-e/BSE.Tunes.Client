@@ -34,19 +34,19 @@
                     <RoundRectangle CornerRadius="3" />
                 </Border.StrokeShape>
                 <Image Style="{StaticResource ViewItemImageStyle}"
-                   Source="{Binding ImageSource, Mode=TwoWay}"
-                   Aspect="AspectFill"
-                   WidthRequest="160"/>
+                       Source="{Binding ImageSource}"
+                       Aspect="AspectFill"
+                       WidthRequest="160"/>
             </Border>
             <Label Text="{Binding Title}"
-               Margin="0,-5,0,0"
-               TextColor="{DynamicResource PrimaryLabelColor}"
-               LineBreakMode="TailTruncation"/>
+                   Margin="0,-5,0,0"
+                   TextColor="{DynamicResource PrimaryLabelColor}"
+                   LineBreakMode="TailTruncation"/>
             <Label Text="{Binding SubTitle}"
-               Margin="0,-5,0,0"
-               FontSize="13"
-               TextColor="{DynamicResource SecondaryLabelColor}"
-               LineBreakMode="TailTruncation"/>
+                   Margin="0,-5,0,0"
+                   FontSize="13"
+                   TextColor="{DynamicResource SecondaryLabelColor}"
+                   LineBreakMode="TailTruncation"/>
         </StackLayout>
     </Grid>
 </ContentView>

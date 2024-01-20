@@ -29,6 +29,8 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<ServiceEndpointWizzardPage>();
                         container.RegisterForNavigation<LoginWizzardPage>();
                         container.RegisterForNavigation<HomePage>();
+                        container.RegisterForNavigation<SettingsPage>();
+                        container.RegisterForNavigation<LoginSettingsPage>();
                         container.RegisterForNavigation<AlbumDetailPage>();
                         container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
                         container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
@@ -38,6 +40,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<ISettingsService, SettingsService>();
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
+                        container.RegisterSingleton<IAppInfoService, AppInfoService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
                         container.RegisterSingleton<IFlyoutNavigationService, FlyoutNavigationService>();
 

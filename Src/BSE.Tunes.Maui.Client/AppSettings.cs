@@ -7,7 +7,7 @@ namespace BSE.Tunes.Maui.Client
 {
     public static class AppSettings
     {
-        const string ResourceId = "BSE.Tunes.XApp.Resx.AppResources";
+        const string ResourceId = "BSE.Tunes.Maui.Client.Resources.Strings.AppResources";
 
         public static readonly Lazy<ResourceManager> ResourceManager =
             new Lazy<ResourceManager>(() => new ResourceManager(

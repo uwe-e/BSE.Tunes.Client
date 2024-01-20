@@ -14,10 +14,20 @@ namespace BSE.Tunes.Maui.Client
 
             InitializeComponent();
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            
             _currentTheme = Current.RequestedTheme;
             SetTheme(_currentTheme);
 
+            MauiExceptions.UnhandledException += (sender, args) =>
+            {
+                //_logger.LogCritical(e.ExceptionObject as Exception, "App failed to handle exception");
+                //throw (Exception)e.ExceptionObject;
+            };
+
         }
+
+        
 
         private void ConfigureTheme(AppTheme requestedTheme)
         {
@@ -49,6 +59,11 @@ namespace BSE.Tunes.Maui.Client
                     }
                 }
             }
+        }
+        
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+
         }
     }
 }

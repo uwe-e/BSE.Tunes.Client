@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             x:Class="BSE.Tunes.Maui.Client.Views.SettingsPage"
+             Title="{x:Static strings:AppResources.SettingsPage_Title}">
+   
+    <TableView Intent="Settings">
+        <TableRoot>
+            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}">
+                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"
+                      Detail="{Binding ServiceEndPoint}"/>
+            </TableSection>
+            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}">
+                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
+                      Detail="{Binding UserName}"
+                      Command="{Binding ToAccountDetailCommand}"/>
+            </TableSection>
+            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}">
+                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
+                      Detail="{Binding UsedDiskSpace}"
+                      Command="{Binding ToCacheSettingsDetailCommand}"/>
+            </TableSection>
+            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}">
+                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
+                      Detail="{Binding VersionString}"/>
+            </TableSection>
+        </TableRoot>
+    </TableView>
+    
+</ContentPage>

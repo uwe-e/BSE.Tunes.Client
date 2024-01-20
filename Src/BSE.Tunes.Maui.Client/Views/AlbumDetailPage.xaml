@@ -14,7 +14,8 @@
                     <CollectionView.Header>
                         <StackLayout Spacing="0">
                             <StackLayout VerticalOptions="StartAndExpand" Orientation="Horizontal" Margin="3,0,3,0">
-                                <Image Aspect="AspectFit"
+                                <Image Aspect="AspectFill"
+                                       VerticalOptions="Start"
                                        HeightRequest="{OnIdiom Default=150, Tablet=250}" 
                                        WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
                                 <Grid>

@@ -6,8 +6,8 @@
 
     <ContentView.ControlTemplate>
         <ControlTemplate>
-            <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <StackLayout VerticalOptions="Start" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+            <Grid>
+                <StackLayout VerticalOptions="Start">
                     <controls:SectionHeaderButton x:Name="PART_SectionHeaderButton"
                                                   Text="{TemplateBinding Title}"
                                                   Style="{TemplateBinding HeaderButtonStyle}"
@@ -28,7 +28,7 @@
                     <ActivityIndicator x:Name="PART_ActivityIndicator"
                                        IsRunning="{TemplateBinding IsBusy}" Color ="{TemplateBinding ActivityIndicatorColor}"/>
                 </StackLayout>
-            </AbsoluteLayout>
+            </Grid>
         </ControlTemplate>
     </ContentView.ControlTemplate>
 
