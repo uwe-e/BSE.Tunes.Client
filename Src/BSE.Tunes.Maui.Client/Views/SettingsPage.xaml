@@ -9,21 +9,22 @@
         <TableRoot>
             <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"
-                      Detail="{Binding ServiceEndPoint}"/>
+                          Command="{Binding ToServiceEndpointDetailCommand}"
+                          Detail="{Binding ServiceEndPoint}"/>
             </TableSection>
             <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
-                      Detail="{Binding UserName}"
-                      Command="{Binding ToAccountDetailCommand}"/>
+                          Detail="{Binding UserName}"
+                          Command="{Binding ToAccountDetailCommand}"/>
             </TableSection>
             <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
-                      Detail="{Binding UsedDiskSpace}"
-                      Command="{Binding ToCacheSettingsDetailCommand}"/>
+                          Detail="{Binding UsedDiskSpace}"
+                          Command="{Binding ToCacheSettingsDetailCommand}"/>
             </TableSection>
             <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
-                      Detail="{Binding VersionString}"/>
+                          Detail="{Binding VersionString}"/>
             </TableSection>
         </TableRoot>
     </TableView>

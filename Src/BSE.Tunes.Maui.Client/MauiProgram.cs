@@ -31,6 +31,8 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<HomePage>();
                         container.RegisterForNavigation<SettingsPage>();
                         container.RegisterForNavigation<LoginSettingsPage>();
+                        container.RegisterForNavigation<ServiceEndpointSettingsPage>();
+                        container.RegisterForNavigation<CacheSettingsPage>();
                         container.RegisterForNavigation<AlbumDetailPage>();
                         container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
                         container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();

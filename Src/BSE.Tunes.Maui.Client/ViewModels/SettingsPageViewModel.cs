@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Windows.Input;
 using IResourceService = BSE.Tunes.Maui.Client.Services.IResourceService;
@@ -12,10 +13,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IStorageService _storageService;
         private readonly IAppInfoService _appInfoService;
-        private string _serviceEndPoint;
-        private string _userName;
-        private string _usedDiskSpace;
-        private string _versionString;
+        private string? _serviceEndPoint;
+        private string? _userName;
+        private string? _usedDiskSpace;
+        private string? _versionString;
         private bool _isActive;
         private bool _isActivated;
         private bool _isCacheChanged;
@@ -104,6 +105,17 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             _versionString = $"{_resourceService.GetString("SettingsPage_SectionInformation_VersionString")} {_appInfoService.VersionString}";
 
+            _eventAggregator.GetEvent<CacheChangedEvent>().Subscribe((args) =>
+            {
+                switch (args)
+                {
+                    case CacheChangeMode.Added:
+                    case CacheChangeMode.Removed:
+
+                        LoadCacheSettings();
+                        break;
+                }
+            });
         }
 
         private void RaiseIsActiveChanged()
@@ -138,9 +150,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
         
-        private void NavigateToServiceEndpointDetail()
+        private async void NavigateToServiceEndpointDetail()
         {
-
+            await NavigationService.NavigateAsync(nameof(ServiceEndpointSettingsPage));
         }
         
         private async void NavigateToAccountDetail()
@@ -148,9 +160,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await NavigationService.NavigateAsync(nameof(LoginSettingsPage));
         }
         
-        private void NavigateToCacheSettingsDetail()
+        private async void NavigateToCacheSettingsDetail()
         {
-
+            await NavigationService.NavigateAsync(nameof(CacheSettingsPage));
         }
     }
 }

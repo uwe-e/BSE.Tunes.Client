@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BSE.Tunes.Maui.Client.Services
+﻿namespace BSE.Tunes.Maui.Client.Services
 {
     public class StorageService : IStorageService
     {
