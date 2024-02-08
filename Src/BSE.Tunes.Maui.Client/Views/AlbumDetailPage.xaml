@@ -5,12 +5,17 @@
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumDetailPage"
-             BackgroundColor="{DynamicResource BackgroundColor}">
+             BackgroundColor="{DynamicResource BackgroundColor}"
+             x:Name="page">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="..." Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Album}"/>
+    </ContentPage.ToolbarItems>
+    
     <ContentPage.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <ScrollView AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
-                <CollectionView ItemsSource="{Binding Items}" VerticalOptions="Start">
+                <CollectionView ItemsSource="{Binding Items}">
                     <CollectionView.Header>
                         <StackLayout Spacing="0">
                             <StackLayout VerticalOptions="StartAndExpand" Orientation="Horizontal" Margin="3,0,3,0">
@@ -46,7 +51,7 @@
                             </StackLayout>
                             <StackLayout VerticalOptions="StartAndExpand">
                                 <StackLayout Orientation="Horizontal">
-                                <!-- player buttons -->
+                                    <!-- player buttons -->
                                 </StackLayout>
                             </StackLayout>
                         </StackLayout>
@@ -94,7 +99,7 @@
                                      SelectionChangedCommandParameter="{Binding SelectedAlbum}"
                                      RemainingItemsThreshold="10"
                                      RemainingItemsThresholdReachedCommand="{Binding LoadMoreAlbumsCommand}"
-                                     HeightRequest="260">
+                                     HeightRequest="{OnIdiom Default=280, Tablet=420}">
                             <controls:HeaderedCollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <templates:ViewItemTemplate Padding="0,0,10,0"/>

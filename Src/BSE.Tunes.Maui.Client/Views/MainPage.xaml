@@ -4,6 +4,7 @@
                              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
                              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
                              xmlns:views="clr-namespace:BSE.Tunes.Maui.Client.Views"
+                             xmlns:prism="http://prismlibrary.com"
                              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
                              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
                              ios:TabbedPage.TranslucencyMode="Opaque"
@@ -14,21 +15,22 @@
                              x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
 
     <controls:ExtendedTabbedPage.Children>
-        <NavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarBackgroundColor="{DynamicResource BackgroundColor}">
+         
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarBackgroundColor="{DynamicResource BackgroundColor}">
             <x:Arguments>
-                <views:HomePage/>
+               <views:HomePage/>
             </x:Arguments>
-        </NavigationPage>
-        <NavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
             <x:Arguments>
                 <views:PlaylistsPage/>
             </x:Arguments>
-        </NavigationPage>
-        <NavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png">
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png">
             <x:Arguments>
                 <views:SettingsPage/>
             </x:Arguments>
-        </NavigationPage>
+        </prism:PrismNavigationPage>
     </controls:ExtendedTabbedPage.Children>
     
 </controls:ExtendedTabbedPage>

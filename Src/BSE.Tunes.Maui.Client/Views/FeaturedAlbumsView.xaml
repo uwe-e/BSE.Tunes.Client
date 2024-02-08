@@ -4,9 +4,9 @@
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
-             x:Class="BSE.Tunes.Maui.Client.Views.FeaturedAlbumsView">
+             x:Class="BSE.Tunes.Maui.Client.Views.FeaturedAlbumsView" >
 
-        <Grid>
+    <Grid>
             <StackLayout >
 
                 <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}"
@@ -15,7 +15,7 @@
 
                 <CollectionView x:Name="featuredAlbumssView"
                                 ItemsSource="{Binding Items}"
-                                ItemsLayout="HorizontalList">
+                                ItemsLayout="HorizontalList" HeightRequest="{OnIdiom Default=260, Tablet=400}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <templates:ViewItemTemplate Padding="0,0,10,0">

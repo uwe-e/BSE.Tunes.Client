@@ -1,14 +1,13 @@
-using Microsoft.Maui;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.Controls;
 
 public partial class BottomFlyoutPage : ContentPage
 {
-    private ContentView _flyout;
-    private BoxView _fader;
-    private TapGestureRecognizer _faderTabGesture;
-    private Button _dismissButton;
+    private ContentView? _flyout;
+    private BoxView? _fader;
+    private TapGestureRecognizer? _faderTabGesture;
+    private Button? _dismissButton;
     private double _pageHeight;
     private double _flyoutHeight;
 
@@ -59,7 +58,7 @@ public partial class BottomFlyoutPage : ContentPage
         BackgroundColor = Colors.Transparent;
     }
 
-    public async System.Threading.Tasks.Task AppearingAnimation()
+    public async Task AppearingAnimation()
     {
         await _fader.FadeTo(1, 100, Easing.SinInOut);
 
@@ -84,6 +83,11 @@ public partial class BottomFlyoutPage : ContentPage
         _fader.HeightRequest = _pageHeight;
 
         base.OnSizeAllocated(width, height);
+    }
+
+    public async Task DisappearingAnimation()
+    {
+        _ = await _flyout?.TranslateTo(0, _pageHeight, 300, Easing.SinInOut);
     }
 
     protected override void OnApplyTemplate()

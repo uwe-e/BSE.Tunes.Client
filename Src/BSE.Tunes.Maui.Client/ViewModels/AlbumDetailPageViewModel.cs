@@ -24,6 +24,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ObservableCollection<GridPanel>? _albums;
         private ICommand? _selectAlbumCommand;
         private ICommand? _loadMoreAlbumssCommand;
+        private ICommand? _goBackCommand;
 
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ?? (
            _loadMoreAlbumssCommand = new DelegateCommand(() =>
@@ -35,6 +36,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ICommand SelectAlbumCommand => _selectAlbumCommand
             ?? (_selectAlbumCommand = new Command<GridPanel>(SelectAlbum));
+
+        public ICommand GoBackCommand => _goBackCommand ??= new DelegateCommand(async () =>
+        {
+            await NavigationService.GoBackAsync();
+        });
 
         public ObservableCollection<GridPanel> Albums => _albums ??= [];
 
@@ -80,7 +86,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IEventAggregator eventAggregator,
             IResourceService resourceService,
             IDataService dataService,
-            IImageService imageService) : base(navigationService)
+            IImageService imageService) : base(navigationService, flyoutNavigationService)
         {
             _eventAggregator = eventAggregator;
             _dataService = dataService;

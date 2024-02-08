@@ -2,6 +2,8 @@
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using Prism.Controls;
+using Prism.Navigation;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -43,7 +45,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         }
 
-        
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            
+        }
 
         private void RefreshView()
         {
@@ -64,6 +70,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 { "album", album }
             };
             await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
+            //await NavigationService.CreateBuilder()
+            //                    //.UseAbsoluteNavigation()
+            //                    .AddNavigationPage()
+            //                    .AddSegment<AlbumDetailPage>()
+            //                    .WithParameters(navigationParams)
+            //                    .NavigateAsync();
         }
     }
 }
