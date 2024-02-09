@@ -34,7 +34,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<ServiceEndpointSettingsPage>();
                         container.RegisterForNavigation<CacheSettingsPage>();
                         container.RegisterForNavigation<AlbumDetailPage>();
-                        container.RegisterForNavigation<PlaylistActionToolbarPage, PlaylistActionToolbarPageViewModel>();
+                        //container.RegisterForNavigation<PlaylistActionToolbarPage, PlaylistActionToolbarPageViewModel>();
                         container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
                         container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
                         container.RegisterSingleton<IRequestService, RequestService>();
@@ -46,6 +46,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IAppInfoService, AppInfoService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
                         container.RegisterSingleton<IFlyoutNavigationService, FlyoutNavigationService>();
+
 
                     })
                     //.OnInitialized(containerProvider =>
@@ -73,7 +74,8 @@ namespace BSE.Tunes.Maui.Client
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-
+            builder.Services.AddTransient<PlaylistActionToolbarPage>();
+            builder.Services.AddTransient<PlaylistActionToolbarPageViewModel>();
             return builder.Build();
         }
 
