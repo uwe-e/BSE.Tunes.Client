@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             x:Class="BSE.Tunes.Maui.Client.Views.FeaturedAlbumsView" >
+
+    <Grid>
+            <StackLayout >
+
+                <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}"
+                                              Style="{DynamicResource SectionHeaderButtonStyle}"
+                                              HorizontalOptions="Start"/>
+
+                <CollectionView x:Name="featuredAlbumssView"
+                                ItemsSource="{Binding Items}"
+                                ItemsLayout="HorizontalList" HeightRequest="{OnIdiom Default=260, Tablet=400}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <templates:ViewItemTemplate Padding="0,0,10,0">
+                                <templates:ViewItemTemplate.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=featuredAlbumssView}}"
+                                                      CommandParameter="{Binding}"/>
+                                    
+                                </templates:ViewItemTemplate.GestureRecognizers>
+                            </templates:ViewItemTemplate>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </StackLayout>
+            <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
+                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                         AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{Binding PrimaryLabelColor}"/>
+            </StackLayout>
+        </Grid>
+
+</ContentView>

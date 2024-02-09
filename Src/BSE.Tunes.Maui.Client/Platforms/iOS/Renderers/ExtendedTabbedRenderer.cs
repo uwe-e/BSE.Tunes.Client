@@ -1,6 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Controls;
 using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
-using Microsoft.Maui.Controls.Handlers.Compatibility;
 using Microsoft.Maui.Controls.Platform;
 using System.ComponentModel;
 using UIKit;

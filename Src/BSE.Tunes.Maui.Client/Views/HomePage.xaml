@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:BSE.Tunes.Maui.Client.Views"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:prism="http://prismlibrary.com"
+             x:Class="BSE.Tunes.Maui.Client.Views.HomePage"
+             BackgroundColor="{DynamicResource BackgroundColor}"
+             Title="{x:Static strings:AppResources.HomePage_Title}">
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <ScrollView>
+            <StackLayout >
+
+                <ContentView prism:RegionManager.RegionName="AlbumsCarousel" HeightRequest="{OnIdiom Default=260, Tablet=420}"/>
+                <ContentView prism:RegionManager.RegionName="FeaturedAlbums" HeightRequest="{OnIdiom Default=260, Tablet=400}"/>
+                
+                <!--<local:RandomPlayerButtonView HeightRequest="80"/>-->
+
+                <!--<views:FeaturedAlbumsView HeightRequest="{OnIdiom Default=260, Tablet=400}"/>-->
+
+                <!--<local:FeaturedPlaylistsView HeightRequest="{OnIdiom Default=260, Tablet=400}"/>-->
+
+            </StackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

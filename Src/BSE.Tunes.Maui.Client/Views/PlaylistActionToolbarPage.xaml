@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:BottomFlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                           xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+                           xmlns:vm="clr-namespace:BSE.Tunes.Maui.Client.ViewModels"
+                           xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+                           xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+                           xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+                           ios:Page.ModalPresentationStyle="OverFullScreen"
+                           FlyoutBackgroundColor="{DynamicResource SystemGray6}"
+                           x:Class="BSE.Tunes.Maui.Client.Views.PlaylistActionToolbarPage"
+                           x:DataType="vm:PlaylistActionToolbarPageViewModel"
+                           CloseButtonText="{x:Static strings:AppResources.ManageAlbumsPage_ButtonClose_Text}"
+                           CloseFlyoutCommand="{Binding CloseFlyoutCommand}">
+    
+    
+    <controls:BottomFlyoutPage.Content>
+        <StackLayout Padding="5">
+            <controls:ListViewItem ImageSource="{Binding ImageSource}" Title="{Binding Title}"
+                               SubTitle="{Binding SubTitle}"/>
+            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
+                               Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_AddToPlaylist}"
+                               Command="{Binding AddToPlaylistCommand}"/>
+            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
+                               IsVisible="{Binding CanRemoveFromPlaylist}"
+                               Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_RemoveFromPlaylist}"
+                               Command="{Binding RemoveFromPlaylistCommand}"/>
+            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
+                               IsVisible="{Binding CanDisplayAlbumInfo}"
+                               Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_DisplayAlbumInfo}"
+                               Command="{Binding DisplayAlbumInfoCommand}"/>
+            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
+                               IsVisible="{Binding CanRemovePlaylist}"
+                               Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_RemovePlaylist}"
+                               Command="{Binding RemovePlaylistCommand}"/>
+        </StackLayout>
+    </controls:BottomFlyoutPage.Content>
+</controls:BottomFlyoutPage>

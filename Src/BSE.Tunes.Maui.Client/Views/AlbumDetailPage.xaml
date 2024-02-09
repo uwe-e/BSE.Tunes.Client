@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             x:Class="BSE.Tunes.Maui.Client.Views.AlbumDetailPage"
+             BackgroundColor="{DynamicResource BackgroundColor}"
+             x:Name="page">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="..." Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Album}"/>
+    </ContentPage.ToolbarItems>
+    
+    <ContentPage.Content>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ScrollView AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+                <CollectionView ItemsSource="{Binding Items}">
+                    <CollectionView.Header>
+                        <StackLayout Spacing="0">
+                            <StackLayout VerticalOptions="StartAndExpand" Orientation="Horizontal" Margin="3,0,3,0">
+                                <Image Aspect="AspectFill"
+                                       VerticalOptions="Start"
+                                       HeightRequest="{OnIdiom Default=150, Tablet=250}" 
+                                       WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition x:Name="actionRow" Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Label x:Name="infoTitle" Text="{Binding Album.Title}"
+                                           LineBreakMode="TailTruncation"
+                                           Grid.Row="0" FontSize="Medium" TextColor="{DynamicResource PrimaryLabelColor}"/>
+                                    <Label x:Name="infoSubTitle" Text="{Binding Album.Artist.Name}"
+                                           LineBreakMode="TailTruncation"
+                                           Grid.Row="1" TextColor="{DynamicResource SecondaryLabelColor}"/>
+                                    <Label x:Name="albumGenre" 
+                                           LineBreakMode="TailTruncation"
+                                           Grid.Row="2" TextColor="{DynamicResource SecondaryLabelColor}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Album.Year}"/>
+                                                <Span Text=" "/>
+                                                <Span Text="{Binding Album.Genre.Name}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+                            </StackLayout>
+                            <StackLayout VerticalOptions="StartAndExpand">
+                                <StackLayout Orientation="Horizontal">
+                                    <!-- player buttons -->
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <!--<StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand,
+                                                            Source={x:Reference page}}"
+                                                          CommandParameter="{Binding}"/>
+                                </StackLayout.GestureRecognizers>-->
+                                <Grid Margin="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="40"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding Number}"
+                                           Grid.Column="0"
+                                           TextColor="{DynamicResource SecondaryLabelColor}"
+                                           VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding Title}"
+                                           Grid.Column="1"
+                                           TextColor="{DynamicResource PrimaryLabelColor}"
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Button Grid.Column="2"
+                                            Style="{DynamicResource ContextMenuButtonStyle}"
+                                            Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                            CommandParameter="{Binding}"/>
+                                </Grid>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.Footer>
+                        <controls:HeaderedCollectionView Title="{x:Static strings:AppResources.AlbumsDetailPage_FurtherAlbums_Header_Text}"
+                                     IsBusy="{Binding IsQueryBusy}"
+                                     IsVisible="{Binding HasFurtherAlbums}"
+                                     HeaderButtonStyle="{DynamicResource SectionHeaderButtonStyle}"
+                                     ActivityIndicatorColor="{Binding PrimaryLabelColor}"
+                                     ItemsSource="{Binding Albums}"
+                                     SelectedItem="{Binding SelectedAlbum}"
+                                     SelectionChangedCommand="{Binding SelectAlbumCommand}"
+                                     SelectionChangedCommandParameter="{Binding SelectedAlbum}"
+                                     RemainingItemsThreshold="10"
+                                     RemainingItemsThresholdReachedCommand="{Binding LoadMoreAlbumsCommand}"
+                                     HeightRequest="{OnIdiom Default=280, Tablet=420}">
+                            <controls:HeaderedCollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <templates:ViewItemTemplate Padding="0,0,10,0"/>
+                                </DataTemplate>
+                            </controls:HeaderedCollectionView.ItemTemplate>
+                        </controls:HeaderedCollectionView>
+                    </CollectionView.Footer>
+                </CollectionView>
+            </ScrollView>
+            <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
+                         AbsoluteLayout.LayoutFlags="PositionProportional"
+                         AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{Binding PrimaryLabelColor}"/>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+    
+</ContentPage>
