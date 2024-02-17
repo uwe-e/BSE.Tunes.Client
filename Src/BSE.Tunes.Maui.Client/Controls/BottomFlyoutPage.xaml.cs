@@ -21,7 +21,7 @@ public partial class BottomFlyoutPage : ContentPage
     }
 
     public static readonly BindableProperty TransparentBackgroundColorProperty =
-        BindableProperty.Create(nameof(TransparentBackgroundColor), typeof(Color), typeof(BottomFlyoutPage), Color.FromHex("#d8000000"));
+        BindableProperty.Create(nameof(TransparentBackgroundColor), typeof(Color), typeof(BottomFlyoutPage), Color.FromArgb("#d8000000"));
 
     public Color TransparentBackgroundColor
     {
@@ -95,7 +95,6 @@ public partial class BottomFlyoutPage : ContentPage
         _flyout = base.GetTemplateChild("PART_Flyout") as ContentView;
         _fader = base.GetTemplateChild("PART_Fader") as BoxView;
         _dismissButton = base.GetTemplateChild("PART_DismissButton") as Button;
-
 
         base.OnApplyTemplate();
     }

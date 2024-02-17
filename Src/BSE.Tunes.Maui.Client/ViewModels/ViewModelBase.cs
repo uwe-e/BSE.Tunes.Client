@@ -1,6 +1,9 @@
-﻿namespace BSE.Tunes.Maui.Client.ViewModels
+﻿using Prism.AppModel;
+using Prism.Navigation;
+
+namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public abstract class ViewModelBase : BindableBase, INavigationAware, IPageLifecycleAware
+    public abstract class ViewModelBase : Prism.Mvvm.BindableBase, INavigationAware, IPageLifecycleAware
     {
         private readonly INavigationService _navigationService;
         private bool _isBusy;

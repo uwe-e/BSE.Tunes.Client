@@ -1,4 +1,6 @@
-﻿namespace BSE.Tunes.Maui.Client.Services
+﻿using Prism.Navigation;
+
+namespace BSE.Tunes.Maui.Client.Services
 {
     public interface IFlyoutNavigationService : INavigationService
     {

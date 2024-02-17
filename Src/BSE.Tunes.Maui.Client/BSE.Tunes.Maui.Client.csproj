@@ -67,7 +67,6 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.6" />
-    <PackageReference Include="Prism.DryIoc.Maui" Version="9.0.271-pre" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -167,6 +166,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Prism\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Prism\src\Maui\Prism.DryIoc.Maui\Prism.DryIoc.Maui.csproj" />
 	</ItemGroup>
 
 </Project>

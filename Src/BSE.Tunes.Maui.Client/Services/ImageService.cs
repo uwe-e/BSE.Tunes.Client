@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
+using Prism.Events;
 using SkiaSharp;
 
 namespace BSE.Tunes.Maui.Client.Services

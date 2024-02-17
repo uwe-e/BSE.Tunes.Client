@@ -3,6 +3,8 @@ using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using Microsoft.Extensions.Logging;
+using Prism;
+using Prism.Navigation;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -28,13 +30,13 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<SplashPage>();
                         container.RegisterForNavigation<ServiceEndpointWizzardPage>();
                         container.RegisterForNavigation<LoginWizzardPage>();
-                        //container.RegisterForNavigation<HomePage>();
+                        container.RegisterForNavigation<HomePage>();
                         container.RegisterForNavigation<SettingsPage>();
                         container.RegisterForNavigation<LoginSettingsPage>();
                         container.RegisterForNavigation<ServiceEndpointSettingsPage>();
                         container.RegisterForNavigation<CacheSettingsPage>();
                         container.RegisterForNavigation<AlbumDetailPage>();
-                        //container.RegisterForNavigation<PlaylistActionToolbarPage, PlaylistActionToolbarPageViewModel>();
+                        container.RegisterForNavigation<PlaylistActionToolbarPage, PlaylistActionToolbarPageViewModel>();
                         container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
                         container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
                         container.RegisterSingleton<IRequestService, RequestService>();
@@ -45,7 +47,8 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<IAppInfoService, AppInfoService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
-                        container.RegisterSingleton<IFlyoutNavigationService, FlyoutNavigationService>();
+                        //Must be a scoped registration
+                        container.RegisterScoped<IFlyoutNavigationService, FlyoutNavigationService>();
 
 
                     })
@@ -55,7 +58,7 @@ namespace BSE.Tunes.Maui.Client
                     //    regionManager.RequestNavigate("AlbumsCarousel", nameof(AlbumsCarouselView));
                     //    //regionManager.RegisterViewWithRegion("AlbumsCarouselView", nameof(AlbumsCarouselView));
                     //})
-                    .OnAppStart(navigationService => navigationService.CreateBuilder()
+                    .CreateWindow(navigationService => navigationService.CreateBuilder()
                     .AddSegment<SplashPageViewModel>()
                     .NavigateAsync(HandleNavigationError));
                 })
@@ -74,8 +77,8 @@ namespace BSE.Tunes.Maui.Client
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            builder.Services.AddTransient<PlaylistActionToolbarPage>();
-            builder.Services.AddTransient<PlaylistActionToolbarPageViewModel>();
+            //builder.Services.AddTransient<PlaylistActionToolbarPage>();
+            //builder.Services.AddTransient<PlaylistActionToolbarPageViewModel>();
             return builder.Build();
         }
 
