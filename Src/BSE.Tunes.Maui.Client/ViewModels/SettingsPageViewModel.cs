@@ -1,6 +1,10 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using Prism;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Navigation;
 using System.Windows.Input;
 using IResourceService = BSE.Tunes.Maui.Client.Services.IResourceService;
 

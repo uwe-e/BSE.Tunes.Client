@@ -1,18 +1,17 @@
-﻿using BSE.Tunes.Maui.Client.Controls;
-using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
+﻿using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
 using Microsoft.Maui.Controls.Platform;
 using System.ComponentModel;
 using UIKit;
 using TabbedPage = Microsoft.Maui.Controls.TabbedPage;
 
-// TODO Xamarin.Forms.ExportRendererAttribute is not longer supported. For more details see https://github.com/dotnet/maui/wiki/Using-Custom-Renderers-in-.NET-MAUI
-namespace BSE.Tunes.Maui.Client.Platforms.iOS.Renderers
+namespace BSE.Tunes.Maui.Client.Platforms.iOS
 {
-    public class ExtendedTabbedRenderer : Microsoft.Maui.Controls.Handlers.Compatibility.TabbedRenderer
+    public class TabbedContainerRenderer : Microsoft.Maui.Controls.Handlers.Compatibility.TabbedRenderer//, IPlatformViewHandler
     {
-        private UIView _audioPlayerBar;
+        private UIView _bottomView;
+        private IMauiContext _mauiContext;
 
-        ExtendedTabbedPage Page => Element as ExtendedTabbedPage;
+        BSE.Tunes.Maui.Client.Controls.TabbedPageContainer Page => Element as BSE.Tunes.Maui.Client.Controls.TabbedPageContainer;
 
         public override void ViewDidLoad()
         {
@@ -38,11 +37,11 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS.Renderers
 
             var frame = View.Frame;
             var tabBarFrame = TabBar.Frame;
-            if (_audioPlayerBar != null)
+            if (_bottomView != null)
             {
-                _audioPlayerBar.Frame = new System.Drawing.RectangleF((float)Element.X, (float)(frame.Top + frame.Height - tabBarFrame.Height - 60), (float)Element.Width, (float)60);
+                _bottomView.Frame = new System.Drawing.RectangleF((float)Element.X, (float)(frame.Top + frame.Height - tabBarFrame.Height - 60), (float)Element.Width, (float)60);
                 
-                var audioPlayerFrame = _audioPlayerBar.Frame;
+                var audioPlayerFrame = _bottomView.Frame;
                 
                 Page.ContainerArea = new Rect(0, 0, frame.Width, frame.Height - audioPlayerFrame.Height - tabBarFrame.Height);
             }
@@ -54,7 +53,7 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS.Renderers
             // The AudioPlayer view does not receive a RemoteControlReceived event.
             // Because of this we execute that event from here.
             //Console.WriteLine($"{nameof(RemoteControlReceived)} {theEvent.Subtype} ");
-            _audioPlayerBar?.RemoteControlReceived(theEvent);
+            _bottomView?.RemoteControlReceived(theEvent);
         }
         protected override void Dispose(bool disposing)
         {
@@ -78,7 +77,7 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS.Renderers
             }
             try
             {
-                Tabbed.PropertyChanged += OnPropertyChanged;
+                //Tabbed.PropertyChanged += OnPropertyChanged;
                 SetupUserInterface();
                 UpdatePlayerBackgroundColor();
             }
@@ -96,23 +95,37 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS.Renderers
             }
         }
 
+        
+
         private void SetupUserInterface()
         {
+
+
             IVisualElementRenderer audioPlayerRenderer = Microsoft.Maui.Controls.Compatibility.Platform.iOS.Platform.GetRenderer(Page.BottomView);
             if (audioPlayerRenderer == null)
             {
                 audioPlayerRenderer = Microsoft.Maui.Controls.Compatibility.Platform.iOS.Platform.CreateRenderer(Page.BottomView);
                 Microsoft.Maui.Controls.Compatibility.Platform.iOS.Platform.SetRenderer(Page.BottomView, audioPlayerRenderer);
             }
-            _audioPlayerBar = audioPlayerRenderer.NativeView;
-            _audioPlayerBar.Hidden = false;
+            _bottomView = audioPlayerRenderer.NativeView;
+            _bottomView.Hidden = false;
 
-            View.AddSubview(_audioPlayerBar);
+            View.AddSubview(_bottomView);
         }
         
         private void UpdatePlayerBackgroundColor()
         {
-            _audioPlayerBar.BackgroundColor = ((TabbedPage)Element).BarBackgroundColor.ToUIColor();
+            //_bottomView.BackgroundColor = ((TabbedPage)Element).BarBackgroundColor.ToUIColor();
         }
+
+        //void IElementHandler.SetMauiContext(IMauiContext mauiContext)
+        //{
+        //    _mauiContext = mauiContext;
+        //}
+
+        //void IElementHandler.SetVirtualView(Microsoft.Maui.IElement view)
+        //{
+        //    SetElement((VisualElement)view);
+        //}
     }
 }

@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.Controls
 {
-    public class AudioPlayer : View, IPlayerController, IPlayerElement
+    public partial class AudioPlayer : ContentView, IPlayerController, IPlayerElement
     {
         public static readonly BindableProperty SelectTrackCommandProperty
             = BindableProperty.Create(
@@ -257,6 +257,11 @@ namespace BSE.Tunes.Maui.Client.Controls
         public void SendSelectTrackClicked()
         {
             SelectTrackCommand?.Execute(SelectTrackCommandParameter);
+        }
+
+        public AudioPlayer()
+        {
+            InitializeComponent();
         }
 
         private static void OnSelectTrackCommandChanged(BindableObject bindable, object oldValue, object newValue)

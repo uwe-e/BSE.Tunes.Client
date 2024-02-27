@@ -28,11 +28,15 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
-  <key>CFBundleLocalizations</key>
-  <array>
-    <string>de</string>
-  </array>
-  <key>CFBundleDevelopmentRegion</key>
-  <string>en</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>de</string>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleDisplayName</key>
+	<string>BSEtunes</string>
 </dict>
 </plist>

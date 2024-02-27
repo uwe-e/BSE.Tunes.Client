@@ -1,6 +1,8 @@
 ﻿using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using Prism.Commands;
+using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -52,9 +54,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 source.Data = item.Data;
             }
 
-            var navigationParams = new NavigationParameters{
-                        { "source", source }
-            };
+            var navigationParams = new NavigationParameters();
+            navigationParams.Add("source", source);
+            navigationParams.Add(KnownNavigationParameters.UseModalNavigation, true);
+            navigationParams.Add(KnownNavigationParameters.Animated, false);
 
             await _flyoutNavigationService.ShowFlyoutAsync(nameof(PlaylistActionToolbarPage), navigationParams);
         }

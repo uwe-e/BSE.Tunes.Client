@@ -2,6 +2,9 @@
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

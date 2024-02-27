@@ -2,8 +2,10 @@
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
-using Prism.Controls;
+using Prism.Commands;
+using Prism.Events;
 using Prism.Navigation;
+using Prism.Navigation.Regions;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels

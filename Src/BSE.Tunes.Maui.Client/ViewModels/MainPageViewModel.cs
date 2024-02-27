@@ -1,4 +1,6 @@
-﻿namespace BSE.Tunes.Maui.Client.ViewModels
+﻿using Prism.Navigation;
+
+namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {

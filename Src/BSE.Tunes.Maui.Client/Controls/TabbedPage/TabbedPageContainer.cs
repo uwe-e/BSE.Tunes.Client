@@ -1,11 +1,11 @@
 ﻿namespace BSE.Tunes.Maui.Client.Controls
 {
-    public class ExtendedTabbedPage : TabbedPageContainer
+    public partial class TabbedPageContainer : Microsoft.Maui.Controls.TabbedPage
     {
         public static readonly BindableProperty BottomViewProperty
             = BindableProperty.Create(nameof(BottomView),
                                       typeof(ContentView),
-                                      typeof(ExtendedTabbedPage),
+                                      typeof(TabbedPageContainer),
                                       null,
                                       propertyChanged: OnBottomViewChanged);
 
