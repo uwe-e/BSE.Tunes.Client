@@ -100,6 +100,9 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
+	  <MauiXaml Update="Controls\AudioPlayer.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\BottomFlyoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -165,6 +168,7 @@
 	  </MauiXaml>
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="Handlers\" />
 	  <Folder Include="Prism\" />
 	</ItemGroup>
 	<ItemGroup>

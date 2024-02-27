@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<controls:ExtendedTabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<controls:TabbedPageContainer xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
                              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
@@ -14,7 +14,7 @@
                              UnselectedTabColor="{DynamicResource SecondaryLabelColor}"
                              x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
 
-    <controls:ExtendedTabbedPage.Children>
+    <controls:TabbedPageContainer.Children>
          
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarBackgroundColor="{DynamicResource BackgroundColor}">
             <x:Arguments>
@@ -31,6 +31,10 @@
                 <views:SettingsPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
-    </controls:ExtendedTabbedPage.Children>
+    </controls:TabbedPageContainer.Children>
+
+    <controls:TabbedPageContainer.BottomView>
+        <controls:AudioPlayer />
+    </controls:TabbedPageContainer.BottomView>
     
-</controls:ExtendedTabbedPage>
+</controls:TabbedPageContainer>

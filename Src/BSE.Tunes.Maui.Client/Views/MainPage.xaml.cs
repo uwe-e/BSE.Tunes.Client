@@ -2,7 +2,7 @@
 
 namespace BSE.Tunes.Maui.Client.Views
 {
-    public partial class MainPage : ExtendedTabbedPage
+    public partial class MainPage : TabbedPageContainer
     {
         public MainPage()
         {
