@@ -1,17 +1,17 @@
-﻿using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
+﻿#nullable disable
+
+using BSE.Tunes.Maui.Client.Controls;
+using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
 using Microsoft.Maui.Controls.Platform;
-using System.ComponentModel;
 using UIKit;
-using TabbedPage = Microsoft.Maui.Controls.TabbedPage;
 
 namespace BSE.Tunes.Maui.Client.Platforms.iOS
 {
-    public class TabbedContainerRenderer : Microsoft.Maui.Controls.Handlers.Compatibility.TabbedRenderer//, IPlatformViewHandler
+    public class TabbedContainerRenderer : Microsoft.Maui.Controls.Handlers.Compatibility.TabbedRenderer
     {
         private UIView _bottomView;
-        private IMauiContext _mauiContext;
 
-        BSE.Tunes.Maui.Client.Controls.TabbedPageContainer Page => Element as BSE.Tunes.Maui.Client.Controls.TabbedPageContainer;
+        TabbedPageContainer Page => Element as TabbedPageContainer;
 
         public override void ViewDidLoad()
         {
@@ -25,10 +25,14 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS
             base.ViewDidLayoutSubviews();
 
             if (Element == null)
+            {
                 return;
+            }
 
             if (Element.Parent is BaseShellItem)
+            {
                 Element.Layout(View.Bounds.ToRectangle());
+            }
 
             if (!Element.Bounds.IsEmpty)
             {
@@ -59,10 +63,10 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS
         {
             if (disposing)
             {
-                if (Tabbed != null)
-                {
-                    Tabbed.PropertyChanged -= OnPropertyChanged;
-                }
+                //if (Tabbed != null)
+                //{
+                //    Tabbed.PropertyChanged -= OnPropertyChanged;
+                //}
             }
             base.Dispose(disposing);
         }
@@ -77,9 +81,7 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS
             }
             try
             {
-                //Tabbed.PropertyChanged += OnPropertyChanged;
                 SetupUserInterface();
-                UpdatePlayerBackgroundColor();
             }
             catch (Exception exception)
             {
@@ -87,20 +89,8 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS
             }
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == TabbedPage.BarBackgroundColorProperty.PropertyName)
-            {
-                UpdatePlayerBackgroundColor();
-            }
-        }
-
-        
-
         private void SetupUserInterface()
         {
-
-
             IVisualElementRenderer audioPlayerRenderer = Microsoft.Maui.Controls.Compatibility.Platform.iOS.Platform.GetRenderer(Page.BottomView);
             if (audioPlayerRenderer == null)
             {
@@ -113,19 +103,6 @@ namespace BSE.Tunes.Maui.Client.Platforms.iOS
             View.AddSubview(_bottomView);
         }
         
-        private void UpdatePlayerBackgroundColor()
-        {
-            //_bottomView.BackgroundColor = ((TabbedPage)Element).BarBackgroundColor.ToUIColor();
-        }
 
-        //void IElementHandler.SetMauiContext(IMauiContext mauiContext)
-        //{
-        //    _mauiContext = mauiContext;
-        //}
-
-        //void IElementHandler.SetVirtualView(Microsoft.Maui.IElement view)
-        //{
-        //    SetElement((VisualElement)view);
-        //}
     }
 }
