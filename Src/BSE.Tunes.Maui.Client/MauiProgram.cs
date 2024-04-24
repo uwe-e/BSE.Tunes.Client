@@ -1,11 +1,7 @@
-﻿using BSE.Tunes.Maui.Client.Controls;
-using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls.Compatibility.Hosting;
-using Prism;
-using Prism.Navigation;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -72,7 +68,7 @@ namespace BSE.Tunes.Maui.Client
                 {
 #if IOS
                     //handlers.AddHandler(typeof(ExtendedTabbedPage), typeof(BSE.Tunes.Maui.Client.Platforms.iOS.Renderers.ExtendedTabbedRenderer));
-                    handlers.AddHandler(typeof(TabbedPageContainer), typeof(BSE.Tunes.Maui.Client.Platforms.iOS.TabbedContainerRenderer));
+                    //handlers.AddHandler(typeof(TabbedPageContainer), typeof(BSE.Tunes.Maui.Client.Platforms.iOS.TabbedContainerRenderer));
 #endif
                 });
 
@@ -81,7 +77,7 @@ namespace BSE.Tunes.Maui.Client
 #endif
             //builder.Services.AddTransient<PlaylistActionToolbarPage>();
             //builder.Services.AddTransient<PlaylistActionToolbarPageViewModel>();
-            builder.UseMauiCompatibility();
+           // builder.UseMauiCompatibility();
 
             return builder.Build();
         }

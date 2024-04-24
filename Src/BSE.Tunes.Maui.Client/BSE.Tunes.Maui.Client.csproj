@@ -63,10 +63,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+	  <AndroidResource Remove="Handlers\**" />
+	  <Compile Remove="Handlers\**" />
+	  <EmbeddedResource Remove="Handlers\**" />
+	  <MauiCss Remove="Handlers\**" />
+	  <MauiXaml Remove="Handlers\**" />
+	  <None Remove="Handlers\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.6" />
+		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.21" />
+		<PackageReference Include="Prism.DryIoc.Maui" Version="9.0.401-pre" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -167,12 +176,5 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Handlers\" />
-	  <Folder Include="Prism\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Prism\src\Maui\Prism.DryIoc.Maui\Prism.DryIoc.Maui.csproj" />
-	</ItemGroup>
-
+	
 </Project>
