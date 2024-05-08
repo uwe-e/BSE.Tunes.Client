@@ -1,8 +1,8 @@
-﻿using BSE.Tunes.Maui.Client.Controls;
+﻿using BSE.Maui.Controls;
 
 namespace BSE.Tunes.Maui.Client.Views
 {
-    public partial class MainPage : TabbedPageContainer
+    public partial class MainPage : TabbedContainerPage
     {
         public MainPage()
         {

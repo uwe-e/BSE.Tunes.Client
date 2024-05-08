@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
+using BSE.Maui.Controls;
 using Microsoft.Extensions.Logging;
 
 namespace BSE.Tunes.Maui.Client
@@ -13,6 +14,7 @@ namespace BSE.Tunes.Maui.Client
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseBSEControls()
                 .UsePrism(prism =>
                 {
                     //prism.OnAppStart(async navigationService =>
