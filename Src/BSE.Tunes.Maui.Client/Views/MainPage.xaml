@@ -21,9 +21,19 @@
                <views:HomePage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.AlbumsPage_Title}" IconImageSource="albums.png">
+            <x:Arguments>
+                <views:PlaylistsPage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
             <x:Arguments>
                 <views:PlaylistsPage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SearchPage_Title}" IconImageSource="search.png">
+            <x:Arguments>
+                <views:SettingsPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png">
