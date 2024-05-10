@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BSE.Tunes.Maui.Client.Controls.AudioPlayer" Background="Orange">
-    <VerticalStackLayout>
-        <Label 
+             x:Class="BSE.Tunes.Maui.Client.Controls.AudioPlayer"
+             BackgroundColor="{DynamicResource BackgroundColor}">
+    <Border Margin="10,0,10,5" BackgroundColor="{DynamicResource SystemGray6}" >
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="{OnPlatform 15, iOS=15, Android=10}" />
+        </Border.StrokeShape>
+        <VerticalStackLayout>
+            <Label 
             Text="Welcome to .NET MAUI!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Border>
 </ContentView>

@@ -8,14 +8,15 @@
                          xmlns:prism="http://prismlibrary.com"
                          xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
                          xmlns:bseandroid="clr-namespace:BSE.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=BSE.Maui.Controls"
-                         ios:TabbedPage.TranslucencyMode="Opaque"
+                         ios:TabbedPage.TranslucencyMode="Translucent"
                          bseandroid:TabbedContainerPage.IsSwipePagingEnabled="False"
+                         BarBackgroundColor="{DynamicResource BackgroundColor}"
                          SelectedTabColor="{DynamicResource PrimaryLabelColor}"
                          UnselectedTabColor="{DynamicResource SecondaryLabelColor}"
+                         NavigationPage.HasNavigationBar="False"
                          x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
 
     <bse:TabbedContainerPage.Children>
-         
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarBackgroundColor="{DynamicResource BackgroundColor}">
             <x:Arguments>
                <views:HomePage/>
@@ -44,7 +45,7 @@
     </bse:TabbedContainerPage.Children>
 
     <bse:TabbedContainerPage.BottomView>
-        <controls:AudioPlayer HeightRequest="{OnPlatform 250, iOS=90, Android=200}"/>
+        <controls:AudioPlayer HeightRequest="{OnPlatform 250, iOS=60, Android=200}"/>
     </bse:TabbedContainerPage.BottomView>
     
 </bse:TabbedContainerPage>
