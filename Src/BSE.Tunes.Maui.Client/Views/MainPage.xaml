@@ -10,14 +10,14 @@
                          xmlns:bseandroid="clr-namespace:BSE.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=BSE.Maui.Controls"
                          ios:TabbedPage.TranslucencyMode="Translucent"
                          bseandroid:TabbedContainerPage.IsSwipePagingEnabled="False"
-                         BarBackgroundColor="{DynamicResource BackgroundColor}"
-                         SelectedTabColor="{DynamicResource PrimaryLabelColor}"
+                         BarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                         SelectedTabColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                          UnselectedTabColor="{DynamicResource SecondaryLabelColor}"
                          NavigationPage.HasNavigationBar="False"
                          x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
-
+    
     <bse:TabbedContainerPage.Children>
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarBackgroundColor="{DynamicResource BackgroundColor}">
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png">
             <x:Arguments>
                <views:HomePage/>
             </x:Arguments>

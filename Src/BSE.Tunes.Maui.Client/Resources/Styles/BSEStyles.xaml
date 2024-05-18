@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+                    xmlns:bse="clr-namespace:BSE.Maui.Controls;assembly=BSE.Maui.Controls"
+                    xmlns:prism="http://prismlibrary.com"
+                    xmlns:bsetmp="using:BSE.Maui.Controls"
                     x:Class="BSE.Tunes.Maui.Client.Resources.Styles.BSEStyles">
 
     <Style x:Key="SubmitActionButtonStyle" TargetType="Button">
@@ -20,10 +24,42 @@
         </Setter>
     </Style>
 
-    <Style x:Key="SectionHeaderButtonStyle" TargetType="controls:SectionHeaderButton">
-        <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
+    <Style TargetType="controls:SectionHeaderButton">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
         <Setter Property="TextTransform" Value="None"/>
-        <Setter Property="TextColor" Value="{DynamicResource PrimaryLabelColor}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+    </Style>
+
+    <Style TargetType="prism:PrismNavigationPage">
+        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+    </Style>
+
+    <Style TargetType="controls:AudioPlayer">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+    </Style>
+
+    <Style x:Key="ContextMenuButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+        <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+    </Style>
+
+    <Style x:Key="CollectionViewLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

@@ -1,101 +1,17 @@
 ﻿<?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.App">
     <Application.Resources>
-        <!--<ResourceDictionary>
+        <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/LightTheme.xaml" />
+                <!--<ResourceDictionary Source="Resources/Styles/LightTheme.xaml" />-->
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <!--<ResourceDictionary Source="Resources/Styles/Styles.xaml" />-->
+                <!--<ResourceDictionary Source="Resources/Styles/TestStyles.xaml" />-->
                 <ResourceDictionary Source="Resources/Styles/BSEStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>-->
-
-        <ResourceDictionary Source="Resources/Styles/LightTheme.xaml" />
-
-        <Style x:Key="SectionHeaderLabelStyle" TargetType="Label">
-            <Setter Property="FontSize" Value="Subtitle"/>
-            <Setter Property="VerticalOptions" Value="Center"/>
-            <Setter Property="HorizontalOptions" Value="Start"/>
-        </Style>
-
-        <Style x:Key="MoreItemsButtonStyle" TargetType="Button">
-            <Setter Property="TextColor" Value="{DynamicResource SystemRed}"/>
-            <Setter Property="VerticalOptions" Value="Center"/>
-            <Setter Property="HorizontalOptions" Value="End"/>
-        </Style>
-
-        <Style x:Key="SeparatorItem" TargetType="BoxView">
-            <Setter Property="BackgroundColor" Value="{DynamicResource SeparatorColor}" />
-            <Setter Property="HeightRequest" Value=".5" />
-        </Style>
-
-        <Style x:Key="SectionHeaderButtonStyle" TargetType="controls:SectionHeaderButton">
-            <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
-            <Setter Property="TextTransform" Value="None"/>
-            <Setter Property="TextColor" Value="{DynamicResource PrimaryLabelColor}"/>
-        </Style>
-
-        <Style x:Key="DestroyButtonStyle" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{DynamicResource SystemGray6}"/>
-            <Setter Property="TextColor" Value="{DynamicResource SystemRed}"/>
-        </Style>
-
-        <Style x:Key="ContextMenuButtonStyle" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{DynamicResource BackgroundColor}"/>
-            <Setter Property="TextColor" Value="{DynamicResource PrimaryLabelColor}"/>
-            <Setter Property="Text" Value="···"/>
-            <Setter Property="FontSize" Value="18"/>
-        </Style>
-
-        <!--<Style TargetType="controls:FlyoutButton">
-            <Setter Property="TextColor" Value="{DynamicResource PrimaryLabelColor}"/>
-            <Setter Property="BackgroundColor" Value="Transparent"/>
-        </Style>-->
-
-        <!--<Style TargetType="controls:ListViewItem">
-            <Setter Property="TitleBackgroundColor" Value="{DynamicResource PrimaryLabelColor}"/>
-            <Setter Property="SubTitleBackgroundColor" Value="{DynamicResource SecondaryLabelColor}"/>
-        </Style>-->
-
-        <Style TargetType="NavigationPage">
-            <Setter Property="BarBackgroundColor" Value="{DynamicResource SystemGray6}"/>
-            <Setter Property="BarTextColor" Value="{DynamicResource PrimaryLabelColor}"/>
-        </Style>
-
-        <Style TargetType="Button">
-            <Setter Property="TextTransform" Value="None"/>
-        </Style>
-
-        <Style x:Key="SubmitActionButtonStyle" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{DynamicResource SystemPink}"/>
-            <Setter Property="TextColor" Value="{DynamicResource SystemWhite}"/>
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Disabled">
-                            <VisualState.Setters>
-                                <Setter Property="TextColor" Value="{DynamicResource SystemWhite}" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
-
-        <Style x:Key="DetailActionButtonStyle" TargetType="Button">
-            <Setter Property="TextColor" Value="{DynamicResource SystemPink}"/>
-            <Setter Property="BackgroundColor" Value="Transparent"/>
-        </Style>
-
-        <Style TargetType="Entry">
-            <Setter Property="TextColor" Value="{DynamicResource PrimaryLabelColor}"/>
-            <Setter Property="BackgroundColor" Value="{DynamicResource SystemGray6}"/>
-            <Setter Property="PlaceholderColor" Value="{DynamicResource SecondaryLabelColor}"/>
-        </Style>
-
+        </ResourceDictionary>
 
     </Application.Resources>
 </Application>

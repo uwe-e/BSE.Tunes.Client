@@ -5,7 +5,6 @@
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumDetailPage"
-             BackgroundColor="{DynamicResource BackgroundColor}"
              x:Name="page">
 
     <ContentPage.ToolbarItems>
@@ -68,18 +67,19 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="25"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="50"/>
                                     </Grid.ColumnDefinitions>
                                     <Label Text="{Binding Number}"
                                            Grid.Column="0"
-                                           TextColor="{DynamicResource SecondaryLabelColor}"
+                                           Style="{DynamicResource CollectionViewLabelStyle}"
                                            VerticalTextAlignment="Center"/>
                                     <Label Text="{Binding Title}"
                                            Grid.Column="1"
-                                           TextColor="{DynamicResource PrimaryLabelColor}"
+                                           Style="{DynamicResource CollectionViewLabelStyle}"
                                            VerticalTextAlignment="Center"
                                            LineBreakMode="TailTruncation"/>
                                     <Button Grid.Column="2"
+                                            Text="..."
                                             Style="{DynamicResource ContextMenuButtonStyle}"
                                             Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
                                             CommandParameter="{Binding}"/>
@@ -88,6 +88,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.Footer>
+                        <Grid IsVisible="{Binding HasFurtherAlbums}">
                         <controls:HeaderedCollectionView Title="{x:Static strings:AppResources.AlbumsDetailPage_FurtherAlbums_Header_Text}"
                                      IsBusy="{Binding IsQueryBusy}"
                                      IsVisible="{Binding HasFurtherAlbums}"
@@ -106,6 +107,7 @@
                                 </DataTemplate>
                             </controls:HeaderedCollectionView.ItemTemplate>
                         </controls:HeaderedCollectionView>
+                        </Grid>
                     </CollectionView.Footer>
                 </CollectionView>
             </ScrollView>

@@ -25,6 +25,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         protected ViewModelBase(INavigationService navigationService)
         {
             _navigationService = navigationService;
+            _isBusy = true;
         }
 
         public virtual void OnAppearing()

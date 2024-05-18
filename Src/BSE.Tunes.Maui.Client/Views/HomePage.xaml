@@ -12,8 +12,8 @@
             <StackLayout >
 
                 <ContentView prism:RegionManager.RegionName="AlbumsCarousel" HeightRequest="{OnIdiom Default=260, Tablet=420}"/>
-                <ContentView prism:RegionManager.RegionName="FeaturedAlbums" HeightRequest="{OnIdiom Default=260, Tablet=400}"/>
-                
+                <ContentView prism:RegionManager.RegionName="FeaturedAlbums" HeightRequest="{OnIdiom Default=220, Tablet=400}"/>
+
                 <!--<local:RandomPlayerButtonView HeightRequest="80"/>-->
 
                 <!--<views:FeaturedAlbumsView HeightRequest="{OnIdiom Default=260, Tablet=400}"/>-->
