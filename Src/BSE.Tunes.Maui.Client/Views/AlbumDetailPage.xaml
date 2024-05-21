@@ -22,7 +22,7 @@
                                        VerticalOptions="Start"
                                        HeightRequest="{OnIdiom Default=150, Tablet=250}" 
                                        WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
-                                <Grid>
+                                <Grid Margin="5">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
@@ -100,7 +100,7 @@
                                      SelectionChangedCommandParameter="{Binding SelectedAlbum}"
                                      RemainingItemsThreshold="10"
                                      RemainingItemsThresholdReachedCommand="{Binding LoadMoreAlbumsCommand}"
-                                     HeightRequest="{OnIdiom Default=280, Tablet=420}">
+                                     HeightRequest="{OnIdiom Default=220, Tablet=400}">
                             <controls:HeaderedCollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <templates:ViewItemTemplate Padding="0,0,10,0"/>

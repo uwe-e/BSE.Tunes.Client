@@ -29,7 +29,7 @@
     <Grid>
         <StackLayout Style="{StaticResource ViewItemTemplateStyle}" Margin="3,0,3,0">
             <!-- the previously used frame didnt support tab gestures -->
-            <Border Padding="0">
+            <Border Padding="0" StrokeThickness="0">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="3" />
                 </Border.StrokeShape>
@@ -39,13 +39,13 @@
                        WidthRequest="160"/>
             </Border>
             <Label Text="{Binding Title}"
-                   Margin="0,-5,0,0"
-                   TextColor="{DynamicResource PrimaryLabelColor}"
+                   Margin="0"
+                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                    LineBreakMode="TailTruncation"/>
             <Label Text="{Binding SubTitle}"
-                   Margin="0,-5,0,0"
+                   Margin="0"
                    FontSize="13"
-                   TextColor="{DynamicResource SecondaryLabelColor}"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}"
                    LineBreakMode="TailTruncation"/>
         </StackLayout>
     </Grid>
