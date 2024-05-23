@@ -10,12 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Src\BSE.Tunes.Maui.Client\.editorconfig = Src\BSE.Tunes.Maui.Client\.editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prism.DryIoc.Maui", "..\Prism\src\Maui\Prism.DryIoc.Maui\Prism.DryIoc.Maui.csproj", "{8D5410AD-EDA9-4FE4-B098-7E2924A76D05}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prism.Maui", "..\Prism\src\Maui\Prism.Maui\Prism.Maui.csproj", "{973211A6-9BEC-46C0-AECF-EE8F7A5FF774}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prism.Maui.Rx", "..\Prism\src\Maui\Prism.Maui.Rx\Prism.Maui.Rx.csproj", "{83DBF2E1-87CD-4F7E-837D-CB4A93FA210B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BSE.Maui.Controls", "..\BSE.Maui\src\BSE.Maui.Controls\BSE.Maui.Controls.csproj", "{EA81B8AB-A099-4EC8-A2E3-C29670E65E64}"
 EndProject
 Global
