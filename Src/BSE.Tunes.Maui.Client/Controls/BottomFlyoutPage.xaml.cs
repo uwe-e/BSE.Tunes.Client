@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.Controls;
@@ -5,6 +7,7 @@ namespace BSE.Tunes.Maui.Client.Controls;
 public partial class BottomFlyoutPage : ContentPage
 {
     private ContentView? _flyout;
+    private Grid? _grid;
     private BoxView? _fader;
     private TapGestureRecognizer? _faderTabGesture;
     private Button? _dismissButton;
@@ -68,7 +71,7 @@ public partial class BottomFlyoutPage : ContentPage
             Grid.SetRow(_flyout, 0);
         }
 
-        await _flyout.TranslateTo(0, _pageHeight - _flyoutHeight, 300, Easing.SinInOut);
+        await _flyout.TranslateTo(0, _pageHeight - _flyoutHeight, 500, Easing.SinIn);
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -77,6 +80,7 @@ public partial class BottomFlyoutPage : ContentPage
 
         if (_flyout != null)
         {
+            // Move the flyout to the invisible area at bottom
             _flyout.TranslationY = _pageHeight;
         }
 
@@ -87,11 +91,12 @@ public partial class BottomFlyoutPage : ContentPage
 
     public async Task DisappearingAnimation()
     {
-        _ = await _flyout?.TranslateTo(0, _pageHeight, 300, Easing.SinInOut);
+        _ = await _flyout?.TranslateTo(0, _pageHeight, 500, Easing.SinInOut);
     }
 
     protected override void OnApplyTemplate()
     {
+        _grid = base.GetTemplateChild("PART_GridContainer") as Grid;
         _flyout = base.GetTemplateChild("PART_Flyout") as ContentView;
         _fader = base.GetTemplateChild("PART_Fader") as BoxView;
         _dismissButton = base.GetTemplateChild("PART_DismissButton") as Button;
@@ -101,6 +106,10 @@ public partial class BottomFlyoutPage : ContentPage
 
     protected override void OnAppearing()
     {
+        /*
+         * without this, the lower part of the flyout is outside the visible area in ios
+         */
+        _grid.IgnoreSafeArea = true;
         _faderTabGesture = new TapGestureRecognizer();
         _faderTabGesture.Tapped += OnDismissModal;
         _fader.GestureRecognizers.Add(_faderTabGesture);

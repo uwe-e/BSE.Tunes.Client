@@ -11,7 +11,11 @@
     <Color x:Key="SecondaryLabelColor">#FF8a8a8e</Color>
     <Color x:Key="PrimaryDarkLabelColor">#FFFFFFFF</Color>
     <Color x:Key="SecondaryDarkLabelColor">#FF98989f</Color>
-    
+
+    <Color x:Key="SeparatorColor">#FF3C3C43</Color>
+    <Color x:Key="SeparatorDarkColor">#FF545458</Color>
+
+
     <!-- End Colors for BSE -->
 
     <Color x:Key="Primary">#512BD4</Color>

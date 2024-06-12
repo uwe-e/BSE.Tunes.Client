@@ -52,6 +52,8 @@
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
     <MauiImage Update="Resources\Images\albums.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\add_circle.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
@@ -86,6 +88,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\add_circle.svg" />
+	  <None Remove="Resources\Images\add_circle_outline.svg" />
 	  <None Remove="Resources\Images\albums.svg" />
 	  <None Remove="Resources\Images\home.svg" />
 	  <None Remove="Resources\Images\library.svg" />
@@ -122,9 +126,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\BottomFlyoutPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Controls\FlyoutButton.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\HeaderedCollectionView.xaml">
