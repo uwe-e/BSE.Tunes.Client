@@ -10,7 +10,7 @@
         <StackLayout >
 
             <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}"
-                                              HorizontalOptions="Start"/>
+                                          HorizontalOptions="Start"/>
 
             <CollectionView x:Name="featuredAlbumsView"
                                 ItemsSource="{Binding Items}"

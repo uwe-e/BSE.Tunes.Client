@@ -31,13 +31,13 @@
                                     </Grid.RowDefinitions>
                                     <Label x:Name="infoTitle" Text="{Binding Album.Title}"
                                            LineBreakMode="TailTruncation"
-                                           Grid.Row="0" FontSize="Medium" TextColor="{DynamicResource PrimaryLabelColor}"/>
+                                           Grid.Row="0" FontSize="Medium" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                     <Label x:Name="infoSubTitle" Text="{Binding Album.Artist.Name}"
                                            LineBreakMode="TailTruncation"
-                                           Grid.Row="1" TextColor="{DynamicResource SecondaryLabelColor}"/>
+                                           Grid.Row="1" TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray300}}"/>
                                     <Label x:Name="albumGenre" 
                                            LineBreakMode="TailTruncation"
-                                           Grid.Row="2" TextColor="{DynamicResource SecondaryLabelColor}">
+                                           Grid.Row="2" TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray300}}">
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="{Binding Album.Year}"/>

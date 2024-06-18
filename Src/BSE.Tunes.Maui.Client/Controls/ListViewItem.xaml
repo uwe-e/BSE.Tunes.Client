@@ -7,19 +7,20 @@
         <ControlTemplate>
             <StackLayout Orientation="Horizontal">
                 <Image Aspect="AspectFill"
-                   HeightRequest="50"
-                   WidthRequest="50"
-                   Source="{TemplateBinding ImageSource}"/>
+                       HeightRequest="50"
+                       WidthRequest="50"
+                       Margin="0,0,10,0"
+                       Source="{TemplateBinding ImageSource}"/>
 
                 <StackLayout>
                     <Label Text="{TemplateBinding Title}"
-                       TextColor="{TemplateBinding TitleBackgroundColor}"
-                       LineBreakMode="TailTruncation"/>
-                    <Label Margin="0,-5,0,0"
-                       FontSize="13"
-                       Text="{TemplateBinding SubTitle}"
-                       TextColor="{TemplateBinding SubTitleBackgroundColor}"
-                       LineBreakMode="TailTruncation"/>
+                           TextColor="{TemplateBinding TitleBackgroundColor}"
+                           LineBreakMode="TailTruncation"/>
+                    <Label Margin="0,0,0,0"
+                           FontSize="13"
+                           Text="{TemplateBinding SubTitle}"
+                           TextColor="{TemplateBinding SubTitleBackgroundColor}"
+                           LineBreakMode="TailTruncation"/>
                 </StackLayout>
             </StackLayout>
         </ControlTemplate>

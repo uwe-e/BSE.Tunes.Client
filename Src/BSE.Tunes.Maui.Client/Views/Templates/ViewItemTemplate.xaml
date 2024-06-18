@@ -45,7 +45,7 @@
             <Label Text="{Binding SubTitle}"
                    Margin="0"
                    FontSize="13"
-                   TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray600}}"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray300}}"
                    LineBreakMode="TailTruncation"/>
         </StackLayout>
     </Grid>

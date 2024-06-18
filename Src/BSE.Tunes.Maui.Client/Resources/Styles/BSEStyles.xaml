@@ -25,14 +25,9 @@
     </Style>
 
     <Style TargetType="controls:SectionHeaderButton">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextTransform" Value="None"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
-    </Style>
-
-    <Style TargetType="prism:PrismNavigationPage">
-        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
-         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
     </Style>
 
     <Style x:Key="SeparatorItem" TargetType="BoxView">
@@ -40,9 +35,13 @@
         <Setter Property="HeightRequest" Value=".5" />
     </Style>
 
+    <Style TargetType="controls:BottomFlyoutPage">
+        <Setter Property="FlyoutBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"/>
+    </Style>
+    
     <Style TargetType="controls:FlyoutButton">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
-        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 
     <Style TargetType="controls:AudioPlayer">
@@ -50,7 +49,7 @@
     </Style>
 
     <Style x:Key="ContextMenuButtonStyle" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextTransform" Value="None"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
     </Style>
@@ -72,4 +71,20 @@
         </Setter>
     </Style>
 
+    <Style TargetType="Page" ApplyToDerivedTypes="True">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"/>
+    </Style>
+
+    <Style TargetType="prism:PrismNavigationPage" ApplyToDerivedTypes="True">
+        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"/>
+    </Style>
+
+    <Style TargetType="bse:TabbedContainerPage" ApplyToDerivedTypes="True">
+        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"/>
+        <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+        <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}"/>
+    </Style>
+   
 </ResourceDictionary>

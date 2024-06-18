@@ -50,10 +50,14 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\add_circle_outline_white.svg">
+		  <Resize>True</Resize>
+		  <BaseSize>32,32</BaseSize>
+		</MauiImage>
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
     <MauiImage Update="Resources\Images\albums.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\add_circle.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\add_circle_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
@@ -76,10 +80,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.60" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.21" />
+		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.60" />
 		<PackageReference Include="Prism.DryIoc.Maui" Version="9.0.401-pre" />
 	</ItemGroup>
 
@@ -88,8 +92,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\Images\add_circle.svg" />
 	  <None Remove="Resources\Images\add_circle_outline.svg" />
+	  <None Remove="Resources\Images\add_circle_outline_white.svg" />
 	  <None Remove="Resources\Images\albums.svg" />
 	  <None Remove="Resources\Images\home.svg" />
 	  <None Remove="Resources\Images\library.svg" />
@@ -187,7 +191,7 @@
 	  </MauiXaml>
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
+	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.60" />
 	</ItemGroup>
 	
 </Project>
