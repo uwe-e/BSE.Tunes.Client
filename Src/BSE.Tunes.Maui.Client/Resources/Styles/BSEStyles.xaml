@@ -27,6 +27,8 @@
     <Style TargetType="controls:SectionHeaderButton">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
     </Style>
 

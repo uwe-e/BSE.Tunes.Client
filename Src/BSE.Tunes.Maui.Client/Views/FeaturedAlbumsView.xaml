@@ -4,13 +4,17 @@
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             xmlns:bsebehaviours="clr-namespace:BSE.Maui.Controls.Behaviours;assembly=BSE.Maui.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.FeaturedAlbumsView" >
 
     <Grid>
         <StackLayout >
 
-            <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}"
-                                          HorizontalOptions="Start"/>
+            <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}">
+                <controls:SectionHeaderButton.Behaviors>
+                    <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
+                </controls:SectionHeaderButton.Behaviors>
+            </controls:SectionHeaderButton>
 
             <CollectionView x:Name="featuredAlbumsView"
                                 ItemsSource="{Binding Items}"
