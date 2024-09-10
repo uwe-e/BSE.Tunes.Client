@@ -62,6 +62,8 @@
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\play.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\play_forward.svg" Resize="True" BaseSize="32,32" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -97,7 +99,9 @@
 	  <None Remove="Resources\Images\albums.svg" />
 	  <None Remove="Resources\Images\home.svg" />
 	  <None Remove="Resources\Images\library.svg" />
+	  <None Remove="Resources\Images\play.svg" />
 	  <None Remove="Resources\Images\playlist.svg" />
+	  <None Remove="Resources\Images\play_forward.svg" />
 	  <None Remove="Resources\Images\search.svg" />
 	</ItemGroup>
 

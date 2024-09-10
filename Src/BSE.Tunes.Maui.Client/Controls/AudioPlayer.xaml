@@ -7,11 +7,17 @@
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="{OnPlatform 15, iOS=15, Android=10}" />
         </Border.StrokeShape>
-        <VerticalStackLayout>
-            <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        </VerticalStackLayout>
+        <Grid Padding="5" ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="32"/>
+                <ColumnDefinition Width="32"/>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Source="cover.jpg" WidthRequest="50"/>
+            <Label Grid.Column="1" TextColor="{StaticResource Black}" FontAttributes="Bold" VerticalTextAlignment="Center" Text="Movin' on up"/>
+            <ImageButton Grid.Column="2" Source="play.png" Aspect="AspectFit"/>
+            <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit"/>
+        </Grid>
     </Border>
 </ContentView>
