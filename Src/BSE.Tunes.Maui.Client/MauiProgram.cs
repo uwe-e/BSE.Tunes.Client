@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using BSE.Maui.Controls;
 using Microsoft.Extensions.Logging;
+using CommunityToolkit.Maui;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -14,6 +15,7 @@ namespace BSE.Tunes.Maui.Client
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkitMediaElement()
                 .UseBSEControls()
                 .UsePrism(prism =>
                 {
@@ -46,6 +48,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<IAppInfoService, AppInfoService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
+                        container.RegisterSingleton<IPlayerService, PlayerService>();
                         //Must be a scoped registration
                         container.RegisterScoped<IFlyoutNavigationService, FlyoutNavigationService>();
 

@@ -1,13 +1,7 @@
-﻿
-using BSE.Tunes.Maui.Client.Resources.Styles;
-using Microsoft.Maui.ApplicationModel;
-
-namespace BSE.Tunes.Maui.Client
+﻿namespace BSE.Tunes.Maui.Client
 {
     public partial class App : Application
     {
-        private AppTheme _currentTheme;
-
         public App()
         {
             InitializeComponent();
