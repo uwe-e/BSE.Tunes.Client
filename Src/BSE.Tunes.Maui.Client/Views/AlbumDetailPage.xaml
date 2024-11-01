@@ -57,13 +57,17 @@
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout>
+                            <!--<StackLayout>-->
                                 <!--<StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand,
                                                             Source={x:Reference page}}"
                                                           CommandParameter="{Binding}"/>
                                 </StackLayout.GestureRecognizers>-->
                                 <Grid Margin="3">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
+                                                          CommandParameter="{Binding}"/>
+                                </Grid.GestureRecognizers>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="25"/>
                                         <ColumnDefinition Width="*"/>
@@ -84,7 +88,7 @@
                                             Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
                                             CommandParameter="{Binding}"/>
                                 </Grid>
-                            </StackLayout>
+                            <!--</StackLayout>-->
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.Footer>

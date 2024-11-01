@@ -6,11 +6,11 @@ namespace BSE.Tunes.Maui.Client.Controls;
 
 public partial class BottomFlyoutPage : ContentPage
 {
-    private ContentView? _flyout;
-    private Grid? _grid;
-    private BoxView? _fader;
-    private TapGestureRecognizer? _faderTabGesture;
-    private Button? _dismissButton;
+    private ContentView _flyout;
+    private Grid _grid;
+    private BoxView _fader;
+    private TapGestureRecognizer _faderTabGesture;
+    private Button _dismissButton;
     private double _pageHeight;
     private double _flyoutHeight;
 

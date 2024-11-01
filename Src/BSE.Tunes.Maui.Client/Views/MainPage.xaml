@@ -42,7 +42,8 @@
     </bse:TabbedContainerPage.Children>
 
     <bse:TabbedContainerPage.BottomView>
-        <controls:AudioPlayer HeightRequest="{OnPlatform 160, iOS=60, Android=160}"/>
+        <controls:AudioPlayer HeightRequest="{OnPlatform 160, iOS=60, Android=160}"
+                              PlayCommand="{Binding PlayCommand}"/>
     </bse:TabbedContainerPage.BottomView>
     
 </bse:TabbedContainerPage>

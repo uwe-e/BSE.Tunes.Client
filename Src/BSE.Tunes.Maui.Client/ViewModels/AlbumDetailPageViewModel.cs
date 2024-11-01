@@ -4,9 +4,6 @@ using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
-using Prism.Commands;
-using Prism.Events;
-using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -18,7 +15,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private Album _album;
-        private GridPanel? _selectedAlbum;
+        private GridPanel _selectedAlbum;
         private bool _isQueryBusy;
         private bool _hasFurtherAlbums;
         private int _pageNumber;
@@ -32,13 +29,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ?? (
            _loadMoreAlbumssCommand = new DelegateCommand(() =>
            {
-               //Device.BeginInvokeOnMainThread(async () => await LoadMoreAlbums());
                MainThread.BeginInvokeOnMainThread(async () => await LoadMoreAlbums());
 
            }));
 
-        public ICommand SelectAlbumCommand => _selectAlbumCommand
-            ?? (_selectAlbumCommand = new Command<GridPanel>(SelectAlbum));
+        public ICommand SelectAlbumCommand => _selectAlbumCommand ??= new Command<GridPanel>(SelectAlbum);
 
         public ICommand GoBackCommand => _goBackCommand ??= new DelegateCommand(async () =>
         {
@@ -47,7 +42,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ObservableCollection<GridPanel> Albums => _albums ??= [];
 
-        public GridPanel? SelectedAlbum
+        public GridPanel SelectedAlbum
         {
             get => _selectedAlbum;
             set => SetProperty<GridPanel>(ref _selectedAlbum, value);
@@ -89,7 +84,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IEventAggregator eventAggregator,
             IResourceService resourceService,
             IDataService dataService,
-            IImageService imageService) : base(navigationService, flyoutNavigationService)
+            IImageService imageService,
+            IMediaManager mediaManager) : base(navigationService, flyoutNavigationService, mediaManager)
         {
             _eventAggregator = eventAggregator;
             _dataService = dataService;
@@ -108,12 +104,23 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await LoadMoreAlbums();
         }
 
+        protected override void PlayTrack(GridPanel panel)
+        {
+            if (panel?.Data is Track track)
+            {
+                PlayTracks(new List<int>
+                {
+                    track.Id
+                }, PlayerMode.Song);
+            }
+        }
+
         private async Task LoadAlbum(Album album)
         {
             if (album != null)
             {
                 Album = await _dataService.GetAlbumById(album.Id);
-                ImageSource = _imageService.GetBitmapSource(Album.AlbumId ?? Guid.Empty);
+                ImageSource = _imageService.GetBitmapSource(Album.AlbumId);
                 if (Album.Tracks != null)
                 {
                     foreach (Track track in Album.Tracks)
@@ -166,7 +173,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             {
                                 Title = album.Title,
                                 SubTitle = album.Artist?.Name,
-                                ImageSource = _imageService.GetBitmapSource(album.AlbumId ?? Guid.Empty),
+                                ImageSource = _imageService.GetBitmapSource(album.AlbumId),
                                 Data = album
                             });
                         }
@@ -183,7 +190,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 }
             }
         }
-        
+
         private async void SelectAlbum(GridPanel panel)
         {
             if (panel?.Data is Album album)

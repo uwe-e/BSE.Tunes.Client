@@ -40,6 +40,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<PlaylistActionToolbarPage, PlaylistActionToolbarPageViewModel>();
                         container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
                         container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
+                        container.RegisterForRegionNavigation<RandomPlayerButtonView, RandomPlayerButtonViewModel>();
                         container.RegisterSingleton<IRequestService, RequestService>();
                         container.RegisterSingleton<IResourceService, ResourceService>();
                         container.RegisterSingleton<IDataService, DataService>(); 
@@ -48,7 +49,8 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<IAppInfoService, AppInfoService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
-                        container.RegisterSingleton<IPlayerService, PlayerService>();
+                        container.RegisterSingleton<IMediaService, MediaService>();
+                        container.RegisterSingleton<IMediaManager, MediaManager>();
                         //Must be a scoped registration
                         container.RegisterScoped<IFlyoutNavigationService, FlyoutNavigationService>();
 

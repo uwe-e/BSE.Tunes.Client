@@ -95,13 +95,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 CanDisplayAlbumInfo = (bool)_playlistActionContext?.DisplayAlbumInfo;
                 Title = track.Name;
                 SubTitle = track.Album.Artist.Name;
-                ImageSource = _imageService.GetBitmapSource(track.Album.AlbumId ?? Guid.Empty, true);
+                ImageSource = _imageService.GetBitmapSource(track.Album.AlbumId, true);
             }
             if (_playlistActionContext?.Data is Album album)
             {
                 Title = album.Title;
                 SubTitle = album.Artist?.Name;
-                ImageSource = _imageService.GetBitmapSource(album.AlbumId ?? Guid.Empty, true);
+                ImageSource = _imageService.GetBitmapSource(album.AlbumId, true);
             }
             base.OnNavigatedTo(parameters);
         }

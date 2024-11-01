@@ -166,9 +166,9 @@ namespace BSE.Tunes.Maui.Client.Controls
         public static readonly BindableProperty AudioPlayerStateProperty
                     = BindableProperty.Create(
                         nameof(AudioPlayerState),
-                        typeof(AudioPlayerState),
+                        typeof(PlayerState),
                         typeof(AudioPlayer),
-                        AudioPlayerState.Closed);
+                        PlayerState.Closed);
 
         public static readonly BindableProperty ProgressColorProperty =
             BindableProperty.Create(nameof(ProgressColor), typeof(Color), typeof(AudioPlayer), default(Color));
@@ -179,9 +179,9 @@ namespace BSE.Tunes.Maui.Client.Controls
             set => SetValue(ProgressColorProperty, value);
         }
 
-        public AudioPlayerState AudioPlayerState
+        public PlayerState AudioPlayerState
         {
-            get => (AudioPlayerState)GetValue(AudioPlayerStateProperty);
+            get => (PlayerState)GetValue(AudioPlayerStateProperty);
             set => SetValue(AudioPlayerStateProperty, value);
         }
 
@@ -448,5 +448,9 @@ namespace BSE.Tunes.Maui.Client.Controls
             AudioPlayer.PlayNextCommandCanExecuteChanged(this, EventArgs.Empty);
         }
 
+        private void OnPlayClicked(object sender, EventArgs e)
+        {
+            PlayCommand?.Execute(PlayCommandParameter);
+        }
     }
 }

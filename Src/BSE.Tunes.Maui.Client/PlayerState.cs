@@ -1,6 +1,6 @@
 ﻿namespace BSE.Tunes.Maui.Client
 {
-    public enum AudioPlayerState
+    public enum PlayerState
     {
         Closed = 0,
         Opening = 1,

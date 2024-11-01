@@ -15,6 +15,9 @@
     <Color x:Key="SeparatorColor">#FF3C3C43</Color>
     <Color x:Key="SeparatorDarkColor">#FF545458</Color>
 
+    <Color x:Key="SystemPink">#FF2D55</Color>
+    <Color x:Key="SystemPinkDark">#FF375F</Color>
+
 
     <!-- End Colors for BSE -->
 

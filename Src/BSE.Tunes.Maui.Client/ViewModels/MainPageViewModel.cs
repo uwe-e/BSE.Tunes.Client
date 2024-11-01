@@ -1,11 +1,13 @@
-﻿using Prism.Navigation;
+﻿using BSE.Tunes.Maui.Client.Services;
+using Prism.Navigation;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class MainPageViewModel : ViewModelBase
+    public class MainPageViewModel(
+        INavigationService navigationService,
+        IEventAggregator eventAggregator,
+        IMediaManager mediaManager) : PlayerBaseViewModel(navigationService, eventAggregator, mediaManager)
     {
-        public MainPageViewModel(INavigationService navigationService) : base(navigationService)
-        {
-        }
+        private readonly IEventAggregator eventAggregator = eventAggregator;
     }
 }

@@ -8,8 +8,8 @@
                     xmlns:bsetmp="using:BSE.Maui.Controls"
                     x:Class="BSE.Tunes.Maui.Client.Resources.Styles.BSEStyles">
 
-    <Style x:Key="SubmitActionButtonStyle" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{DynamicResource SystemPink}"/>
+    <Style TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SystemPink}, Dark={StaticResource SystemPinkDark}}"/>
         <Setter Property="TextColor" Value="{DynamicResource SystemWhite}"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
