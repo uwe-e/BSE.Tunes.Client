@@ -43,7 +43,11 @@
 
     <bse:TabbedContainerPage.BottomView>
         <controls:AudioPlayer HeightRequest="{OnPlatform 160, iOS=60, Android=160}"
-                              PlayCommand="{Binding PlayCommand}"/>
+                              PlayCommand="{Binding PlayCommand}"
+                              PlayNextCommand="{Binding PlayNextCommand}"
+                              Track="{Binding CurrentTrack, Mode=TwoWay}"
+                              Cover="{Binding CoverSource, Mode=TwoWay}"
+                              PlayerState="{Binding PlayerState, Mode=TwoWay}"/>
     </bse:TabbedContainerPage.BottomView>
     
 </bse:TabbedContainerPage>

@@ -60,6 +60,7 @@
     <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\add_circle_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\pause.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />

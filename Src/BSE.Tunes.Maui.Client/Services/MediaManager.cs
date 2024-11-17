@@ -21,13 +21,38 @@ namespace BSE.Tunes.Maui.Client.Services
             _mediaService = mediaService;
             _eventAggregator = eventAggregator;
             _settingsService = settingsService;
+
+            _mediaService.PlayerStateChanged += OnPlayerStateChanged;
+            _mediaService.MediaStateChanged += OnMediaStateChanged;
         }
+
+
+
+        public event Action<PlayerState> PlayerStateChanged;
+        public event Action<MediaState> MediaStateChanged;
 
         public NavigableCollection<int> Playlist { get; set; }
 
         public PlayerMode PlayerMode { get; private set; }
 
         public PlayerState PlayerState { get; private set; } = PlayerState.Closed;
+
+        public Track CurrentTrack { get; private set; }
+
+        public void Pause()
+        {
+            _mediaService.Pause();
+        }
+
+        public bool CanPlay()
+        {
+            return Playlist?.Count > 0;
+        }
+
+        public void Play()
+        {
+            _mediaService.Play();
+        }
 
         public async void PlayTracks(PlayerMode playerMode)
         {
@@ -43,6 +68,38 @@ namespace BSE.Tunes.Maui.Client.Services
             PlayTracks(playerMode);
         }
 
+        public bool CanPlayPreviosTrack()
+        {
+            return Playlist?.CanMovePrevious ?? false;
+        }
+
+        public async void PlayPreviousTrack()
+        {
+            if (CanPlayPreviosTrack())
+            {
+                if (Playlist.MovePrevious())
+                {
+                    await PlayTrackAsync(Playlist.Current);
+                }
+            }
+        }
+
+        public bool CanPlayNextTrack()
+        {
+            return Playlist?.CanMoveNext ?? false;
+        }
+
+        public async void PlayNextTrack()
+        {
+            if (CanPlayNextTrack())
+            {
+                if (Playlist.MoveNext())
+                {
+                    await PlayTrackAsync(Playlist.Current);
+                }
+            }
+        }
+
         private async Task PlayTrackAsync(int trackId)
         {
             _mediaService.Stop();
@@ -55,5 +112,38 @@ namespace BSE.Tunes.Maui.Client.Services
                 }
             }
         }
+
+        private void OnPlayerStateChanged(PlayerState state)
+        {
+            if (PlayerState != state)
+            {
+                PlayerState = state;
+                PlayerStateChanged?.Invoke(state);
+            }
+        }
+
+        private async void OnMediaStateChanged(MediaState state)
+        {
+            switch (state)
+            {
+                case MediaState.Opened:
+                    var trackId = Playlist.Current;
+                    if (trackId > 0)
+                    {
+                        CurrentTrack = await _dataService.GetTrackById(trackId);
+                        //UpdateHistory(CurrentTrack);
+                    }
+                    break;
+                case MediaState.Ended:
+                    if (PlayerMode != PlayerMode.None && PlayerMode != PlayerMode.Song && CanPlayNextTrack())
+                    {
+                        PlayNextTrack();
+                    }
+                    break;
+            }
+            MediaStateChanged?.Invoke(state);
+        }
+
+
     }
 }

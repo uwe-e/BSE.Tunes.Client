@@ -12,11 +12,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 typeof(MediaService),
                 false,
                 propertyChanged: RegisterAsMediaServicePropertyChanged);
-        private readonly IDataService _dataService;
-        private readonly ISettingsService _settingsService;
-        private readonly IRequestService _requestService;
-        private readonly IStorageService _storageService;
-
+        
         public static bool GetRegisterAsMediaService(MediaElement target)
         {
             return (bool)target.GetValue(RegisterAsMediaServiceProperty);
@@ -44,7 +40,16 @@ namespace BSE.Tunes.Maui.Client.Services
             }
         }
 
+        public event Action<PlayerState> PlayerStateChanged;
+        public event Action<MediaState> MediaStateChanged;
+
+        private readonly IDataService _dataService;
+        private readonly ISettingsService _settingsService;
+        private readonly IRequestService _requestService;
+        private readonly IStorageService _storageService;
         private MediaElement _mediaElement;
+
+        private PlayerState _currentPlayerState;
 
         public MediaService(IDataService dataService,
             ISettingsService settingsService,
@@ -70,19 +75,58 @@ namespace BSE.Tunes.Maui.Client.Services
 
         }
 
-        private void OnMediaStateChanged(object? sender, MediaStateChangedEventArgs e)
+        private async void OnMediaStateChanged(object? sender, MediaStateChangedEventArgs e)
         {
-            var mediaElementState = e.NewState;
+            await _mediaElement.Dispatcher.DispatchAsync(() =>
+            {
+                _currentPlayerState = PlayerState.Closed;
+                var mediaElementState = e.NewState;
+                switch (mediaElementState)
+                {
+                    case MediaElementState.Buffering:
+                        _currentPlayerState = PlayerState.Buffering;
+                        break;
+                    case MediaElementState.Opening:
+                        _currentPlayerState = PlayerState.Opening;
+                        break;
+                    case MediaElementState.Paused:
+                        _currentPlayerState = PlayerState.Paused;
+                        break;
+                    case MediaElementState.Playing:
+                        _currentPlayerState = PlayerState.Playing;
+                        break;
+                    case MediaElementState.Stopped:
+                        _currentPlayerState = PlayerState.Stopped;
+                        break;
+                    default:
+                        _currentPlayerState = PlayerState.Closed;
+                        break;
+
+
+                }
+                PlayerStateChanged?.Invoke(_currentPlayerState);
+            });
+
         }
 
         private void OnMediaEnded(object? sender, EventArgs e)
         {
-
+            MediaStateChanged?.Invoke(MediaState.Ended);
         }
 
         private void OnMediaOpened(object? sender, EventArgs e)
         {
+            MediaStateChanged?.Invoke(MediaState.Opened);
+        }
 
+        public void Pause()
+        {
+            _mediaElement?.Pause();
+        }
+
+        public void Play()
+        {
+            _mediaElement?.Play();
         }
 
         public void Stop()
@@ -134,5 +178,7 @@ namespace BSE.Tunes.Maui.Client.Services
             builder.Path = Path.Combine(builder.Path, $"/api/files/audio/{guid}");
             return builder.Uri;
         }
+
+
     }
 }
