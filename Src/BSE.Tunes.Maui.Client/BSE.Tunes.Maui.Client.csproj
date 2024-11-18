@@ -66,6 +66,8 @@
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play_forward.svg" Resize="True" BaseSize="32,32" />
+    
+    <MauiImage Update="Resources\Images\play_forward_disabled.svg" Resize="True" TintColor="#919191" BaseSize="32,32" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -84,7 +86,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

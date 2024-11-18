@@ -48,7 +48,17 @@
                             </DataTrigger>
                         </ImageButton.Triggers>-->
                     </ImageButton>
-                    <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit"/>
+                    <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Property="Source" Value="play_forward_disabled.png" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </ImageButton>
                 </Grid>
             </Border>
         </ControlTemplate>
