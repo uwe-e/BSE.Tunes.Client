@@ -2,6 +2,7 @@
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
+//using Track = BSE.Tunes.Maui.Client.Models.Contract.Track;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
@@ -11,6 +12,17 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly IMediaService _mediaService;
         private readonly IEventAggregator _eventAggregator;
         private readonly ISettingsService _settingsService;
+
+        public event Action<PlayerState> PlayerStateChanged;
+        public event Action<MediaState> MediaStateChanged;
+
+        public NavigableCollection<int> Playlist { get; set; }
+
+        public PlayerMode PlayerMode { get; private set; }
+
+        public PlayerState PlayerState { get; private set; } = PlayerState.Closed;
+
+        public Track CurrentTrack { get; private set; }
 
         public MediaManager(IDataService dataService,
             IMediaService mediaService,
@@ -25,19 +37,6 @@ namespace BSE.Tunes.Maui.Client.Services
             _mediaService.PlayerStateChanged += OnPlayerStateChanged;
             _mediaService.MediaStateChanged += OnMediaStateChanged;
         }
-
-
-
-        public event Action<PlayerState> PlayerStateChanged;
-        public event Action<MediaState> MediaStateChanged;
-
-        public NavigableCollection<int> Playlist { get; set; }
-
-        public PlayerMode PlayerMode { get; private set; }
-
-        public PlayerState PlayerState { get; private set; } = PlayerState.Closed;
-
-        public Track CurrentTrack { get; private set; }
 
         public void Pause()
         {
@@ -131,7 +130,7 @@ namespace BSE.Tunes.Maui.Client.Services
                     if (trackId > 0)
                     {
                         CurrentTrack = await _dataService.GetTrackById(trackId);
-                        //UpdateHistory(CurrentTrack);
+                        UpdateHistoryAsync(CurrentTrack);
                     }
                     break;
                 case MediaState.Ended:
@@ -144,6 +143,20 @@ namespace BSE.Tunes.Maui.Client.Services
             MediaStateChanged?.Invoke(state);
         }
 
-
+        private async void UpdateHistoryAsync(Track currentTrack)
+        {
+            var userName = _settingsService.User.UserName;
+            if (!string.IsNullOrEmpty(userName))
+            {
+                await _dataService.UpdateHistory(new History
+                {
+                    PlayMode = (int)PlayerMode,
+                    AlbumId = currentTrack.Album.Id,
+                    TrackId = currentTrack.Id,
+                    UserName = userName,
+                    PlayedAt = DateTime.Now
+                });
+            }
+        }
     }
 }

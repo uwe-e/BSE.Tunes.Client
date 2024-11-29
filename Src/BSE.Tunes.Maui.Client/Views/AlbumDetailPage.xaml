@@ -50,19 +50,26 @@
                             </StackLayout>
                             <StackLayout VerticalOptions="StartAndExpand">
                                 <StackLayout Orientation="Horizontal">
-                                    <!-- player buttons -->
+                                    <Button Text="{x:Static strings:AppResources.AlbumsDetailPage_Button_PlayAll_Text}"
+                                            ImageSource="{AppThemeBinding Light=play_pk_light.png, Dark=play_pk_dark.png}"
+                                            Command="{Binding PlayAllCommand}"
+                                            Style="{DynamicResource DetailActionButtonStyle}"/>
+                                    <Button Text="{x:Static strings:AppResources.AlbumsDetailPage_Button_PlayRandomized_Text}"
+                                            ImageSource="{AppThemeBinding Light=shuffle_pk_light.png, Dark=shuffle_pk_dark.png}"
+                                            Command="{Binding PlayAllRandomizedCommand}"
+                                            Style="{DynamicResource DetailActionButtonStyle}"/>
                                 </StackLayout>
                             </StackLayout>
                         </StackLayout>
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <!--<StackLayout>-->
-                                <!--<StackLayout.GestureRecognizers>
+                            <StackLayout>
+                                <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand,
                                                             Source={x:Reference page}}"
                                                           CommandParameter="{Binding}"/>
-                                </StackLayout.GestureRecognizers>-->
+                                </StackLayout.GestureRecognizers>
                                 <Grid Margin="3">
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
@@ -88,7 +95,7 @@
                                             Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
                                             CommandParameter="{Binding}"/>
                                 </Grid>
-                            <!--</StackLayout>-->
+                            </StackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.Footer>

@@ -12,8 +12,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private string _imageSource;
         private ICommand _openFlyoutCommand;
         private ICommand _playCommand;
-        private ICommand _playAllCommand;
-        private ICommand _playAllRandomizedCommand;
+        private DelegateCommand _playAllCommand;
+        private DelegateCommand _playAllRandomizedCommand;
         private readonly IFlyoutNavigationService _flyoutNavigationService;
         private readonly IMediaManager _mediaManager;
 
@@ -21,9 +21,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ICommand PlayCommand => _playCommand ??= new DelegateCommand<GridPanel>(PlayTrack);
 
-        public ICommand PlayAllCommand => _playAllCommand ??= new DelegateCommand(PlayAll, CanPlayAll);
+        public DelegateCommand PlayAllCommand => _playAllCommand ??= new DelegateCommand(PlayAll, CanPlayAll);
 
-        public ICommand PlayAllRandomizedCommand => _playAllRandomizedCommand ??= new DelegateCommand(PlayAllRandomized, CanPlayAllRandomized);
+        public DelegateCommand PlayAllRandomizedCommand => _playAllRandomizedCommand ??= new DelegateCommand(PlayAllRandomized, CanPlayAllRandomized);
 
         public ObservableCollection<GridPanel> Items => _items ??= [];
 
@@ -94,6 +94,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             _mediaManager.PlayTracks(
                 new ObservableCollection<int>(trackIds), playerMode);
+        }
+
+        protected virtual ObservableCollection<int> GetTrackIds()
+        {
+            return new ObservableCollection<int>();
         }
     }
 }

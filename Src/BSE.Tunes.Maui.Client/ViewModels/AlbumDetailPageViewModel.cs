@@ -1,5 +1,6 @@
 ﻿
 
+using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -104,6 +105,21 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await LoadMoreAlbums();
         }
 
+        protected override void PlayAll()
+        {
+            PlayTracks(GetTrackIds(), PlayerMode.CD);
+        }
+
+        protected override void PlayAllRandomized()
+        {
+            PlayTracks(GetTrackIds().ToRandomCollection(), PlayerMode.CD);
+        }
+
+        protected override ObservableCollection<int> GetTrackIds()
+        {
+            return new ObservableCollection<int>(Items.Select(track => ((Track)track.Data).Id));
+        }
+
         protected override void PlayTrack(GridPanel panel)
         {
             if (panel?.Data is Track track)
@@ -141,8 +157,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         });
                     }
                 }
-                //PlayAllCommand.RaiseCanExecuteChanged();
-                //PlayAllRandomizedCommand.RaiseCanExecuteChanged();
+                PlayAllCommand.RaiseCanExecuteChanged();
+                PlayAllRandomizedCommand.RaiseCanExecuteChanged();
                 IsBusy = false;
             }
         }

@@ -24,6 +24,11 @@
         </Setter>
     </Style>
 
+    <Style x:Key="DetailActionButtonStyle" TargetType="Button">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SystemPink}, Dark={StaticResource SystemPinkDark}}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
     <Style TargetType="controls:SectionHeaderButton">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextTransform" Value="None"/>
