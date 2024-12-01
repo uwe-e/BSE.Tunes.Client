@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             x:Class="BSE.Tunes.Maui.Client.Views.PlaylistSelectorDialogPage"
+             Title="PlaylistSelectorDialogPage">
+
+    <Grid>
+        <Grid Padding="5" Margin="0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="70*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                            HorizontalOptions="StartAndExpand"
+                            Text="{x:Static strings:AppResources.PlaylistSelectorDialogPage_ButtonCancel_Text}"
+                            Command="{Binding CancelCommand}"
+                            Style="{DynamicResource DetailActionButtonStyle}"/>
+                <Label Grid.Column="1" 
+                           Text="{x:Static strings:AppResources.PlaylistSelectorDialogPage_Title}"
+                           HorizontalOptions="StartAndExpand"
+                           VerticalOptions="Center"/>
+            </Grid>
+            <Button Grid.Row="1" Text="{x:Static strings:AppResources.PlaylistSelectorDialogPage_Button_NewPlaylist_Text}"
+                        Command="{Binding OpenNewPlaylistDialogCommand}"
+                        Style="{StaticResource SubmitActionButtonStyle}"/>
+            <CollectionView Grid.Row="2" ItemsSource="{Binding PlaylistFlyoutItems}" >
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0,5,0,5">
+                            <controls:FlyoutButton Text="{Binding Text}" 
+                                                       HorizontalOptions="Start"
+                                                       ImageSource="{Binding ImageSource}"
+                                                       Command="{Binding SelectFlyoutItemCommand}"
+                                                       CommandParameter="{Binding}">
+                            </controls:FlyoutButton>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" WidthRequest="50" Color ="{Binding PrimaryLabelColor}"/>
+    </Grid>
+
+</ContentPage>

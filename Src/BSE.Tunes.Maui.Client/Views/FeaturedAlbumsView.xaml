@@ -18,7 +18,7 @@
 
             <CollectionView x:Name="featuredAlbumsView"
                                 ItemsSource="{Binding Items}"
-                                ItemsLayout="HorizontalList" HeightRequest="{OnIdiom Default=200, Tablet=400}">
+                                ItemsLayout="HorizontalList" HeightRequest="{OnIdiom Default=200, Tablet=260}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <templates:ViewItemTemplate Padding="0,0,10,0">

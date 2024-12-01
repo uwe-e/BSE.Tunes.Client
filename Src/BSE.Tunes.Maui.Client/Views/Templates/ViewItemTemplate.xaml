@@ -7,20 +7,25 @@
         <Style TargetType="StackLayout" x:Key="ViewItemTemplateStyle">
             <Setter Property="HeightRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="190" Tablet="300"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="190" Tablet="250"/>
                 </Setter.Value>
             </Setter>
             <Setter Property="WidthRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="250"/>
                 </Setter.Value>
             </Setter>
         </Style>
 
         <Style TargetType="Image" x:Key="ViewItemImageStyle">
-            <Setter Property="HeightRequest">
+            <!--<Setter Property="HeightRequest">
                 <Setter.Value>
                     <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
+                </Setter.Value>
+            </Setter>-->
+            <Setter Property="WidthRequest">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="240"/>
                 </Setter.Value>
             </Setter>
         </Style>
@@ -35,8 +40,7 @@
                 </Border.StrokeShape>
                 <Image Style="{StaticResource ViewItemImageStyle}"
                        Source="{Binding ImageSource}"
-                       Aspect="AspectFill"
-                       WidthRequest="160"/>
+                       Aspect="AspectFill"/>
             </Border>
             <Label Text="{Binding Title}"
                    Margin="0"

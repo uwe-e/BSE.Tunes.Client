@@ -1,6 +1,4 @@
-﻿
-
-using BSE.Tunes.Maui.Client.Extensions;
+﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -86,7 +84,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IResourceService resourceService,
             IDataService dataService,
             IImageService imageService,
-            IMediaManager mediaManager) : base(navigationService, flyoutNavigationService, mediaManager)
+            IMediaManager mediaManager) : base(navigationService, flyoutNavigationService, mediaManager, eventAggregator)
         {
             _eventAggregator = eventAggregator;
             _dataService = dataService;

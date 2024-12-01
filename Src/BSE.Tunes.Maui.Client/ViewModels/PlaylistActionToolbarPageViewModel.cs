@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using Prism.Commands;
@@ -22,6 +23,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private string _subTitle;
         private string _title;
         private readonly IImageService _imageService;
+        private readonly IEventAggregator _eventAggregator;
         private readonly IFlyoutNavigationService _flyoutNavigationService;
 
         public ICommand CloseFlyoutCommand => _closeFlyoutCommand
@@ -80,9 +82,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public PlaylistActionToolbarPageViewModel(
             INavigationService navigationService,
             IImageService imageService,
+            IEventAggregator eventAggregator,
             IFlyoutNavigationService flyoutNavigationService) : base(navigationService)
         {
             _imageService = imageService;
+            _eventAggregator = eventAggregator;
             _flyoutNavigationService = flyoutNavigationService;
         }
 
@@ -113,7 +117,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void AddToPlaylist()
         {
-
+            if (_playlistActionContext != null)
+            {
+                _playlistActionContext.ActionMode = PlaylistActionMode.SelectPlaylist;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
         }
 
         private void RemoveFromPlaylist()

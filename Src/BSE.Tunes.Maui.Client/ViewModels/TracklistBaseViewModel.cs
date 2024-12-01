@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
@@ -14,8 +15,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _playCommand;
         private DelegateCommand _playAllCommand;
         private DelegateCommand _playAllRandomizedCommand;
+        private IFlyoutNavigationService flyoutNavigationService;
+        private IMediaManager mediaManager;
         private readonly IFlyoutNavigationService _flyoutNavigationService;
         private readonly IMediaManager _mediaManager;
+        private readonly IEventAggregator _eventAggregator;
 
         public ICommand OpenFlyoutCommand => _openFlyoutCommand ??= new DelegateCommand<object>(OpenFlyout);
 
@@ -42,10 +46,39 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public TracklistBaseViewModel(
             INavigationService navigationService,
             IFlyoutNavigationService flyoutNavigationService,
-            IMediaManager mediaManager) : base(navigationService)
+            IMediaManager mediaManager,
+            IEventAggregator eventAggregator) : base(navigationService)
         {
             _flyoutNavigationService = flyoutNavigationService;
             _mediaManager = mediaManager;
+            _eventAggregator = eventAggregator;
+
+            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
+            {
+                if (args is PlaylistActionContext managePlaylistContext)
+                {
+                    switch (managePlaylistContext.ActionMode)
+                    {
+                        case PlaylistActionMode.AddToPlaylist:
+                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            await AddToPlaylist(managePlaylistContext);
+                            break;
+                        case PlaylistActionMode.SelectPlaylist:
+                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            await SelectPlaylist(managePlaylistContext);
+                            break;
+                    }
+                }
+            }, ThreadOption.UIThread);
+        }
+
+        protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
+        {
+            var navigationParams = new NavigationParameters
+            {
+                { KnownNavigationParameters.UseModalNavigation, true}
+            };
+            await NavigationService.GoBackAsync(navigationParams);
         }
 
         protected async void OpenFlyout(object obj)
@@ -66,6 +99,18 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             navigationParams.Add(KnownNavigationParameters.Animated, false);
 
             await _flyoutNavigationService.ShowFlyoutAsync(nameof(PlaylistActionToolbarPage), navigationParams);
+        }
+
+        protected async Task SelectPlaylist(PlaylistActionContext managePlaylistContext)
+        {
+            await _flyoutNavigationService.CloseFlyoutAsync();
+
+            var navigationParams = new NavigationParameters
+            {
+                { "source", managePlaylistContext },
+                { KnownNavigationParameters.UseModalNavigation, true}
+            };
+            await NavigationService.NavigateAsync(nameof(PlaylistSelectorDialogPage), navigationParams);
         }
 
         protected virtual void PlayTrack(GridPanel panel)
