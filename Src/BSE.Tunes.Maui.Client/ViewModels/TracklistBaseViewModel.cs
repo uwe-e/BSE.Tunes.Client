@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
+using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
@@ -18,7 +19,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private IFlyoutNavigationService flyoutNavigationService;
         private IMediaManager mediaManager;
         private readonly IFlyoutNavigationService _flyoutNavigationService;
+        private readonly IDataService _dataService;
         private readonly IMediaManager _mediaManager;
+        private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
 
         public ICommand OpenFlyoutCommand => _openFlyoutCommand ??= new DelegateCommand<object>(OpenFlyout);
@@ -46,11 +49,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public TracklistBaseViewModel(
             INavigationService navigationService,
             IFlyoutNavigationService flyoutNavigationService,
+            IDataService dataService,
             IMediaManager mediaManager,
+            IImageService imageService,
             IEventAggregator eventAggregator) : base(navigationService)
         {
             _flyoutNavigationService = flyoutNavigationService;
+            _dataService = dataService;
             _mediaManager = mediaManager;
+            _imageService = imageService;
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
@@ -70,15 +77,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     }
                 }
             }, ThreadOption.UIThread);
-        }
-
-        protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
-        {
-            var navigationParams = new NavigationParameters
-            {
-                { KnownNavigationParameters.UseModalNavigation, true}
-            };
-            await NavigationService.GoBackAsync(navigationParams);
         }
 
         protected async void OpenFlyout(object obj)
@@ -144,6 +142,65 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         protected virtual ObservableCollection<int> GetTrackIds()
         {
             return new ObservableCollection<int>();
+        }
+
+        protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
+        {
+            var navigationParams = new NavigationParameters
+            {
+                { KnownNavigationParameters.UseModalNavigation, true}
+            };
+            await NavigationService.GoBackAsync(navigationParams);
+
+            IEnumerable<Track> tracks = default;
+
+            if (managePlaylistContext.Data is Track track)
+            {
+                tracks = Enumerable.Repeat(track, 1);
+            }
+            if (managePlaylistContext.Data is Album album)
+            {
+                tracks = album.Tracks;
+            }
+            if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
+            {
+                tracks = Enumerable.Repeat(playlistEntry.Track, 1);
+            }
+            if (managePlaylistContext.Data is Playlist playlist)
+            {
+                tracks = playlist.Entries?.Select(t => t.Track);
+            }
+
+            if (tracks != null)
+            {
+                await AddTracksToPlaylist(managePlaylistContext, tracks);
+            }
+
+        }
+
+        private async Task AddTracksToPlaylist(PlaylistActionContext managePlaylistContext, IEnumerable<Track> tracks)
+        {
+            var playlistTo = managePlaylistContext.PlaylistTo;
+            if (playlistTo != null && tracks != null)
+            {
+                foreach (var track in tracks)
+                {
+                    if (track != null)
+                    {
+                        playlistTo.Entries.Add(new PlaylistEntry
+                        {
+                            PlaylistId = playlistTo.Id,
+                            TrackId = track.Id,
+                            Guid = Guid.NewGuid()
+                        });
+                    }
+                }
+                await _dataService.AppendToPlaylist(playlistTo);
+                await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
+
+                managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
+            }
         }
     }
 }

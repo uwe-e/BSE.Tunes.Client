@@ -215,5 +215,11 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             return _dataService.GetImage(id, asThumbnail);
         }
+
+        public async Task RemoveStitchedBitmaps(int playlistId)
+        {
+            string searchPattern = $"{playlistId}_*.png";
+            await _storageService.DeleteCachedImagesAsync(searchPattern);
+        }
     }
 }

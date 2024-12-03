@@ -84,7 +84,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IResourceService resourceService,
             IDataService dataService,
             IImageService imageService,
-            IMediaManager mediaManager) : base(navigationService, flyoutNavigationService, mediaManager, eventAggregator)
+            IMediaManager mediaManager) : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
             _eventAggregator = eventAggregator;
             _dataService = dataService;
