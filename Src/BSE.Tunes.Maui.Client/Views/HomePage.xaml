@@ -8,12 +8,15 @@
              Title="{x:Static strings:AppResources.HomePage_Title}">
     <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
         <ScrollView>
-            <StackLayout >
+            <StackLayout>
 
                 <ContentView prism:RegionManager.RegionName="AlbumsCarousel" HeightRequest="{OnIdiom Default=260, Tablet=420}"/>
-                <ContentView prism:RegionManager.RegionName="RandomPlayerButton" HeightRequest="80"/>
-                <ContentView prism:RegionManager.RegionName="FeaturedAlbums" HeightRequest="{OnIdiom Default=220, Tablet=400}"/>
-
+                
+                <ContentView prism:RegionManager.RegionName="RandomPlayerButton" Margin="5,10" HeightRequest="80"/>
+                
+                <ContentView prism:RegionManager.RegionName="FeaturedAlbums" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>
+                
+                <ContentView prism:RegionManager.RegionName="FeaturedPlaylists" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>
                 <!--<local:RandomPlayerButtonView HeightRequest="80"/>-->
 
                 <!--<views:FeaturedAlbumsView HeightRequest="{OnIdiom Default=260, Tablet=400}"/>-->

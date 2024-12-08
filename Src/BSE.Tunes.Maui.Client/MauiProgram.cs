@@ -41,6 +41,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<PlaylistSelectorDialogPage, PlaylistSelectorDialogPageViewModel>();
                         container.RegisterForRegionNavigation<AlbumsCarouselView, AlbumsCarouselViewModel>();
                         container.RegisterForRegionNavigation<FeaturedAlbumsView, FeaturedAlbumsViewModel>();
+                        container.RegisterForRegionNavigation<FeaturedPlaylistsView, FeaturedPlaylistsViewModel>();
                         container.RegisterForRegionNavigation<RandomPlayerButtonView, RandomPlayerButtonViewModel>();
                         container.RegisterSingleton<IRequestService, RequestService>();
                         container.RegisterSingleton<IResourceService, ResourceService>();

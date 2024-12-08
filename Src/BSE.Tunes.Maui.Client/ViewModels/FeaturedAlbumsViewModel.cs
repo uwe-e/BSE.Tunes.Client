@@ -41,7 +41,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private async void LoadData()
         {
             Items.Clear();
-            var albums = await _dataService.GetNewestAlbums(20);
+            var albums = await _dataService.GetNewestAlbums(10);
             if (albums != null)
             {
                 foreach (var album in albums)

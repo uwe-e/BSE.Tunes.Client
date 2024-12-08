@@ -63,6 +63,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             _regionManager.RequestNavigate("AlbumsCarousel", nameof(AlbumsCarouselView));
             _regionManager.RequestNavigate("FeaturedAlbums", nameof(FeaturedAlbumsView));
+            _regionManager.RequestNavigate("FeaturedPlaylists", nameof(FeaturedPlaylistsView));
             _regionManager.RequestNavigate("RandomPlayerButton", nameof(RandomPlayerButtonView));
         }
         

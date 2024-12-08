@@ -5,30 +5,29 @@
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              xmlns:bsebehaviours="clr-namespace:BSE.Maui.Controls.Behaviours;assembly=BSE.Maui.Controls"
-             x:Class="BSE.Tunes.Maui.Client.Views.FeaturedAlbumsView" >
-
+             x:Class="BSE.Tunes.Maui.Client.Views.FeaturedPlaylistsView">
     <Grid>
         <StackLayout >
 
-            <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatAlbums_SectionHeader_Button_Text}">
+            <controls:SectionHeaderButton Text="{x:Static strings:AppResources.HomePage_FeatPlaylists_SectionHeader_Button_Text}">
                 <controls:SectionHeaderButton.Behaviors>
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
                 </controls:SectionHeaderButton.Behaviors>
             </controls:SectionHeaderButton>
 
-            <CollectionView x:Name="featuredAlbumsView"
-                                ItemsSource="{Binding Items}" 
-                                HeightRequest="{OnIdiom Default=200, Tablet=230}">
+            <CollectionView x:Name="featuredPlaylistsView"
+                            ItemsSource="{Binding Items}" 
+                            HeightRequest="{OnIdiom Default=200, Tablet=230}">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Horizontal"
-                                       ItemSpacing="15" />
+                                   ItemSpacing="15" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <templates:ViewItemTemplate Padding="0">
                             <templates:ViewItemTemplate.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=featuredAlbumsView}}"
-                                                      CommandParameter="{Binding}"/>
+                                <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=featuredPlaylistsView}}"
+                                                  CommandParameter="{Binding}"/>
 
                             </templates:ViewItemTemplate.GestureRecognizers>
                         </templates:ViewItemTemplate>
@@ -38,9 +37,8 @@
 
         </StackLayout>
         <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
-                     VerticalOptions="Center">
+                 VerticalOptions="Center">
             <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{DynamicResource PrimaryLabelColor}"/>
         </StackLayout>
     </Grid>
-
 </ContentView>
