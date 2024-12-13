@@ -79,7 +79,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }, ThreadOption.UIThread);
         }
 
-        protected async void OpenFlyout(object obj)
+        protected void OpenFlyout(object obj)
+        {
+            Task.Run(async () =>
+            {
+                await OpenFlyoutAsync(obj);
+            });
+        }
+
+        private async Task OpenFlyoutAsync(object obj)
         {
             var source = new PlaylistActionContext
             {

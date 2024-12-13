@@ -40,10 +40,10 @@ namespace BSE.Tunes.Maui.Client.Services
             string absoluteUri = GetImageUrl(asThumbnail, albumId).AbsoluteUri;
 
             //Fire and forget
-            Task.Run(() =>
+            Task.Run(async() =>
             {
                 //we create and save the image into the file system to use it next time.
-                CreateAndSaveBitmap(absoluteUri, fileFullName, asThumbnail);
+                await CreateAndSaveBitmapAsync(absoluteUri, fileFullName, asThumbnail);
             }).ConfigureAwait(false);
 
             return absoluteUri;
@@ -157,7 +157,7 @@ namespace BSE.Tunes.Maui.Client.Services
             }
         }
 
-        private async void CreateAndSaveBitmap(string imageUri, string fileName, bool asThumbnail)
+        private async Task CreateAndSaveBitmapAsync(string imageUri, string fileName, bool asThumbnail)
         {
             SKBitmap? bitmap = await CreateBitmapFromStream(imageUri);
             if (bitmap != null)

@@ -1,7 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
-using Prism.Navigation;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
@@ -39,7 +38,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
            LoadCoverSource(track);
         }
 
-        private void LoadCoverSource(Track currentTrack)
+        private void LoadCoverSource(Track track)
+        {
+            Task.Run(async () =>
+            {
+                await LoadCoverSourceAsync(track);
+            });
+        }
+
+        private async Task LoadCoverSourceAsync(Track currentTrack)
         {
             if (currentTrack != null)
             {

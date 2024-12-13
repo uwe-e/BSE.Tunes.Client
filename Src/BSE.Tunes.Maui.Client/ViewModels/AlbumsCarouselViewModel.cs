@@ -31,16 +31,25 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _resourceService = resourceService;
             _dataService = dataService;
             _imageService = imageService;
+            
+            LoadData();
+            
             _eventAggregator.GetEvent<HomePageRefreshEvent>().Subscribe(() =>
             {
                 IsBusy = true;
                 LoadData();
             });
-
-            LoadData();
         }
 
-        private async void LoadData()
+        private void LoadData()
+        {
+            Task.Run(async () =>
+            {
+                await LoadDataAsync();
+            });
+        }
+
+        private async Task LoadDataAsync()
         {
             Items.Clear();
             var albums = await _dataService.GetFeaturedAlbums(6);

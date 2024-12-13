@@ -44,7 +44,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             LoadData();
         }
 
-        private async void LoadData()
+        private void LoadData()
+        {
+            Task.Run(async () =>
+            {
+                await LoadDataAsync();
+            });
+        }
+
+        private async Task LoadDataAsync()
         {
             ObservableCollection<int> trackIds = await _dataService.GetTrackIdsByGenre();
             if (trackIds != null)

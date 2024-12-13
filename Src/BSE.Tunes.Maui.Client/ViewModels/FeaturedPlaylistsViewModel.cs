@@ -53,7 +53,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             });
         }
 
-        private async void LoadData()
+        private void LoadData()
+        {
+            Task.Run(async () =>
+            {
+                await LoadDataAsync();
+            });
+        }
+
+        private async Task LoadDataAsync()
         {
             var playlists = await _dataService.GetPlaylistsByUserName(_settingsService.User.UserName, 0, 5);
             if (playlists != null)

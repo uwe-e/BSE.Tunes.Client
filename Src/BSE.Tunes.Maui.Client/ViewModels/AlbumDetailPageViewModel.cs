@@ -96,11 +96,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             HasFurtherAlbums = false;
         }
 
-        public override async void OnNavigatedTo(INavigationParameters parameters)
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             Album album = parameters.GetValue<Album>("album");
-            await LoadAlbum(album);
-            await LoadMoreAlbums();
+            LoadData(album);
         }
 
         protected override void PlayAll()
@@ -127,6 +126,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     track.Id
                 }, PlayerMode.Song);
             }
+        }
+        private void LoadData(Album album)
+        {
+            Task.Run(async () =>
+            {
+                await LoadAlbum(album);
+                await LoadMoreAlbums();
+            });
         }
 
         private async Task LoadAlbum(Album album)
@@ -205,7 +212,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
-        private async void SelectAlbum(GridPanel panel)
+        private void SelectAlbum(GridPanel panel)
+        {
+            Task.Run(async () =>
+            {
+                await SelectAlbumAsync(panel);
+            });
+        }
+
+        private async Task SelectAlbumAsync(GridPanel panel)
         {
             if (panel?.Data is Album album)
             {

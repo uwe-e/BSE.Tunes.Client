@@ -43,7 +43,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             _playlistActionContext = parameters.GetValue<PlaylistActionContext>("source");
-            MainThread.BeginInvokeOnMainThread(async () =>
+            
+            Task.Run(async () =>
             {
                 await CreatePlaylistFlyoutItems();
                 IsBusy = false;

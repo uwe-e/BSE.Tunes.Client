@@ -66,8 +66,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _regionManager.RequestNavigate("FeaturedPlaylists", nameof(FeaturedPlaylistsView));
             _regionManager.RequestNavigate("RandomPlayerButton", nameof(RandomPlayerButtonView));
         }
-        
-        private async void SelectAlbum(Album album)
+
+        private void SelectAlbum(Album album)
+        {
+            Task.Run(async () =>
+            {
+                await SelectAlbumAsync(album);
+            });
+        }
+
+        private async Task SelectAlbumAsync(Album album)
         {
             var navigationParams = new NavigationParameters
             {

@@ -52,7 +52,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             return !String.IsNullOrEmpty(UserName) && !(string.IsNullOrEmpty(Password));
         }
 
-        private async void Save()
+        private void Save()
+        {
+            Task.Run(async() => {
+                await SaveAsync();
+            });
+        }
+
+        private async Task SaveAsync()
         {
             try
             {
