@@ -168,7 +168,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 }
                 using (SKImage image = SKImage.FromBitmap(bitmap))
                 {
-                    using (SKData encoded = image.Encode(SKEncodedImageFormat.Jpeg, 100))
+                    using (SKData encoded = image.Encode(SKEncodedImageFormat.Jpeg, 90))
                     {
                         using (System.IO.Stream outFile = System.IO.File.OpenWrite(fileName))
                         {

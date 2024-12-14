@@ -17,15 +17,14 @@
             </controls:SectionHeaderButton>
 
             <CollectionView x:Name="featuredAlbumsView"
-                                ItemsSource="{Binding Items}" 
+                                ItemsSource="{Binding Items}"
                                 HeightRequest="{OnIdiom Default=200, Tablet=230}">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal"
-                                       ItemSpacing="15" />
+                    <LinearItemsLayout Orientation="Horizontal"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <templates:ViewItemTemplate Padding="0">
+                        <templates:ViewItemTemplate Margin="5,0">
                             <templates:ViewItemTemplate.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=featuredAlbumsView}}"
                                                       CommandParameter="{Binding}"/>
