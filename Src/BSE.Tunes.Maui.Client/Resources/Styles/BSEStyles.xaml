@@ -52,7 +52,8 @@
     </Style>
 
     <Style TargetType="controls:AudioPlayer">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
     </Style>
 
     <Style x:Key="ContextMenuButtonStyle" TargetType="Button">

@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
+using Microsoft.Maui.Graphics.Text;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.Controls
@@ -7,6 +8,15 @@ namespace BSE.Tunes.Maui.Client.Controls
     public partial class AudioPlayer : ContentView, IPlayerController, IPlayerElement
     {
         private ImageButton _imageButton;
+
+        public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
+            nameof(TextColor), typeof(Color), typeof(AudioPlayer), Colors.Black);
+
+        public Color TextColor
+        {
+            get { return (Color)GetValue(TextColorProperty); }
+            set { SetValue(TextColorProperty, value); }
+        }
 
         public static readonly BindableProperty SelectTrackCommandProperty
             = BindableProperty.Create(

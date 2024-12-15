@@ -69,10 +69,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void SelectAlbum(Album album)
         {
-            Task.Run(async () =>
-            {
-                await SelectAlbumAsync(album);
-            });
+            _ = SelectAlbumAsync(album);
         }
 
         private async Task SelectAlbumAsync(Album album)
@@ -82,12 +79,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 { "album", album }
             };
             await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
-            //await NavigationService.CreateBuilder()
-            //                    //.UseAbsoluteNavigation()
-            //                    .AddNavigationPage()
-            //                    .AddSegment<AlbumDetailPage>()
-            //                    .WithParameters(navigationParams)
-            //                    .NavigateAsync();
         }
     }
 }

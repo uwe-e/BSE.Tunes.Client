@@ -129,11 +129,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         }
         private void LoadData(Album album)
         {
-            Task.Run(async () =>
-            {
-                await LoadAlbum(album);
-                await LoadMoreAlbums();
-            });
+            _ = LoadAlbum(album);
+            _ = LoadMoreAlbums();
         }
 
         private async Task LoadAlbum(Album album)
@@ -214,10 +211,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void SelectAlbum(GridPanel panel)
         {
-            Task.Run(async () =>
-            {
-                await SelectAlbumAsync(panel);
-            });
+            _ = SelectAlbumAsync(panel);
         }
 
         private async Task SelectAlbumAsync(GridPanel panel)
