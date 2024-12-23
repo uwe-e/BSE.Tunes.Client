@@ -46,10 +46,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void LoadData()
         {
-            Task.Run(async () =>
-            {
-                await LoadDataAsync();
-            });
+            _ = LoadDataAsync();
         }
 
         private async Task LoadDataAsync()

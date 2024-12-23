@@ -66,7 +66,10 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             var builder = new UriBuilder(_settingsService.ServiceEndPoint);
             builder.AppendToPath(string.Format("/api/files/image/{0}", imageId.ToString()));
-
+            if (asThumbnail)
+            {
+                builder.AppendToPath($"{asThumbnail}");
+            }
             return builder.Uri;
         }
 

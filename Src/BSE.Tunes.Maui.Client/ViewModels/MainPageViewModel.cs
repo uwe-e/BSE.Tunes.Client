@@ -40,17 +40,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void LoadCoverSource(Track track)
         {
-            Task.Run(async () =>
+            if (track != null)
             {
-                await LoadCoverSourceAsync(track);
-            });
-        }
-
-        private async Task LoadCoverSourceAsync(Track currentTrack)
-        {
-            if (currentTrack != null)
-            {
-                Uri coverSource = _dataService.GetImage(currentTrack.Album.AlbumId, true);
+                Uri coverSource = _dataService.GetImage(track.Album.AlbumId, true);
                 if (coverSource != null && !coverSource.Equals(CoverSource))
                 {
                     CoverSource = coverSource;
