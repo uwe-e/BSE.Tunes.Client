@@ -1,13 +1,93 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cards="clr-namespace:PanCardView;assembly=PanCardView"
+             xmlns:proc="clr-namespace:PanCardView.Processors;assembly=PanCardView"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumsCarouselView">
 
     <Grid>
-        <StackLayout >
-            <StackLayout>
-                <CarouselView x:Name="carouselView"
+        <StackLayout>
+
+            <cards:CoverFlowView PositionShiftValue="{OnIdiom Default=145, Tablet=145}"
+                                 IsCyclical="True"
+                                 ItemsSource="{Binding Items}"
+                                 x:Name="carouselView">
+
+                <x:Arguments>
+                    <proc:CoverFlowProcessor ScaleFactor="1" OpacityFactor="0.75" />
+                </x:Arguments>
+
+                <cards:CoverFlowView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="80,0"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Fill"
+                                HeightRequest="{OnIdiom Default=255, Tablet=305}"
+                                Padding="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="3" />
+                            </Border.StrokeShape>
+                            <Grid>
+
+                                <Image Source="{Binding ImageSource}" Aspect="AspectFill"/>
+
+                                <StackLayout BackgroundColor="#A0000000" VerticalOptions="End" HorizontalOptions="FillAndExpand">
+                                    <Label HorizontalTextAlignment="Center" Text="{Binding Title}" TextColor="White"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Label HorizontalTextAlignment="Center" Margin="0,-5,0,0" FontSize="13"
+                                           Text="{Binding SubTitle}" TextColor="White" LineBreakMode="TailTruncation"/>
+                                </StackLayout>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=carouselView}}"
+                                                      CommandParameter="{Binding}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+
+                        </Border>
+                    </DataTemplate>
+                </cards:CoverFlowView.ItemTemplate>
+            </cards:CoverFlowView>
+
+
+            <!--<CarouselView x:Name="carouselView"
+               ItemsSource="{Binding Items}"
+               PeekAreaInsets="80" IndicatorView="indicatorView">
+     <CarouselView.ItemsLayout>
+         <LinearItemsLayout 
+                            Orientation="Horizontal"
+                            SnapPointsType="MandatorySingle"
+                            SnapPointsAlignment="Start"/>
+     </CarouselView.ItemsLayout>
+     <CarouselView.ItemTemplate>
+         <DataTemplate>
+             <StackLayout>
+                 <Border Padding="0"
+                         StrokeThickness="0"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Start">
+                     <templates:SlidePanelTemplate HeightRequest="{OnIdiom Default=250, Tablet=230}" 
+                                                   WidthRequest="{OnIdiom Default=250, Tablet=230}"
+                                                   Margin="0">
+                         <templates:SlidePanelTemplate.GestureRecognizers>
+                             <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=carouselView}}"
+                                                   CommandParameter="{Binding}"/>
+                         </templates:SlidePanelTemplate.GestureRecognizers>
+                     </templates:SlidePanelTemplate>
+                 </Border>
+             </StackLayout>
+         </DataTemplate>
+     </CarouselView.ItemTemplate>
+ </CarouselView>
+                <IndicatorView x:Name="indicatorView"
+                IndicatorSize="{OnIdiom Default=5, Tablet=10}"
+                IndicatorColor="Gray"
+                SelectedIndicatorColor="Red"
+                HorizontalOptions="Center"/>-->
+
+
+
+            <!--<CarouselView x:Name="carouselView"
                               ItemsSource="{Binding Items}"
                               PeekAreaInsets="80" IndicatorView="indicatorView">
                     <CarouselView.ItemsLayout>
@@ -40,8 +120,8 @@
                                IndicatorSize="{OnIdiom Default=5, Tablet=10}"
                                IndicatorColor="Gray"
                                SelectedIndicatorColor="Red"
-                               HorizontalOptions="Center"/>
-            </StackLayout>
+                               HorizontalOptions="Center"/>-->
+            <!--</StackLayout>-->
         </StackLayout>
         <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
                      VerticalOptions="Center">

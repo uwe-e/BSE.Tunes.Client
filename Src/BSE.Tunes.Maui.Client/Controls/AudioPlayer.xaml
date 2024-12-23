@@ -22,18 +22,18 @@
                                   IsVisible="False" services:MediaService.RegisterAsMediaService="True"
                                   ShouldShowPlaybackControls="False" />
                     <Image Grid.Column="0" Source="{TemplateBinding Cover}" WidthRequest="50"/>
-                    <Label Grid.Column="1" TextColor="{TemplateBinding TextColor}" FontAttributes="Bold" VerticalTextAlignment="Center" Text="{TemplateBinding Track.Name}"/>
-                    <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="play.png" Aspect="AspectFit">
+                    <Label Grid.Column="1" TextColor="{TemplateBinding TextColor}" FontSize="Medium" VerticalTextAlignment="Center" Text="{TemplateBinding Track.Name}"/>
+                    <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="{AppThemeBinding Light=play.png, Dark=play_white.png}" Aspect="AspectFit">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Play">
                                     <VisualState.Setters>
-                                        <Setter Property="Source" Value="play.png" />
+                                        <Setter Property="Source" Value="{AppThemeBinding Light=play.png, Dark=play_white.png}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState Name="Pause">
                                     <VisualState.Setters>
-                                        <Setter Property="Source" Value="pause.png" />
+                                        <Setter Property="Source" Value="{AppThemeBinding Light=pause.png, Dark=pause_white.png}" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -47,7 +47,7 @@
                             </DataTrigger>
                         </ImageButton.Triggers>-->
                     </ImageButton>
-                    <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit">
+                    <ImageButton Grid.Column="3" Source="{AppThemeBinding Light=play_forward.png, Dark=play_forward_white.png}" Aspect="AspectFit">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Disabled">

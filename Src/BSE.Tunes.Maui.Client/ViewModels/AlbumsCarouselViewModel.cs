@@ -43,10 +43,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void LoadData()
         {
-            Task.Run(async () =>
-            {
-                await LoadDataAsync();
-            });
+            _ = LoadDataAsync();
         }
 
         private async Task LoadDataAsync()
@@ -63,7 +60,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         {
                             Title = album.Title,
                             SubTitle = album.Artist?.Name,
-                            ImageSource = _imageService.GetBitmapSource(album.AlbumId, true),
+                            ImageSource = _imageService.GetBitmapSource(album.AlbumId, false),
                             Data = album
                         });
                     }

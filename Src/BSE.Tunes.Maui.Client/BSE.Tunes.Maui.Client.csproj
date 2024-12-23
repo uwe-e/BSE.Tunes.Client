@@ -63,7 +63,16 @@
     <MauiImage Update="Resources\Images\ellipsis_horizontal.svg" Resize="False" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\ellipsis_horizontal_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\pause_white.svg" TintColor="#FFFFFF">
+      <Resize>True</Resize>
+      <BaseSize>32,32</BaseSize>
+    </MauiImage>
     <MauiImage Update="Resources\Images\pause.svg" Resize="True" BaseSize="32,32" />
+   
+    <MauiImage Update="Resources\Images\play_white.svg" TintColor="#FFFFFF">
+      <Resize>True</Resize>
+      <BaseSize>32,32</BaseSize>
+    </MauiImage>
     <MauiImage Update="Resources\Images\play_pk_dark.svg" TintColor="#FF375F">
       <Resize>True</Resize>
       <BaseSize>24,24</BaseSize>
@@ -77,6 +86,10 @@
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play_forward.svg" Resize="True" BaseSize="32,32" />
+     <MauiImage Update="Resources\Images\play_forward_white.svg" TintColor="#FFFFFF">
+      <Resize>True</Resize>
+      <BaseSize>32,32</BaseSize>
+    </MauiImage>
     <MauiImage Update="Resources\Images\play_forward_disabled.svg" Resize="True" TintColor="#919191" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\shuffle_pk_dark.svg" TintColor="#FF375F">
       <Resize>True</Resize>
@@ -104,6 +117,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CardsView.Maui" Version="1.1.0" />
 		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.100" />

@@ -4,6 +4,7 @@ using BSE.Tunes.Maui.Client.Views;
 using BSE.Maui.Controls;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
+using PanCardView;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -16,6 +17,7 @@ namespace BSE.Tunes.Maui.Client
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkitMediaElement()
+                .UseCardsView()
                 .UseBSEControls()
                 .UsePrism(prism =>
                 {

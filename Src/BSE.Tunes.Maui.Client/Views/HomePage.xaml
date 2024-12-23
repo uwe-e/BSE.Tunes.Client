@@ -10,19 +10,13 @@
         <ScrollView>
             <StackLayout>
 
-                <ContentView prism:RegionManager.RegionName="AlbumsCarousel" HeightRequest="{OnIdiom Default=260, Tablet=420}"/>
+                <ContentView prism:RegionManager.RegionName="AlbumsCarousel" HeightRequest="{OnIdiom Default=260, Tablet=310}"/>
                 
                 <ContentView prism:RegionManager.RegionName="RandomPlayerButton" Margin="5,10" HeightRequest="80"/>
                 
                 <ContentView prism:RegionManager.RegionName="FeaturedAlbums" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>
                 
-                
                 <ContentView prism:RegionManager.RegionName="FeaturedPlaylists" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>
-                <!--<local:RandomPlayerButtonView HeightRequest="80"/>-->
-
-                <!--<views:FeaturedAlbumsView HeightRequest="{OnIdiom Default=260, Tablet=400}"/>-->
-
-                <!--<local:FeaturedPlaylistsView HeightRequest="{OnIdiom Default=260, Tablet=400}"/>-->
 
             </StackLayout>
         </ScrollView>

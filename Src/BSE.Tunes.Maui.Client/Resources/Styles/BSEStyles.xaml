@@ -35,6 +35,7 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="HorizontalOptions" Value="Start"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+        <Setter Property="FontSize" Value="Large"/>
     </Style>
 
     <Style x:Key="SeparatorItem" TargetType="BoxView">

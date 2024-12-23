@@ -5,6 +5,8 @@
     <ContentView.Content>
         <Button Command="{Binding PlayRandomCommand}"
                 Text="{Binding Text}"
+                TextColor="White"
+                FontSize="Medium"
                 LineBreakMode="WordWrap"
                 VerticalOptions="Fill"/>
     </ContentView.Content>
