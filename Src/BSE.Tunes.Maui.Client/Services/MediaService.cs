@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Models.Contract;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 
@@ -160,7 +161,9 @@ namespace BSE.Tunes.Maui.Client.Services
                             {
                                 await response.Content.CopyToAsync(fileStream);
                             }
-
+                            _mediaElement.MetadataArtist = track.Album?.Artist?.Name;
+                            _mediaElement.MetadataTitle = track?.Name;
+                            _mediaElement.MetadataArtworkUrl = coverUri?.ToString();
                             _mediaElement.Source = MediaSource.FromFile(filePath);
 
 
