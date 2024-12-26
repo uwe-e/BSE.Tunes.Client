@@ -107,7 +107,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 Track track = await _dataService.GetTrackById(trackId);
                 if (track != null)
                 {
-                    _mediaService.SetTrack(track, _dataService.GetImage(track.Album.AlbumId, true));
+                    await _mediaService.SetTrackAsync(track, _dataService.GetImage(track.Album.AlbumId, true));
                 }
             }
         }

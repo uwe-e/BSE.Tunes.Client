@@ -140,7 +140,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         }
 
-        public async void SetTrack(Track track, Uri coverUri)
+        public async Task SetTrackAsync(Track track, Uri coverUri)
         {
             if (track != null)
             {

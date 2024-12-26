@@ -13,6 +13,6 @@ namespace BSE.Tunes.Maui.Client.Services
         void Pause();
         void Stop();
         void SetTrack(Track track);
-        void SetTrack(Track track, Uri coverUri);
+        Task SetTrackAsync(Track track, Uri coverUri);
     }
 }
