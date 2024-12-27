@@ -5,15 +5,32 @@
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.SettingsPage"
              Title="{x:Static strings:AppResources.SettingsPage_Title}">
-   
+
+
     <TableView Intent="Settings" HasUnevenRows="True" x:Name="settingsView">
         <TableRoot>
             <TableSection>
-                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}"
-                                           Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"
-                                           Detail="{Binding BindingContext.ServiceEndPoint, Source={x:Reference settingsView}}"/>
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}" TitleColor="White"
+                                           Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}" TextColor="White"
+                                           Detail="{Binding BindingContext.ServiceEndPoint, Source={x:Reference settingsView}}"
+                                           Command="{Binding BindingContext.ToServiceEndpointDetailCommand, Source={x:Reference settingsView}}"/>
+                
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}"
+                                           Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
+                                           Detail="{Binding BindingContext.UserName, Source={x:Reference settingsView}}"
+                                           Command="{Binding BindingContext.ToAccountDetailCommand, Source={x:Reference settingsView}}"/>
+                
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}"
+                                           Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
+                                           Detail="{Binding BindingContext.UsedDiskSpace, Source={x:Reference settingsView}}"
+                                           Command="{Binding BindingContext.ToCacheSettingsDetailCommand, Source={x:Reference settingsView}}"/>
+                
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}"
+                                           Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
+                                           Detail="{Binding BindingContext.VersionString, Source={x:Reference settingsView}}"
+                                           IsEnabled="False"/>
             </TableSection>
-            <TableSection>
+            <!--<TableSection>
                 <ViewCell>
                     
                     <ViewCell.View>
@@ -24,34 +41,50 @@
                         <Grid Grid.Row="1" RowDefinitions="Auto,Auto">
                             
                             <Label Grid.Row="0" Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"/>
-                        <!--<Label Grid.Row="1" Text="{Binding ServiceEndPoint}"/>-->
+                        <Label Grid.Row="1" Text="{Binding ServiceEndPoint}"/>
                         </Grid>
                         
-                          <!--Detail="{Binding ServiceEndPoint}"-->
+
                     </Grid>
                     </ViewCell.View>
                     
                 </ViewCell>
-            </TableSection>
-            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}">
+            </TableSection>-->
+            <!--<TableSection>
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}"
+                           Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
+                           Detail="{Binding BindingContext.UserName, Source={x:Reference settingsView}}"/>
+            </TableSection>-->
+            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"
                           Command="{Binding ToServiceEndpointDetailCommand}"/>
-            </TableSection>
-            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}">
+            </TableSection>-->
+            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
                           Detail="{Binding UserName}"
                           Command="{Binding ToAccountDetailCommand}"/>
-            </TableSection>
-            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}">
+            </TableSection>-->
+            <!--<TableSection>
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}"
+                                           Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
+                                           Detail="{Binding BindingContext.UsedDiskSpace, Source={x:Reference settingsView}}"/>
+            </TableSection>-->
+            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
                           Detail="{Binding UsedDiskSpace}"
                           Command="{Binding ToCacheSettingsDetailCommand}"/>
-            </TableSection>
-            <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}">
+            </TableSection>-->
+            <!--<TableSection>
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}"
+                           Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
+                           Detail="{Binding BindingContext.VersionString, Source={x:Reference settingsView}}"
+                                           IsEnabled="False"/>
+            </TableSection>-->
+            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
                           Detail="{Binding VersionString}"/>
-            </TableSection>
+            </TableSection>-->
         </TableRoot>
     </TableView>
-    
+
 </ContentPage>

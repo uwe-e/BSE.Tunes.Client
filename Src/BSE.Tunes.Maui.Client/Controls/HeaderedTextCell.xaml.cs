@@ -117,18 +117,12 @@ public partial class HeaderedTextCell : ViewCell
             return;
         }
 
+        Command?.Execute(CommandParameter);
     }
 
     void OnCommandCanExecuteChanged(object sender, EventArgs eventArgs)
     {
         IsEnabled = Command.CanExecute(CommandParameter);
     }
-
-    //protected override void OnBindingContextChanged()
-    //{
-    //    base.OnBindingContextChanged();
-    //    View.BindingContext = BindingContext;
-    //}
-
 
 }

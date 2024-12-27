@@ -10,7 +10,7 @@
 
     <Style TargetType="Button">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SystemPink}, Dark={StaticResource SystemPinkDark}}"/>
-        <Setter Property="TextColor" Value="{DynamicResource SystemWhite}"/>
+        <Setter Property="TextColor" Value="{DynamicResource White}"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -57,6 +57,11 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
     </Style>
 
+    <Style TargetType="controls:HeaderedTextCell">
+        <Setter Property="TitleColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+    </Style>
+    
     <Style x:Key="ContextMenuButtonStyle" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextTransform" Value="None"/>

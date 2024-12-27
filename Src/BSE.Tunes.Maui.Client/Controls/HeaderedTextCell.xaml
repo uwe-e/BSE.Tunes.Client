@@ -2,7 +2,7 @@
 <ViewCell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
           x:Class="BSE.Tunes.Maui.Client.Controls.HeaderedTextCell">
-    <Border BackgroundColor="#11ffffff" Margin="10">
+    <Border BackgroundColor="Transparent" Margin="10">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="{OnPlatform 15, iOS=15, Android=10}" />
         </Border.StrokeShape>
@@ -13,7 +13,7 @@
                     <Label Grid.Row="0" Text="{Binding Text}" TextColor="{Binding TextColor}"/>
                     <Label Grid.Row="1" Text="{Binding Detail}" TextColor="{Binding DetailColor}"/>
                 </Grid>
-                <Image Grid.Column="1" Source="chevron_forward_outline_white.png" HeightRequest="24"/>
+                <Image IsVisible="{Binding IsEnabled}" Grid.Column="1" Source="chevron_forward_outline_white.png" HeightRequest="24"/>
             </Grid>
         </Grid>
     </Border>

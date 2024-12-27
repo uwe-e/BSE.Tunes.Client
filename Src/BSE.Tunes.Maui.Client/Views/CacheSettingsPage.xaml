@@ -2,19 +2,24 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.CacheSettingsPage"
              Title="CacheSettingsPage">
-    <TableView Intent="Settings">
+
+    <TableView Intent="Form" HasUnevenRows="True"  x:Name="settingsPage">
         <TableRoot>
-            <TableSection Title="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Title}">
-                <TextCell Text="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Text}"
-                      Detail="{Binding UsedDiskSpace}"/>
+            <TableSection>
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Title}" TitleColor="White"
+                                           Text="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Text}" TextColor="White"
+                                           Detail="{Binding BindingContext.UsedDiskSpace, Source={x:Reference settingsPage}}"
+                                           IsEnabled="False"/>
                 <ViewCell>
                     <Button Text="{x:Static strings:AppResources.CacheSettingsPage_ButtonDelete_Text}"
-                        Command="{Binding DeleteCommand}"
-                        Style="{StaticResource SubmitActionButtonStyle}"/>
+                            Command="{Binding DeleteCommand}"
+                            Margin="20,10"/>
                 </ViewCell>
             </TableSection>
         </TableRoot>
     </TableView>
+    
 </ContentPage>
