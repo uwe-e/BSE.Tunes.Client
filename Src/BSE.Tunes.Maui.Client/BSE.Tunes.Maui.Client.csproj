@@ -60,6 +60,9 @@
     <MauiImage Update="Resources\Images\albums.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\add_circle_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\chevron_forward_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\chevron_forward_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    
     <MauiImage Update="Resources\Images\ellipsis_horizontal.svg" Resize="False" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\ellipsis_horizontal_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
@@ -131,6 +134,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Remove="Controls\HeaderedTextCell.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Resources\Images\add_circle_outline.svg" />
 	  <None Remove="Resources\Images\add_circle_outline_white.svg" />
 	  <None Remove="Resources\Images\albums.svg" />
@@ -167,6 +174,9 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
+    <MauiXaml Include="Controls\HeaderedTextCell.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\AudioPlayer.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

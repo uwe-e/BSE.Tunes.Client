@@ -152,10 +152,6 @@ namespace BSE.Tunes.Maui.Client.Services
                     using (var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead))
                         if (response.IsSuccessStatusCode)
                         {
-                            //var stream = await response.Content.ReadAsStreamAsync();
-
-
-                            //_storageService.
                             var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid.ToString());
                             using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
@@ -166,12 +162,8 @@ namespace BSE.Tunes.Maui.Client.Services
                             _mediaElement.MetadataArtworkUrl = coverUri?.ToString();
                             _mediaElement.Source = MediaSource.FromFile(filePath);
 
-
-                            //_mediaElement.Source = new Uri("http://test.com");
                         }
                 }
-                //_mediaElement.Source = track.
-                //_dataService.
             }
         }
 

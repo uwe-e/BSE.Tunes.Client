@@ -2,15 +2,40 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.SettingsPage"
              Title="{x:Static strings:AppResources.SettingsPage_Title}">
    
-    <TableView Intent="Settings">
+    <TableView Intent="Settings" HasUnevenRows="True" x:Name="settingsView">
         <TableRoot>
+            <TableSection>
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}"
+                                           Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"
+                                           Detail="{Binding BindingContext.ServiceEndPoint, Source={x:Reference settingsView}}"/>
+            </TableSection>
+            <TableSection>
+                <ViewCell>
+                    
+                    <ViewCell.View>
+                        
+                        <Grid RowDefinitions="Auto,Auto">
+                        
+                        <Label Grid.Row="0" FontSize="Medium" Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}"/>
+                        <Grid Grid.Row="1" RowDefinitions="Auto,Auto">
+                            
+                            <Label Grid.Row="0" Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"/>
+                        <!--<Label Grid.Row="1" Text="{Binding ServiceEndPoint}"/>-->
+                        </Grid>
+                        
+                          <!--Detail="{Binding ServiceEndPoint}"-->
+                    </Grid>
+                    </ViewCell.View>
+                    
+                </ViewCell>
+            </TableSection>
             <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"
-                          Command="{Binding ToServiceEndpointDetailCommand}"
-                          Detail="{Binding ServiceEndPoint}"/>
+                          Command="{Binding ToServiceEndpointDetailCommand}"/>
             </TableSection>
             <TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}">
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
