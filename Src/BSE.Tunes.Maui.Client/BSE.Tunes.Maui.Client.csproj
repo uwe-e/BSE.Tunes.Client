@@ -22,7 +22,7 @@
     <NoWarn>$(NoWarn)</NoWarn>-->
 
 		<!-- Display name -->
-		<ApplicationTitle>BSE.Tunes.Maui.Client</ApplicationTitle>
+		<ApplicationTitle>BSEtunes</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.bse.tunes.maui.client</ApplicationId>
@@ -44,11 +44,11 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#AA0000" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg"/>
     <!--<MauiIcon Include="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />-->
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\bsesplash.svg" Color="#ffffff" BaseSize="1024,1024" />
+		<MauiSplashScreen Include="Resources\Splash\bsesplash.svg" Color="#00ffffff" BaseSize="1024,1024" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
