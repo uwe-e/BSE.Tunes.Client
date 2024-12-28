@@ -18,14 +18,15 @@
                                     SelectionChangedCommandParameter="{TemplateBinding SelectionChangedCommandParameter}"
                                     RemainingItemsThreshold="{TemplateBinding RemainingItemsThreshold}"
                                     RemainingItemsThresholdReachedCommand="{TemplateBinding RemainingItemsThresholdReachedCommand}"
-                                    ItemsLayout="HorizontalList" ItemTemplate="{TemplateBinding ItemTemplate}"
-                                    HeightRequest="{OnIdiom Default=200, Tablet=400}">
+                                    ItemsLayout="HorizontalList"
+                                    ItemTemplate="{TemplateBinding ItemTemplate}"
+                                    HeightRequest="{OnIdiom Default=200, Tablet=230}">
                     </CollectionView>
                 </StackLayout>
                 <StackLayout IsVisible="{TemplateBinding IsBusy}" Padding="12"
                              VerticalOptions="Center">
                     <ActivityIndicator x:Name="PART_ActivityIndicator"
-                                       IsRunning="{TemplateBinding IsBusy}" Color ="{TemplateBinding PrimaryLabelColor}"/>
+                                       IsRunning="{TemplateBinding IsBusy}"/>
                 </StackLayout>
             </Grid>
         </ControlTemplate>

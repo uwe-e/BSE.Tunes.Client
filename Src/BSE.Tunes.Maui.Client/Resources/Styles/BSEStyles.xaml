@@ -70,8 +70,9 @@
     </Style>
 
     <Style x:Key="CollectionViewLabelStyle" TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
+        <!--<Setter Property="FontSize" Value="{OnIdiom Phone=20, Tablet=14}"/>-->
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
