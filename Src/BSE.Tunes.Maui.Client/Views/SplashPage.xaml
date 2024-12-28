@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BSE.Tunes.Maui.Client.Views.SplashPage"
              Title="SplashPage">
-    <VerticalStackLayout>
-        <Label Text="Loading..."
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid HeightRequest="50">
+        <ActivityIndicator IsRunning="True" Color ="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"/>
+    </Grid>
 </ContentPage>

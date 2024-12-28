@@ -25,12 +25,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand? _loadMoreAlbumssCommand;
         private ICommand? _goBackCommand;
 
-        public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ?? (
-           _loadMoreAlbumssCommand = new DelegateCommand(() =>
-           {
-               MainThread.BeginInvokeOnMainThread(async () => await LoadMoreAlbums());
-
-           }));
+        public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ??= new DelegateCommand(async () => await LoadMoreAlbumsAsync());
 
         public ICommand SelectAlbumCommand => _selectAlbumCommand ??= new Command<GridPanel>(SelectAlbum);
 
@@ -129,11 +124,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         }
         private void LoadData(Album album)
         {
-            _ = LoadAlbum(album);
-            _ = LoadMoreAlbums();
+            _ = LoadAlbumAsync(album);
         }
 
-        private async Task LoadAlbum(Album album)
+        private async Task LoadAlbumAsync(Album album)
         {
             if (album != null)
             {
@@ -162,11 +156,18 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 PlayAllCommand.RaiseCanExecuteChanged();
                 PlayAllRandomizedCommand.RaiseCanExecuteChanged();
                 IsBusy = false;
+
+                await LoadMoreAlbumsAsync();
             }
         }
 
-        private async Task LoadMoreAlbums()
+        private async Task LoadMoreAlbumsAsync()
         {
+            if (Albums == null)
+            {
+                return;
+            }
+            
             if (IsQueryBusy)
             {
                 return;

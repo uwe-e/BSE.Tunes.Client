@@ -38,7 +38,7 @@
         </StackLayout>
         <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
                  VerticalOptions="Center">
-            <ActivityIndicator IsRunning="{Binding IsBusy}" Color ="{DynamicResource PrimaryLabelColor}"/>
+            <ActivityIndicator IsRunning="{Binding IsBusy}"/>
         </StackLayout>
     </Grid>
 </ContentView>

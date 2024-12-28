@@ -6,84 +6,41 @@
              x:Class="BSE.Tunes.Maui.Client.Views.SettingsPage"
              Title="{x:Static strings:AppResources.SettingsPage_Title}">
 
-
     <TableView Intent="Settings" HasUnevenRows="True" x:Name="settingsView">
         <TableRoot>
             <TableSection>
-                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}" TitleColor="White"
-                                           Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}" TextColor="White"
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}"
+                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}" 
+                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
                                            Detail="{Binding BindingContext.ServiceEndPoint, Source={x:Reference settingsView}}"
+                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
                                            Command="{Binding BindingContext.ToServiceEndpointDetailCommand, Source={x:Reference settingsView}}"/>
-                
+
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}"
+                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
                                            Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
+                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
                                            Detail="{Binding BindingContext.UserName, Source={x:Reference settingsView}}"
+                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
                                            Command="{Binding BindingContext.ToAccountDetailCommand, Source={x:Reference settingsView}}"/>
-                
+
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}"
+                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
                                            Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
+                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
                                            Detail="{Binding BindingContext.UsedDiskSpace, Source={x:Reference settingsView}}"
+                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
                                            Command="{Binding BindingContext.ToCacheSettingsDetailCommand, Source={x:Reference settingsView}}"/>
                 
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}"
+                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
                                            Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
+                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
                                            Detail="{Binding BindingContext.VersionString, Source={x:Reference settingsView}}"
+                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
                                            IsEnabled="False"/>
             </TableSection>
-            <!--<TableSection>
-                <ViewCell>
-                    
-                    <ViewCell.View>
-                        
-                        <Grid RowDefinitions="Auto,Auto">
-                        
-                        <Label Grid.Row="0" FontSize="Medium" Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}"/>
-                        <Grid Grid.Row="1" RowDefinitions="Auto,Auto">
-                            
-                            <Label Grid.Row="0" Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"/>
-                        <Label Grid.Row="1" Text="{Binding ServiceEndPoint}"/>
-                        </Grid>
-                        
-
-                    </Grid>
-                    </ViewCell.View>
-                    
-                </ViewCell>
-            </TableSection>-->
-            <!--<TableSection>
-                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}"
-                           Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
-                           Detail="{Binding BindingContext.UserName, Source={x:Reference settingsView}}"/>
-            </TableSection>-->
-            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}">
-                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}"
-                          Command="{Binding ToServiceEndpointDetailCommand}"/>
-            </TableSection>-->
-            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}">
-                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
-                          Detail="{Binding UserName}"
-                          Command="{Binding ToAccountDetailCommand}"/>
-            </TableSection>-->
-            <!--<TableSection>
-                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}"
-                                           Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
-                                           Detail="{Binding BindingContext.UsedDiskSpace, Source={x:Reference settingsView}}"/>
-            </TableSection>-->
-            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}">
-                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
-                          Detail="{Binding UsedDiskSpace}"
-                          Command="{Binding ToCacheSettingsDetailCommand}"/>
-            </TableSection>-->
-            <!--<TableSection>
-                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}"
-                           Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
-                           Detail="{Binding BindingContext.VersionString, Source={x:Reference settingsView}}"
-                                           IsEnabled="False"/>
-            </TableSection>-->
-            <!--<TableSection Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}">
-                <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
-                          Detail="{Binding VersionString}"/>
-            </TableSection>-->
         </TableRoot>
     </TableView>
 

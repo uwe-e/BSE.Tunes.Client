@@ -9,10 +9,13 @@
     <TableView Intent="Form" HasUnevenRows="True"  x:Name="settingsPage">
         <TableRoot>
             <TableSection>
-                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.LoginSettingsPage_SectionAccount_Title}" TitleColor="White"
-                               Text="{x:Static strings:AppResources.LoginSettingsPage_SectionAccount_Description_Text}" TextColor="White"
-                               Detail="{Binding BindingContext.UserName, Source={x:Reference settingsPage}}"
-                               IsEnabled="False"/>
+                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.LoginSettingsPage_SectionAccount_Title}"
+                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           Text="{x:Static strings:AppResources.LoginSettingsPage_SectionAccount_Description_Text}"
+                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           Detail="{Binding BindingContext.UserName, Source={x:Reference settingsPage}}"
+                                           DetailColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           IsEnabled="False"/>
                 <ViewCell>
                     <Button Text="{x:Static strings:AppResources.LoginSettingsPage_ButtonDelete_Text}"
                             Command="{Binding DeleteCommand}"
