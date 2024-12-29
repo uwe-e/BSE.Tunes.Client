@@ -18,7 +18,7 @@
             <ScrollView AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
                 <CollectionView Margin="10,0" ItemsSource="{Binding Items}">
                     <CollectionView.Header>
-                        <StackLayout Spacing="0">
+                        <StackLayout Spacing="0" Margin="0,0,0,15">
                             <StackLayout VerticalOptions="StartAndExpand" Orientation="Horizontal">
                                 <Image Aspect="AspectFill"
                                        VerticalOptions="Start"
@@ -91,8 +91,10 @@
                                            Style="{DynamicResource CollectionViewLabelStyle}"
                                            VerticalTextAlignment="Center"
                                            LineBreakMode="TailTruncation"/>
-                                    <ImageButton Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}" HorizontalOptions="End" Margin="10,0"
-               Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}" CommandParameter="{Binding}"/>
+                                    <ImageButton Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
+                                                 HorizontalOptions="End" Margin="10,0"
+                                                 Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                                 CommandParameter="{Binding}"/>
                                     <!--<Button Grid.Column="2"
                                             Text="..."
                                             Style="{DynamicResource ContextMenuButtonStyle}"
@@ -103,7 +105,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.Footer>
-                        <Grid IsVisible="{Binding HasFurtherAlbums}">
+                        <Grid IsVisible="{Binding HasFurtherAlbums}" Margin="0,15,0,0">
                         <controls:HeaderedCollectionView Title="{x:Static strings:AppResources.AlbumsDetailPage_FurtherAlbums_Header_Text}"
                                      IsBusy="{Binding IsQueryBusy}"
                                      IsVisible="{Binding HasFurtherAlbums}"
