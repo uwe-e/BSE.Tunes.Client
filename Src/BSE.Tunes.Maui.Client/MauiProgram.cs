@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using PanCardView;
 using Xe.AcrylicView;
+using FFImageLoading.Maui;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -19,6 +20,7 @@ namespace BSE.Tunes.Maui.Client
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkitMediaElement()
                 .UseCardsView()
+                .UseFFImageLoading()
                 .UseAcrylicView()
                 .UseBSEControls()
                 .UsePrism(prism =>
@@ -36,6 +38,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<ServiceEndpointWizzardPage>();
                         container.RegisterForNavigation<LoginWizzardPage>();
                         container.RegisterForNavigation<HomePage>();
+                        container.RegisterForNavigation<AlbumsPage, AlbumsPageViewModel>();
                         container.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
                         container.RegisterForNavigation<LoginSettingsPage>();
                         container.RegisterForNavigation<ServiceEndpointSettingsPage>();

@@ -2,10 +2,6 @@
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
-using Prism.Commands;
-using Prism.Events;
-using Prism.Navigation;
-using Prism.Navigation.Regions;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -45,12 +41,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             _eventAggregator.GetEvent<AlbumSelectedEvent>().Subscribe(SelectAlbum, ThreadOption.UIThread);
 
-        }
-
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-            
         }
 
         private void RefreshView()

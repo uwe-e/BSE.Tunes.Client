@@ -21,7 +21,7 @@
         </prism:PrismNavigationPage>
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.AlbumsPage_Title}" IconImageSource="albums.png">
             <x:Arguments>
-                <views:PlaylistsPage/>
+                <views:AlbumsPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
