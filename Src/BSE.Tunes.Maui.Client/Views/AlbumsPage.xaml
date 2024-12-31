@@ -5,7 +5,7 @@
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumsPage"
-             Title="AlbumsPage">
+             Title="{x:Static strings:AppResources.AlbumsPage_Title}">
     <Grid>
         <CollectionView x:Name="albumsView"  ItemsSource="{Binding Items}"
                 ItemSizingStrategy="MeasureFirstItem"

@@ -39,6 +39,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<LoginWizzardPage>();
                         container.RegisterForNavigation<HomePage>();
                         container.RegisterForNavigation<AlbumsPage, AlbumsPageViewModel>();
+                        container.RegisterForNavigation<PlaylistsPage, PlaylistsPageViewModel>();
                         container.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
                         container.RegisterForNavigation<LoginSettingsPage>();
                         container.RegisterForNavigation<ServiceEndpointSettingsPage>();
