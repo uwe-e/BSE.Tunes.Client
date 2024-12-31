@@ -24,7 +24,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
 
-        public ICommand OpenFlyoutCommand => _openFlyoutCommand ??= new DelegateCommand<object>(OpenFlyout);
+        public ICommand OpenFlyoutCommand => _openFlyoutCommand ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
 
         public ICommand PlayCommand => _playCommand ??= new DelegateCommand<GridPanel>(PlayTrack);
 
@@ -77,14 +77,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     }
                 }
             }, ThreadOption.UIThread);
-        }
-
-        protected void OpenFlyout(object obj)
-        {
-            Task.Run(async () =>
-            {
-                await OpenFlyoutAsync(obj);
-            });
         }
 
         private async Task OpenFlyoutAsync(object obj)
