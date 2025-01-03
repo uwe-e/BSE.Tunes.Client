@@ -2,8 +2,6 @@
 {
     public class Playlist
     {
-        private IList<PlaylistEntry>? _playlistEntries;
-
         public int Id
         {
             get; set;
@@ -29,6 +27,6 @@
             set;
         }
 
-        public IList<PlaylistEntry> Entries => _playlistEntries ?? (_playlistEntries = new List<PlaylistEntry>());
+        public IList<PlaylistEntry> Entries { get; set; }
     }
 }

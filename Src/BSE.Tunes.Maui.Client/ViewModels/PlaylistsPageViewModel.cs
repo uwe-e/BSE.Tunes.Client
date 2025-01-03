@@ -1,5 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Models;
+using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -26,7 +28,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await LoadMoreItemsAsync();
         }, HasMoreItems);
 
-        public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(SelectItem);
+        public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(async(panel) => await SelectItemAsync(panel));
 
         public ObservableCollection<GridPanel> Items => _items ??= new ObservableCollection<GridPanel>();
 
@@ -71,6 +73,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 IsBusy = false;
                 _isActivated = true;
                 _hasItems = true;
+                
                 _ = LoadMoreItemsAsync();
             }
             IsActiveChanged?.Invoke(this, EventArgs.Empty);
@@ -128,9 +131,17 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         }
         
-        private void SelectItem(GridPanel panel)
+        private async Task SelectItemAsync(GridPanel panel)
         {
-            
+            if (panel?.Data is Playlist playlist)
+            {
+                var navigationParams = new NavigationParameters
+                    {
+                        { "playlist", playlist }
+                    };
+
+                await NavigationService.NavigateAsync($"{nameof(PlaylistDetailPage)}", navigationParams);
+            }
         }
     }
 }

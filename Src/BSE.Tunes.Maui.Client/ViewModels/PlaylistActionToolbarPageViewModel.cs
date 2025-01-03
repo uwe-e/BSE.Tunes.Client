@@ -2,8 +2,6 @@
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
-using Prism.Commands;
-using Prism.Navigation;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -29,7 +27,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public ICommand CloseFlyoutCommand => _closeFlyoutCommand
             ??= new DelegateCommand(async () =>
             {
-                await CloseFlyout();
+                await CloseFlyoutAsync();
             });
 
         public ICommand AddToPlaylistCommand => _addToPlaylistCommand
@@ -107,10 +105,24 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 SubTitle = album.Artist?.Name;
                 ImageSource = _imageService.GetBitmapSource(album.AlbumId, true);
             }
+            //if (_playlistActionContext?.Data is Playlist playlist)
+            //{
+            //    CanRemovePlaylist = true;
+            //    Title = playlist.Name;
+            //    ImageSource = await _imageService.GetStitchedBitmapSource(playlist.Id, 50, true);
+            //}
+            if (_playlistActionContext?.Data is PlaylistEntry playlistEntry)
+            {
+                CanRemoveFromPlaylist = true;
+                CanDisplayAlbumInfo = true;
+                Title = playlistEntry.Track?.Name;
+                SubTitle = playlistEntry.Artist;
+                ImageSource = _imageService.GetBitmapSource(playlistEntry.AlbumId, true);
+            }
             base.OnNavigatedTo(parameters);
         }
 
-        private async Task CloseFlyout()
+        private async Task CloseFlyoutAsync()
         {
             await _flyoutNavigationService.CloseFlyoutAsync();
         }
@@ -126,7 +138,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void RemoveFromPlaylist()
         {
-
+            if (_playlistActionContext != null)
+            {
+                _playlistActionContext.ActionMode = PlaylistActionMode.RemoveFromPlaylist;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
         }
 
         private void ShowAlbum()

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
+             xmlns:acrylic="clr-namespace:Xe.AcrylicView;assembly=Xe.AcrylicView"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             x:Class="BSE.Tunes.Maui.Client.Views.PlaylistDetailPage"
+             x:Name="page">
+
+    <NavigationPage.TitleView>
+        <ImageButton Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
+                 HorizontalOptions="End" Margin="10,0"
+                 Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Playlist}"/>
+    </NavigationPage.TitleView>
+
+    <Grid>
+                <CollectionView Margin="10,0" ItemsSource="{Binding Items}">
+                    <CollectionView.Header>
+                        <Grid Margin="0,0,0,15" RowDefinitions="*,Auto">
+                            <ffimageloading:CachedImage HeightRequest="{OnIdiom Default=150, Tablet=250}"
+                               Aspect="AspectFill" Source="{Binding ImageSource}"/>
+                            <acrylic:AcrylicView EffectStyle="Dark" VerticalOptions="Fill" >
+                                <acrylic:AcrylicView.Background>
+                                    <LinearGradientBrush EndPoint="0,1">
+                                        <GradientStop Color="Transparent" Offset="0.1" />
+                                        <GradientStop Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </acrylic:AcrylicView.Background>
+                                <Grid RowDefinitions="*,Auto">
+                                    <ffimageloading:CachedImage Grid.Row="0" Aspect="AspectFit"
+                                       HeightRequest="{OnIdiom Default=150, Tablet=250}" 
+                                       WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
+                                    <Label x:Name="infoTitle" Text="{Binding Playlist.Name}"
+                                       HorizontalOptions="Center"
+                                       LineBreakMode="TailTruncation"
+                                       Grid.Row="1" FontSize="Medium" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                </Grid>
+                            </acrylic:AcrylicView>
+                            <StackLayout Grid.Row="1" HorizontalOptions="Center" Orientation="Horizontal">
+                                <Button Text="{x:Static strings:AppResources.PlaylistDetailPage_Button_PlayAll_Text}"
+                                    ImageSource="{AppThemeBinding Light=play_pk_light.png, Dark=play_pk_dark.png}"
+                                    Command="{Binding PlayAllCommand}"
+                                    Style="{DynamicResource DetailActionButtonStyle}"/>
+                                <Button Text="{x:Static strings:AppResources.PlaylistDetailPage_Button_PlayRandomized_Text}"
+                                    ImageSource="{AppThemeBinding Light=shuffle_pk_light.png, Dark=shuffle_pk_dark.png}"
+                                    Command="{Binding PlayAllRandomizedCommand}"
+                                    Style="{DynamicResource DetailActionButtonStyle}"/>
+                            </StackLayout>
+                        </Grid>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand,Source={x:Reference page}}"
+                                                      CommandParameter="{Binding}"/>
+                                </StackLayout.GestureRecognizers>
+                                <Grid Margin="3,10" HeightRequest="50">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
+                                                          CommandParameter="{Binding}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="40"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding ImageSource}"
+                                                                Aspect="AspectFill" HeightRequest="50"/>
+                                    <Grid Grid.Column="1" RowDefinitions="*, Auto">
+                                        <Label Grid.Row="0" Text="{Binding Title}"
+                                           VerticalTextAlignment="Center"
+                                           Style="{DynamicResource CollectionViewLabelStyle}"
+                                           LineBreakMode="TailTruncation"/>
+                                        <Label Grid.Row="1" VerticalOptions="FillAndExpand" Margin="0,-5,0,0"
+                                           VerticalTextAlignment="Center"
+                                           Text="{Binding SubTitle}"
+                                           LineBreakMode="TailTruncation"/>
+                                    </Grid>
+                                    <ImageButton BackgroundColor="Red" Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
+                                                 HorizontalOptions="End" Margin="10,0"
+                                                 Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                                 CommandParameter="{Binding}"/>
+                                </Grid>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Grid IsVisible="{Binding IsBusy}" HeightRequest="30">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"/>
+                </Grid>
+        
+    </Grid>
+    
+</ContentPage>

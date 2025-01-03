@@ -5,6 +5,7 @@
                     xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
                     xmlns:bse="clr-namespace:BSE.Maui.Controls;assembly=BSE.Maui.Controls"
                     xmlns:prism="http://prismlibrary.com"
+                    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
                     xmlns:bsetmp="using:BSE.Maui.Controls"
                     x:Class="BSE.Tunes.Maui.Client.Resources.Styles.BSEStyles">
 
@@ -106,5 +107,9 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
         <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}"/>
     </Style>
-   
+
+    <Style TargetType="ffimageloading:CachedImage" ApplyToDerivedTypes="True">
+        <Setter Property="LoadingPlaceholder" Value="musical_notes_outline.png"/>
+    </Style>
+    
 </ResourceDictionary>

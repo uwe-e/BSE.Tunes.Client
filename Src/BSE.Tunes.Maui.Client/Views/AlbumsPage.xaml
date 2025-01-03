@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
-             xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumsPage"
              Title="{x:Static strings:AppResources.AlbumsPage_Title}">
     <Grid>

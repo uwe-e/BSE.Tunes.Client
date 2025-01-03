@@ -40,8 +40,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<AlbumSelectedEvent>().Subscribe(SelectAlbum, ThreadOption.UIThread);
+            _eventAggregator.GetEvent<PlaylistSelectedEvent>().Subscribe(SelectPlaylist, ThreadOption.UIThread);
 
         }
+
+        
 
         private void RefreshView()
         {
@@ -70,5 +73,25 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             };
             await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
         }
+        
+        private void SelectPlaylist(Playlist playlist)
+        {
+            _ = SelectPlaylistAsync(playlist);
+        }
+        
+        private async Task SelectPlaylistAsync(Playlist playlist)
+        {
+            if (playlist != null)
+            {
+                var navigationParams = new NavigationParameters
+                    {
+                        { "playlist", playlist }
+                    };
+
+                await NavigationService.NavigateAsync($"{nameof(PlaylistDetailPage)}", navigationParams);
+            }
+        }
+
+
     }
 }

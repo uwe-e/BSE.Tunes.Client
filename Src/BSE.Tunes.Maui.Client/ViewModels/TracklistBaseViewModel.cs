@@ -74,9 +74,18 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             managePlaylistContext.ActionMode = PlaylistActionMode.None;
                             await SelectPlaylist(managePlaylistContext);
                             break;
+                        case PlaylistActionMode.RemoveFromPlaylist:
+                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            await RemoveFromPlaylistAsync(managePlaylistContext);
+                            break;
                     }
                 }
             }, ThreadOption.UIThread);
+        }
+
+        protected virtual async Task RemoveFromPlaylistAsync(PlaylistActionContext managePlaylistContext)
+        {
+            await _flyoutNavigationService.CloseFlyoutAsync();
         }
 
         private async Task OpenFlyoutAsync(object obj)
