@@ -9,6 +9,7 @@ namespace BSE.Tunes.Maui.Client.Services
         void RegisterAsMediaService(MediaElement mediaElement);
         event Action<PlayerState> PlayerStateChanged;
         event Action<MediaState> MediaStateChanged;
+        void Disconnect();
         void Play();
         void Pause();
         void Stop();

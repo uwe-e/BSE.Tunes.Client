@@ -21,5 +21,6 @@ namespace BSE.Tunes.Maui.Client.Services
         bool CanPlayNextTrack();
         void PlayNextTrack();
         void Pause();
+        void Disconnect();
     }
 }

@@ -38,6 +38,12 @@ namespace BSE.Tunes.Maui.Client.Services
             _mediaService.MediaStateChanged += OnMediaStateChanged;
         }
 
+        public void Disconnect()
+        {
+            // Stop and cleanup MediaElement when we navigate away
+            _mediaService?.Disconnect();
+        }
+
         public void Pause()
         {
             _mediaService.Pause();

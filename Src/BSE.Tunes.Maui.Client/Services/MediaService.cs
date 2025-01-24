@@ -1,5 +1,4 @@
 ﻿using BSE.Tunes.Maui.Client.Models.Contract;
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 
@@ -74,6 +73,13 @@ namespace BSE.Tunes.Maui.Client.Services
                 _mediaElement.StateChanged += OnMediaStateChanged;
             }
 
+        }
+
+        public void Disconnect()
+        {
+            // Stop and cleanup MediaElement when we navigate away
+            _mediaElement?.Handler?.DisconnectHandler();
+            //_mediaElement?.Dispose();
         }
 
         private async void OnMediaStateChanged(object? sender, MediaStateChangedEventArgs e)
