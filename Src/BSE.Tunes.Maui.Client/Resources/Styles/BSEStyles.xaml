@@ -30,6 +30,11 @@
         <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 
+    <Style x:Key="CancelButtonStyle" TargetType="Button">
+        <Setter Property="BorderColor"  Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
     <Style TargetType="controls:SectionHeaderButton">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextTransform" Value="None"/>

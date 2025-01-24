@@ -5,18 +5,24 @@
              x:Class="BSE.Tunes.Maui.Client.Views.NewPlaylistDialogPage"
              Title="NewPlaylistDialogPage">
     
-    <Grid RowDefinitions="*,2*">
+    <Grid RowDefinitions="*,2*" Margin="40">
         <Grid Grid.Row="1" RowDefinitions="Auto, Auto, Auto">
             <Label Grid.Row="0" Text="{x:Static strings:AppResources.NewPlaylistDialogPage_Title}"
-                    HorizontalOptions="Center" />
+                   FontSize="Large"
+                   Margin="0,0,0,20"
+                   HorizontalOptions="Center" />
             <Entry Grid.Row="1" Text="{Binding PlaylistName}" HorizontalOptions="FillAndExpand"
                    ReturnCommand="{Binding SaveCommand}"
+                   FontSize="Medium"
                    Placeholder="{x:Static strings:AppResources.NewPlaylistDialogPage_Entry_Placeholder_EnterUserName}"/>
             <Grid Grid.Row="2" ColumnDefinitions="*,*">
                 <Button Text="{x:Static strings:AppResources.NewPlaylistDialogPage_ButtonCancel_Text}"
-                        Command="{Binding CancelCommand}"/>
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource CancelButtonStyle}"
+                        Margin="0,20,10,0"/>
                 <Button Grid.Column="1" Text="{x:Static strings:AppResources.NewPlaylistDialogPage_ButtonSave_Text}"
-                        Command="{Binding SaveCommand}"/>
+                        Command="{Binding SaveCommand}"
+                        Margin="10,20,0,0"/>
             </Grid>
         </Grid>
     </Grid>

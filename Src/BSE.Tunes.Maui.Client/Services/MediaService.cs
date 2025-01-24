@@ -79,7 +79,10 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             // Stop and cleanup MediaElement when we navigate away
             _mediaElement?.Handler?.DisconnectHandler();
-            //_mediaElement?.Dispose();
+            /*
+             * The attribute android:stopWithTask="true" in AndroidManifest.xml prevents the 
+             * exception "Cannot access a disposed object" when trying to restart the closed app  
+             */
         }
 
         private async void OnMediaStateChanged(object? sender, MediaStateChangedEventArgs e)

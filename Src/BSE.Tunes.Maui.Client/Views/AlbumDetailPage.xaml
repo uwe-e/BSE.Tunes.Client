@@ -119,7 +119,6 @@
                                     <Button Grid.Column="2"
                                             Text="..."
                                             Style="{DynamicResource ContextMenuButtonStyle}"
-                                            BackgroundColor="{StaticResource SystemPinkDark}"
                                             Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
                                             CommandParameter="{Binding}"/>
                                 </Grid>

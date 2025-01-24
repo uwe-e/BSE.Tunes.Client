@@ -1,6 +1,4 @@
-﻿
-using Android.OS.Storage;
-using BSE.Tunes.Maui.Client.Models.Contract;
+﻿using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -52,23 +50,19 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public override void OnDisappearing()
         {
-
-            if (_isPlaying)
-            {
-                //_mediaManager.Stop();
-                _mediaManager.Disconnect();
-            }
+            _mediaManager.Disconnect();
+            
             base.OnDisappearing();
         }
 
         private void OnMediaStateChanged(MediaState state)
         {
-            switch (state) {
-            case MediaState.Opened:
+            switch (state)
+            {
+                case MediaState.Opened:
                     OnMediaOpened();
                     break;
             }
-
         }
 
         private void OnMediaOpened()
