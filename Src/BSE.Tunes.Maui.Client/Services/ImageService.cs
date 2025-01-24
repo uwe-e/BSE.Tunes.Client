@@ -1,5 +1,4 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
-using Prism.Events;
 using SkiaSharp;
 using System.Collections.ObjectModel;
 
@@ -14,18 +13,21 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly IRequestService _requestService;
         private readonly ISettingsService _settingsService;
         private readonly IStorageService _storageService;
+        private readonly IImageCacheService _imageCacheService;
 
         public ImageService(
             IDataService dataService,
             IEventAggregator eventAggregator,
             IRequestService requestService,
             ISettingsService settingsService,
-            IStorageService storageService) {
+            IStorageService storageService,
+            IImageCacheService imageCacheService) {
             _dataService = dataService;
             _eventAggregator = eventAggregator;
             _requestService = requestService;
             _settingsService = settingsService;
             _storageService = storageService;
+            _imageCacheService = imageCacheService;
         }
         public string GetBitmapSource(Guid albumId, bool asThumbnail = false)
         {
@@ -50,7 +52,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         }
 
-        public async Task<string> GetStitchedBitmapSource(int playlistId, int width = 300, bool asThumbnail = false)
+        public async Task<string> GetStitchedBitmapSourceAsync(int playlistId, int width = 300, bool asThumbnail = false)
         {
             if (playlistId > 0)
             {
@@ -219,6 +221,8 @@ namespace BSE.Tunes.Maui.Client.Services
         public async Task RemoveStitchedBitmaps(int playlistId)
         {
             string searchPattern = $"{playlistId}_*.png";
+            // should clear the ffimageloading cache when a playlist changed
+            await _imageCacheService.InvalidateCacheEntryAsync(searchPattern);
             await _storageService.DeleteCachedImagesAsync(searchPattern);
         }
     }

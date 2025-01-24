@@ -50,7 +50,6 @@
                     
                     <Button Text="{x:Static strings:AppResources.LoginPage_Button_Text_Login}"
                             Command="{Binding SaveCommand}"
-                            Style="{DynamicResource SubmitActionButtonStyle}"
                             Grid.Row="4"/>
 
                 </Grid>

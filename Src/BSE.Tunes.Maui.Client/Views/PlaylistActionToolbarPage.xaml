@@ -31,6 +31,7 @@
             <controls:FlyoutButton HorizontalOptions="FillAndExpand"
                                    IsVisible="{Binding CanRemoveFromPlaylist}"
                                    Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_RemoveFromPlaylist}"
+                                   ImageSource="{AppThemeBinding Light=trash_outline.png, Dark=trash_outline_white.png}"
                                    Command="{Binding RemoveFromPlaylistCommand}">
                 <controls:FlyoutButton.Behaviors>
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
@@ -39,6 +40,7 @@
             <controls:FlyoutButton HorizontalOptions="FillAndExpand"
                                    IsVisible="{Binding CanDisplayAlbumInfo}"
                                    Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_DisplayAlbumInfo}"
+                                   ImageSource="{AppThemeBinding Light=disc_outline.png, Dark=disc_outline_white.png}"
                                    Command="{Binding DisplayAlbumInfoCommand}">
                 <controls:FlyoutButton.Behaviors>
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
@@ -47,6 +49,7 @@
             <controls:FlyoutButton HorizontalOptions="FillAndExpand"
                                    IsVisible="{Binding CanRemovePlaylist}"
                                    Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_RemovePlaylist}"
+                                   ImageSource="{AppThemeBinding Light=trash_outline.png, Dark=trash_outline_white.png}"
                                    Command="{Binding RemovePlaylistCommand}">
                 <controls:FlyoutButton.Behaviors>
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>

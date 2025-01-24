@@ -14,6 +14,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ObservableCollection<FlyoutItemViewModel> _playlistFlyoutItems;
         private PlaylistActionContext _playlistActionContext;
         private ICommand _cancelCommand;
+        private ICommand _openNewPlaylistDialogCommand;
         private readonly IDataService _dataService;
         private readonly ISettingsService _settingsService;
         private readonly IImageService _imageService;
@@ -25,7 +26,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public ICommand CancelCommand =>
            _cancelCommand ??= new DelegateCommand(CloseDialog);
 
-        
+        public ICommand OpenNewPlaylistDialogCommand =>
+            _openNewPlaylistDialogCommand ??= new DelegateCommand(NewPlaylistDialog);
 
         public PlaylistSelectorDialogPageViewModel(
             INavigationService navigationService,
@@ -43,17 +45,18 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             _playlistActionContext = parameters.GetValue<PlaylistActionContext>("source");
-            
-            Task.Run(async () =>
-            {
-                await CreatePlaylistFlyoutItems();
-                IsBusy = false;
-            });
+
+            CreatePlaylistFlyoutItems();
 
             base.OnNavigatedTo(parameters);
         }
 
-        private async Task CreatePlaylistFlyoutItems()
+        private void CreatePlaylistFlyoutItems()
+        {
+            _ = CreatePlaylistFlyoutItemsAsync();
+        }
+
+        private async Task CreatePlaylistFlyoutItemsAsync()
         {
             var playlists = await _dataService.GetPlaylistsByUserName(_settingsService.User.UserName, 0, 50);
             if (playlists != null)
@@ -65,7 +68,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         var flyoutItem = new FlyoutItemViewModel
                         {
                             Text = playlist.Name,
-                            ImageSource = await _imageService.GetStitchedBitmapSource(playlist.Id, 50, true),
+                            ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, 50, true),
                             Data = playlist
                         };
                         flyoutItem.ItemClicked += OnFlyoutItemClicked;
@@ -73,6 +76,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     }
                 }
             }
+            IsBusy = false;
         }
 
         private void OnFlyoutItemClicked(object sender, EventArgs e)
@@ -92,6 +96,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 { KnownNavigationParameters.UseModalNavigation, true}
             };
             await NavigationService.GoBackAsync(navigationParams);
+        }
+        
+        private void NewPlaylistDialog()
+        {
+            _playlistActionContext.ActionMode = PlaylistActionMode.CreatePlaylist;
+            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
         }
     }
 }

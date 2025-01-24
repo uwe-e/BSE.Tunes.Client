@@ -74,13 +74,41 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             managePlaylistContext.ActionMode = PlaylistActionMode.None;
                             await SelectPlaylist(managePlaylistContext);
                             break;
+                        case PlaylistActionMode.CreatePlaylist:
+                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            await CreateNewPlaylist(managePlaylistContext);
+                            break;
                         case PlaylistActionMode.RemoveFromPlaylist:
                             managePlaylistContext.ActionMode = PlaylistActionMode.None;
                             await RemoveFromPlaylistAsync(managePlaylistContext);
                             break;
+                        case PlaylistActionMode.RemovePlaylist:
+                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            await RemovePlaylistAsync(managePlaylistContext);
+                            break;
+                        case PlaylistActionMode.PlaylistDeleted:
+                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            await NavigationService.GoBackAsync();
+                            break;
                     }
                 }
             }, ThreadOption.UIThread);
+        }
+
+        private async Task CreateNewPlaylist(PlaylistActionContext managePlaylistContext)
+        {
+
+            await NavigationService.GoBackAsync(new NavigationParameters
+            {
+                { KnownNavigationParameters.UseModalNavigation, true }
+            });
+
+            var navigationParams = new NavigationParameters
+            {
+                { KnownNavigationParameters.UseModalNavigation, true },
+                { "source", managePlaylistContext }
+            };
+            await NavigationService.NavigateAsync(nameof(NewPlaylistDialogPage), navigationParams);
         }
 
         protected virtual async Task RemoveFromPlaylistAsync(PlaylistActionContext managePlaylistContext)
@@ -100,10 +128,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 source.Data = item.Data;
             }
 
-            var navigationParams = new NavigationParameters();
-            navigationParams.Add("source", source);
-            navigationParams.Add(KnownNavigationParameters.UseModalNavigation, true);
-            navigationParams.Add(KnownNavigationParameters.Animated, false);
+            var navigationParams = new NavigationParameters
+            {
+                { "source", source },
+                { KnownNavigationParameters.UseModalNavigation, true},
+                { KnownNavigationParameters.Animated, false}
+            };
 
             await _flyoutNavigationService.ShowFlyoutAsync(nameof(PlaylistActionToolbarPage), navigationParams);
         }
@@ -208,6 +238,20 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
 
                 managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
+            }
+        }
+        
+        private async Task RemovePlaylistAsync(PlaylistActionContext managePlaylistContext)
+        {
+            await _flyoutNavigationService.CloseFlyoutAsync();
+
+            if (managePlaylistContext.Data is Playlist playlist)
+            {
+                await _dataService.DeletePlaylist(playlist.Id);
+
+                managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistDeleted;
+
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
             }
         }

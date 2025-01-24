@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
@@ -21,6 +22,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IDataService _dataService;
         private readonly ISettingsService _settingsService;
         private readonly IImageService _imageService;
+        private readonly IEventAggregator _eventAggregator;
         private readonly IResourceService _resourceService;
 
         public ICommand LoadMoreItemsCommand => _loadMoreItemsCommand ??= new DelegateCommand(async () =>
@@ -56,14 +58,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IDataService dataService,
             ISettingsService settingsService,
             IImageService imageService,
+            IEventAggregator eventAggregator,
             IResourceService resourceService) : base(navigationService)
         {
             _dataService = dataService;
             _settingsService = settingsService;
             _imageService = imageService;
+            _eventAggregator = eventAggregator;
             _resourceService = resourceService;
-            
+
             PageSize = 20;
+
+            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(args =>
+            {
+                if (args is PlaylistActionContext managePlaylistContext)
+                {
+                    Items.Clear();
+                    _isActivated = false;
+                    RaiseIsActiveChanged();
+                }
+            });
+
+            _eventAggregator.GetEvent<CacheChangedEvent>().Subscribe((args) =>
+            {
+                Items.Clear();
+                _isActivated = false;
+                RaiseIsActiveChanged();
+            });
+
         }
 
         private void RaiseIsActiveChanged()
@@ -73,6 +95,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 IsBusy = false;
                 _isActivated = true;
                 _hasItems = true;
+                _pageNumber = 0;
                 
                 _ = LoadMoreItemsAsync();
             }
@@ -114,7 +137,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                                 {
                                     Title = playlist.Name,
                                     SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("PlaylistItem_PartNumberOfEntries")}",
-                                    ImageSource = await _imageService.GetStitchedBitmapSource(playlist.Id),
+                                    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id),
                                     Data = playlist
                                 });
                             }

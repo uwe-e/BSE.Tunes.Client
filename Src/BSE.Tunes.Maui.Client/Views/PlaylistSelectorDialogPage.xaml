@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              x:Class="BSE.Tunes.Maui.Client.Views.PlaylistSelectorDialogPage"
              Title="PlaylistSelectorDialogPage">
 
@@ -30,18 +31,21 @@
                            VerticalOptions="Center"/>
             </Grid>
             <Button Grid.Row="1" Text="{x:Static strings:AppResources.PlaylistSelectorDialogPage_Button_NewPlaylist_Text}"
-                        Command="{Binding OpenNewPlaylistDialogCommand}"
-                        Style="{StaticResource SubmitActionButtonStyle}"/>
+                        Command="{Binding OpenNewPlaylistDialogCommand}"/>
             <CollectionView Grid.Row="2" ItemsSource="{Binding PlaylistFlyoutItems}" >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="0,5,0,5">
-                            <controls:FlyoutButton Text="{Binding Text}" 
-                                                       HorizontalOptions="Start"
-                                                       ImageSource="{Binding ImageSource}"
-                                                       Command="{Binding SelectFlyoutItemCommand}"
-                                                       CommandParameter="{Binding}">
-                            </controls:FlyoutButton>
+                        <Grid Padding="0,5,0,10" ColumnDefinitions="60,*">
+                            <ffimageloading:CachedImage Source="{Binding ImageSource}"
+                                                        Grid.Column="0"
+                                                        WidthRequest="50"/>
+                            <Label Margin="10,0" Text="{Binding Text}"
+                                   Grid.Column="1"
+                                   VerticalTextAlignment="Center"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectFlyoutItemCommand}"
+                       CommandParameter="{Binding}"/>
+                            </Grid.GestureRecognizers>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

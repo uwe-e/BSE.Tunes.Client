@@ -60,6 +60,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task LoadDataAsync()
         {
+            Items.Clear();
             var playlists = await _dataService.GetPlaylistsByUserName(_settingsService.User.UserName, 0, 5);
             if (playlists != null)
             {
@@ -70,7 +71,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         Id = playlist.Id,
                         Title = playlist.Name,
                         SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("PlaylistItem_PartNumberOfEntries")}",
-                        ImageSource = await _imageService.GetStitchedBitmapSource(playlist.Id),
+                        ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id),
                         Data = playlist
                     });
                 }

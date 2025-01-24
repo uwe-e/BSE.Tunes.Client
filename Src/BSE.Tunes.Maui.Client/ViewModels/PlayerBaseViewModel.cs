@@ -14,8 +14,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private bool _isPlaying;
         private Track _currentTrack;
 
-        public DelegateCommand PlayCommand => _playCommand ?? new DelegateCommand(Play);
-        public DelegateCommand PlayNextCommand => _playNextCommand ?? new DelegateCommand(PlayNext, CanPlayNext);
+        public DelegateCommand PlayCommand => _playCommand ??= new DelegateCommand(Play);
+        public DelegateCommand PlayNextCommand => _playNextCommand ??= new DelegateCommand(PlayNext, CanPlayNext);
         
 
         public PlayerState PlayerState

@@ -41,6 +41,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<AlbumsPage, AlbumsPageViewModel>();
                         container.RegisterForNavigation<PlaylistsPage, PlaylistsPageViewModel>();
                         container.RegisterForNavigation<PlaylistDetailPage, PlaylistDetailPageViewModel>();
+                        container.RegisterForNavigation<NewPlaylistDialogPage, NewPlaylistDialogPageViewModel>();
                         container.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
                         container.RegisterForNavigation<LoginSettingsPage>();
                         container.RegisterForNavigation<ServiceEndpointSettingsPage>();
@@ -58,6 +59,12 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<ISettingsService, SettingsService>();
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
+                        /*
+                         * since we use the ffimageloading features,
+                         * it's no longer enough to clear the file cache, 
+                         * but we also need to clear the cache of a ffimageloading image
+                         */
+                        container.RegisterSingleton<IImageCacheService, ImageCacheService>();
                         container.RegisterSingleton<IAppInfoService, AppInfoService>();
                         container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
                         container.RegisterSingleton<IMediaService, MediaService>();

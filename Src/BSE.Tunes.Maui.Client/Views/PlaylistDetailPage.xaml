@@ -65,7 +65,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="50"/>
                                     </Grid.ColumnDefinitions>
                                     <Image Source="{Binding ImageSource}"
                                                                 Aspect="AspectFill" HeightRequest="50"/>
@@ -79,10 +79,15 @@
                                            Text="{Binding SubTitle}"
                                            LineBreakMode="TailTruncation"/>
                                     </Grid>
-                                    <ImageButton BackgroundColor="Red" Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
+
+                            <Button Grid.Column="2"
+                                    Style="{DynamicResource ContextMenuButtonStyle}"
+                                    Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                    CommandParameter="{Binding}"/>
+                            <!--<ImageButton BackgroundColor="Red" Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
                                                  HorizontalOptions="End" Margin="10,0"
                                                  Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
-                                                 CommandParameter="{Binding}"/>
+                                                 CommandParameter="{Binding}"/>-->
                                 </Grid>
                             </StackLayout>
                         </DataTemplate>

@@ -56,13 +56,19 @@
 		  <Resize>True</Resize>
 		  <BaseSize>32,32</BaseSize>
 		</MauiImage>
+		<MauiImage Update="Resources\Images\albums_white.svg">
+		  <Resize>True</Resize>
+		  <BaseSize>32,32</BaseSize>
+		</MauiImage>
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
     <MauiImage Update="Resources\Images\albums.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\albums_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\add_circle_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\chevron_forward_outline.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\chevron_forward_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
-    
+    <MauiImage Update="Resources\Images\disc_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\disc_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\ellipsis_horizontal.svg" Resize="False" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\ellipsis_horizontal_white.svg" Resize="False" TintColor="#FFFFFF" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
@@ -88,6 +94,8 @@
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\trash_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\trash_outline_white.svg" TintColor="#FFFFFF" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play_forward.svg" Resize="True" BaseSize="32,32" />
      <MauiImage Update="Resources\Images\play_forward_white.svg" TintColor="#FFFFFF">
@@ -214,6 +222,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\FeaturedPlaylistsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\NewPlaylistDialogPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\PlaylistActionToolbarPage.xaml">

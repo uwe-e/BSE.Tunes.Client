@@ -40,7 +40,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
              ??= new DelegateCommand(RemovePlaylist);
 
         public ICommand DisplayAlbumInfoCommand => _displayAlbumInfoCommand
-            ??= new DelegateCommand(ShowAlbum);
+            ??= new DelegateCommand(async() => ShowAlbumAsync());
 
         public string ImageSource
         {
@@ -88,7 +88,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _flyoutNavigationService = flyoutNavigationService;
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             _playlistActionContext = parameters.GetValue<PlaylistActionContext>("source");
             if (_playlistActionContext?.Data is Track track)
@@ -105,12 +105,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 SubTitle = album.Artist?.Name;
                 ImageSource = _imageService.GetBitmapSource(album.AlbumId, true);
             }
-            //if (_playlistActionContext?.Data is Playlist playlist)
-            //{
-            //    CanRemovePlaylist = true;
-            //    Title = playlist.Name;
-            //    ImageSource = await _imageService.GetStitchedBitmapSource(playlist.Id, 50, true);
-            //}
+            if (_playlistActionContext?.Data is Playlist playlist)
+            {
+                CanRemovePlaylist = true;
+                Title = playlist.Name;
+                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, 50, true);
+            }
             if (_playlistActionContext?.Data is PlaylistEntry playlistEntry)
             {
                 CanRemoveFromPlaylist = true;
@@ -145,14 +145,40 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
-        private void ShowAlbum()
+        private async Task ShowAlbumAsync()
         {
+            await CloseFlyoutAsync();
 
+            if (_playlistActionContext != null)
+            {
+                /*
+                 * This event has a unique identifier that can be used to prevent multiple execution.
+                 */
+                var uniqueTrack = new UniqueAlbum
+                {
+                    UniqueId = Guid.NewGuid()
+                };
+
+                if (_playlistActionContext.Data is Track track)
+                {
+                    uniqueTrack.Album = track.Album;
+                }
+                if (_playlistActionContext.Data is PlaylistEntry playlistEntry)
+                {
+                    uniqueTrack.Album = playlistEntry.Track.Album;
+                }
+
+                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
+            }
         }
 
         private void RemovePlaylist()
         {
-
+            if (_playlistActionContext != null)
+            {
+                _playlistActionContext.ActionMode = PlaylistActionMode.RemovePlaylist;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
         }
     }
 }
