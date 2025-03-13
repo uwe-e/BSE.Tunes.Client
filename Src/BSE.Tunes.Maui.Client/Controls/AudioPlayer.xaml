@@ -18,9 +18,7 @@
                         <ColumnDefinition Width="32"/>
                         <ColumnDefinition Width="32"/>
                     </Grid.ColumnDefinitions>
-                    <toolkit:MediaElement x:Name="MediaElement"
-                                  IsVisible="False" services:MediaService.RegisterAsMediaService="True"
-                                  ShouldShowPlaybackControls="False" />
+                    <!-- The toolkit:MediaElement is now placed on the splashpage. It doesnt work here on ios-->
                     <Image Grid.Column="0" Source="{TemplateBinding Cover}" WidthRequest="50"/>
                     <Label Grid.Column="1" TextColor="{TemplateBinding TextColor}" FontSize="Medium" VerticalTextAlignment="Center" Text="{TemplateBinding Track.Name}"/>
                     <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="{AppThemeBinding Light=play.png, Dark=play_white.png}" Aspect="AspectFit">

@@ -25,6 +25,20 @@ namespace BSE.Tunes.Maui.Client.Services
             return result;
         }
 
+        public async Task<T> GetAsync<T>(Uri uri, CancellationToken token)
+        {
+            T result = default;
+            using (var client = await GetHttpClient())
+            {
+                var responseMessage = await client.GetAsync(uri, token);
+                //responseMessage.EnsureExtendedSuccessStatusCode();
+                var serialized = await responseMessage.Content.ReadAsStringAsync();
+                result = JsonSerializer.Deserialize<T>(serialized);
+                
+            }
+            return result;
+        }
+
         public async Task<TResult> PostAsync<TResult, TRequest>(Uri uri, TRequest from)
         {
             TResult? result = default;

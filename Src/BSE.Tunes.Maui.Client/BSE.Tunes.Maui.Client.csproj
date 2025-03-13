@@ -135,7 +135,7 @@
 		<PackageReference Include="FFImageLoading.Maui" Version="1.2.7" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.100" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.100" />
 		<PackageReference Include="Prism.DryIoc.Maui" Version="9.0.401-pre" />
 	</ItemGroup>
@@ -252,6 +252,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RandomPlayerButtonView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SearchPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ServiceEndpointSettingsPage.xaml">
