@@ -2,9 +2,6 @@
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
-using Prism.Commands;
-using Prism.Events;
-using Prism.Navigation;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -32,19 +29,24 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _dataService = dataService;
 
+            LoadData();
+
             _eventAggregator.GetEvent<HomePageRefreshEvent>().Subscribe(() =>
             {
                 IsBusy = true;
                 LoadData();
             });
-
-            LoadData();
         }
 
-        private async void LoadData()
+        private void LoadData()
+        {
+            _ = LoadDataAsync();
+        }
+
+        private async Task LoadDataAsync()
         {
             Items.Clear();
-            var albums = await _dataService.GetNewestAlbums(20);
+            var albums = await _dataService.GetNewestAlbums(10);
             if (albums != null)
             {
                 foreach (var album in albums)
@@ -55,7 +57,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         {
                             Title = album.Title,
                             SubTitle = album.Artist?.Name,
-                            ImageSource = _imageService.GetBitmapSource(album.AlbumId ?? Guid.Empty, true),
+                            ImageSource = _imageService.GetBitmapSource(album.AlbumId, true),
                             Data = album
                         });
                     }

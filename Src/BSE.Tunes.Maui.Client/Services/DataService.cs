@@ -66,7 +66,10 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             var builder = new UriBuilder(_settingsService.ServiceEndPoint);
             builder.AppendToPath(string.Format("/api/files/image/{0}", imageId.ToString()));
-
+            if (asThumbnail)
+            {
+                builder.AppendToPath($"{asThumbnail}");
+            }
             return builder.Uri;
         }
 
@@ -81,6 +84,13 @@ namespace BSE.Tunes.Maui.Client.Services
             query = System.Web.HttpUtility.UrlEncode(query);
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/albums/search/?query={query}&skip={skip}&limit={limit}";
             return _requestService.GetAsync<Album[]>(new UriBuilder(strUrl).Uri);
+        }
+
+        public Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit, CancellationToken token)
+        {
+            query = System.Web.HttpUtility.UrlEncode(query);
+            string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/albums/search/?query={query}&skip={skip}&limit={limit}";
+            return _requestService.GetAsync<Album[]>(new UriBuilder(strUrl).Uri, token);
         }
 
         public Task<int> GetNumberOfAlbumsByGenre(int? genreId)
@@ -117,6 +127,12 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/tracks/search/?query={query}&skip={skip}&limit={limit}";
             return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri);
+        }
+
+        public Task<Track[]> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token)
+        {
+            string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/tracks/search/?query={query}&skip={skip}&limit={limit}";
+            return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri, token);
         }
 
         public Task<bool> UpdateHistory(History history)

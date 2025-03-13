@@ -2,10 +2,6 @@
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
-using Prism.Commands;
-using Prism.Events;
-using Prism.Navigation;
-using Prism.Navigation.Regions;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -44,14 +40,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<AlbumSelectedEvent>().Subscribe(SelectAlbum, ThreadOption.UIThread);
+            _eventAggregator.GetEvent<PlaylistSelectedEvent>().Subscribe(SelectPlaylist, ThreadOption.UIThread);
 
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
-        {
-            base.OnNavigatedTo(parameters);
-            
-        }
+        
 
         private void RefreshView()
         {
@@ -63,21 +56,42 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             _regionManager.RequestNavigate("AlbumsCarousel", nameof(AlbumsCarouselView));
             _regionManager.RequestNavigate("FeaturedAlbums", nameof(FeaturedAlbumsView));
+            _regionManager.RequestNavigate("FeaturedPlaylists", nameof(FeaturedPlaylistsView));
+            _regionManager.RequestNavigate("RandomPlayerButton", nameof(RandomPlayerButtonView));
         }
-        
-        private async void SelectAlbum(Album album)
+
+        private void SelectAlbum(Album album)
+        {
+            _ = SelectAlbumAsync(album);
+        }
+
+        private async Task SelectAlbumAsync(Album album)
         {
             var navigationParams = new NavigationParameters
             {
                 { "album", album }
             };
             await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
-            //await NavigationService.CreateBuilder()
-            //                    //.UseAbsoluteNavigation()
-            //                    .AddNavigationPage()
-            //                    .AddSegment<AlbumDetailPage>()
-            //                    .WithParameters(navigationParams)
-            //                    .NavigateAsync();
         }
+        
+        private void SelectPlaylist(Playlist playlist)
+        {
+            _ = SelectPlaylistAsync(playlist);
+        }
+        
+        private async Task SelectPlaylistAsync(Playlist playlist)
+        {
+            if (playlist != null)
+            {
+                var navigationParams = new NavigationParameters
+                    {
+                        { "playlist", playlist }
+                    };
+
+                await NavigationService.NavigateAsync($"{nameof(PlaylistDetailPage)}", navigationParams);
+            }
+        }
+
+
     }
 }

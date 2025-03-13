@@ -1,8 +1,7 @@
-﻿using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
-using Prism.Commands;
-using Prism.Navigation;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -22,12 +21,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private string _subTitle;
         private string _title;
         private readonly IImageService _imageService;
+        private readonly IEventAggregator _eventAggregator;
         private readonly IFlyoutNavigationService _flyoutNavigationService;
 
         public ICommand CloseFlyoutCommand => _closeFlyoutCommand
             ??= new DelegateCommand(async () =>
             {
-                await CloseFlyout();
+                await CloseFlyoutAsync();
             });
 
         public ICommand AddToPlaylistCommand => _addToPlaylistCommand
@@ -40,7 +40,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
              ??= new DelegateCommand(RemovePlaylist);
 
         public ICommand DisplayAlbumInfoCommand => _displayAlbumInfoCommand
-            ??= new DelegateCommand(ShowAlbum);
+            ??= new DelegateCommand(async() => ShowAlbumAsync());
 
         public string ImageSource
         {
@@ -80,13 +80,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public PlaylistActionToolbarPageViewModel(
             INavigationService navigationService,
             IImageService imageService,
+            IEventAggregator eventAggregator,
             IFlyoutNavigationService flyoutNavigationService) : base(navigationService)
         {
             _imageService = imageService;
+            _eventAggregator = eventAggregator;
             _flyoutNavigationService = flyoutNavigationService;
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             _playlistActionContext = parameters.GetValue<PlaylistActionContext>("source");
             if (_playlistActionContext?.Data is Track track)
@@ -95,40 +97,88 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 CanDisplayAlbumInfo = (bool)_playlistActionContext?.DisplayAlbumInfo;
                 Title = track.Name;
                 SubTitle = track.Album.Artist.Name;
-                ImageSource = _imageService.GetBitmapSource(track.Album.AlbumId ?? Guid.Empty, true);
+                ImageSource = _imageService.GetBitmapSource(track.Album.AlbumId, true);
             }
             if (_playlistActionContext?.Data is Album album)
             {
                 Title = album.Title;
                 SubTitle = album.Artist?.Name;
-                ImageSource = _imageService.GetBitmapSource(album.AlbumId ?? Guid.Empty, true);
+                ImageSource = _imageService.GetBitmapSource(album.AlbumId, true);
+            }
+            if (_playlistActionContext?.Data is Playlist playlist)
+            {
+                CanRemovePlaylist = true;
+                Title = playlist.Name;
+                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, 50, true);
+            }
+            if (_playlistActionContext?.Data is PlaylistEntry playlistEntry)
+            {
+                CanRemoveFromPlaylist = true;
+                CanDisplayAlbumInfo = true;
+                Title = playlistEntry.Track?.Name;
+                SubTitle = playlistEntry.Artist;
+                ImageSource = _imageService.GetBitmapSource(playlistEntry.AlbumId, true);
             }
             base.OnNavigatedTo(parameters);
         }
 
-        private async Task CloseFlyout()
+        private async Task CloseFlyoutAsync()
         {
             await _flyoutNavigationService.CloseFlyoutAsync();
         }
 
         private void AddToPlaylist()
         {
-
+            if (_playlistActionContext != null)
+            {
+                _playlistActionContext.ActionMode = PlaylistActionMode.SelectPlaylist;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
         }
 
         private void RemoveFromPlaylist()
         {
-
+            if (_playlistActionContext != null)
+            {
+                _playlistActionContext.ActionMode = PlaylistActionMode.RemoveFromPlaylist;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
         }
 
-        private void ShowAlbum()
+        private async Task ShowAlbumAsync()
         {
+            await CloseFlyoutAsync();
 
+            if (_playlistActionContext != null)
+            {
+                /*
+                 * This event has a unique identifier that can be used to prevent multiple execution.
+                 */
+                var uniqueTrack = new UniqueAlbum
+                {
+                    UniqueId = Guid.NewGuid()
+                };
+
+                if (_playlistActionContext.Data is Track track)
+                {
+                    uniqueTrack.Album = track.Album;
+                }
+                if (_playlistActionContext.Data is PlaylistEntry playlistEntry)
+                {
+                    uniqueTrack.Album = playlistEntry.Track.Album;
+                }
+
+                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
+            }
         }
 
         private void RemovePlaylist()
         {
-
+            if (_playlistActionContext != null)
+            {
+                _playlistActionContext.ActionMode = PlaylistActionMode.RemovePlaylist;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
         }
     }
 }

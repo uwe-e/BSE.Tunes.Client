@@ -18,10 +18,11 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<!--<Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn)</NoWarn>-->
 
 		<!-- Display name -->
-		<ApplicationTitle>BSE.Tunes.Maui.Client</ApplicationTitle>
+		<ApplicationTitle>BSEtunes</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.bse.tunes.maui.client</ApplicationId>
@@ -43,17 +44,73 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" />
+    <!--<MauiIcon Include="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />-->
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\bsesplash.svg" Color="#ffffff" BaseSize="1024,1024" />
+		<MauiSplashScreen Include="Resources\Splash\bsesplash.svg" Color="#00ffffff" BaseSize="1024,1024" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\add_circle_outline_white.svg">
+		  <Resize>True</Resize>
+		  <BaseSize>32,32</BaseSize>
+		</MauiImage>
+		<MauiImage Update="Resources\Images\albums_white.svg">
+		  <Resize>True</Resize>
+		  <BaseSize>32,32</BaseSize>
+		</MauiImage>
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+    <MauiImage Update="Resources\Images\albums.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\albums_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\add_circle_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\chevron_forward_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\chevron_forward_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\disc_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\disc_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\ellipsis_horizontal.svg" Resize="False" BaseSize="20,20" />
+    <MauiImage Update="Resources\Images\ellipsis_horizontal_white.svg" Resize="False" TintColor="#FFFFFF" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\pause_white.svg" TintColor="#FFFFFF">
+      <Resize>True</Resize>
+      <BaseSize>32,32</BaseSize>
+    </MauiImage>
+    <MauiImage Update="Resources\Images\pause.svg" Resize="True" BaseSize="32,32" />
+   
+    <MauiImage Update="Resources\Images\play_white.svg" TintColor="#FFFFFF">
+      <Resize>True</Resize>
+      <BaseSize>32,32</BaseSize>
+    </MauiImage>
+    <MauiImage Update="Resources\Images\play_pk_dark.svg" TintColor="#FF375F">
+      <Resize>True</Resize>
+      <BaseSize>24,24</BaseSize>
+    </MauiImage>
+    <MauiImage Update="Resources\Images\play_pk_light.svg" TintColor="#FF2D55">
+      <Resize>True</Resize>
+      <BaseSize>24,24</BaseSize>
+    </MauiImage>
+    <MauiImage Update="Resources\Images\musical_notes_outline.svg" Resize="True" BaseSize="200,200" />
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\trash_outline.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\trash_outline_white.svg" TintColor="#FFFFFF" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\play.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\play_forward.svg" Resize="True" BaseSize="32,32" />
+     <MauiImage Update="Resources\Images\play_forward_white.svg" TintColor="#FFFFFF">
+      <Resize>True</Resize>
+      <BaseSize>32,32</BaseSize>
+    </MauiImage>
+    <MauiImage Update="Resources\Images\play_forward_disabled.svg" Resize="True" TintColor="#919191" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\shuffle_pk_dark.svg" TintColor="#FF375F">
+      <Resize>True</Resize>
+      <BaseSize>24,24</BaseSize>
+    </MauiImage>
+    <MauiImage Update="Resources\Images\shuffle_pk_light.svg" TintColor="#FF2D55">
+      <Resize>True</Resize>
+      <BaseSize>24,24</BaseSize>
+    </MauiImage>
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -72,10 +129,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.21" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.21" />
+		<PackageReference Include="AcrylicView.Maui" Version="2.1.3" />
+		<PackageReference Include="CardsView.Maui" Version="1.1.0" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="4.1.2" />
+		<PackageReference Include="FFImageLoading.Maui" Version="1.2.7" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.100" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.100" />
 		<PackageReference Include="Prism.DryIoc.Maui" Version="9.0.401-pre" />
 	</ItemGroup>
 
@@ -84,9 +145,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Remove="Controls\HeaderedTextCell.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Images\add_circle_outline.svg" />
+	  <None Remove="Resources\Images\add_circle_outline_white.svg" />
+	  <None Remove="Resources\Images\albums.svg" />
 	  <None Remove="Resources\Images\home.svg" />
 	  <None Remove="Resources\Images\library.svg" />
+	  <None Remove="Resources\Images\play.svg" />
 	  <None Remove="Resources\Images\playlist.svg" />
+	  <None Remove="Resources\Images\play_forward.svg" />
+	  <None Remove="Resources\Images\search.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -114,13 +185,13 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
+    <MauiXaml Include="Controls\HeaderedTextCell.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\AudioPlayer.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\BottomFlyoutPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Controls\FlyoutButton.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\HeaderedCollectionView.xaml">
@@ -147,6 +218,15 @@
 	  <MauiXaml Update="Views\AlbumsCarouselView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\AlbumsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FeaturedPlaylistsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\NewPlaylistDialogPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\PlaylistActionToolbarPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -162,7 +242,19 @@
 	  <MauiXaml Update="Views\LoginWizzardPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\PlaylistDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\PlaylistSelectorDialogPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\PlaylistsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RandomPlayerButtonView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SearchPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ServiceEndpointSettingsPage.xaml">
@@ -182,7 +274,7 @@
 	  </MauiXaml>
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
+	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.100" />
 	</ItemGroup>
 	
 </Project>

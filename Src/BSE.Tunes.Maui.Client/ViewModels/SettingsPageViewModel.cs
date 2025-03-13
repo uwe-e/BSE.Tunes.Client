@@ -29,13 +29,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand? _toCacheSettingsDetailCommand;
 
         public ICommand ToServiceEndpointDetailCommand
-            => _toServiceEndpointDetailCommand ??= new DelegateCommand(NavigateToServiceEndpointDetail);
+            => _toServiceEndpointDetailCommand ??= new DelegateCommand(async() => await NavigateToServiceEndpointDetailAsync());
 
         public ICommand ToAccountDetailCommand
-           => _toAccountDetailCommand ??= new DelegateCommand(NavigateToAccountDetail);
+           => _toAccountDetailCommand ??= new DelegateCommand(async() => await NavigateToAccountDetailAsync());
 
-        public ICommand ToCacheSettingsDetailCommand => _toCacheSettingsDetailCommand ??= new DelegateCommand(NavigateToCacheSettingsDetail);
-
+        public ICommand ToCacheSettingsDetailCommand
+            => _toCacheSettingsDetailCommand ??= new DelegateCommand(async() => await NavigateToCacheSettingsDetailAsync());
 
         public string ServiceEndPoint
         {
@@ -154,17 +154,17 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
         
-        private async void NavigateToServiceEndpointDetail()
+        private async Task NavigateToServiceEndpointDetailAsync()
         {
             await NavigationService.NavigateAsync(nameof(ServiceEndpointSettingsPage));
         }
         
-        private async void NavigateToAccountDetail()
+        private async Task NavigateToAccountDetailAsync()
         {
             await NavigationService.NavigateAsync(nameof(LoginSettingsPage));
         }
         
-        private async void NavigateToCacheSettingsDetail()
+        private async Task NavigateToCacheSettingsDetailAsync()
         {
             await NavigationService.NavigateAsync(nameof(CacheSettingsPage));
         }

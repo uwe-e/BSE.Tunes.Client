@@ -7,10 +7,9 @@
     <ContentView.ControlTemplate>
         <ControlTemplate>
             <Grid>
-                <!--<StackLayout VerticalOptions="Start">-->
+                <StackLayout>
                     <controls:SectionHeaderButton x:Name="PART_SectionHeaderButton"
                                                   Text="{TemplateBinding Title}"
-                                                  Style="{TemplateBinding HeaderButtonStyle}"
                                                   HorizontalOptions="Start"/>
                     <CollectionView ItemsSource="{TemplateBinding ItemsSource}"
                                     SelectionMode="Single"
@@ -19,14 +18,15 @@
                                     SelectionChangedCommandParameter="{TemplateBinding SelectionChangedCommandParameter}"
                                     RemainingItemsThreshold="{TemplateBinding RemainingItemsThreshold}"
                                     RemainingItemsThresholdReachedCommand="{TemplateBinding RemainingItemsThresholdReachedCommand}"
-                                    ItemsLayout="HorizontalList" ItemTemplate="{TemplateBinding ItemTemplate}">
+                                    ItemsLayout="HorizontalList"
+                                    ItemTemplate="{TemplateBinding ItemTemplate}"
+                                    HeightRequest="{OnIdiom Default=200, Tablet=230}">
                     </CollectionView>
-                <!--</StackLayout>-->
+                </StackLayout>
                 <StackLayout IsVisible="{TemplateBinding IsBusy}" Padding="12"
-                             AbsoluteLayout.LayoutFlags="PositionProportional"
-                             AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+                             VerticalOptions="Center">
                     <ActivityIndicator x:Name="PART_ActivityIndicator"
-                                       IsRunning="{TemplateBinding IsBusy}" Color ="{TemplateBinding ActivityIndicatorColor}"/>
+                                       IsRunning="{TemplateBinding IsBusy}"/>
                 </StackLayout>
             </Grid>
         </ControlTemplate>

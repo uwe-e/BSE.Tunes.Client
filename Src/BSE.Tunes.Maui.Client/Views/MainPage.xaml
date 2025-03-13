@@ -8,22 +8,30 @@
                          xmlns:prism="http://prismlibrary.com"
                          xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
                          xmlns:bseandroid="clr-namespace:BSE.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=BSE.Maui.Controls"
-                         ios:TabbedPage.TranslucencyMode="Opaque"
+                         ios:TabbedPage.TranslucencyMode="Translucent"
                          bseandroid:TabbedContainerPage.IsSwipePagingEnabled="False"
-                         SelectedTabColor="{DynamicResource PrimaryLabelColor}"
-                         UnselectedTabColor="{DynamicResource SecondaryLabelColor}"
+                         NavigationPage.HasNavigationBar="False"
                          x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
-
+    
     <bse:TabbedContainerPage.Children>
-         
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarBackgroundColor="{DynamicResource BackgroundColor}">
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png">
             <x:Arguments>
                <views:HomePage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.AlbumsPage_Title}" IconImageSource="albums.png">
+            <x:Arguments>
+                <views:AlbumsPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
             <x:Arguments>
                 <views:PlaylistsPage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SearchPage_Title}" IconImageSource="search.png">
+            <x:Arguments>
+                <views:SearchPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png">
@@ -34,7 +42,12 @@
     </bse:TabbedContainerPage.Children>
 
     <bse:TabbedContainerPage.BottomView>
-        <controls:AudioPlayer HeightRequest="{OnPlatform 250, iOS=90, Android=200}"/>
+        <controls:AudioPlayer HeightRequest="{OnPlatform 160, iOS=60, Android=160}"
+                              PlayCommand="{Binding PlayCommand}"
+                              PlayNextCommand="{Binding PlayNextCommand}"
+                              Track="{Binding CurrentTrack, Mode=TwoWay}"
+                              Cover="{Binding CoverSource, Mode=TwoWay}"
+                              PlayerState="{Binding PlayerState, Mode=TwoWay}"/>
     </bse:TabbedContainerPage.BottomView>
     
 </bse:TabbedContainerPage>

@@ -1,52 +1,65 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              x:Class="BSE.Tunes.Maui.Client.Views.Templates.ViewItemTemplate">
-    
+
     <ContentView.Resources>
-        <Style TargetType="StackLayout" x:Key="ViewItemTemplateStyle">
+        <Style TargetType="Grid" x:Key="ViewItemTemplateStyle">
             <Setter Property="HeightRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="200" Tablet="300"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="190" Tablet="230"/>
                 </Setter.Value>
             </Setter>
             <Setter Property="WidthRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style TargetType="Image" x:Key="ViewItemImageStyle">
-            <Setter Property="HeightRequest">
+        <Style TargetType="ffimageloading:CachedImage" x:Key="ViewItemImageStyle">
+            <!--<Setter Property="HeightRequest">
                 <Setter.Value>
                     <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
+                </Setter.Value>
+            </Setter>-->
+            <Setter Property="WidthRequest">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="HeightRequest">
+                <Setter.Value>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
                 </Setter.Value>
             </Setter>
         </Style>
     </ContentView.Resources>
 
-    <Grid>
-        <StackLayout Style="{StaticResource ViewItemTemplateStyle}" Margin="3,0,3,0">
-            <!-- the previously used frame didnt support tab gestures -->
-            <Border Padding="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="3" />
-                </Border.StrokeShape>
-                <Image Style="{StaticResource ViewItemImageStyle}"
+    <!--<Grid>-->
+    <Grid Style="{StaticResource ViewItemTemplateStyle}" Margin="0" RowDefinitions="*, Auto, Auto">
+        <!-- the previously used frame didnt support tab gestures -->
+        <Border  Padding="0" StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="3" />
+            </Border.StrokeShape>
+            <!--<Image Style="{StaticResource ViewItemImageStyle}"
                        Source="{Binding ImageSource}"
-                       Aspect="AspectFill"
-                       WidthRequest="160"/>
-            </Border>
-            <Label Text="{Binding Title}"
-                   Margin="0,-5,0,0"
-                   TextColor="{DynamicResource PrimaryLabelColor}"
+                       Aspect="AspectFill"/>-->
+            <ffimageloading:CachedImage Source="{Binding ImageSource}"
+                                        Aspect="AspectFill"
+                                        Style="{StaticResource ViewItemImageStyle}" />
+        </Border>
+        <Label Grid.Row="1" Text="{Binding Title}"
+                   Margin="0"
+                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                    LineBreakMode="TailTruncation"/>
-            <Label Text="{Binding SubTitle}"
-                   Margin="0,-5,0,0"
+        <Label Grid.Row="2" Text="{Binding SubTitle}"
+                   Margin="0"
                    FontSize="13"
-                   TextColor="{DynamicResource SecondaryLabelColor}"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray300}}"
                    LineBreakMode="TailTruncation"/>
-        </StackLayout>
     </Grid>
+    <!--</Grid>-->
 </ContentView>

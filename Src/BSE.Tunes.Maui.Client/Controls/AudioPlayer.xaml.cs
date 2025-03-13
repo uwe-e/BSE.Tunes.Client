@@ -1,11 +1,23 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
+using Microsoft.Maui.Graphics.Text;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.Controls
 {
     public partial class AudioPlayer : ContentView, IPlayerController, IPlayerElement
     {
+        private ImageButton _imageButton;
+
+        public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
+            nameof(TextColor), typeof(Color), typeof(AudioPlayer), Colors.Black);
+
+        public Color TextColor
+        {
+            get { return (Color)GetValue(TextColorProperty); }
+            set { SetValue(TextColorProperty, value); }
+        }
+
         public static readonly BindableProperty SelectTrackCommandProperty
             = BindableProperty.Create(
                 nameof(IPlayerElement.SelectTrackCommand),
@@ -163,12 +175,29 @@ namespace BSE.Tunes.Maui.Client.Controls
             set => SetValue(ProgressProperty, value);
         }
 
-        public static readonly BindableProperty AudioPlayerStateProperty
+        public static readonly BindableProperty PlayerStateProperty
                     = BindableProperty.Create(
-                        nameof(AudioPlayerState),
-                        typeof(AudioPlayerState),
+                        nameof(PlayerState),
+                        typeof(PlayerState),
                         typeof(AudioPlayer),
-                        AudioPlayerState.Closed);
+                        PlayerState.Closed,propertyChanged: OnPlayerStateChanged);
+
+        private static void OnPlayerStateChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+
+            AudioPlayer player = (AudioPlayer)bindable;
+            if (newValue is PlayerState playState)
+            {
+                if (playState == PlayerState.Playing) {
+                    VisualStateManager.GoToState(player._imageButton, "Pause");
+                }
+                else
+                {
+                    VisualStateManager.GoToState(player._imageButton, "Play");
+                }
+
+            }
+        }
 
         public static readonly BindableProperty ProgressColorProperty =
             BindableProperty.Create(nameof(ProgressColor), typeof(Color), typeof(AudioPlayer), default(Color));
@@ -179,10 +208,10 @@ namespace BSE.Tunes.Maui.Client.Controls
             set => SetValue(ProgressColorProperty, value);
         }
 
-        public AudioPlayerState AudioPlayerState
+        public PlayerState PlayerState
         {
-            get => (AudioPlayerState)GetValue(AudioPlayerStateProperty);
-            set => SetValue(AudioPlayerStateProperty, value);
+            get => (PlayerState)GetValue(PlayerStateProperty);
+            set => SetValue(PlayerStateProperty, value);
         }
 
         public static readonly BindableProperty TrackProperty
@@ -262,6 +291,12 @@ namespace BSE.Tunes.Maui.Client.Controls
         public AudioPlayer()
         {
             InitializeComponent();
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _imageButton = base.GetTemplateChild("PART_PlayButton") as ImageButton;
         }
 
         private static void OnSelectTrackCommandChanged(BindableObject bindable, object oldValue, object newValue)
@@ -404,7 +439,7 @@ namespace BSE.Tunes.Maui.Client.Controls
                 }
             }
         }
-
+        
         public void OnPlayPreviousCommandCanExecuteChanged(object sender, EventArgs e)
         {
             AudioPlayer.PlayPreviousCommandCanExecuteChanged(this, EventArgs.Empty);
@@ -448,5 +483,9 @@ namespace BSE.Tunes.Maui.Client.Controls
             AudioPlayer.PlayNextCommandCanExecuteChanged(this, EventArgs.Empty);
         }
 
+        private void OnPlayClicked(object sender, EventArgs e)
+        {
+            PlayCommand?.Execute(PlayCommandParameter);
+        }
     }
 }
