@@ -30,12 +30,8 @@ namespace BSE.Tunes.Maui.Client.Services
                 bool toRegister = Convert.ToBoolean(newValue);
                 if (toRegister)
                 {
-
                     var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
-                    if (playerService != null)
-                    {
-                        playerService.RegisterAsMediaService(mediaElement);
-                    }
+                    playerService?.RegisterAsMediaService(mediaElement);
                 }
             }
         }
@@ -85,38 +81,22 @@ namespace BSE.Tunes.Maui.Client.Services
              */
         }
 
+#nullable enable
         private async void OnMediaStateChanged(object? sender, MediaStateChangedEventArgs e)
         {
             await _mediaElement.Dispatcher.DispatchAsync(() =>
             {
-                _currentPlayerState = PlayerState.Closed;
-                var mediaElementState = e.NewState;
-                switch (mediaElementState)
+                _currentPlayerState = e.NewState switch
                 {
-                    case MediaElementState.Buffering:
-                        _currentPlayerState = PlayerState.Buffering;
-                        break;
-                    case MediaElementState.Opening:
-                        _currentPlayerState = PlayerState.Opening;
-                        break;
-                    case MediaElementState.Paused:
-                        _currentPlayerState = PlayerState.Paused;
-                        break;
-                    case MediaElementState.Playing:
-                        _currentPlayerState = PlayerState.Playing;
-                        break;
-                    case MediaElementState.Stopped:
-                        _currentPlayerState = PlayerState.Stopped;
-                        break;
-                    default:
-                        _currentPlayerState = PlayerState.Closed;
-                        break;
-
-
-                }
+                    MediaElementState.Buffering => PlayerState.Buffering,
+                    MediaElementState.Opening => PlayerState.Opening,
+                    MediaElementState.Paused => PlayerState.Paused,
+                    MediaElementState.Playing => PlayerState.Playing,
+                    MediaElementState.Stopped => PlayerState.Stopped,
+                    _ => PlayerState.Closed,
+                };
                 PlayerStateChanged?.Invoke(_currentPlayerState);
             });
-
         }
 
         private void OnMediaEnded(object? sender, EventArgs e)
@@ -153,25 +133,18 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             if (track != null)
             {
-                var uri = _settingsService.ServiceEndPoint;
                 var requestUri = GetRequestUri(track.Guid);
-                //var requestUri = GetRequestUri(new Guid("3755174e-5381-44ef-8195-00676260b45a"));
-                using (var httpClient = await _requestService.GetHttpClient())
+                using var httpClient = await _requestService.GetHttpClient();
+                using var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
+                if (response.IsSuccessStatusCode)
                 {
-                    using (var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead))
-                        if (response.IsSuccessStatusCode)
-                        {
-                            var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid.ToString() + track.Extension);
-                            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
-                            {
-                                await response.Content.CopyToAsync(fileStream);
-                            }
-                            _mediaElement.MetadataArtist = track.Album?.Artist?.Name;
-                            _mediaElement.MetadataTitle = track?.Name;
-                            _mediaElement.MetadataArtworkUrl = coverUri?.ToString();
-                            _mediaElement.Source = MediaSource.FromFile(filePath);
-
-                        }
+                    var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid.ToString() + track.Extension);
+                    using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    await response.Content.CopyToAsync(fileStream);
+                    _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
+                    _mediaElement.MetadataTitle = track.Name ?? string.Empty;
+                    _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
+                    _mediaElement.Source = MediaSource.FromFile(filePath);
                 }
             }
         }

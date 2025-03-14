@@ -13,8 +13,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IResourceService _resourceService;
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
-        private ObservableCollection<GridPanel>? _items;
-        private ICommand? _selectItemCommand;
+        private ObservableCollection<GridPanel> _items;
+        private ICommand _selectItemCommand;
 
         public ObservableCollection<GridPanel> Items => _items ??= [];
 

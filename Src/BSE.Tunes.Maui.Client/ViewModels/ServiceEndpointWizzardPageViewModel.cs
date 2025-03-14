@@ -7,19 +7,25 @@ using Prism.Services;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class ServiceEndpointWizzardPageViewModel : ViewModelBase
+    public class ServiceEndpointWizzardPageViewModel(
+        INavigationService navigationService,
+        IResourceService resourceService,
+        IPageDialogService pageDialogService,
+        ISettingsService settingsService,
+        IDataService dataService,
+        IAuthenticationService authenticationService) : ViewModelBase(navigationService)
     {
-        private readonly IResourceService _resourceService;
-        private readonly IPageDialogService _pageDialogService;
-        private readonly ISettingsService _settingsService;
-        private readonly IDataService _dataService;
-        private readonly IAuthenticationService _authenticationService;
-        private DelegateCommand? _saveCommand;
-        private string? _serviceEndPoint;
+        private readonly IResourceService _resourceService = resourceService;
+        private readonly IPageDialogService _pageDialogService = pageDialogService;
+        private readonly ISettingsService _settingsService = settingsService;
+        private readonly IDataService _dataService = dataService;
+        private readonly IAuthenticationService _authenticationService = authenticationService;
+        private DelegateCommand _saveCommand;
+        private string _serviceEndPoint;
 
         public DelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(Save, CanSave);
 
-        public string? ServiceEndPoint
+        public string ServiceEndPoint
         {
             get => _serviceEndPoint;
             set
@@ -29,21 +35,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
-        public ServiceEndpointWizzardPageViewModel(
-            INavigationService navigationService,
-            IResourceService resourceService,
-            IPageDialogService pageDialogService,
-            ISettingsService settingsService,
-            IDataService dataService,
-            IAuthenticationService authenticationService) : base(navigationService)
-        {
-            _resourceService = resourceService;
-            _pageDialogService = pageDialogService;
-            _settingsService = settingsService;
-            _dataService = dataService;
-            _authenticationService = authenticationService;
-        }
-
         private bool CanSave()
         {
             return !String.IsNullOrEmpty(ServiceEndPoint);
@@ -51,7 +42,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async void Save()
         {
-            string? serviceEndPoint = null;
+            string serviceEndPoint = null;
 
             /* 
              * if theres a valid url, use it.

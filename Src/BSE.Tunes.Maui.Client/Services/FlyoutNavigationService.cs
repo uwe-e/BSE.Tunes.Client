@@ -5,17 +5,13 @@ using Prism.Navigation;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
-    public class FlyoutNavigationService : PageNavigationService, IFlyoutNavigationService
+    public class FlyoutNavigationService(
+        IContainerProvider container,
+        IWindowManager windowManager,
+        IEventAggregator eventAggregator,
+        IPageAccessor pageAccessor) : PageNavigationService(container, windowManager, eventAggregator, pageAccessor), IFlyoutNavigationService
     {
-        private BottomFlyoutPage? _flyoutPage;
-
-        public FlyoutNavigationService(
-            IContainerProvider container,
-            IWindowManager windowManager,
-            IEventAggregator eventAggregator,
-            IPageAccessor pageAccessor) : base(container, windowManager, eventAggregator, pageAccessor)
-        {
-        }
+        private BottomFlyoutPage _flyoutPage;
 
         public async Task<INavigationResult> CloseFlyoutAsync()
         {

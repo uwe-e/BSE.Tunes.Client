@@ -5,8 +5,8 @@ namespace BSE.Tunes.Maui.Client.Controls;
 
 public partial class HeaderedCollectionView : ContentView
 {
-    private SectionHeaderButton? _sectionHeaderButton;
-    private ActivityIndicator? _activityIndicator;
+    private SectionHeaderButton _sectionHeaderButton;
+    private ActivityIndicator _activityIndicator;
 
 
     public static readonly BindableProperty TitleProperty =
@@ -48,7 +48,7 @@ public partial class HeaderedCollectionView : ContentView
     }
 
     public static readonly BindableProperty SelectedItemProperty =
-        BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(HeaderedCollectionView), default(object),
+        BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(HeaderedCollectionView), default,
             defaultBindingMode: BindingMode.TwoWay);
 
     public object SelectedItem
@@ -89,7 +89,7 @@ public partial class HeaderedCollectionView : ContentView
 
     public static readonly BindableProperty RemainingItemsThresholdReachedCommandParameterProperty =
         BindableProperty.Create(nameof(RemainingItemsThresholdReachedCommandParameter),
-            typeof(object), typeof(HeaderedCollectionView), default(object));
+            typeof(object), typeof(HeaderedCollectionView), default);
 
     public object RemainingItemsThresholdReachedCommandParameter
     {

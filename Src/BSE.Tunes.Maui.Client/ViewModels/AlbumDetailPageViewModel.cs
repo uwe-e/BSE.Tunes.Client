@@ -20,9 +20,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private int _pageNumber;
         private int _pageSize;
         private bool _hasItems;
-        private ObservableCollection<GridPanel>? _albums;
-        private ICommand? _selectAlbumCommand;
-        private ICommand? _loadMoreAlbumssCommand;
+        private ObservableCollection<GridPanel> _albums;
+        private ICommand _selectAlbumCommand;
+        private ICommand _loadMoreAlbumssCommand;
 
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ??= new DelegateCommand(async () => await LoadMoreAlbumsAsync());
 

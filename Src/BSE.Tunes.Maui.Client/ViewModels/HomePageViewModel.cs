@@ -11,7 +11,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IRegionManager _regionManager;
         private readonly IResourceService _resourceService;
         private readonly IEventAggregator _eventAggregator;
-        private ICommand? _refreshCommand;
+        private ICommand _refreshCommand;
         private bool _isRefreshing;
 
         public ICommand RefreshCommand => _refreshCommand ??= new DelegateCommand(RefreshView);

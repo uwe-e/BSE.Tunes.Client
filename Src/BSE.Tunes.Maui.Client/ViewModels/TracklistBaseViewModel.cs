@@ -10,7 +10,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public class TracklistBaseViewModel : ViewModelBase
     {
-        private ObservableCollection<GridPanel>? _items;
+        private ObservableCollection<GridPanel> _items;
         private string _imageSource;
         private ICommand _openFlyoutCommand;
         private ICommand _playCommand;
@@ -180,7 +180,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected virtual ObservableCollection<int> GetTrackIds()
         {
-            return new ObservableCollection<int>();
+            return [];
         }
 
         protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)

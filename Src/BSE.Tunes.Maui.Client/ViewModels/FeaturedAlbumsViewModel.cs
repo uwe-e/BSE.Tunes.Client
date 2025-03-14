@@ -12,8 +12,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IImageService _imageService;
         private readonly IDataService _dataService;
-        private ObservableCollection<GridPanel>? _items;
-        private ICommand? _selectItemCommand;
+        private ObservableCollection<GridPanel> _items;
+        private ICommand _selectItemCommand;
 
         public ObservableCollection<GridPanel> Items => _items ??= [];
 

@@ -9,7 +9,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public class FeaturedPlaylistsViewModel : ViewModelBase
     {
-        private ObservableCollection<GridPanel>? _items;
+        private ObservableCollection<GridPanel> _items;
         private DelegateCommand<GridPanel> _selectItemCommand;
         private readonly ISettingsService _settingsService;
         private readonly IImageService _imageService;

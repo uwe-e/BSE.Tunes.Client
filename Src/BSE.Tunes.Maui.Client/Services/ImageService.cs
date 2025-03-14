@@ -4,31 +4,23 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
-    public class ImageService : IImageService
+    public class ImageService(
+        IDataService dataService,
+        IEventAggregator eventAggregator,
+        IRequestService requestService,
+        ISettingsService settingsService,
+        IStorageService storageService,
+        IImageCacheService imageCacheService) : IImageService
     {
         private const string ThumbnailPart = "_thumb";
         private const string ImageExtension = "img";
-        private readonly IDataService _dataService;
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IRequestService _requestService;
-        private readonly ISettingsService _settingsService;
-        private readonly IStorageService _storageService;
-        private readonly IImageCacheService _imageCacheService;
+        private readonly IDataService _dataService = dataService;
+        private readonly IEventAggregator _eventAggregator = eventAggregator;
+        private readonly IRequestService _requestService = requestService;
+        private readonly ISettingsService _settingsService = settingsService;
+        private readonly IStorageService _storageService = storageService;
+        private readonly IImageCacheService _imageCacheService = imageCacheService;
 
-        public ImageService(
-            IDataService dataService,
-            IEventAggregator eventAggregator,
-            IRequestService requestService,
-            ISettingsService settingsService,
-            IStorageService storageService,
-            IImageCacheService imageCacheService) {
-            _dataService = dataService;
-            _eventAggregator = eventAggregator;
-            _requestService = requestService;
-            _settingsService = settingsService;
-            _storageService = storageService;
-            _imageCacheService = imageCacheService;
-        }
         public string GetBitmapSource(Guid albumId, bool asThumbnail = false)
         {
             string fileName = asThumbnail ? $"{albumId}_{ThumbnailPart}" : $"{albumId}";
@@ -66,13 +58,9 @@ namespace BSE.Tunes.Maui.Client.Services
 
                     SKImage stitchedImage = await Combine(albumIds, width, height, asThumbnail);
 
-                    using (SKData encoded = stitchedImage.Encode(SKEncodedImageFormat.Png, 100))
-                    {
-                        using (System.IO.Stream outFile = System.IO.File.OpenWrite(fullName))
-                        {
-                            encoded.SaveTo(outFile);
-                        }
-                    }
+                    using SKData encoded = stitchedImage.Encode(SKEncodedImageFormat.Png, 100);
+                    using System.IO.Stream outFile = System.IO.File.OpenWrite(fullName);
+                    encoded.SaveTo(outFile);
                 }
                 return fullName;
             }
@@ -87,7 +75,7 @@ namespace BSE.Tunes.Maui.Client.Services
         private async Task<SKImage> Combine(IEnumerable<Guid> albumIds, int width, int height, bool asThumbnail = false)
         {
             //read all images into memory
-            List<SKBitmap> images = new List<SKBitmap>();
+            List<SKBitmap> images = [];
             SKImage finalImage = null;
 
             try
@@ -161,52 +149,47 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private async Task CreateAndSaveBitmapAsync(string imageUri, string fileName, bool asThumbnail)
         {
-            SKBitmap? bitmap = await CreateBitmapFromStream(imageUri);
+            SKBitmap bitmap = await CreateBitmapFromStream(imageUri);
             if (bitmap != null)
             {
                 if (!asThumbnail)
                 {
                     bitmap = bitmap.Resize(new SKImageInfo(300, 300), SKFilterQuality.Medium);
                 }
-                using (SKImage image = SKImage.FromBitmap(bitmap))
+                using SKImage image = SKImage.FromBitmap(bitmap);
+                using (SKData encoded = image.Encode(SKEncodedImageFormat.Jpeg, 90))
                 {
-                    using (SKData encoded = image.Encode(SKEncodedImageFormat.Jpeg, 90))
-                    {
-                        using (System.IO.Stream outFile = System.IO.File.OpenWrite(fileName))
-                        {
-                            encoded.SaveTo(outFile);
-                        }
-                    }
-                    _eventAggregator.GetEvent<CacheChangedEvent>().Publish(CacheChangeMode.Added);
+                    using System.IO.Stream outFile = System.IO.File.OpenWrite(fileName);
+                    encoded.SaveTo(outFile);
                 }
+                _eventAggregator.GetEvent<CacheChangedEvent>().Publish(CacheChangeMode.Added);
             }
         }
 
-        private async Task<SKBitmap?> CreateBitmapFromStream(string imageUri)
+        private async Task<SKBitmap> CreateBitmapFromStream(string imageUri)
         {
-            SKBitmap? bitmap = default;
+            SKBitmap bitmap = default;
 
             if (imageUri != null)
             {
-                using (var httpClient = await _requestService.GetHttpClient())
+                using var httpClient = await _requestService.GetHttpClient();
+                try
                 {
-                    try
+                    var stream = await httpClient.GetStreamAsync(imageUri);
+                    if (stream != null)
                     {
-                        var stream = await httpClient.GetStreamAsync(imageUri);
-                        if (stream != null)
+                        //create a bitmap from the file and add it to the list
+                        //bitmap = SKBitmap.Decode(stream);
+                        bitmap = await Task.Run(() =>
                         {
-                            //create a bitmap from the file and add it to the list
-                            //bitmap = SKBitmap.Decode(stream);
-                            bitmap = await Task.Run(() =>
-                            {
-                                return SKBitmap.Decode(stream);
-                            });
-                        }
+                            return SKBitmap.Decode(stream);
+                        });
                     }
-                    //if there´s no image
-                    catch (Exception ex) {
-                        var t = "";
-                    }
+                }
+                //if there´s no image
+                catch (Exception ex)
+                {
+                    var t = "";
                 }
             }
 

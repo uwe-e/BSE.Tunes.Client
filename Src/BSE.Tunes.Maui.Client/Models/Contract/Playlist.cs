@@ -11,7 +11,7 @@
             get;
             set;
         }
-        public string? Name
+        public string Name
         {
             get;
             set;
@@ -21,7 +21,7 @@
             get;
             set;
         }
-        public string? UserName
+        public string UserName
         {
             get;
             set;

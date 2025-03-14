@@ -8,9 +8,9 @@
 
         public int TrackId { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        public string? Artist { get; set; }
+        public string Artist { get; set; }
 
         public Guid AlbumId { get; set; }
 
@@ -20,6 +20,6 @@
 
         public int SortOrder { get; set; }
 
-        public Track? Track { get; set; }
+        public Track Track { get; set; }
     }
 }

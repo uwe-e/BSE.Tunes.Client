@@ -6,10 +6,14 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class PlaylistActionToolbarPageViewModel : ViewModelBase
+    public class PlaylistActionToolbarPageViewModel(
+        INavigationService navigationService,
+        IImageService imageService,
+        IEventAggregator eventAggregator,
+        IFlyoutNavigationService flyoutNavigationService) : ViewModelBase(navigationService)
     {
-        private ICommand? _closeFlyoutCommand;
-        private ICommand? _addToPlaylistCommand;
+        private ICommand _closeFlyoutCommand;
+        private ICommand _addToPlaylistCommand;
         private ICommand _removeFromPlaylistCommand;
         private ICommand _removePlaylistCommand;
         private ICommand _displayAlbumInfoCommand;
@@ -20,9 +24,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private string _imageSource;
         private string _subTitle;
         private string _title;
-        private readonly IImageService _imageService;
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IFlyoutNavigationService _flyoutNavigationService;
+        private readonly IImageService _imageService = imageService;
+        private readonly IEventAggregator _eventAggregator = eventAggregator;
+        private readonly IFlyoutNavigationService _flyoutNavigationService = flyoutNavigationService;
 
         public ICommand CloseFlyoutCommand => _closeFlyoutCommand
             ??= new DelegateCommand(async () =>
@@ -40,7 +44,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
              ??= new DelegateCommand(RemovePlaylist);
 
         public ICommand DisplayAlbumInfoCommand => _displayAlbumInfoCommand
-            ??= new DelegateCommand(async() => ShowAlbumAsync());
+            ??= new DelegateCommand(async() => await ShowAlbumAsync());
 
         public string ImageSource
         {
@@ -75,17 +79,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             get => _canDisplayAlbumInfo;
             set => SetProperty<bool>(ref _canDisplayAlbumInfo, value);
-        }
-
-        public PlaylistActionToolbarPageViewModel(
-            INavigationService navigationService,
-            IImageService imageService,
-            IEventAggregator eventAggregator,
-            IFlyoutNavigationService flyoutNavigationService) : base(navigationService)
-        {
-            _imageService = imageService;
-            _eventAggregator = eventAggregator;
-            _flyoutNavigationService = flyoutNavigationService;
         }
 
         public override async void OnNavigatedTo(INavigationParameters parameters)

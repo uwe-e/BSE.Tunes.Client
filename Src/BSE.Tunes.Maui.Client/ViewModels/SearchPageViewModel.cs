@@ -2,12 +2,13 @@
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using System.Collections.ObjectModel;
-using System.Threading;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class SearchPageViewModel : ViewModelBase
+    public class SearchPageViewModel(
+        INavigationService navigationService,
+        IDataService dataService) : ViewModelBase(navigationService)
     {
         private ICommand _textChangedCommand;
         private bool _hasAlbums;
@@ -16,14 +17,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ObservableCollection<GridPanel> _tracks;
         private bool _hasMoreAlbums;
         private bool _hasMoreTracks;
-        private readonly IDataService _dataService;
+        private readonly IDataService _dataService = dataService;
         private CancellationTokenSource _cancellationTokenSource;
 
         public ICommand TextChangedCommand => _textChangedCommand ??= new DelegateCommand<string>(async (textValue) => await TextChangedAsync(textValue));
 
-        public ObservableCollection<GridPanel> Albums => _albums ??= new ObservableCollection<GridPanel>();
+        public ObservableCollection<GridPanel> Albums => _albums ??= [];
 
-        public ObservableCollection<GridPanel> Tracks => _tracks ??= new ObservableCollection<GridPanel>();
+        public ObservableCollection<GridPanel> Tracks => _tracks ??= [];
 
         public bool HasAlbums
         {
@@ -47,13 +48,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             get => _hasMoreTracks;
             set => SetProperty<bool>(ref _hasMoreTracks, value);
-        }
-
-        public SearchPageViewModel(
-            INavigationService navigationService,
-            IDataService dataService) : base(navigationService)
-        {
-            _dataService = dataService;
         }
 
         private async Task TextChangedAsync(string textValue)

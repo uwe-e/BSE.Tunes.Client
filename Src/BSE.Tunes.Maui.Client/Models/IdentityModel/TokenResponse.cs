@@ -10,18 +10,18 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
 {
     public class TokenResponse
     {
-        public string? Raw
+        public string Raw
         {
             get; protected set;
         }
-        public JsonObject? Json
+        public JsonObject Json
         {
             get; protected set;
         }
 
         private bool _isHttpError;
         private HttpStatusCode _httpErrorstatusCode;
-        private string? _httpErrorReason;
+        private string _httpErrorReason;
 
         public TokenResponse(string raw)
         {
@@ -53,7 +53,7 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
             }
         }
 
-        public string? HttpErrorReason
+        public string HttpErrorReason
         {
             get
             {
@@ -61,7 +61,7 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
             }
         }
 
-        public string? AccessToken
+        public string AccessToken
         {
             get
             {
@@ -69,7 +69,7 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
             }
         }
 
-        public string? IdentityToken
+        public string IdentityToken
         {
             get
             {
@@ -77,7 +77,7 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
             }
         }
 
-        public string? Error
+        public string Error
         {
             get
             {
@@ -102,7 +102,7 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
             }
         }
 
-        public string? TokenType
+        public string TokenType
         {
             get
             {
@@ -110,7 +110,7 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
             }
         }
 
-        public string? RefreshToken
+        public string RefreshToken
         {
             get
             {
@@ -118,9 +118,9 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
             }
         }
 
-        protected virtual string? GetStringOrNull(string name)
+        protected virtual string GetStringOrNull(string name)
         {
-            if (Json != null && Json.TryGetPropertyValue(name, out JsonNode? value))
+            if (Json != null && Json.TryGetPropertyValue(name, out JsonNode value))
             {
                 return value?.ToString();
             }
@@ -130,10 +130,9 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
 
         protected virtual long GetLongOrNull(string name)
         {
-            if (Json != null && Json.TryGetPropertyValue(name, out JsonNode? value))
+            if (Json != null && Json.TryGetPropertyValue(name, out JsonNode value))
             {
-                long longValue = 0;
-                if (long.TryParse(value?.ToString(), out longValue))
+                if (long.TryParse(value?.ToString(), out long longValue))
                 {
                     return longValue;
                 }

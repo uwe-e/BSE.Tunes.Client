@@ -8,7 +8,7 @@
         public Task DeleteCachedImagesAsync(string searchPattern = null)
         {
             string imageFolderPath = GetImageFolder();
-            DirectoryInfo directoryInfo = new DirectoryInfo(imageFolderPath);
+            DirectoryInfo directoryInfo = new(imageFolderPath);
             if (directoryInfo.Exists)
             {
                 //var files = directoryInfo.GetFiles(searchPattern ?? "*");
@@ -35,7 +35,7 @@
         {
             long length = default;
             string imageFolderPath = GetImageFolder();
-            DirectoryInfo directoryInfo = new DirectoryInfo(imageFolderPath);
+            DirectoryInfo directoryInfo = new(imageFolderPath);
             if (directoryInfo.Exists)
             {
                 foreach (var fileInfo in directoryInfo.GetFiles())

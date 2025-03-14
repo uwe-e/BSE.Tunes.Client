@@ -17,16 +17,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IStorageService _storageService;
         private readonly IAppInfoService _appInfoService;
-        private string? _serviceEndPoint;
-        private string? _userName;
-        private string? _usedDiskSpace;
-        private string? _versionString;
+        private string _serviceEndPoint;
+        private string _userName;
+        private string _usedDiskSpace;
+        private string _versionString;
         private bool _isActive;
         private bool _isActivated;
         private bool _isCacheChanged;
-        private ICommand? _toServiceEndpointDetailCommand;
-        private ICommand? _toAccountDetailCommand;
-        private ICommand? _toCacheSettingsDetailCommand;
+        private ICommand _toServiceEndpointDetailCommand;
+        private ICommand _toAccountDetailCommand;
+        private ICommand _toCacheSettingsDetailCommand;
 
         public ICommand ToServiceEndpointDetailCommand
             => _toServiceEndpointDetailCommand ??= new DelegateCommand(async() => await NavigateToServiceEndpointDetailAsync());

@@ -6,23 +6,17 @@ using System.Text;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService(ISettingsService settingsService) : IAuthenticationService
     {
-        private readonly ISettingsService _settingsService;
-        public TokenResponse? TokenResponse
+        private readonly ISettingsService _settingsService = settingsService;
+        public TokenResponse TokenResponse
         {
             get;
             private set;
         }
 
-        public AuthenticationService(ISettingsService settingsService)
-        {
-            _settingsService = settingsService;
-        }
-
         public async Task<bool> LoginAsync(string userName, string password)
         {
-            var succeeded = false;
             var fields = new Dictionary<string, string>
             {
                 { OAuth2Constants.UserName, userName },
@@ -38,14 +32,12 @@ namespace BSE.Tunes.Maui.Client.Services
                     UserName = userName,
                     Token = this.TokenResponse.RefreshToken
                 };
-                succeeded = true;
+                return true;
             }
             catch (Exception)
             {
                 throw;
             }
-
-            return succeeded;
         }
 
         public async Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken)
@@ -71,7 +63,6 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private async Task<TokenResponse> RequestAsync(Dictionary<string, string> fields)
         {
-            TokenResponse? tokenResponse = null;
             var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
             builder.AppendToPath("token");
 
@@ -83,6 +74,7 @@ namespace BSE.Tunes.Maui.Client.Services
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("basic", EncodeCredential("BSEtunes", "f2186598-35f4-496d-9de0-41157a27642f"));
 
             var response = await client.SendAsync(request);
+            TokenResponse tokenResponse;
             if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.BadRequest)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -94,7 +86,7 @@ namespace BSE.Tunes.Maui.Client.Services
             }
             if (tokenResponse.IsError)
             {
-                throw new UnauthorizedAccessException(tokenResponse.Error);
+                throw new UnauthorizedAccessException(((TokenResponse)null).Error);
             }
             return tokenResponse;
         }

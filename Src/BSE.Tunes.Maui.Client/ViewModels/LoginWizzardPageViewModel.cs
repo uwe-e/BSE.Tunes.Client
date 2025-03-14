@@ -6,16 +6,20 @@ using Prism.Services;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    internal class LoginWizzardPageViewModel : ViewModelBase
+    internal class LoginWizzardPageViewModel(
+        INavigationService navigationService,
+        IResourceService resourceService,
+        IPageDialogService pageDialogService,
+        IAuthenticationService authenticationService) : ViewModelBase(navigationService)
     {
-        private readonly IResourceService _resourceService;
-        private readonly IPageDialogService _pageDialogService;
-        private readonly IAuthenticationService _authenticationService;
-        private DelegateCommand? _saveCommand;
-        private string? _userName;
-        private string? _password;
+        private readonly IResourceService _resourceService = resourceService;
+        private readonly IPageDialogService _pageDialogService = pageDialogService;
+        private readonly IAuthenticationService _authenticationService = authenticationService;
+        private DelegateCommand _saveCommand;
+        private string _userName;
+        private string _password;
 
-        public string? UserName
+        public string UserName
         {
             get => _userName;
             set
@@ -24,7 +28,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 SaveCommand.RaiseCanExecuteChanged();
             }
         }
-        public string? Password
+        public string Password
         {
             get => _password;
             set
@@ -35,17 +39,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         }
 
         public DelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(Save, CanSave);
-
-        public LoginWizzardPageViewModel(
-            INavigationService navigationService,
-            IResourceService resourceService,
-            IPageDialogService pageDialogService,
-            IAuthenticationService authenticationService) : base(navigationService)
-        {
-            _resourceService = resourceService;
-            _pageDialogService = pageDialogService;
-            _authenticationService = authenticationService;
-        }
 
         private bool CanSave()
         {
@@ -69,11 +62,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                                 .AddSegment<MainPage>()
                                 .Navigate();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                string? title = _resourceService.GetString("AlertDialog_Error_Title_Text");
-                string? message = _resourceService.GetString("LoginPageViewModel_LoginException");
-                string? dialogResult = _resourceService.GetString("Dialog_Result_Cancel");
+                string title = _resourceService.GetString("AlertDialog_Error_Title_Text");
+                string message = exception.Message;// _resourceService.GetString("LoginPageViewModel_LoginException");
+                string dialogResult = _resourceService.GetString("Dialog_Result_Cancel");
 
                 await _pageDialogService.DisplayAlertAsync(
                     title,

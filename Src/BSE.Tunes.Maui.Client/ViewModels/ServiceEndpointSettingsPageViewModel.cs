@@ -5,12 +5,16 @@ using Prism.Services;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class ServiceEndpointSettingsPageViewModel : BaseSettingsPageViewModel
+    public class ServiceEndpointSettingsPageViewModel(
+        INavigationService navigationService,
+        ISettingsService settingsService,
+        IResourceService resourceService,
+        IPageDialogService pageDialogService) : BaseSettingsPageViewModel(navigationService)
     {
-        private string? _serviceEndPoint;
-        private readonly ISettingsService _settingsService;
-        private readonly IResourceService _resourceService;
-        private readonly IPageDialogService _pageDialogService;
+        private string _serviceEndPoint;
+        private readonly ISettingsService _settingsService = settingsService;
+        private readonly IResourceService _resourceService = resourceService;
+        private readonly IPageDialogService _pageDialogService = pageDialogService;
 
         public string ServiceEndPoint
         {
@@ -22,17 +26,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 SetProperty(ref _serviceEndPoint, value);
             }
-        }
-
-        public ServiceEndpointSettingsPageViewModel(
-            INavigationService navigationService,
-            ISettingsService settingsService,
-            IResourceService resourceService,
-            IPageDialogService pageDialogService) : base(navigationService)
-        {
-            _settingsService = settingsService;
-            _resourceService = resourceService;
-            _pageDialogService = pageDialogService;
         }
 
         public override void LoadSettings()

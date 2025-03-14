@@ -9,7 +9,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public class CacheSettingsPageViewModel : BaseSettingsPageViewModel
     {
-        private string? _usedDiskSpace;
+        private string _usedDiskSpace;
         private bool _isCacheChanged;
         private readonly IStorageService _storageService;
         private readonly IResourceService _resourceService;

@@ -6,12 +6,17 @@ using Prism.Services;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class LoginSettingsPageViewModel : BaseSettingsPageViewModel
+    public class LoginSettingsPageViewModel(
+        INavigationService navigationService,
+        ISettingsService settingsService,
+        IResourceService resourceService,
+        IEventAggregator eventAggregator,
+        IPageDialogService pageDialogService) : BaseSettingsPageViewModel(navigationService)
     {
-        private string? _userName;
-        private readonly ISettingsService _settingsService;
-        private readonly IResourceService _resourceService;
-        private readonly IPageDialogService _pageDialogService;
+        private string _userName;
+        private readonly ISettingsService _settingsService = settingsService;
+        private readonly IResourceService _resourceService = resourceService;
+        private readonly IPageDialogService _pageDialogService = pageDialogService;
 
         public string UserName
         {
@@ -23,18 +28,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 SetProperty(ref _userName, value);
             }
-        }
-
-        public LoginSettingsPageViewModel(
-            INavigationService navigationService,
-            ISettingsService settingsService,
-            IResourceService resourceService,
-            IEventAggregator eventAggregator,
-            IPageDialogService pageDialogService) : base(navigationService)
-        {
-            _settingsService = settingsService;
-            _resourceService = resourceService;
-            _pageDialogService = pageDialogService;
         }
 
         public async override void DeleteSettings()

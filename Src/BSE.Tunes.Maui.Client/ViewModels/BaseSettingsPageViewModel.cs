@@ -5,11 +5,11 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class BaseSettingsPageViewModel : ViewModelBase, IActiveAware
+    public class BaseSettingsPageViewModel(INavigationService navigationService) : ViewModelBase(navigationService), IActiveAware
     {
         private bool _isActive;
         private bool _isActivated;
-        private ICommand? _deleteCommand;
+        private ICommand _deleteCommand;
 
         public ICommand DeleteCommand => _deleteCommand ??= new DelegateCommand(Delete);
 
@@ -20,10 +20,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         }
 
         public event EventHandler IsActiveChanged;
-
-        public BaseSettingsPageViewModel(INavigationService navigationService) : base(navigationService)
-        {
-        }
 
         public virtual void DeleteSettings()
         {

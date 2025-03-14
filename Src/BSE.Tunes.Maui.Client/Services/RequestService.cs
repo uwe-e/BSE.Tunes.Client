@@ -3,18 +3,13 @@ using System.Text.Json;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
-    public class RequestService : IRequestService
+    public class RequestService(IAuthenticationService authenticationService) : IRequestService
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthenticationService _authenticationService = authenticationService;
 
-        public RequestService(IAuthenticationService authenticationService)
+        public async Task<TResult> GetAsync<TResult>(Uri uri)
         {
-            _authenticationService = authenticationService;
-        }
-
-        public async Task<TResult?> GetAsync<TResult>(Uri uri)
-        {
-            TResult? result = default;
+            TResult result = default;
             using (var client = await GetHttpClient())
             {
                 var responseMessage = await client.GetAsync(uri);
@@ -32,7 +27,7 @@ namespace BSE.Tunes.Maui.Client.Services
             {
                 var responseMessage = await client.GetAsync(uri, token);
                 //responseMessage.EnsureExtendedSuccessStatusCode();
-                var serialized = await responseMessage.Content.ReadAsStringAsync();
+                var serialized = await responseMessage.Content.ReadAsStringAsync(token);
                 result = JsonSerializer.Deserialize<T>(serialized);
                 
             }
@@ -41,42 +36,34 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public async Task<TResult> PostAsync<TResult, TRequest>(Uri uri, TRequest from)
         {
-            TResult? result = default;
+            TResult result = default;
             using (var client = await GetHttpClient())
             {
                 var serialized = await Task.Run(() => JsonSerializer.Serialize(from));
-                using (var responseMessage = await client.PostAsync(uri,
-                                                                    new StringContent(serialized, Encoding.UTF8, "application/json")))
-                {
-                    var responseData = await responseMessage.Content.ReadAsStringAsync();
-                    result = JsonSerializer.Deserialize<TResult>(responseData);
-                }
+                using var responseMessage = await client.PostAsync(uri, new StringContent(serialized, Encoding.UTF8, "application/json"));
+                var responseData = await responseMessage.Content.ReadAsStringAsync();
+                result = JsonSerializer.Deserialize<TResult>(responseData);
             }
             return result;
         }
 
         public async Task<TResult> PutAsync<TResult, TRequest>(Uri uri, TRequest from)
         {
-            TResult? result = default;
+            TResult result = default;
             using (var client = await GetHttpClient())
             {
                 var serialized = await Task.Run(() => JsonSerializer.Serialize(from));
-                using (var responseMessage = await client.PutAsync(uri,
-                                                                    new StringContent(serialized, Encoding.UTF8, "application/json")))
-                {
-                    var responseData = await responseMessage.Content.ReadAsStringAsync();
-                    result = JsonSerializer.Deserialize<TResult>(responseData);
-                }
+                using var responseMessage = await client.PutAsync(uri, new StringContent(serialized, Encoding.UTF8, "application/json"));
+                var responseData = await responseMessage.Content.ReadAsStringAsync();
+                result = JsonSerializer.Deserialize<TResult>(responseData);
             }
             return result;
         }
 
         public async Task DeleteAsync(Uri uri)
         {
-            using (var client = await GetHttpClient())
-            {
-                var responseMessage = await client.DeleteAsync(uri);
-            }
+            using var client = await GetHttpClient();
+            var responseMessage = await client.DeleteAsync(uri);
         }
 
         public async Task<HttpClient> GetHttpClient(bool withRefreshToken = true)

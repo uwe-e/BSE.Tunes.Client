@@ -9,7 +9,7 @@ namespace BSE.Tunes.Maui.Client.Models
             get; set;
         }
 
-        public Album? Album
+        public Album Album
         {
             get; set;
         }
