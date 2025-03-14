@@ -27,6 +27,11 @@
             get; set;
         }
 
+        public string Extension
+        {
+            get; set;
+        }
+
         public Album Album
         {
             get; set;

@@ -161,8 +161,7 @@ namespace BSE.Tunes.Maui.Client.Services
                     using (var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead))
                         if (response.IsSuccessStatusCode)
                         {
-                            //TODO: get the file extension from the api
-                            var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid.ToString()) + ".mp3";
+                            var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid.ToString() + track.Extension);
                             using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
                                 await response.Content.CopyToAsync(fileStream);
