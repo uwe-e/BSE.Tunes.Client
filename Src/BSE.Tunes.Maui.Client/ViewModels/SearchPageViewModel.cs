@@ -23,7 +23,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ObservableCollection<GridPanel> Albums => _albums ??= new ObservableCollection<GridPanel>();
 
-            public ObservableCollection<GridPanel> Tracks => _tracks ??= new ObservableCollection<GridPanel>();
+        public ObservableCollection<GridPanel> Tracks => _tracks ??= new ObservableCollection<GridPanel>();
 
         public bool HasAlbums
         {
@@ -74,10 +74,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     await GetAlbumResultsAsync(textValue, token);
                     await GetTrackResultsAsync(textValue, token);
                 }
-                catch (OperationCanceledException)
-                {
-                    Console.WriteLine("Operation was canceled.");
-                }
+                catch (Exception) { }
             }
             IsBusy = false;
         }

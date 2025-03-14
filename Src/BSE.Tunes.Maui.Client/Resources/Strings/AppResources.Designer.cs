@@ -628,7 +628,7 @@ namespace BSE.Tunes.Maui.Client.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BSEtunes Xamarin Client.
+        ///   Looks up a localized string similar to BSEtunes Maui.Client.
         /// </summary>
         internal static string SettingsPage_SectionInformation_Text {
             get {
