@@ -86,7 +86,7 @@ namespace BSE.Tunes.Maui.Client.Services
             }
             if (tokenResponse.IsError)
             {
-                throw new UnauthorizedAccessException(((TokenResponse)null).Error);
+                throw new UnauthorizedAccessException(tokenResponse.Error);
             }
             return tokenResponse;
         }

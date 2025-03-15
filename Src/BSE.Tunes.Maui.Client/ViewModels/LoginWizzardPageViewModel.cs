@@ -47,9 +47,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void Save()
         {
-            Task.Run(async() => {
-                await SaveAsync();
-            });
+            _ = SaveAsync();
         }
 
         private async Task SaveAsync()
@@ -62,10 +60,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                                 .AddSegment<MainPage>()
                                 .Navigate();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 string title = _resourceService.GetString("AlertDialog_Error_Title_Text");
-                string message = exception.Message;// _resourceService.GetString("LoginPageViewModel_LoginException");
+                string message = _resourceService.GetString("LoginPageViewModel_LoginException");
                 string dialogResult = _resourceService.GetString("Dialog_Result_Cancel");
 
                 await _pageDialogService.DisplayAlertAsync(
