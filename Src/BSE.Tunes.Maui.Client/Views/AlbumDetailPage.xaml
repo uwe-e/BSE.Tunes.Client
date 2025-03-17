@@ -107,11 +107,6 @@
                                            Style="{DynamicResource CollectionViewLabelStyle}"
                                            VerticalTextAlignment="Center"
                                            LineBreakMode="TailTruncation"/>
-                                    <!--<ImageButton Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
-                                                 HorizontalOptions="End" Margin="10,0" WidthRequest="50"
-                                                 BackgroundColor="{StaticResource SystemPinkDark}"
-                                                 Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
-                                                 CommandParameter="{Binding}"/>-->
                                     <Button Grid.Column="2"
                                             Text="..."
                                             Style="{DynamicResource ContextMenuButtonStyle}"
@@ -127,7 +122,7 @@
                                      IsBusy="{Binding IsQueryBusy}"
                                      IsVisible="{Binding HasFurtherAlbums}"
                                      HeaderButtonStyle="{DynamicResource SectionHeaderButtonStyle}"
-                                     ActivityIndicatorColor="{DynamicResource PrimaryLabelColor}"
+                                     ActivityIndicatorColor="{DynamicResource SecondaryDarkLabelColor}"
                                      ItemsSource="{Binding Albums}"
                                      SelectedItem="{Binding SelectedAlbum}"
                                      SelectionChangedCommand="{Binding SelectAlbumCommand}"

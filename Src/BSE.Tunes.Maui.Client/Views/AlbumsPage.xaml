@@ -9,8 +9,7 @@
         <CollectionView x:Name="albumsView"  ItemsSource="{Binding Items}"
                 ItemSizingStrategy="MeasureFirstItem"
                 RemainingItemsThreshold="10"
-                RemainingItemsThresholdReachedCommand="{Binding LoadMoreItemsCommand}"
-                VerticalOptions="FillAndExpand">
+                RemainingItemsThresholdReachedCommand="{Binding LoadMoreItemsCommand}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="{OnIdiom 2, Tablet=3}" />
             </CollectionView.ItemsLayout>
@@ -24,7 +23,7 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Grid IsVisible="{Binding IsBusy}" Padding="12"
+        <Grid IsVisible="{Binding IsBusy}"
               HeightRequest="50">
             <ActivityIndicator IsRunning="{Binding IsBusy}"/>
         </Grid>

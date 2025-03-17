@@ -81,10 +81,6 @@
                                     Style="{DynamicResource ContextMenuButtonStyle}"
                                     Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
                                     CommandParameter="{Binding}"/>
-                            <!--<ImageButton BackgroundColor="Red" Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
-                                                 HorizontalOptions="End" Margin="10,0"
-                                                 Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
-                                                 CommandParameter="{Binding}"/>-->
                         </Grid>
                     </StackLayout>
                 </DataTemplate>

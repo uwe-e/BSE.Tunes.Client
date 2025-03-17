@@ -53,7 +53,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>
-        <ActivityIndicator IsRunning="{Binding IsBusy}" WidthRequest="50" Color ="{Binding PrimaryLabelColor}"/>
+        <ActivityIndicator IsRunning="{Binding IsBusy}" WidthRequest="50"/>
     </Grid>
 
 </ContentPage>

@@ -10,11 +10,11 @@
         <TableRoot>
             <TableSection>
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.ServiceEndpointSettingsPage_SectionWebserver_Title}"
-                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
                                            Text="{x:Static strings:AppResources.ServiceEndpointSettingsPage_SectionWebserver_Description_Text}"
-                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"                                    
+                                           TextColor="{StaticResource PrimaryDarkLabelColor}"                                    
                                            Detail="{Binding BindingContext.ServiceEndPoint, Source={x:Reference settingsPage}}"
-                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
+                                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
                                            IsEnabled="False"/>
                 <ViewCell>
                     <Button Text="{x:Static strings:AppResources.ServiceEndpointSettingsPage_ButtonDelete_Text}"

@@ -10,35 +10,35 @@
         <TableRoot>
             <TableSection>
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Title}"
-                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
                                            Text="{x:Static strings:AppResources.SettingsPage_SectionWebserver_Description_Text}" 
-                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TextColor="{StaticResource PrimaryDarkLabelColor}"
                                            Detail="{Binding BindingContext.ServiceEndPoint, Source={x:Reference settingsView}}"
-                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
+                                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
                                            Command="{Binding BindingContext.ToServiceEndpointDetailCommand, Source={x:Reference settingsView}}"/>
 
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionAccount_Title}"
-                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
                                            Text="{x:Static strings:AppResources.SettingsPage_SectionAccount_Description_Text}"
-                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TextColor="{StaticResource PrimaryDarkLabelColor}"
                                            Detail="{Binding BindingContext.UserName, Source={x:Reference settingsView}}"
-                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
+                                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
                                            Command="{Binding BindingContext.ToAccountDetailCommand, Source={x:Reference settingsView}}"/>
 
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Title}"
-                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
                                            Text="{x:Static strings:AppResources.SettingsPage_SectionDiskSpace_Description_Text}"
-                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TextColor="{StaticResource PrimaryDarkLabelColor}"
                                            Detail="{Binding BindingContext.UsedDiskSpace, Source={x:Reference settingsView}}"
-                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
+                                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
                                            Command="{Binding BindingContext.ToCacheSettingsDetailCommand, Source={x:Reference settingsView}}"/>
                 
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.SettingsPage_SectionInformation_Title}"
-                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
                                            Text="{x:Static strings:AppResources.SettingsPage_SectionInformation_Text}"
-                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TextColor="{StaticResource PrimaryDarkLabelColor}"
                                            Detail="{Binding BindingContext.VersionString, Source={x:Reference settingsView}}"
-                                           DetailColor="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"
+                                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
                                            IsEnabled="False"/>
             </TableSection>
         </TableRoot>
