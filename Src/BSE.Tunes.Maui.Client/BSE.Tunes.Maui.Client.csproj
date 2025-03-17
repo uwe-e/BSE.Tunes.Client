@@ -69,6 +69,7 @@
     <MauiImage Update="Resources\Images\chevron_forward_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\disc_outline.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\disc_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\ellipsis_vertical.svg" Resize="False" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\ellipsis_horizontal.svg" Resize="False" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\ellipsis_horizontal_white.svg" Resize="False" TintColor="#FFFFFF" BaseSize="20,20" />
     <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
@@ -77,6 +78,10 @@
       <BaseSize>32,32</BaseSize>
     </MauiImage>
     <MauiImage Update="Resources\Images\pause.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\detail_action_play.svg">
+      <Resize>False</Resize>
+      <BaseSize>32,32</BaseSize>
+    </MauiImage>
    
     <MauiImage Update="Resources\Images\play_white.svg" TintColor="#FFFFFF">
       <Resize>True</Resize>
@@ -94,6 +99,11 @@
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\shuffle.svg">
+      <Resize>False</Resize>
+      <BaseSize>32,32</BaseSize>
+      <TintColor>#FFFFFF</TintColor>
+    </MauiImage>
     <MauiImage Update="Resources\Images\trash_outline.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\trash_outline_white.svg" TintColor="#FFFFFF" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play.svg" Resize="True" BaseSize="32,32" />

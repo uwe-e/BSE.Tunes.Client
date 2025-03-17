@@ -11,6 +11,7 @@
                          ios:TabbedPage.TranslucencyMode="Translucent"
                          bseandroid:TabbedContainerPage.IsSwipePagingEnabled="False"
                          NavigationPage.HasNavigationBar="False"
+                         BarBackgroundColor="#121212"
                          x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
     
     <bse:TabbedContainerPage.Children>

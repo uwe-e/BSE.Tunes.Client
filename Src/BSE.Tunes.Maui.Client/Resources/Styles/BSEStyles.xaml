@@ -10,7 +10,7 @@
                     x:Class="BSE.Tunes.Maui.Client.Resources.Styles.BSEStyles">
 
     <Style TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SystemPink}, Dark={StaticResource SystemPinkDark}}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource AccentColorBlue}"/>
         <Setter Property="TextColor" Value="{DynamicResource White}"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -26,8 +26,18 @@
     </Style>
 
     <Style x:Key="DetailActionButtonStyle" TargetType="Button">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource SystemPink}, Dark={StaticResource SystemPinkDark}}"/>
-        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="CornerRadius" Value="{OnPlatform 25, iOS=25, Android=28}"/>
+        <Setter Property="HeightRequest" Value="{OnPlatform 50, iOS=50, Android=56}"/>
+        <Setter Property="WidthRequest" Value="{OnPlatform 50, iOS=50, Android=56}"/>
+        <Setter Property="Margin" Value="10,0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Gray900}"/>
+    </Style>
+
+    <Style x:Key="DetailActionPlayButtonStyle" TargetType="Button" BaseResourceKey="DetailActionButtonStyle">
+        <Setter Property="CornerRadius" Value="{OnPlatform 28, iOS=28, Android=30}"/>
+        <Setter Property="HeightRequest" Value="{OnPlatform 56, iOS=56, Android=60}"/>
+        <Setter Property="WidthRequest" Value="{OnPlatform 56, iOS=56, Android=60}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
     </Style>
 
     <Style x:Key="CancelButtonStyle" TargetType="Button">
@@ -110,7 +120,7 @@
     </Style>
 
     <Style TargetType="bse:TabbedContainerPage" ApplyToDerivedTypes="True">
-        <Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"/>
+        <Setter Property="BarBackgroundColor" Value="{StaticResource Gray950}"/>
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
         <Setter Property="UnselectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray500}}"/>
     </Style>
