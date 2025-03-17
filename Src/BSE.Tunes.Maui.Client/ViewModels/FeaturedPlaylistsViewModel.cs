@@ -37,6 +37,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             LoadData();
 
+            _eventAggregator.GetEvent<HomePageRefreshEvent>().Subscribe(() =>
+            {
+                IsBusy = true;
+                LoadData();
+            });
+
             _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(args =>
             {
                 if (args is PlaylistActionContext managePlaylistContext)
