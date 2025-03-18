@@ -52,48 +52,25 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\add_circle_outline_white.svg">
-		  <Resize>True</Resize>
-		  <BaseSize>32,32</BaseSize>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\albums_white.svg">
-		  <Resize>True</Resize>
-		  <BaseSize>32,32</BaseSize>
-		</MauiImage>
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
     <MauiImage Update="Resources\Images\albums.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\albums_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\add_circle_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\chevron_forward_outline.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\chevron_forward_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\disc_outline.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\disc_outline_white.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\ellipsis_vertical.svg" Resize="False" TintColor="#FFFFFF" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\ellipsis_horizontal.svg" Resize="False" BaseSize="20,20" />
-    <MauiImage Update="Resources\Images\ellipsis_horizontal_white.svg" Resize="False" TintColor="#FFFFFF" BaseSize="20,20" />
-    <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\pause_white.svg" TintColor="#FFFFFF">
+    <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\chevron_forward_outline.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\close_outline.svg" TintColor="#FFFFFF">
       <Resize>True</Resize>
       <BaseSize>32,32</BaseSize>
     </MauiImage>
-    <MauiImage Update="Resources\Images\pause.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\disc_outline.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\ellipsis_vertical.svg" Resize="False" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\home.svg" Resize="True" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\pause.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\detail_action_play.svg">
       <Resize>False</Resize>
       <BaseSize>32,32</BaseSize>
     </MauiImage>
    
-    <MauiImage Update="Resources\Images\play_white.svg" TintColor="#FFFFFF">
+    <MauiImage Update="Resources\Images\play.svg">
       <Resize>True</Resize>
       <BaseSize>32,32</BaseSize>
-    </MauiImage>
-    <MauiImage Update="Resources\Images\play_pk_dark.svg" TintColor="#FF375F">
-      <Resize>True</Resize>
-      <BaseSize>24,24</BaseSize>
-    </MauiImage>
-    <MauiImage Update="Resources\Images\play_pk_light.svg" TintColor="#FF2D55">
-      <Resize>True</Resize>
-      <BaseSize>24,24</BaseSize>
     </MauiImage>
     <MauiImage Update="Resources\Images\musical_notes_outline.svg" Resize="True" BaseSize="200,200" />
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
@@ -104,23 +81,10 @@
       <BaseSize>32,32</BaseSize>
       <TintColor>#FFFFFF</TintColor>
     </MauiImage>
-    <MauiImage Update="Resources\Images\trash_outline.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\trash_outline_white.svg" TintColor="#FFFFFF" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\play.svg" Resize="True" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\play_forward.svg" Resize="True" BaseSize="32,32" />
-     <MauiImage Update="Resources\Images\play_forward_white.svg" TintColor="#FFFFFF">
-      <Resize>True</Resize>
-      <BaseSize>32,32</BaseSize>
-    </MauiImage>
+    <MauiImage Update="Resources\Images\trash_outline.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\play.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
+    <MauiImage Update="Resources\Images\play_forward.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\play_forward_disabled.svg" Resize="True" TintColor="#919191" BaseSize="32,32" />
-    <MauiImage Update="Resources\Images\shuffle_pk_dark.svg" TintColor="#FF375F">
-      <Resize>True</Resize>
-      <BaseSize>24,24</BaseSize>
-    </MauiImage>
-    <MauiImage Update="Resources\Images\shuffle_pk_light.svg" TintColor="#FF2D55">
-      <Resize>True</Resize>
-      <BaseSize>24,24</BaseSize>
-    </MauiImage>
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -160,7 +124,6 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\add_circle_outline.svg" />
-	  <None Remove="Resources\Images\add_circle_outline_white.svg" />
 	  <None Remove="Resources\Images\albums.svg" />
 	  <None Remove="Resources\Images\home.svg" />
 	  <None Remove="Resources\Images\library.svg" />
