@@ -1,6 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
-using Microsoft.Maui.Graphics.Text;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.Controls

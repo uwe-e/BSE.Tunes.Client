@@ -1,6 +1,4 @@
-﻿using Prism.Navigation;
-
-namespace BSE.Tunes.Maui.Client.Services
+﻿namespace BSE.Tunes.Maui.Client.Services
 {
     public interface IFlyoutNavigationService : INavigationService
     {

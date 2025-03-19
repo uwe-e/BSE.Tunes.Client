@@ -1,7 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Controls;
 using Prism.Common;
-using Prism.Events;
-using Prism.Navigation;
 
 namespace BSE.Tunes.Maui.Client.Services
 {

@@ -1,7 +1,4 @@
-﻿using Prism.AppModel;
-using Prism.Navigation;
-
-namespace BSE.Tunes.Maui.Client.ViewModels
+﻿namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public abstract class ViewModelBase : Prism.Mvvm.BindableBase, INavigationAware, IPageLifecycleAware
     {

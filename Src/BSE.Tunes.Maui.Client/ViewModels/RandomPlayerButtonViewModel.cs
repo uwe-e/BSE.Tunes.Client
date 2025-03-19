@@ -2,7 +2,6 @@
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Services;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {

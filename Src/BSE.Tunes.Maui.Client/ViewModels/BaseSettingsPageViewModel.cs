@@ -1,7 +1,4 @@
-﻿using Prism;
-using Prism.Commands;
-using Prism.Navigation;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
