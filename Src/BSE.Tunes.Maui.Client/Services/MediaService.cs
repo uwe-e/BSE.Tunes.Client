@@ -30,7 +30,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 bool toRegister = Convert.ToBoolean(newValue);
                 if (toRegister)
                 {
-                    var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
+                    IMediaService playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
                     playerService?.RegisterAsMediaService(mediaElement);
                 }
             }
@@ -73,7 +73,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public void Disconnect()
         {
-            // Stop and cleanup MediaElement when we navigate away
+            // Stop and cleanup MediaElement when we close the app
             _mediaElement?.Handler?.DisconnectHandler();
             /*
              * The attribute android:stopWithTask="true" in AndroidManifest.xml prevents the 

@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Collections;
+using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
@@ -33,6 +34,11 @@ namespace BSE.Tunes.Maui.Client.Services
             _mediaService = mediaService;
             _eventAggregator = eventAggregator;
             _settingsService = settingsService;
+
+            _eventAggregator.GetEvent<CleanUpResourcesEvent>().Subscribe(() =>
+            {
+                Disconnect();
+            }, ThreadOption.UIThread);
 
             _mediaService.PlayerStateChanged += OnPlayerStateChanged;
             _mediaService.MediaStateChanged += OnMediaStateChanged;

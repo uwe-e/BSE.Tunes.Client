@@ -48,13 +48,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
         }
 
-        public override void OnDisappearing()
-        {
-            _mediaManager.Disconnect();
-            
-            base.OnDisappearing();
-        }
-
         private void OnMediaStateChanged(MediaState state)
         {
             switch (state)
