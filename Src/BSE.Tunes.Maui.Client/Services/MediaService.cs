@@ -7,12 +7,12 @@ namespace BSE.Tunes.Maui.Client.Services
     public class MediaService : IMediaService
     {
         public static readonly BindableProperty RegisterAsMediaServiceProperty =
-            BindableProperty.Create("RegisterAsMediaService",
+            BindableProperty.Create(nameof(RegisterAsMediaService),
                 typeof(bool),
                 typeof(MediaService),
                 false,
                 propertyChanged: RegisterAsMediaServicePropertyChanged);
-        
+
         public static bool GetRegisterAsMediaService(MediaElement target)
         {
             return (bool)target.GetValue(RegisterAsMediaServiceProperty);
@@ -25,14 +25,10 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private static void RegisterAsMediaServicePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is MediaElement mediaElement)
+            if (bindable is MediaElement mediaElement && newValue is bool toRegister && toRegister)
             {
-                bool toRegister = Convert.ToBoolean(newValue);
-                if (toRegister)
-                {
-                    IMediaService playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
-                    playerService?.RegisterAsMediaService(mediaElement);
-                }
+                var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
+                playerService?.RegisterAsMediaService(mediaElement);
             }
         }
 
@@ -46,6 +42,17 @@ namespace BSE.Tunes.Maui.Client.Services
         private MediaElement _mediaElement;
 
         private PlayerState _currentPlayerState;
+
+        public double Progress => GetProgress();
+
+        private double GetProgress()
+        {
+            if (_mediaElement?.Duration != null && _mediaElement.Duration.TotalSeconds > 0)
+            {
+                return _mediaElement.Position.TotalSeconds / _mediaElement.Duration.TotalSeconds;
+            }
+            return 0.0;
+        }
 
         public MediaService(IDataService dataService,
             ISettingsService settingsService,
@@ -68,7 +75,6 @@ namespace BSE.Tunes.Maui.Client.Services
                 _mediaElement.MediaEnded += OnMediaEnded;
                 _mediaElement.StateChanged += OnMediaStateChanged;
             }
-
         }
 
         public void Disconnect()
@@ -126,7 +132,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public void SetTrack(Track track)
         {
-
+            // Implementation needed
         }
 
         public async Task SetTrackAsync(Track track, Uri coverUri)
@@ -138,7 +144,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 using var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
                 if (response.IsSuccessStatusCode)
                 {
-                    var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid.ToString() + track.Extension);
+                    var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
                     using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
                     await response.Content.CopyToAsync(fileStream);
                     _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
@@ -155,7 +161,5 @@ namespace BSE.Tunes.Maui.Client.Services
             builder.Path = Path.Combine(builder.Path, $"/api/files/audio/{guid}");
             return builder.Uri;
         }
-
-
     }
 }

@@ -10,9 +10,11 @@
         <ControlTemplate>
             <Border Margin="10,0,10,5" BackgroundColor="{StaticResource Gray950}" >
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="{OnPlatform 15, iOS=15, Android=10}" />
+                    <RoundRectangle CornerRadius="0" />
                 </Border.StrokeShape>
-                <Grid Padding="5" ColumnSpacing="10">
+                <Grid RowDefinitions="6, Auto">
+                    <ProgressBar x:Name="PART_ProgressBar" Grid.Row="0" VerticalOptions="End" HeightRequest="5" ProgressColor="LimeGreen" Progress="{TemplateBinding Progress}"/>
+                    <Grid Grid.Row="1" Padding="0" ColumnSpacing="10" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="*"/>
@@ -61,6 +63,7 @@
                         </VisualStateManager.VisualStateGroups>
                     </ImageButton>
                 </Grid>
+            </Grid>
             </Border>
         </ControlTemplate>
     </ContentView.ControlTemplate>

@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Models.Contract;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -12,11 +13,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private PlayerState _playerState;
         private bool _isPlaying;
         private Track _currentTrack;
+        private double _progress;
 
         public DelegateCommand PlayCommand => _playCommand ??= new DelegateCommand(Play);
         public DelegateCommand PlayNextCommand => _playNextCommand ??= new DelegateCommand(PlayNext, CanPlayNext);
         
-
         public PlayerState PlayerState
         {
             get { return _playerState; }
@@ -33,15 +34,27 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             get { return _currentTrack; }
             set { SetProperty<Track>(ref _currentTrack, value); }
-        } 
+        }
+
+        public double Progress
+        {
+            get { return _progress; }
+            set { SetProperty<double>(ref _progress, value); }
+        }
 
         public PlayerBaseViewModel(INavigationService navigationService,
             IEventAggregator eventAggregator,
             IMediaManager mediaManager) : base(navigationService)
         {
+            _eventAggregator = eventAggregator;
             _mediaManager = mediaManager;
             _mediaManager.PlayerStateChanged += OnPlayerStateChanged;
             _mediaManager.MediaStateChanged += OnMediaStateChanged;
+
+            _eventAggregator.GetEvent<MediaProgressChangedEvent>().Subscribe((progress) =>
+            {
+                Progress = progress;
+            }, ThreadOption.UIThread);
         }
 
         protected virtual void OnTrackChanged(Track track)
