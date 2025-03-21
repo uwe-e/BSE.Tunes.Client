@@ -72,7 +72,7 @@
       <Resize>True</Resize>
       <BaseSize>32,32</BaseSize>
     </MauiImage>
-    <MauiImage Update="Resources\Images\musical_notes_outline.svg" Resize="True" BaseSize="200,200" />
+    <MauiImage Update="Resources\Images\musical_notes_outline.svg" Resize="True" TintColor="#404040" BaseSize="200,200" />
     <MauiImage Update="Resources\Images\playlist.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\search.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\settings.svg" Resize="True" BaseSize="32,32" />

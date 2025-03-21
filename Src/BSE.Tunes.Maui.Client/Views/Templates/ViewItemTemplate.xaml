@@ -19,11 +19,6 @@
         </Style>
 
         <Style TargetType="ffimageloading:CachedImage" x:Key="ViewItemImageStyle">
-            <!--<Setter Property="HeightRequest">
-                <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
-                </Setter.Value>
-            </Setter>-->
             <Setter Property="WidthRequest">
                 <Setter.Value>
                     <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
