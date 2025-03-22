@@ -44,11 +44,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         }
 
-        
-
         private void RefreshView()
         {
-            //_eventAggregator.GetEvent<HomePageRefreshEvent>().Publish();
+            _eventAggregator.GetEvent<HomePageRefreshEvent>().Publish();
             IsRefreshing = false;
         }
 

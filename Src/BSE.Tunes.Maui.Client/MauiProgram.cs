@@ -60,6 +60,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<ISettingsService, SettingsService>();
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
+                        container.RegisterSingleton<ITimerService, TimerService>();
                         /*
                          * since we use the ffimageloading features,
                          * it's no longer enough to clear the file cache, 

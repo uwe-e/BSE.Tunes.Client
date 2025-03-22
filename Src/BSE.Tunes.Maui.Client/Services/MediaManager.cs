@@ -1,8 +1,8 @@
 ﻿using BSE.Tunes.Maui.Client.Collections;
+using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
-//using Track = BSE.Tunes.Maui.Client.Models.Contract.Track;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
@@ -12,6 +12,8 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly IMediaService _mediaService;
         private readonly IEventAggregator _eventAggregator;
         private readonly ISettingsService _settingsService;
+        private readonly ITimerService _timerService;
+        private double _oldProgress;
 
         public event Action<PlayerState> PlayerStateChanged;
         public event Action<MediaState> MediaStateChanged;
@@ -27,12 +29,21 @@ namespace BSE.Tunes.Maui.Client.Services
         public MediaManager(IDataService dataService,
             IMediaService mediaService,
             IEventAggregator eventAggregator,
-            ISettingsService settingsService)
+            ISettingsService settingsService,
+            ITimerService timerService)
         {
             _dataService = dataService;
             _mediaService = mediaService;
             _eventAggregator = eventAggregator;
             _settingsService = settingsService;
+            _timerService = timerService;
+            _timerService.TimerElapsed += OnTimerElapsed;
+            _timerService.Start();
+            
+            _eventAggregator.GetEvent<CleanUpResourcesEvent>().Subscribe(() =>
+            {
+                Disconnect();
+            }, ThreadOption.UIThread);
 
             _mediaService.PlayerStateChanged += OnPlayerStateChanged;
             _mediaService.MediaStateChanged += OnMediaStateChanged;
@@ -73,14 +84,14 @@ namespace BSE.Tunes.Maui.Client.Services
             PlayTracks(playerMode);
         }
 
-        public bool CanPlayPreviosTrack()
+        public bool CanPlayPreviousTrack()
         {
             return Playlist?.CanMovePrevious ?? false;
         }
 
         public async void PlayPreviousTrack()
         {
-            if (CanPlayPreviosTrack())
+            if (CanPlayPreviousTrack())
             {
                 if (Playlist.MovePrevious())
                 {
@@ -149,6 +160,16 @@ namespace BSE.Tunes.Maui.Client.Services
             MediaStateChanged?.Invoke(state);
         }
 
+        private void OnTimerElapsed()
+        {
+            var newProgress = _mediaService.Progress;
+            if (newProgress != _oldProgress && newProgress < 1.0)
+            {
+                _eventAggregator.GetEvent<MediaProgressChangedEvent>().Publish(newProgress);
+                _oldProgress = newProgress;
+            }
+        }
+        
         private async void UpdateHistoryAsync(Track currentTrack)
         {
             var userName = _settingsService.User.UserName;

@@ -35,7 +35,7 @@
                                                        Title="{Binding Title}"
                                                        SubTitle="{Binding SubTitle}"
                                                        Grid.Column="0"/>
-                                    <Image Grid.Column="1" Source="chevron_forward_outline_white.png" HeightRequest="24"/>
+                                    <Image Grid.Column="1" Source="chevron_forward_outline.png" HeightRequest="24"/>
                                 </Grid>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>

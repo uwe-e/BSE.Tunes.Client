@@ -14,7 +14,7 @@
                     <Label Grid.Row="0" Text="{Binding Text}" TextColor="{Binding TextColor}"/>
                     <Label Grid.Row="1" Text="{Binding Detail}" TextColor="{Binding DetailColor}"/>
                 </Grid>
-                <Image IsVisible="{Binding IsEnabled}" Grid.Column="1" Source="chevron_forward_outline_white.png" HeightRequest="24"/>
+                <Image IsVisible="{Binding IsEnabled}" Grid.Column="1" Source="chevron_forward_outline.png" HeightRequest="24"/>
             </Grid>
         </Grid>
     </Border>

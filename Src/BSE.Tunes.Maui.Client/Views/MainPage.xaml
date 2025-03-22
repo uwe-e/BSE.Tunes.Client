@@ -11,6 +11,7 @@
                          ios:TabbedPage.TranslucencyMode="Translucent"
                          bseandroid:TabbedContainerPage.IsSwipePagingEnabled="False"
                          NavigationPage.HasNavigationBar="False"
+                         BarBackgroundColor="#121212"
                          x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
     
     <bse:TabbedContainerPage.Children>
@@ -47,7 +48,8 @@
                               PlayNextCommand="{Binding PlayNextCommand}"
                               Track="{Binding CurrentTrack, Mode=TwoWay}"
                               Cover="{Binding CoverSource, Mode=TwoWay}"
-                              PlayerState="{Binding PlayerState, Mode=TwoWay}"/>
+                              PlayerState="{Binding PlayerState, Mode=TwoWay}"
+                              Progress="{Binding Progress}"/>
     </bse:TabbedContainerPage.BottomView>
     
 </bse:TabbedContainerPage>

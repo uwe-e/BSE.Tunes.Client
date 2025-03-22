@@ -19,11 +19,6 @@
         </Style>
 
         <Style TargetType="ffimageloading:CachedImage" x:Key="ViewItemImageStyle">
-            <!--<Setter Property="HeightRequest">
-                <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="260"/>
-                </Setter.Value>
-            </Setter>-->
             <Setter Property="WidthRequest">
                 <Setter.Value>
                     <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
@@ -53,12 +48,12 @@
         </Border>
         <Label Grid.Row="1" Text="{Binding Title}"
                    Margin="0"
-                   TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                   TextColor="{StaticResource White}"
                    LineBreakMode="TailTruncation"/>
         <Label Grid.Row="2" Text="{Binding SubTitle}"
                    Margin="0"
                    FontSize="13"
-                   TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray300}}"
+                   TextColor="{StaticResource Gray300}"
                    LineBreakMode="TailTruncation"/>
     </Grid>
     <!--</Grid>-->

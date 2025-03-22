@@ -3,15 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:services="clr-namespace:BSE.Tunes.Maui.Client.Services"
-             x:Class="BSE.Tunes.Maui.Client.Controls.AudioPlayer">
+             x:Class="BSE.Tunes.Maui.Client.Controls.AudioPlayer"
+             BackgroundColor="{StaticResource Gray950}">
 
     <ContentView.ControlTemplate>
         <ControlTemplate>
-            <Border Margin="10,0,10,5" BackgroundColor="{DynamicResource SystemGray6}" >
+            <Border Margin="10,0,10,5" BackgroundColor="{StaticResource Gray950}" >
                 <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="{OnPlatform 15, iOS=15, Android=10}" />
+                    <RoundRectangle CornerRadius="0" />
                 </Border.StrokeShape>
-                <Grid Padding="5" ColumnSpacing="10">
+                <Grid RowDefinitions="6, Auto">
+                    <ProgressBar x:Name="PART_ProgressBar" Grid.Row="0" VerticalOptions="End" HeightRequest="5" ProgressColor="LimeGreen" Progress="{TemplateBinding Progress}"/>
+                    <Grid Grid.Row="1" Padding="0" ColumnSpacing="10" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="*"/>
@@ -24,17 +27,17 @@
                         <Label Grid.Row="0" TextColor="{TemplateBinding TextColor}" FontSize="Medium" VerticalTextAlignment="End" Text="{TemplateBinding Track.Name}"/>
                         <Label Grid.Row="1" TextColor="{TemplateBinding TextColor}" FontSize="Small" VerticalTextAlignment="Start" Text="{TemplateBinding Track.Album.Artist.Name}"/>
                     </Grid>
-                    <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="{AppThemeBinding Light=play.png, Dark=play_white.png}" Aspect="AspectFit">
+                    <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="play.png" Aspect="AspectFit">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Play">
                                     <VisualState.Setters>
-                                        <Setter Property="Source" Value="{AppThemeBinding Light=play.png, Dark=play_white.png}" />
+                                        <Setter Property="Source" Value="play.png" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState Name="Pause">
                                     <VisualState.Setters>
-                                        <Setter Property="Source" Value="{AppThemeBinding Light=pause.png, Dark=pause_white.png}" />
+                                        <Setter Property="Source" Value="pause.png" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -48,7 +51,7 @@
                             </DataTrigger>
                         </ImageButton.Triggers>-->
                     </ImageButton>
-                    <ImageButton Grid.Column="3" Source="{AppThemeBinding Light=play_forward.png, Dark=play_forward_white.png}" Aspect="AspectFit">
+                    <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Disabled">
@@ -60,6 +63,7 @@
                         </VisualStateManager.VisualStateGroups>
                     </ImageButton>
                 </Grid>
+            </Grid>
             </Border>
         </ControlTemplate>
     </ContentView.ControlTemplate>

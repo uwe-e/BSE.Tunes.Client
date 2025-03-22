@@ -1,5 +1,4 @@
 ﻿using BSE.Tunes.Maui.Client.Models;
-using Prism.Events;
 
 namespace BSE.Tunes.Maui.Client.Extensions
 {

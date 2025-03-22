@@ -9,6 +9,6 @@
         <toolkit:MediaElement x:Name="MediaElement"
                               IsVisible="False" services:MediaService.RegisterAsMediaService="True"
                               ShouldShowPlaybackControls="False" />
-        <ActivityIndicator IsRunning="True" Color ="{AppThemeBinding Light={StaticResource SecondaryLabelColor}, Dark={StaticResource SecondaryDarkLabelColor}}"/>
+        <ActivityIndicator IsRunning="True"/>
     </Grid>
 </ContentPage>

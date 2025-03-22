@@ -10,11 +10,11 @@
         <TableRoot>
             <TableSection>
                 <controls:HeaderedTextCell Title="{x:Static strings:AppResources.LoginSettingsPage_SectionAccount_Title}"
-                                           TitleColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
                                            Text="{x:Static strings:AppResources.LoginSettingsPage_SectionAccount_Description_Text}"
-                                           TextColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           TextColor="{StaticResource PrimaryDarkLabelColor}"
                                            Detail="{Binding BindingContext.UserName, Source={x:Reference settingsPage}}"
-                                           DetailColor="{AppThemeBinding Light={StaticResource PrimaryLabelColor}, Dark={StaticResource PrimaryDarkLabelColor}}"
+                                           DetailColor="{StaticResource PrimaryDarkLabelColor}"
                                            IsEnabled="False"/>
                 <ViewCell>
                     <Button Text="{x:Static strings:AppResources.LoginSettingsPage_ButtonDelete_Text}"

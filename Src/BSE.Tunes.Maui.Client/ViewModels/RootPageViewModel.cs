@@ -1,7 +1,4 @@
-﻿using Prism.Commands;
-using Prism.Navigation;
-
-namespace BSE.Tunes.Maui.Client.ViewModels
+﻿namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public class RootPageViewModel
     {

@@ -2,21 +2,23 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
+             xmlns:behaviours="clr-namespace:BSE.Tunes.Maui.Client.Behaviours"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumsPage"
              Title="{x:Static strings:AppResources.AlbumsPage_Title}">
     <Grid>
         <CollectionView x:Name="albumsView"  ItemsSource="{Binding Items}"
-                ItemSizingStrategy="MeasureFirstItem"
-                RemainingItemsThreshold="10"
-                RemainingItemsThresholdReachedCommand="{Binding LoadMoreItemsCommand}"
-                VerticalOptions="FillAndExpand">
+                        ItemSizingStrategy="MeasureFirstItem"
+                        RemainingItemsThreshold="10"
+                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreItemsCommand}"
+                        behaviours:GridItemsLayoutBehavior.EnableResponsiveSpan="True">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="{OnIdiom 2, Tablet=3}" />
+                <!-- The number of spans is calculated within the GridItemsLayoutBehavior -->
+                <GridItemsLayout Orientation="Vertical"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <templates:ViewItemTemplate HeightRequest="{OnIdiom Phone=200, Tablet=230}" Padding="6,3,6,3">
+                    <templates:ViewItemTemplate HeightRequest="{OnIdiom Phone=200, Tablet=230}">
                         <templates:ViewItemTemplate.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=albumsView}}" CommandParameter="{Binding}"/>
                         </templates:ViewItemTemplate.GestureRecognizers>
@@ -24,7 +26,7 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Grid IsVisible="{Binding IsBusy}" Padding="12"
+        <Grid IsVisible="{Binding IsBusy}"
               HeightRequest="50">
             <ActivityIndicator IsRunning="{Binding IsBusy}"/>
         </Grid>

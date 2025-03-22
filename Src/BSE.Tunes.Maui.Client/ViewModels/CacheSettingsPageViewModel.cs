@@ -1,9 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Services;
-using Prism.Events;
-using Prism.Navigation;
-using Prism.Services;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {

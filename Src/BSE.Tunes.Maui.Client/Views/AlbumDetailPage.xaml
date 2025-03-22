@@ -8,15 +8,9 @@
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumDetailPage"
              x:Name="page">
 
-    <NavigationPage.TitleView>
-        <ImageButton Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
-                     HorizontalOptions="End" Margin="10,0"
-                     Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Album}"/>
-    </NavigationPage.TitleView>
-
     <ContentPage.Content>
-        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <ScrollView AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <Grid>
+            <ScrollView>
                 <CollectionView Margin="10,0" ItemsSource="{Binding Items}">
                     <CollectionView.Header>
                         <Grid Margin="0,0,0,15">
@@ -26,17 +20,18 @@
                             </Grid.RowDefinitions>
                             <Image HeightRequest="{OnIdiom Default=150, Tablet=250}"
                                    Aspect="AspectFill" Source="{Binding ImageSource}"/>
-                            <acrylic:AcrylicView EffectStyle="Dark" VerticalOptions="Fill" >
+                            <acrylic:AcrylicView EffectStyle="ExtraDark" VerticalOptions="Fill" >
                                 <acrylic:AcrylicView.Background>
                                     <LinearGradientBrush EndPoint="0,1">
                                         <GradientStop Color="Transparent" Offset="0.1" />
-                                        <GradientStop Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}" Offset="1.0" />
+                                        <GradientStop Color="{StaticResource DarkBackground}" Offset="0.9" />
                                     </LinearGradientBrush>
                                 </acrylic:AcrylicView.Background>
 
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
@@ -49,15 +44,15 @@
                                     <Label x:Name="infoTitle" Text="{Binding Album.Title}"
                                                HorizontalOptions="Center"
                                                LineBreakMode="TailTruncation"
-                                               Grid.Row="1" FontSize="Medium" TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                               Grid.Row="1" FontSize="Medium" TextColor="{StaticResource White}"/>
                                     <Label x:Name="infoSubTitle" Text="{Binding Album.Artist.Name}"
                                                HorizontalOptions="Center"
                                                LineBreakMode="TailTruncation"
-                                               Grid.Row="2" TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray300}}"/>
+                                               Grid.Row="2" TextColor="{StaticResource Gray300}"/>
                                     <Label x:Name="albumGenre"
                                                HorizontalOptions="Center"
                                                LineBreakMode="TailTruncation"
-                                               Grid.Row="3" TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray300}}">
+                                               Grid.Row="3" TextColor="{StaticResource Gray300}">
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="{Binding Album.Year}"/>
@@ -67,20 +62,21 @@
                                         </Label.FormattedText>
                                     </Label>
 
+                                    <StackLayout Grid.Row="4" Margin="20" HorizontalOptions="Center" Orientation="Horizontal">
+                                        <Button ImageSource="shuffle.png" Command="{Binding PlayAllRandomizedCommand}"
+                                                Style="{DynamicResource DetailActionButtonStyle}"/>
+                                        <Button ImageSource="detail_action_play.png"
+                                                Command="{Binding PlayAllCommand}"
+                                                Style="{DynamicResource DetailActionPlayButtonStyle}"/>
+                                        <Button ImageSource="ellipsis_vertical.png"
+                                                Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Album}"
+                                                Style="{DynamicResource DetailActionButtonStyle}"/>
+                                    </StackLayout>
+
                                 </Grid>
 
                             </acrylic:AcrylicView>
-                            
-                            <StackLayout Grid.Row="1" HorizontalOptions="Center" Orientation="Horizontal">
-                                <Button Text="{x:Static strings:AppResources.AlbumsDetailPage_Button_PlayAll_Text}"
-                                        ImageSource="{AppThemeBinding Light=play_pk_light.png, Dark=play_pk_dark.png}"
-                                        Command="{Binding PlayAllCommand}"
-                                        Style="{DynamicResource DetailActionButtonStyle}"/>
-                                <Button Text="{x:Static strings:AppResources.AlbumsDetailPage_Button_PlayRandomized_Text}"
-                                        ImageSource="{AppThemeBinding Light=shuffle_pk_light.png, Dark=shuffle_pk_dark.png}"
-                                        Command="{Binding PlayAllRandomizedCommand}"
-                                        Style="{DynamicResource DetailActionButtonStyle}"/>
-                            </StackLayout>
+
                         </Grid>
 
                     </CollectionView.Header>
@@ -111,11 +107,6 @@
                                            Style="{DynamicResource CollectionViewLabelStyle}"
                                            VerticalTextAlignment="Center"
                                            LineBreakMode="TailTruncation"/>
-                                    <!--<ImageButton Grid.Column="2" Source="{AppThemeBinding Light=ellipsis_horizontal.png, Dark=ellipsis_horizontal_white.png}"
-                                                 HorizontalOptions="End" Margin="10,0" WidthRequest="50"
-                                                 BackgroundColor="{StaticResource SystemPinkDark}"
-                                                 Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
-                                                 CommandParameter="{Binding}"/>-->
                                     <Button Grid.Column="2"
                                             Text="..."
                                             Style="{DynamicResource ContextMenuButtonStyle}"
@@ -131,7 +122,7 @@
                                      IsBusy="{Binding IsQueryBusy}"
                                      IsVisible="{Binding HasFurtherAlbums}"
                                      HeaderButtonStyle="{DynamicResource SectionHeaderButtonStyle}"
-                                     ActivityIndicatorColor="{DynamicResource PrimaryLabelColor}"
+                                     ActivityIndicatorColor="{DynamicResource SecondaryDarkLabelColor}"
                                      ItemsSource="{Binding Albums}"
                                      SelectedItem="{Binding SelectedAlbum}"
                                      SelectionChangedCommand="{Binding SelectAlbumCommand}"
@@ -149,12 +140,10 @@
                     </CollectionView.Footer>
                 </CollectionView>
             </ScrollView>
-            <StackLayout IsVisible="{Binding IsBusy}" Padding="12"
-                         AbsoluteLayout.LayoutFlags="PositionProportional"
-                         AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1">
+            <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
                 <ActivityIndicator IsRunning="{Binding IsBusy}"/>
-            </StackLayout>
-        </AbsoluteLayout>
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 
 </ContentPage>

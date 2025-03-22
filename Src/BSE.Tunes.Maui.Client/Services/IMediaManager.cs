@@ -16,7 +16,7 @@ namespace BSE.Tunes.Maui.Client.Services
         void Play();
         void PlayTracks(PlayerMode playerMode);
         void PlayTracks(ObservableCollection<int> trackIds, PlayerMode playerMode);
-        bool CanPlayPreviosTrack();
+        bool CanPlayPreviousTrack();
         void PlayPreviousTrack();
         bool CanPlayNextTrack();
         void PlayNextTrack();
