@@ -4,7 +4,6 @@ using BSE.Tunes.Maui.Client.Views;
 using BSE.Maui.Controls;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
-using PanCardView;
 using Xe.AcrylicView;
 using FFImageLoading.Maui;
 
@@ -19,7 +18,6 @@ namespace BSE.Tunes.Maui.Client
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkitMediaElement()
-                .UseCardsView()
                 .UseFFImageLoading()
                 .UseAcrylicView()
                 .UseBSEControls()
