@@ -42,8 +42,7 @@
                         </Border.StrokeShape>
                         <Grid>
 
-                            <ffimageloading:CachedImage Source="{Binding ImageSource}" Aspect="AspectFill"
-                                                        Style="{StaticResource ViewItemImageStyle}"/>
+                            <ffimageloading:CachedImage Source="{Binding ImageSource}" Aspect="AspectFill"/>
 
                             <StackLayout BackgroundColor="#A0000000" VerticalOptions="End">
                                 <Label HorizontalTextAlignment="Center" Text="{Binding Title}"
