@@ -44,6 +44,8 @@
 
     <bse:TabbedContainerPage.BottomView>
         <controls:AudioPlayer HeightRequest="{OnPlatform 160, iOS=60, Android=160}"
+                              SelectTrackCommand="{Binding SelectTrackCommand}"
+                              SelectTrackCommandParameter="{Binding CurrentTrack}"
                               PlayCommand="{Binding PlayCommand}"
                               PlayNextCommand="{Binding PlayNextCommand}"
                               Track="{Binding CurrentTrack, Mode=TwoWay}"

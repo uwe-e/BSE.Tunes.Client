@@ -7,12 +7,12 @@
             base.OnAttachedTo(bindable);
 
             // Set initial state based on the current orientation
-            UpdateVisualState(DeviceDisplay.MainDisplayInfo.Orientation, bindable);
+            OrientationBehavior.UpdateVisualState(DeviceDisplay.MainDisplayInfo.Orientation, bindable);
 
             // Subscribe to orientation changes
             DeviceDisplay.MainDisplayInfoChanged += (sender, e) =>
             {
-                UpdateVisualState(e.DisplayInfo.Orientation, bindable);
+                OrientationBehavior.UpdateVisualState(e.DisplayInfo.Orientation, bindable);
             };
         }
 
@@ -23,7 +23,7 @@
             // Unsubscribe from orientation changes
             DeviceDisplay.MainDisplayInfoChanged -= (sender, e) =>
             {
-                UpdateVisualState(e.DisplayInfo.Orientation, bindable);
+                OrientationBehavior.UpdateVisualState(e.DisplayInfo.Orientation, bindable);
             };
         }
 
@@ -32,7 +32,7 @@
         //    UpdateVisualState(e.DisplayInfo.Orientation, (VisualElement)sender);
         //}
 
-        private void UpdateVisualState(DisplayOrientation orientation, VisualElement element)
+        private static void UpdateVisualState(DisplayOrientation orientation, VisualElement element)
         {
             string state = orientation == DisplayOrientation.Portrait ? "Portrait" : "Landscape";
             VisualStateManager.GoToState(element, state);

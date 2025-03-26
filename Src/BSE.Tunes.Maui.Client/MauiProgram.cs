@@ -40,6 +40,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForNavigation<PlaylistsPage, PlaylistsPageViewModel>();
                         container.RegisterForNavigation<PlaylistDetailPage, PlaylistDetailPageViewModel>();
                         container.RegisterForNavigation<NewPlaylistDialogPage, NewPlaylistDialogPageViewModel>();
+                        container.RegisterForNavigation<NowPlayingPage, NowPlayingPageViewModel>();
                         container.RegisterForNavigation<SettingsPage, SettingsPageViewModel>();
                         container.RegisterForNavigation<LoginSettingsPage>();
                         container.RegisterForNavigation<ServiceEndpointSettingsPage>();

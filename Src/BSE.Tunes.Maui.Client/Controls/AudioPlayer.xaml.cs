@@ -488,5 +488,10 @@ namespace BSE.Tunes.Maui.Client.Controls
         {
             PlayCommand?.Execute(PlayCommandParameter);
         }
+
+        private void OnCoverTapped(object sender, EventArgs e)
+        {
+            SelectTrackCommand?.Execute(SelectTrackCommandParameter);
+        }
     }
 }

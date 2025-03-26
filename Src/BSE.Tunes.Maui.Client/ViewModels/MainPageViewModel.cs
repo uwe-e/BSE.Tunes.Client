@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
@@ -9,6 +10,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IDataService _dataService;
         private Uri _coverSource;
+        private DelegateCommand<Track> _selectTrackCommand;
+
+        public DelegateCommand<Track> SelectTrackCommand => _selectTrackCommand
+            ??= new DelegateCommand<Track>(SelectTrack, CanSelectTrack);
+
+        
 
         public Uri CoverSource
         {
@@ -48,6 +55,21 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     CoverSource = coverSource;
                 }
             }
+        }
+        
+        private bool CanSelectTrack(Track track)
+        {
+            return track != null;
+        }
+
+        private async void SelectTrack(Track track)
+        {
+            var navigationParams = new NavigationParameters
+            {
+                { "source", track },
+                { KnownNavigationParameters.UseModalNavigation, true }
+            };
+            await NavigationService.NavigateAsync(nameof(NowPlayingPage), navigationParams);
         }
     }
 }

@@ -22,7 +22,11 @@
                         <ColumnDefinition Width="32"/>
                     </Grid.ColumnDefinitions>
                     <!-- The toolkit:MediaElement is now placed on the splashpage. It doesnt work here on ios-->
-                    <Image Grid.Column="0" Source="{TemplateBinding Cover}" WidthRequest="50"/>
+                        <Image Grid.Column="0" Source="{TemplateBinding Cover}" WidthRequest="50">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnCoverTapped"/>
+                            </Image.GestureRecognizers>
+                        </Image>
                     <Grid Grid.Column="1" RowDefinitions="5*,5*">
                         <Label Grid.Row="0" TextColor="{TemplateBinding TextColor}" FontSize="Medium" VerticalTextAlignment="End" Text="{TemplateBinding Track.Name}"/>
                         <Label Grid.Row="1" TextColor="{TemplateBinding TextColor}" FontSize="Small" VerticalTextAlignment="Start" Text="{TemplateBinding Track.Album.Artist.Name}"/>

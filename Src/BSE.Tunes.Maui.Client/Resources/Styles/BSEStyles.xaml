@@ -40,6 +40,10 @@
         <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
     </Style>
 
+    <Style x:Key="NowPlayingActionButtonStyle" TargetType="Button" BaseResourceKey="DetailActionButtonStyle">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
     <Style x:Key="CancelButtonStyle" TargetType="Button">
         <Setter Property="BorderColor"  Value="{StaticResource White}"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
