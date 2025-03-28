@@ -15,8 +15,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public DelegateCommand<Track> SelectTrackCommand => _selectTrackCommand
             ??= new DelegateCommand<Track>(SelectTrack, CanSelectTrack);
 
-        
-
         public Uri CoverSource
         {
             get { return _coverSource; }

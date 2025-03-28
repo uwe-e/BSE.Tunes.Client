@@ -13,40 +13,42 @@
                     <RoundRectangle CornerRadius="0" />
                 </Border.StrokeShape>
                 <Grid RowDefinitions="6, Auto">
-                    <ProgressBar x:Name="PART_ProgressBar" Grid.Row="0" VerticalOptions="End" HeightRequest="5" ProgressColor="LimeGreen" Progress="{TemplateBinding Progress}"/>
+                    <ProgressBar x:Name="PART_ProgressBar" Grid.Row="0" VerticalOptions="End" HeightRequest="5" ProgressColor="{StaticResource White}" Progress="{TemplateBinding Progress}"/>
                     <Grid Grid.Row="1" Padding="0" ColumnSpacing="10" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="32"/>
-                        <ColumnDefinition Width="32"/>
-                    </Grid.ColumnDefinitions>
-                    <!-- The toolkit:MediaElement is now placed on the splashpage. It doesnt work here on ios-->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="32"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- The toolkit:MediaElement is now placed on the splashpage. It doesnt work here on ios-->
                         <Image Grid.Column="0" Source="{TemplateBinding Cover}" WidthRequest="50">
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnCoverTapped"/>
                             </Image.GestureRecognizers>
                         </Image>
-                    <Grid Grid.Column="1" RowDefinitions="5*,5*">
-                        <Label Grid.Row="0" TextColor="{TemplateBinding TextColor}" FontSize="Medium" VerticalTextAlignment="End" Text="{TemplateBinding Track.Name}"/>
-                        <Label Grid.Row="1" TextColor="{TemplateBinding TextColor}" FontSize="Small" VerticalTextAlignment="Start" Text="{TemplateBinding Track.Album.Artist.Name}"/>
-                    </Grid>
-                    <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="play.png" Aspect="AspectFit">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Play">
-                                    <VisualState.Setters>
-                                        <Setter Property="Source" Value="play.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState Name="Pause">
-                                    <VisualState.Setters>
-                                        <Setter Property="Source" Value="pause.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <!--<ImageButton.Triggers>
+                        <Grid Grid.Column="1" RowDefinitions="5*,5*">
+                            <Label Grid.Row="0" TextColor="{TemplateBinding TextColor}" FontSize="Medium" VerticalTextAlignment="End" Text="{TemplateBinding Track.Name}"/>
+                            <Label Grid.Row="1" TextColor="{TemplateBinding TextColor}" FontSize="Small" VerticalTextAlignment="Start" Text="{TemplateBinding Track.Album.Artist.Name}"/>
+                        </Grid>
+                        <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="play.png" Aspect="AspectFit">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroupList>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Play">
+                                            <VisualState.Setters>
+                                                <Setter Property="Source" Value="play.png" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState Name="Pause">
+                                            <VisualState.Setters>
+                                                <Setter Property="Source" Value="pause.png" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateGroupList>
+                            </VisualStateManager.VisualStateGroups>
+                            <!--<ImageButton.Triggers>
                             <DataTrigger TargetType="ImageButton" Binding="{Binding IsPlaying}" Value="True">
                                 <Setter Property="Source" Value="pause.png" />
                             </DataTrigger>
@@ -54,20 +56,22 @@
                                 <Setter Property="Source" Value="play.png" />
                             </DataTrigger>
                         </ImageButton.Triggers>-->
-                    </ImageButton>
-                    <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Disabled">
-                                    <VisualState.Setters>
-                                        <Setter Property="Source" Value="play_forward_disabled.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                    </ImageButton>
+                        </ImageButton>
+                        <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroupList>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Disabled">
+                                            <VisualState.Setters>
+                                                <Setter Property="Source" Value="play_forward_disabled.png" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateGroupList>
+                            </VisualStateManager.VisualStateGroups>
+                        </ImageButton>
+                    </Grid>
                 </Grid>
-            </Grid>
             </Border>
         </ControlTemplate>
     </ContentView.ControlTemplate>

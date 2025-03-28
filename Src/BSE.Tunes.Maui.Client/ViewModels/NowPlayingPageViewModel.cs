@@ -40,8 +40,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 CurrentTrack = currentTrack;
                 CoverImage = _imageService.GetBitmapSource(CurrentTrack.Album.AlbumId);
             }
-            //Progress = _mediaManager.Progress;
-            //MediaPlayerState = PlayerManager.AudioPlayerState;
+            //Progress = _mediaManager.pr.Progress;
+            //CurrentTrack = _mediaManager.CurrentTrack;
+            //CoverImage = _imageService.GetBitmapSource(CurrentTrack.Album.AlbumId);
+            PlayerState = _mediaManager.PlayerState;
 
             base.OnNavigatedTo(parameters);
         }

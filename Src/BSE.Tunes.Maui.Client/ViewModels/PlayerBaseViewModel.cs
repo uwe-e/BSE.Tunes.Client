@@ -10,6 +10,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IMediaManager _mediaManager;
         private DelegateCommand _playCommand;
         private DelegateCommand _playNextCommand;
+        private DelegateCommand _playPreviousCommand;
         private PlayerState _playerState;
         private bool _isPlaying;
         private Track _currentTrack;
@@ -17,7 +18,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public DelegateCommand PlayCommand => _playCommand ??= new DelegateCommand(Play);
         public DelegateCommand PlayNextCommand => _playNextCommand ??= new DelegateCommand(PlayNext, CanPlayNext);
-        
+        public DelegateCommand PlayPreviousCommand => _playPreviousCommand ??= new DelegateCommand(PlayPrevious, CanPlayPrevious);
+
         public PlayerState PlayerState
         {
             get { return _playerState; }
@@ -103,7 +105,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             }
         }
-        
+
         private bool CanPlayNext()
         {
             return _mediaManager.CanPlayNextTrack();
@@ -112,6 +114,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private void PlayNext()
         {
             _mediaManager.PlayNextTrack();
+        }
+        
+        private bool CanPlayPrevious()
+        {
+            return _mediaManager.CanPlayPreviousTrack();
+        }
+
+        private void PlayPrevious()
+        {
+            _mediaManager.PlayPreviousTrack();
         }
     }
 }
