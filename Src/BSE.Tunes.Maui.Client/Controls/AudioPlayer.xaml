@@ -57,7 +57,7 @@
                             </DataTrigger>
                         </ImageButton.Triggers>-->
                         </ImageButton>
-                        <ImageButton Grid.Column="3" Source="play_forward.png" Aspect="AspectFit">
+                        <ImageButton Grid.Column="3" Clicked="OnPlayNextClicked" Source="play_forward.png" Aspect="AspectFit">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroupList>
                                     <VisualStateGroup Name="CommonStates">

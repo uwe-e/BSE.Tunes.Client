@@ -31,11 +31,11 @@ namespace BSE.Tunes.Maui.Client
                     //.AddSegment<SplashPageViewModel>())
                     prism.RegisterTypes(container =>
                     {
-                        container.RegisterForNavigation<MainPage>();
+                        container.RegisterForNavigation<MainPage, MainPageViewModel>();
                         container.RegisterForNavigation<SplashPage>();
                         container.RegisterForNavigation<ServiceEndpointWizzardPage>();
                         container.RegisterForNavigation<LoginWizzardPage>();
-                        container.RegisterForNavigation<HomePage>();
+                        container.RegisterForNavigation<HomePage, HomePageViewModel>();
                         container.RegisterForNavigation<AlbumsPage, AlbumsPageViewModel>();
                         container.RegisterForNavigation<PlaylistsPage, PlaylistsPageViewModel>();
                         container.RegisterForNavigation<PlaylistDetailPage, PlaylistDetailPageViewModel>();

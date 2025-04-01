@@ -493,5 +493,10 @@ namespace BSE.Tunes.Maui.Client.Controls
         {
             SelectTrackCommand?.Execute(SelectTrackCommandParameter);
         }
+
+        private void OnPlayNextClicked(object sender, EventArgs e)
+        {
+            PlayNextCommand?.Execute(PlayNextCommandParameter);
+        }
     }
 }

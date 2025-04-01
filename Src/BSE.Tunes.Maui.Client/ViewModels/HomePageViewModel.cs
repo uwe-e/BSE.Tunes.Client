@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
@@ -13,6 +14,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private ICommand _refreshCommand;
         private bool _isRefreshing;
+        private SubscriptionToken _albumInfoSelectionToken;
 
         public ICommand RefreshCommand => _refreshCommand ??= new DelegateCommand(RefreshView);
 
@@ -42,6 +44,17 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _eventAggregator.GetEvent<AlbumSelectedEvent>().Subscribe(SelectAlbum, ThreadOption.UIThread);
             _eventAggregator.GetEvent<PlaylistSelectedEvent>().Subscribe(SelectPlaylist, ThreadOption.UIThread);
 
+            _albumInfoSelectionToken = _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            {
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(HomePage)))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
+                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+                }
+            });
         }
 
         private void RefreshView()

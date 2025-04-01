@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Extensions;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -23,6 +24,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ObservableCollection<GridPanel> _albums;
         private ICommand _selectAlbumCommand;
         private ICommand _loadMoreAlbumssCommand;
+        private SubscriptionToken _albumInfoSelectionToken;
 
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ??= new DelegateCommand(async () => await LoadMoreAlbumsAsync());
 
@@ -84,6 +86,21 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _pageNumber = 0;
             _hasItems = true;
             HasFurtherAlbums = false;
+
+            _albumInfoSelectionToken = _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            {
+                /*Sometimes we have more than one AlbumDetailPage.
+                 * For preventing the execution of this event in all these pages, we check an identifier for its use.
+                */
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(AlbumDetailPage), uniqueTrack.UniqueId))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
+                    await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
+                }
+            });
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)

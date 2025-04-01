@@ -35,7 +35,7 @@
                         Command="{Binding CloseDialogCommand}"
                         Style="{DynamicResource DialogButtonStyle}"/>
                 <Button Grid.Column="1" ImageSource="ellipsis_vertical.png" HorizontalOptions="End"
-                        Command="{Binding CloseDialogCommand}"
+                        Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding CurrentTrack}"
                         Style="{DynamicResource DialogButtonStyle}"/>
             </Grid>
 
