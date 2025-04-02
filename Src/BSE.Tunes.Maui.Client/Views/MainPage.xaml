@@ -15,22 +15,22 @@
                          x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
     
     <bse:TabbedContainerPage.Children>
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png">
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarTextColor="{StaticResource White}">
             <x:Arguments>
                <views:HomePage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.AlbumsPage_Title}" IconImageSource="albums.png">
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.AlbumsPage_Title}" IconImageSource="albums.png" BarTextColor="{StaticResource White}">
             <x:Arguments>
                 <views:AlbumsPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png">
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png" BarTextColor="{StaticResource White}">
             <x:Arguments>
                 <views:PlaylistsPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SearchPage_Title}" IconImageSource="search.png">
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SearchPage_Title}" IconImageSource="search.png" BarTextColor="{StaticResource White}" >
             <x:Arguments>
                 <views:SearchPage/>
             </x:Arguments>

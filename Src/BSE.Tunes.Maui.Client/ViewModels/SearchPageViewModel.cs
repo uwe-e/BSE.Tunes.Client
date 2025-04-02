@@ -1,26 +1,35 @@
 ﻿
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class SearchPageViewModel(
-        INavigationService navigationService,
-        IDataService dataService) : ViewModelBase(navigationService)
+    public class SearchPageViewModel : ViewModelBase
     {
         private ICommand _textChangedCommand;
+        private ICommand _showAllAlbumSearchResultsCommand;
+        private ICommand _showAllTrackSearchResultsCommand;
         private bool _hasAlbums;
         private bool _hasTracks;
         private ObservableCollection<GridPanel> _albums;
         private ObservableCollection<GridPanel> _tracks;
         private bool _hasMoreAlbums;
         private bool _hasMoreTracks;
-        private readonly IDataService _dataService = dataService;
+        private readonly IDataService _dataService;
         private CancellationTokenSource _cancellationTokenSource;
+        private string _textValue;
 
-        public ICommand TextChangedCommand => _textChangedCommand ??= new DelegateCommand<string>(async (textValue) => await TextChangedAsync(textValue));
+        public ICommand TextChangedCommand => _textChangedCommand
+            ??= new DelegateCommand<string>(async (textValue) => await TextChangedAsync(textValue));
+
+        public ICommand ShowAllAlbumSearchResultsCommand => _showAllAlbumSearchResultsCommand
+           ??= new DelegateCommand(async() => await ShowAllAlbumSearchResults());
+
+        public ICommand ShowAllTrackSearchResultsCommand => _showAllTrackSearchResultsCommand
+            ??= new DelegateCommand(async() => await ShowAllTrackSearchResults());
 
         public ObservableCollection<GridPanel> Albums => _albums ??= [];
 
@@ -48,6 +57,19 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             get => _hasMoreTracks;
             set => SetProperty<bool>(ref _hasMoreTracks, value);
+        }
+
+        public string TextValue
+        {
+            get => _textValue;
+            set => SetProperty<string>(ref _textValue, value);
+        }
+
+        public SearchPageViewModel(
+            INavigationService navigationService, IDataService dataService) : base(navigationService)
+        {
+            _dataService = dataService;
+            IsBusy = false;
         }
 
         private async Task TextChangedAsync(string textValue)
@@ -145,7 +167,23 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
+        private async Task ShowAllAlbumSearchResults()
+        {
+            var navigationParams = new NavigationParameters
+                    {
+                        { "query",  TextValue}
+                    };
+            await NavigationService.NavigateAsync($"{nameof(SearchAlbumsPage)}", navigationParams);
+        }
 
+        private async Task ShowAllTrackSearchResults()
+        {
+            var navigationParams = new NavigationParameters
+                    {
+                        { "query",  TextValue}
+                    };
+            await NavigationService.NavigateAsync($"{nameof(SearchTracksPage)}", navigationParams);
+        }
 
     }
 }

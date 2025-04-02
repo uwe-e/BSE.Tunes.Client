@@ -47,26 +47,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public bool IsQueryBusy
         {
-            get
-            {
-                return _isQueryBusy;
-            }
-            set
-            {
-                SetProperty<bool>(ref _isQueryBusy, value);
-            }
+            get => _isQueryBusy;
+            set => SetProperty<bool>(ref _isQueryBusy, value);
         }
 
         public bool HasFurtherAlbums
         {
-            get
-            {
-                return _hasFurtherAlbums;
-            }
-            set
-            {
-                SetProperty<bool>(ref _hasFurtherAlbums, value);
-            }
+            get => _hasFurtherAlbums;
+            set => SetProperty<bool>(ref _hasFurtherAlbums, value);
         }
 
         public AlbumDetailPageViewModel(

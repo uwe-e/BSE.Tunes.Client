@@ -9,6 +9,10 @@
 
     <Grid Margin="10" RowDefinitions="Auto,*">
         <SearchBar Grid.Row="0" Placeholder="{x:Static strings:AppResources.SearchPage_SearchBar_Placeholder}"
+                   Text="{Binding TextValue, Mode=TwoWay}"
+                   BackgroundColor="{StaticResource Gray600}"
+                   TextColor="{StaticResource White}"
+                   CancelButtonColor="{StaticResource White}"
                    PlaceholderColor="{DynamicResource SecondaryLabelColor}">
             <SearchBar.Behaviors>
                 <prism:EventToCommandBehavior EventName="TextChanged"
@@ -17,24 +21,27 @@
             </SearchBar.Behaviors>
         </SearchBar>
         <ScrollView Grid.Row="1">
-            <Grid RowDefinitions="Auto,Auto">
+            <Grid>
+                <Grid RowDefinitions="Auto,Auto">
                 <Grid Grid.Row="0" RowDefinitions="Auto,*" Margin="10" IsVisible="{Binding HasAlbums}">
                     <Grid Grid.Row="0">
                         <Label Text="{x:Static strings:AppResources.SearchPage_SectionAlbums_Title}"
-                           FontSize="Large"/>
+                               FontSize="Large"/>
                         <Button Text="{x:Static strings:AppResources.SearchPage_SectionAlbums_DisplayAll_Text}"
-                            HorizontalOptions="End"
-                            Command="{Binding ShowAllAlbumSearchResultsCommand}"
-                            IsVisible="{Binding HasMoreAlbums}"/>
+                                HorizontalOptions="End"
+                                Command="{Binding ShowAllAlbumSearchResultsCommand}"
+                                IsVisible="{Binding HasMoreAlbums}"/>
                     </Grid>
                     <StackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding Albums}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,10" ColumnDefinitions="*,15">
                                     <controls:ListViewItem ImageSource="{Binding ImageSource}"
-                                                       Title="{Binding Title}"
-                                                       SubTitle="{Binding SubTitle}"
-                                                       Grid.Column="0"/>
+                                                           Title="{Binding Title}"
+                                                           SubTitle="{Binding SubTitle}"
+                                                           TitleBackgroundColor="{StaticResource PrimaryLabelColor}"
+                                                           SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"
+                                                           Grid.Column="0"/>
                                     <Image Grid.Column="1" Source="chevron_forward_outline.png" HeightRequest="24"/>
                                 </Grid>
                             </DataTemplate>
@@ -45,23 +52,29 @@
                 <Grid  Grid.Row="1" RowDefinitions="Auto,*" Margin="10" IsVisible="{Binding HasTracks}">
                     <Grid Grid.Row="0">
                         <Label Text="{x:Static strings:AppResources.SearchPage_SectionTracks_Title}"
-               FontSize="Large"/>
+                               FontSize="Large"/>
                         <Button Text="{x:Static strings:AppResources.SearchPage_SectionTracks_DisplayAll_Text}"
-                            HorizontalOptions="End"
-                            Command="{Binding ShowAllTrackSearchResultsCommand}"
-                            IsVisible="{Binding HasMoreTracks}"/>
+                                HorizontalOptions="End"
+                                Command="{Binding ShowAllTrackSearchResultsCommand}"
+                                IsVisible="{Binding HasMoreTracks}"/>
                     </Grid>
                     <StackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding Tracks}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,10">
                                     <controls:ListViewItem ImageSource="{Binding ImageSource}"
-                                           Title="{Binding Title}"
-                                           SubTitle="{Binding SubTitle}"/>
+                                                           Title="{Binding Title}"
+                                                           SubTitle="{Binding SubTitle}"
+                                                           TitleBackgroundColor="{StaticResource PrimaryLabelColor}"
+                                                           SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"/>
                                 </Grid>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </StackLayout>
+                </Grid>
+            </Grid>
+            <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"/>
                 </Grid>
             </Grid>
         </ScrollView>
