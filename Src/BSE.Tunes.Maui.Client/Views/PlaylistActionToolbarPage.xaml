@@ -19,17 +19,17 @@
     <controls:BottomFlyoutPage.Content>
         <StackLayout Padding="5">
            <controls:ListViewItem ImageSource="{Binding ImageSource}" Title="{Binding Title}"
-                                  SubTitle="{Binding SubTitle}"/>
-            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
-                                   Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_AddToPlaylist}"
+                                  SubTitle="{Binding SubTitle}"
+                                  TitleBackgroundColor="{StaticResource PrimaryLabelColor}"
+                                  SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"/>
+            <controls:FlyoutButton Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_AddToPlaylist}"
                                    ImageSource="add_circle_outline.png"
                                    Command="{Binding AddToPlaylistCommand}">
                 <controls:FlyoutButton.Behaviors>
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
                 </controls:FlyoutButton.Behaviors>
             </controls:FlyoutButton>
-            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
-                                   IsVisible="{Binding CanRemoveFromPlaylist}"
+            <controls:FlyoutButton IsVisible="{Binding CanRemoveFromPlaylist}"
                                    Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_RemoveFromPlaylist}"
                                    ImageSource="trash_outline.png"
                                    Command="{Binding RemoveFromPlaylistCommand}">
@@ -37,8 +37,7 @@
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
                 </controls:FlyoutButton.Behaviors>
             </controls:FlyoutButton>
-            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
-                                   IsVisible="{Binding CanDisplayAlbumInfo}"
+            <controls:FlyoutButton IsVisible="{Binding CanDisplayAlbumInfo}"
                                    Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_DisplayAlbumInfo}"
                                    ImageSource="disc_outline.png"
                                    Command="{Binding DisplayAlbumInfoCommand}">
@@ -46,8 +45,7 @@
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
                 </controls:FlyoutButton.Behaviors>
             </controls:FlyoutButton>
-            <controls:FlyoutButton HorizontalOptions="FillAndExpand"
-                                   IsVisible="{Binding CanRemovePlaylist}"
+            <controls:FlyoutButton IsVisible="{Binding CanRemovePlaylist}"
                                    Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_RemovePlaylist}"
                                    ImageSource="trash_outline.png"
                                    Command="{Binding RemovePlaylistCommand}">

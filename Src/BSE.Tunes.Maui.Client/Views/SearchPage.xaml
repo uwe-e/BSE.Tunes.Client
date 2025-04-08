@@ -5,7 +5,8 @@
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              xmlns:prism="http://prismlibrary.com"
              x:Class="BSE.Tunes.Maui.Client.Views.SearchPage"
-             Title="{x:Static strings:AppResources.SearchPage_Title}">
+             Title="{x:Static strings:AppResources.SearchPage_Title}"
+             x:Name="page">
 
     <Grid Margin="10" RowDefinitions="Auto,*">
         <SearchBar Grid.Row="0" Placeholder="{x:Static strings:AppResources.SearchPage_SearchBar_Placeholder}"
@@ -23,57 +24,74 @@
         <ScrollView Grid.Row="1">
             <Grid>
                 <Grid RowDefinitions="Auto,Auto">
-                <Grid Grid.Row="0" RowDefinitions="Auto,*" Margin="10" IsVisible="{Binding HasAlbums}">
-                    <Grid Grid.Row="0">
-                        <Label Text="{x:Static strings:AppResources.SearchPage_SectionAlbums_Title}"
+                    <Grid Grid.Row="0" RowDefinitions="Auto,*" Margin="10" IsVisible="{Binding HasAlbums}">
+                        <Grid Grid.Row="0">
+                            <Label Text="{x:Static strings:AppResources.SearchPage_SectionAlbums_Title}"
                                FontSize="Large"/>
-                        <Button Text="{x:Static strings:AppResources.SearchPage_SectionAlbums_DisplayAll_Text}"
+                            <Button Text="{x:Static strings:AppResources.SearchPage_SectionAlbums_DisplayAll_Text}"
                                 HorizontalOptions="End"
                                 Command="{Binding ShowAllAlbumSearchResultsCommand}"
                                 IsVisible="{Binding HasMoreAlbums}"/>
-                    </Grid>
-                    <StackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding Albums}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,10" ColumnDefinitions="*,15">
-                                    <controls:ListViewItem ImageSource="{Binding ImageSource}"
+                        </Grid>
+                        <StackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding Albums}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,10" ColumnDefinitions="*,50">
+                                        <controls:ListViewItem ImageSource="{Binding ImageSource}"
                                                            Title="{Binding Title}"
                                                            SubTitle="{Binding SubTitle}"
                                                            TitleBackgroundColor="{StaticResource PrimaryLabelColor}"
                                                            SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"
                                                            Grid.Column="0"/>
-                                    <Image Grid.Column="1" Source="chevron_forward_outline.png" HeightRequest="24"/>
-                                </Grid>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </StackLayout>
-                </Grid>
+                                        <Button Grid.Column="1"
+                                                Text="..."
+                                                TextColor="{StaticResource White}"
+                                                Style="{DynamicResource ContextMenuButtonStyle}"
+                                                Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                                CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </Grid>
 
-                <Grid  Grid.Row="1" RowDefinitions="Auto,*" Margin="10" IsVisible="{Binding HasTracks}">
-                    <Grid Grid.Row="0">
-                        <Label Text="{x:Static strings:AppResources.SearchPage_SectionTracks_Title}"
+                    <Grid  Grid.Row="1" RowDefinitions="Auto,*" Margin="10" IsVisible="{Binding HasTracks}">
+                        <Grid Grid.Row="0">
+                            <Label Text="{x:Static strings:AppResources.SearchPage_SectionTracks_Title}"
                                FontSize="Large"/>
-                        <Button Text="{x:Static strings:AppResources.SearchPage_SectionTracks_DisplayAll_Text}"
+                            <Button Text="{x:Static strings:AppResources.SearchPage_SectionTracks_DisplayAll_Text}"
                                 HorizontalOptions="End"
                                 Command="{Binding ShowAllTrackSearchResultsCommand}"
                                 IsVisible="{Binding HasMoreTracks}"/>
-                    </Grid>
-                    <StackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding Tracks}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,10">
-                                    <controls:ListViewItem ImageSource="{Binding ImageSource}"
+                        </Grid>
+                        <StackLayout Grid.Row="1" BindableLayout.ItemsSource="{Binding Tracks}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,10" ColumnDefinitions="*,50">
+                                        <controls:ListViewItem ImageSource="{Binding ImageSource}"
                                                            Title="{Binding Title}"
                                                            SubTitle="{Binding SubTitle}"
                                                            TitleBackgroundColor="{StaticResource PrimaryLabelColor}"
-                                                           SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </StackLayout>
+                                                           SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"
+                                                           Grid.Column="0">
+                                            <controls:ListViewItem.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
+                                                                    CommandParameter="{Binding}"/>
+                                            </controls:ListViewItem.GestureRecognizers>
+                                        </controls:ListViewItem>
+                                        <Button Grid.Column="1"
+                                                Text="..."
+                                                TextColor="{StaticResource White}"
+                                                Style="{DynamicResource ContextMenuButtonStyle}"
+                                                Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                                CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
+                <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
                     <ActivityIndicator IsRunning="{Binding IsBusy}"/>
                 </Grid>
             </Grid>

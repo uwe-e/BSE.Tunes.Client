@@ -16,13 +16,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _playCommand;
         private DelegateCommand _playAllCommand;
         private DelegateCommand _playAllRandomizedCommand;
-        private IFlyoutNavigationService flyoutNavigationService;
-        private IMediaManager mediaManager;
         private readonly IFlyoutNavigationService _flyoutNavigationService;
         private readonly IDataService _dataService;
         private readonly IMediaManager _mediaManager;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
+        private SubscriptionToken _playlistActionContextChanged;
 
         public ICommand OpenFlyoutCommand => _openFlyoutCommand ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
 
@@ -60,8 +59,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
+            _playlistActionContextChanged = _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
             {
+                //_eventAggregator.GetEvent<PlaylistActionContextChanged>().Unsubscribe(_playlistActionContextChanged);
+                //_playlistActionContextChanged = null;
                 if (args is PlaylistActionContext managePlaylistContext)
                 {
                     switch (managePlaylistContext.ActionMode)
@@ -116,12 +117,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await _flyoutNavigationService.CloseFlyoutAsync();
         }
 
-        private async Task OpenFlyoutAsync(object obj)
+        protected virtual async Task OpenFlyoutAsync(object obj, PlaylistActionContext playlistActionContext)
         {
-            var source = new PlaylistActionContext
-            {
-                Data = obj,
-            };
+            var source = playlistActionContext;
+            source ??= new PlaylistActionContext
+                {
+                    Data = obj,
+                };
 
             if (obj is GridPanel item)
             {
@@ -136,6 +138,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             };
 
             await _flyoutNavigationService.ShowFlyoutAsync(nameof(PlaylistActionToolbarPage), navigationParams);
+        }
+        
+        protected virtual async Task OpenFlyoutAsync(object obj)
+        {
+            await OpenFlyoutAsync(obj, null);
         }
 
         protected async Task SelectPlaylist(PlaylistActionContext managePlaylistContext)
@@ -185,35 +192,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            var navigationParams = new NavigationParameters
+            var res = await NavigationService.GoBackAsync(new NavigationParameters
             {
                 { KnownNavigationParameters.UseModalNavigation, true}
-            };
-            await NavigationService.GoBackAsync(navigationParams);
+            });
 
-            IEnumerable<Track> tracks = default;
+            //IEnumerable < Track> tracks = default;
 
-            if (managePlaylistContext.Data is Track track)
-            {
-                tracks = Enumerable.Repeat(track, 1);
-            }
-            if (managePlaylistContext.Data is Album album)
-            {
-                tracks = album.Tracks;
-            }
-            if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
-            {
-                tracks = Enumerable.Repeat(playlistEntry.Track, 1);
-            }
-            if (managePlaylistContext.Data is Playlist playlist)
-            {
-                tracks = playlist.Entries?.Select(t => t.Track);
-            }
+            //if (managePlaylistContext.Data is Track track)
+            //{
+            //    tracks = Enumerable.Repeat(track, 1);
+            //}
+            //if (managePlaylistContext.Data is Album album)
+            //{
+            //    tracks = album.Tracks;
+            //}
+            //if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
+            //{
+            //    tracks = Enumerable.Repeat(playlistEntry.Track, 1);
+            //}
+            //if (managePlaylistContext.Data is Playlist playlist)
+            //{
+            //    tracks = playlist.Entries?.Select(t => t.Track);
+            //}
 
-            if (tracks != null)
-            {
-                await AddTracksToPlaylist(managePlaylistContext, tracks);
-            }
+            //if (tracks != null)
+            //{
+            //    await AddTracksToPlaylist(managePlaylistContext, tracks);
+            //}
 
         }
 

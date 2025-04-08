@@ -4,7 +4,8 @@
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.SearchAlbumsPage"
-             Title="{x:Static strings:AppResources.AlbumSearchResultsPage_Title}">
+             Title="{x:Static strings:AppResources.AlbumSearchResultsPage_Title}"
+             x:Name="page">
     <Grid Margin="10">
         <CollectionView x:Name="resultsView"  ItemsSource="{Binding Items}"
                         RemainingItemsThreshold="{Binding PageSize}"
@@ -14,13 +15,19 @@
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="0,10">
+                    <Grid Margin="0,10"  ColumnDefinitions="*,50">
                         <controls:ListViewItem ImageSource="{Binding ImageSource}"
                                                Title="{Binding Title}"
                                                SubTitle="{Binding SubTitle}"
                                                TitleBackgroundColor="{StaticResource PrimaryLabelColor}"
                                                SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"
                                                Grid.Column="0"/>
+                        <Button Grid.Column="1"
+                                Text="..."
+                                TextColor="{StaticResource White}"
+                                Style="{DynamicResource ContextMenuButtonStyle}"
+                                Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                CommandParameter="{Binding}"/>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

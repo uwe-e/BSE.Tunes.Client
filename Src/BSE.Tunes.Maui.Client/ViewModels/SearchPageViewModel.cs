@@ -1,5 +1,8 @@
 ﻿
+using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
+using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
@@ -7,7 +10,7 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class SearchPageViewModel : ViewModelBase
+    public class SearchPageViewModel : TracklistBaseViewModel
     {
         private ICommand _textChangedCommand;
         private ICommand _showAllAlbumSearchResultsCommand;
@@ -19,6 +22,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private bool _hasMoreAlbums;
         private bool _hasMoreTracks;
         private readonly IDataService _dataService;
+        private readonly IEventAggregator _eventAggregator;
         private CancellationTokenSource _cancellationTokenSource;
         private string _textValue;
 
@@ -66,10 +70,45 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         }
 
         public SearchPageViewModel(
-            INavigationService navigationService, IDataService dataService) : base(navigationService)
+            INavigationService navigationService,
+            IDataService dataService,
+            IFlyoutNavigationService flyoutNavigationService,
+            IMediaManager mediaManager,
+            IImageService imageService,
+            IEventAggregator eventAggregator) : base(navigationService,
+                flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
             _dataService = dataService;
+            _eventAggregator = eventAggregator;
             IsBusy = false;
+
+             _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            {
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(SearchPage)))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
+                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+                }
+            });
+        }
+
+        protected override void PlayTrack(GridPanel panel)
+        {
+            if (panel?.Data is Track track)
+            {
+                PlayTracks(new List<int>
+                {
+                    track.Id
+                }, PlayerMode.Song);
+            }
+        }
+
+        protected override Task OpenFlyoutAsync(object obj)
+        {
+            return base.OpenFlyoutAsync(obj, new PlaylistActionContext { DisplayAlbumInfo = true });
         }
 
         private async Task TextChangedAsync(string textValue)
@@ -184,6 +223,5 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     };
             await NavigationService.NavigateAsync($"{nameof(SearchTracksPage)}", navigationParams);
         }
-
     }
 }

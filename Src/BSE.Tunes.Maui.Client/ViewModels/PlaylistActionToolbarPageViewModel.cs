@@ -35,7 +35,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             });
 
         public ICommand AddToPlaylistCommand => _addToPlaylistCommand
-           ??= new DelegateCommand(AddToPlaylist);
+           ??= new DelegateCommand(async() => await AddToPlaylistAsync());
 
         public ICommand RemoveFromPlaylistCommand => _removeFromPlaylistCommand
            ??= new DelegateCommand(RemoveFromPlaylist);
@@ -94,6 +94,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
             if (_playlistActionContext?.Data is Album album)
             {
+                CanDisplayAlbumInfo = (bool)_playlistActionContext?.DisplayAlbumInfo;
                 Title = album.Title;
                 SubTitle = album.Artist?.Name;
                 ImageSource = _imageService.GetBitmapSource(album.AlbumId, true);
@@ -129,6 +130,26 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
+        private async Task AddToPlaylistAsync()
+        {
+            //await CloseFlyoutAsync();
+            //var navigationParams = new NavigationParameters
+            //{
+            //    { KnownNavigationParameters.UseModalNavigation, true}
+            //};
+            //var res = await NavigationService.GoBackAsync(new NavigationParameters
+            //{
+            //      { KnownNavigationParameters.UseModalNavigation, true}
+            //});
+
+
+            if (_playlistActionContext != null)
+            {
+                _playlistActionContext.ActionMode = PlaylistActionMode.SelectPlaylist;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
+        }
+
         private void RemoveFromPlaylist()
         {
             if (_playlistActionContext != null)
@@ -155,6 +176,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 if (_playlistActionContext.Data is Track track)
                 {
                     uniqueTrack.Album = track.Album;
+                }
+                if (_playlistActionContext.Data is Album album)
+                {
+                    uniqueTrack.Album = album;
                 }
                 if (_playlistActionContext.Data is PlaylistEntry playlistEntry)
                 {

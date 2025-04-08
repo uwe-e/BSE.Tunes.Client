@@ -1,11 +1,12 @@
 ﻿
 using BSE.Tunes.Maui.Client.Models;
+using BSE.Tunes.Maui.Client.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class BaseSearchPageViewModel : ViewModelBase
+    public class BaseSearchPageViewModel: TracklistBaseViewModel
     {
         private int _pageSize;
         private int _pageNumber;
@@ -13,14 +14,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _loadMoreItemsCommand;
         private ICommand _selectItemCommand;
         private string _query;
-        private ObservableCollection<GridPanel> _items;
 
         public ICommand LoadMoreItemsCommand => _loadMoreItemsCommand ??= new DelegateCommand(LoadMoreItems);
 
         public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(SelectItem);
-
-
-        public ObservableCollection<GridPanel> Items => _items ??= [];
 
         public int PageSize
         {
@@ -43,9 +40,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         protected string Query => _query;
 
         public BaseSearchPageViewModel(
-            INavigationService navigationService
-            ) : base(navigationService)
+            INavigationService navigationService,
+            IFlyoutNavigationService flyoutNavigationService,
+            IDataService dataService,
+            IMediaManager mediaManager,
+            IImageService imageService,
+            IEventAggregator eventAggregator)
+            : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
+            PageSize = 10;
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
