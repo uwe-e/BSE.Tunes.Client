@@ -13,6 +13,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private string _playlistName;
         private PlaylistActionContext _playlistActionContext;
         private readonly IDataService _dataService;
+        private readonly IPlaylistService _playlistService;
         private readonly ISettingsService _settingsService;
         private readonly IEventAggregator _eventAggregator;
 
@@ -34,10 +35,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public NewPlaylistDialogPageViewModel(
             INavigationService navigationService,
             IDataService dataService,
+            IPlaylistService playlistService,
             ISettingsService settingsService,
             IEventAggregator eventAggregator) : base(navigationService)
         {
             _dataService = dataService;
+            _playlistService = playlistService;
             _settingsService = settingsService;
             _eventAggregator = eventAggregator;
         }
@@ -68,13 +71,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             try
             {
-                var playlist = await _dataService.InsertPlaylist(new Playlist
-                {
-                    Name = PlaylistName,
-                    UserName = _settingsService.User.UserName,
-                    Guid = Guid.NewGuid()
-                });
+                //var playlist = await _dataService.InsertPlaylist(new Playlist
+                //{
+                //    Name = PlaylistName,
+                //    UserName = _settingsService.User.UserName,
+                //    Guid = Guid.NewGuid()
+                //});
+                var playlist = await _playlistService.CreatePlaylistAsync(PlaylistName);
 
+                await CloseDialogAsync();
+                
                 _playlistActionContext.ActionMode = PlaylistActionMode.AddToPlaylist;
                 _playlistActionContext.PlaylistTo = playlist as Playlist;
 

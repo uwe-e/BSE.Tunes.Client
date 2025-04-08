@@ -29,19 +29,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IFlyoutNavigationService _flyoutNavigationService = flyoutNavigationService;
 
         public ICommand CloseFlyoutCommand => _closeFlyoutCommand
-            ??= new DelegateCommand(async () =>
-            {
-                await CloseFlyoutAsync();
-            });
+            ??= new DelegateCommand(async () => await CloseFlyoutAsync());
 
         public ICommand AddToPlaylistCommand => _addToPlaylistCommand
            ??= new DelegateCommand(async() => await AddToPlaylistAsync());
 
         public ICommand RemoveFromPlaylistCommand => _removeFromPlaylistCommand
-           ??= new DelegateCommand(RemoveFromPlaylist);
+           ??= new DelegateCommand(async() => await RemoveFromPlaylistAsync());
 
         public ICommand RemovePlaylistCommand => _removePlaylistCommand
-             ??= new DelegateCommand(RemovePlaylist);
+             ??= new DelegateCommand(async() => await RemovePlaylistAsync());
 
         public ICommand DisplayAlbumInfoCommand => _displayAlbumInfoCommand
             ??= new DelegateCommand(async() => await ShowAlbumAsync());
@@ -121,27 +118,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await _flyoutNavigationService.CloseFlyoutAsync();
         }
 
-        private void AddToPlaylist()
-        {
-            if (_playlistActionContext != null)
-            {
-                _playlistActionContext.ActionMode = PlaylistActionMode.SelectPlaylist;
-                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
-            }
-        }
-
         private async Task AddToPlaylistAsync()
         {
-            //await CloseFlyoutAsync();
-            //var navigationParams = new NavigationParameters
-            //{
-            //    { KnownNavigationParameters.UseModalNavigation, true}
-            //};
-            //var res = await NavigationService.GoBackAsync(new NavigationParameters
-            //{
-            //      { KnownNavigationParameters.UseModalNavigation, true}
-            //});
-
+            await CloseFlyoutAsync();
 
             if (_playlistActionContext != null)
             {
@@ -150,8 +129,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
-        private void RemoveFromPlaylist()
+        private async Task  RemoveFromPlaylistAsync()
         {
+            await CloseFlyoutAsync();
+
             if (_playlistActionContext != null)
             {
                 _playlistActionContext.ActionMode = PlaylistActionMode.RemoveFromPlaylist;
@@ -190,8 +171,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
-        private void RemovePlaylist()
+        private async Task RemovePlaylistAsync()
         {
+            await CloseFlyoutAsync();
+
             if (_playlistActionContext != null)
             {
                 _playlistActionContext.ActionMode = PlaylistActionMode.RemovePlaylist;

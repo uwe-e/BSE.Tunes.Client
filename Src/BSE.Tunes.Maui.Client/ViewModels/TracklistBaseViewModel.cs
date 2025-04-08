@@ -21,7 +21,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IMediaManager _mediaManager;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
-        private SubscriptionToken _playlistActionContextChanged;
 
         public ICommand OpenFlyoutCommand => _openFlyoutCommand ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
 
@@ -59,10 +58,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _eventAggregator = eventAggregator;
 
-            _playlistActionContextChanged = _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
+            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
             {
-                //_eventAggregator.GetEvent<PlaylistActionContextChanged>().Unsubscribe(_playlistActionContextChanged);
-                //_playlistActionContextChanged = null;
                 if (args is PlaylistActionContext managePlaylistContext)
                 {
                     switch (managePlaylistContext.ActionMode)
@@ -89,6 +86,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             break;
                         case PlaylistActionMode.PlaylistDeleted:
                             managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            // closes the open PlaylistDetailPage
                             await NavigationService.GoBackAsync();
                             break;
                     }
@@ -98,12 +96,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task CreateNewPlaylist(PlaylistActionContext managePlaylistContext)
         {
-
-            await NavigationService.GoBackAsync(new NavigationParameters
-            {
-                { KnownNavigationParameters.UseModalNavigation, true }
-            });
-
             var navigationParams = new NavigationParameters
             {
                 { KnownNavigationParameters.UseModalNavigation, true },
@@ -112,9 +104,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await NavigationService.NavigateAsync(nameof(NewPlaylistDialogPage), navigationParams);
         }
 
-        protected virtual async Task RemoveFromPlaylistAsync(PlaylistActionContext managePlaylistContext)
+        protected virtual Task RemoveFromPlaylistAsync(PlaylistActionContext managePlaylistContext)
         {
-            await _flyoutNavigationService.CloseFlyoutAsync();
+            return Task.CompletedTask;
         }
 
         protected virtual async Task OpenFlyoutAsync(object obj, PlaylistActionContext playlistActionContext)
@@ -147,8 +139,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected async Task SelectPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            await _flyoutNavigationService.CloseFlyoutAsync();
-
             var navigationParams = new NavigationParameters
             {
                 { "source", managePlaylistContext },
@@ -181,8 +171,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected virtual void PlayTracks(IEnumerable<int> trackIds, PlayerMode playerMode)
         {
-            _mediaManager.PlayTracks(
-                new ObservableCollection<int>(trackIds), playerMode);
+            _mediaManager.PlayTracks(new ObservableCollection<int>(trackIds), playerMode);
         }
 
         protected virtual ObservableCollection<int> GetTrackIds()
@@ -192,34 +181,29 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            var res = await NavigationService.GoBackAsync(new NavigationParameters
+            IEnumerable<Track> tracks = default;
+
+            if (managePlaylistContext.Data is Track track)
             {
-                { KnownNavigationParameters.UseModalNavigation, true}
-            });
+                tracks = Enumerable.Repeat(track, 1);
+            }
+            if (managePlaylistContext.Data is Album album)
+            {
+                tracks = album.Tracks;
+            }
+            if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
+            {
+                tracks = Enumerable.Repeat(playlistEntry.Track, 1);
+            }
+            if (managePlaylistContext.Data is Playlist playlist)
+            {
+                tracks = playlist.Entries?.Select(t => t.Track);
+            }
 
-            //IEnumerable < Track> tracks = default;
-
-            //if (managePlaylistContext.Data is Track track)
-            //{
-            //    tracks = Enumerable.Repeat(track, 1);
-            //}
-            //if (managePlaylistContext.Data is Album album)
-            //{
-            //    tracks = album.Tracks;
-            //}
-            //if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
-            //{
-            //    tracks = Enumerable.Repeat(playlistEntry.Track, 1);
-            //}
-            //if (managePlaylistContext.Data is Playlist playlist)
-            //{
-            //    tracks = playlist.Entries?.Select(t => t.Track);
-            //}
-
-            //if (tracks != null)
-            //{
-            //    await AddTracksToPlaylist(managePlaylistContext, tracks);
-            //}
+            if (tracks != null)
+            {
+                await AddTracksToPlaylist(managePlaylistContext, tracks);
+            }
 
         }
 
@@ -250,8 +234,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         
         private async Task RemovePlaylistAsync(PlaylistActionContext managePlaylistContext)
         {
-            await _flyoutNavigationService.CloseFlyoutAsync();
-
             if (managePlaylistContext.Data is Playlist playlist)
             {
                 await _dataService.DeletePlaylist(playlist.Id);

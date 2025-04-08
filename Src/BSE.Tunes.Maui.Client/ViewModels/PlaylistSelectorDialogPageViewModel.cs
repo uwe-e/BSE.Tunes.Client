@@ -1,6 +1,4 @@
-﻿
-
-using BSE.Tunes.Maui.Client.Events;
+﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -20,14 +18,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
 
-        public virtual ObservableCollection<FlyoutItemViewModel> PlaylistFlyoutItems =>
-            _playlistFlyoutItems ??= new ObservableCollection<FlyoutItemViewModel>();
-
         public ICommand CancelCommand =>
-           _cancelCommand ??= new DelegateCommand(CloseDialog);
+            _cancelCommand ??= new DelegateCommand(async () => await CloseDialog());
 
         public ICommand OpenNewPlaylistDialogCommand =>
-            _openNewPlaylistDialogCommand ??= new DelegateCommand(NewPlaylistDialog);
+            _openNewPlaylistDialogCommand ??= new DelegateCommand(async () => await NewPlaylistDialog());
+
+        public virtual ObservableCollection<FlyoutItemViewModel> PlaylistFlyoutItems =>
+            _playlistFlyoutItems ??= new ObservableCollection<FlyoutItemViewModel>();
 
         public PlaylistSelectorDialogPageViewModel(
             INavigationService navigationService,
@@ -79,17 +77,19 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IsBusy = false;
         }
 
-        private void OnFlyoutItemClicked(object sender, EventArgs e)
+        private async void OnFlyoutItemClicked(object sender, EventArgs e)
         {
             if (sender is FlyoutItemViewModel flyoutItem)
             {
+                await CloseDialog();
+
                 _playlistActionContext.PlaylistTo = flyoutItem.Data as Playlist;
                 _playlistActionContext.ActionMode = PlaylistActionMode.AddToPlaylist;
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
             }
         }
-        
-        private async void CloseDialog()
+
+        private async Task CloseDialog()
         {
             var navigationParams = new NavigationParameters
             {
@@ -97,9 +97,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             };
             await NavigationService.GoBackAsync(navigationParams);
         }
-        
-        private void NewPlaylistDialog()
+
+        private async Task NewPlaylistDialog()
         {
+            await CloseDialog();
+
             _playlistActionContext.ActionMode = PlaylistActionMode.CreatePlaylist;
             _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
         }
