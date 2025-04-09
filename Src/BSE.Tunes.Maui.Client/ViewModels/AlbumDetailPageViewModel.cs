@@ -30,7 +30,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ICommand SelectAlbumCommand => _selectAlbumCommand ??= new Command<GridPanel>(SelectAlbum);
 
-
         public ObservableCollection<GridPanel> Albums => _albums ??= [];
 
         public GridPanel SelectedAlbum

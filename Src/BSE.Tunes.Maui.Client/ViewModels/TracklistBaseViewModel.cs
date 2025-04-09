@@ -190,6 +190,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             if (managePlaylistContext.Data is Album album)
             {
                 tracks = album.Tracks;
+                // if the method is called from a search page, the tracks are null. We need to load them
+                if (tracks == null)
+                {
+                    tracks = await _dataService.GetTracksByAlbumId(album.Id);
+                }
             }
             if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
             {

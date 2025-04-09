@@ -7,7 +7,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         INavigationService navigationService,
         ISettingsService settingsService,
         IResourceService resourceService,
-        IEventAggregator eventAggregator,
         IPageDialogService pageDialogService) : BaseSettingsPageViewModel(navigationService)
     {
         private string _userName;

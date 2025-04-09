@@ -6,16 +6,19 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class NewPlaylistDialogPageViewModel : ViewModelBase
+    public class NewPlaylistDialogPageViewModel(
+        INavigationService navigationService,
+        IDataService dataService,
+        ISettingsService settingsService,
+        IEventAggregator eventAggregator) : ViewModelBase(navigationService)
     {
         private ICommand _cancelCommand;
         private DelegateCommand _saveCommand;
         private string _playlistName;
         private PlaylistActionContext _playlistActionContext;
-        private readonly IDataService _dataService;
-        private readonly IPlaylistService _playlistService;
-        private readonly ISettingsService _settingsService;
-        private readonly IEventAggregator _eventAggregator;
+        private readonly IDataService _dataService = dataService;
+        private readonly ISettingsService _settingsService = settingsService;
+        private readonly IEventAggregator _eventAggregator = eventAggregator;
 
         public ICommand CancelCommand => _cancelCommand ??= new DelegateCommand(async() => await CloseDialogAsync());
 
@@ -30,19 +33,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 SetProperty<string>(ref _playlistName, value);
                 SaveCommand.RaiseCanExecuteChanged();
             }
-        }
-
-        public NewPlaylistDialogPageViewModel(
-            INavigationService navigationService,
-            IDataService dataService,
-            IPlaylistService playlistService,
-            ISettingsService settingsService,
-            IEventAggregator eventAggregator) : base(navigationService)
-        {
-            _dataService = dataService;
-            _playlistService = playlistService;
-            _settingsService = settingsService;
-            _eventAggregator = eventAggregator;
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
@@ -71,13 +61,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             try
             {
-                //var playlist = await _dataService.InsertPlaylist(new Playlist
-                //{
-                //    Name = PlaylistName,
-                //    UserName = _settingsService.User.UserName,
-                //    Guid = Guid.NewGuid()
-                //});
-                var playlist = await _playlistService.CreatePlaylistAsync(PlaylistName);
+                var playlist = await _dataService.InsertPlaylist(new Playlist
+                {
+                    Name = PlaylistName,
+                    UserName = _settingsService.User.UserName,
+                    Guid = Guid.NewGuid()
+                });
 
                 await CloseDialogAsync();
                 

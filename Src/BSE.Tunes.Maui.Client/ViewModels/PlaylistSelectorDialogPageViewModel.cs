@@ -7,16 +7,21 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class PlaylistSelectorDialogPageViewModel : ViewModelBase
+    public class PlaylistSelectorDialogPageViewModel(
+        INavigationService navigationService,
+        IDataService dataService,
+        ISettingsService settingsService,
+        IImageService imageService,
+        IEventAggregator eventAggregator) : ViewModelBase(navigationService)
     {
         private ObservableCollection<FlyoutItemViewModel> _playlistFlyoutItems;
         private PlaylistActionContext _playlistActionContext;
         private ICommand _cancelCommand;
         private ICommand _openNewPlaylistDialogCommand;
-        private readonly IDataService _dataService;
-        private readonly ISettingsService _settingsService;
-        private readonly IImageService _imageService;
-        private readonly IEventAggregator _eventAggregator;
+        private readonly IDataService _dataService = dataService;
+        private readonly ISettingsService _settingsService = settingsService;
+        private readonly IImageService _imageService = imageService;
+        private readonly IEventAggregator _eventAggregator = eventAggregator;
 
         public ICommand CancelCommand =>
             _cancelCommand ??= new DelegateCommand(async () => await CloseDialog());
@@ -26,19 +31,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public virtual ObservableCollection<FlyoutItemViewModel> PlaylistFlyoutItems =>
             _playlistFlyoutItems ??= new ObservableCollection<FlyoutItemViewModel>();
-
-        public PlaylistSelectorDialogPageViewModel(
-            INavigationService navigationService,
-            IDataService dataService,
-            ISettingsService settingsService,
-            IImageService imageService,
-            IEventAggregator eventAggregator) : base(navigationService)
-        {
-            _dataService = dataService;
-            _settingsService = settingsService;
-            _imageService = imageService;
-            _eventAggregator = eventAggregator;
-        }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {

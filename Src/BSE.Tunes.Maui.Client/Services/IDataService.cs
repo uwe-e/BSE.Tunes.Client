@@ -23,6 +23,7 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<Playlist> InsertPlaylist(Playlist playlist);
         Task<Playlist> UpdatePlaylist(Playlist playlist);
         Task<SystemInfo> GetSystemInfo();
+        Task<Track[]> GetTracksByAlbumId(int albumId);
         Task<Track> GetTrackById(int trackId);
         Task<ObservableCollection<int>> GetTrackIdsByGenre(int? genreId = null);
         Task<Track[]> GetTrackSearchResults(string query, int skip, int limit);

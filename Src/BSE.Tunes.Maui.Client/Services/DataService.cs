@@ -111,6 +111,11 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.GetAsync<SystemInfo>(new UriBuilder(strUrl).Uri);
         }
 
+        public Task<Track[]> GetTracksByAlbumId(int albumId)
+        {
+            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/{albumId}/tracks";
+            return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri);
+        }
         public Task<Track> GetTrackById(int trackId)
         {
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/tracks/{trackId}";
