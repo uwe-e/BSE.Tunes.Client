@@ -76,6 +76,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private void OnMediaOpened()
         {
             CurrentTrack = _mediaManager.CurrentTrack;
+            PlayNextCommand.RaiseCanExecuteChanged();
+            PlayPreviousCommand.RaiseCanExecuteChanged();
+            
             OnTrackChanged(CurrentTrack);
         }
 
