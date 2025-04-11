@@ -92,9 +92,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 CurrentTrack = currentTrack;
                 CoverImage = _imageService.GetBitmapSource(CurrentTrack.Album.AlbumId);
             }
-            //Progress = _mediaManager.pr.Progress;
-            //CurrentTrack = _mediaManager.CurrentTrack;
-            //CoverImage = _imageService.GetBitmapSource(CurrentTrack.Album.AlbumId);
             PlayerState = _mediaManager.PlayerState;
 
             base.OnNavigatedTo(parameters);
@@ -135,8 +132,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task CreateNewPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            await CloseDialog();
-
             var navigationParams = new NavigationParameters
             {
                 { "source", managePlaylistContext },
@@ -147,8 +142,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            await CloseDialog();
-
             if (managePlaylistContext.Data is Track track)
             {
                 var playlistTo = managePlaylistContext.PlaylistTo;
@@ -172,8 +165,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task SelectPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            await CloseDialog();
-
             var navigationParams = new NavigationParameters
             {
                 { "source", managePlaylistContext },
