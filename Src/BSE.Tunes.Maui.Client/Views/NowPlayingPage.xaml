@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:behaviours="clr-namespace:BSE.Tunes.Maui.Client.Behaviours"
+             xmlns:converter="clr-namespace:BSE.Tunes.Maui.Client.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Maui"
+             x:Class="BSE.Tunes.Maui.Client.Views.NowPlayingPage"
+             Title="NowPlayingPage">
+
+    <ContentPage.Resources>
+        <Style x:Key="DialogButtonStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+        </Style>
+        <converter:PlayerStateToBoolConverter x:Key="PlayerStateToBoolConverter" />
+    </ContentPage.Resources>
+
+    <Grid>
+        <ffimageloading:CachedImage Aspect="AspectFill"
+                                    Source="{Binding CoverImage}"
+                                    DownsampleToViewSize="True"
+                                    FadeAnimationEnabled="True">
+            <ffimageloading:CachedImage.Transformations>
+                <fftransformations:CropTransformation CropHeightRatio="10" CropWidthRatio="10"></fftransformations:CropTransformation>
+                <fftransformations:BlurredTransformation Radius="100"></fftransformations:BlurredTransformation>
+            </ffimageloading:CachedImage.Transformations>
+        </ffimageloading:CachedImage>
+
+        <Border BackgroundColor="Black" Opacity="0.3"/>
+
+        <Grid RowDefinitions="Auto,*" Margin="20">
+            <Grid Grid.Row="0" HeightRequest="40" ColumnDefinitions="50*,50*">
+                <Button Grid.Column="0" ImageSource="chevron_down_outline.png" HorizontalOptions="Start"
+                        Command="{Binding CloseDialogCommand}"
+                        Style="{DynamicResource DialogButtonStyle}"/>
+                <Button Grid.Column="1" ImageSource="ellipsis_vertical.png" HorizontalOptions="End"
+                        Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding CurrentTrack}"
+                        Style="{DynamicResource DialogButtonStyle}"/>
+            </Grid>
+
+            <Grid Grid.Row="1" ColumnDefinitions="10*,80*,10*">
+                <Grid RowDefinitions="6*,4*" Grid.Column="1">
+                    <Grid Grid.Row="0" x:Name="controlContainer" Margin="20">
+                        <ffimageloading:CachedImage x:Name="albumCover" Aspect="AspectFill"
+                                                    Margin="0,10"
+                                                    HorizontalOptions="Center"
+                                                    WidthRequest="{Binding Height, Source={RelativeSource Self}}"
+                                                    HeightRequest="{Binding Height, Source={x:Reference controlContainer}}"
+                                                    Source="{Binding CoverImage}">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:RoundedTransformation Radius="10"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+                    </Grid>
+                    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto">
+                        <Grid Grid.Row="0" Margin="0,20" RowDefinitions="50*,50*">
+                            <Label Grid.Row="0" Text="{Binding CurrentTrack.Name}" FontSize="Large" VerticalTextAlignment="End" TextColor="White" HorizontalOptions="Center"/>
+                            <Label Grid.Row="1" Text="{Binding CurrentTrack.Album.Artist.Name}" FontSize="Medium" VerticalTextAlignment="Start" TextColor="White" HorizontalOptions="Center"/>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <ProgressBar Progress="{Binding Progress}" ProgressColor="{StaticResource White}"/>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0,20" ColumnDefinitions="20*,20*,20*,20*,20*">
+                            <Button Grid.Column="1"
+                                    HorizontalOptions="Start"
+                                    ImageSource="play_back.png"
+                                    Command="{Binding PlayPreviousCommand}"
+                                    Style="{DynamicResource NowPlayingActionButtonStyle}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="ImageSource" Value="play_back.png"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="ImageSource" Value="play_back_disabled.png"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                            <Button Grid.Column="2" ImageSource="play_black.png"
+                                    Command="{Binding PlayCommand}"
+                                    Style="{StaticResource DetailActionPlayButtonStyle}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding PlayerState, Converter={StaticResource PlayerStateToBoolConverter}}" Value="True">
+                                        <Setter Property="ImageSource" Value="pause_black.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Button" Binding="{Binding PlayerState, Converter={StaticResource PlayerStateToBoolConverter}}" Value="False">
+                                        <Setter Property="ImageSource" Value="play_black.png"/>
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                            <Button Grid.Column="3"
+                                    HorizontalOptions="End"
+                                    ImageSource="play_forward.png"
+                                    Command="{Binding PlayNextCommand}"
+                                    Style="{DynamicResource NowPlayingActionButtonStyle}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="ImageSource" Value="play_forward.png"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="ImageSource" Value="play_forward_disabled.png"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

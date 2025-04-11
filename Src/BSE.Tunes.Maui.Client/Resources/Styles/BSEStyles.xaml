@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+                    xmlns:bse="clr-namespace:BSE.Maui.Controls;assembly=BSE.Maui.Controls"
+                    xmlns:prism="http://prismlibrary.com"
+                    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+                    xmlns:bsetmp="using:BSE.Maui.Controls"
+                    x:Class="BSE.Tunes.Maui.Client.Resources.Styles.BSEStyles">
+
+    <Style TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource AccentColorBlue}"/>
+        <Setter Property="TextColor" Value="{DynamicResource White}"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{DynamicResource SystemWhite}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DetailActionButtonStyle" TargetType="Button">
+        <Setter Property="CornerRadius" Value="{OnPlatform 25, iOS=25, Android=28}"/>
+        <Setter Property="HeightRequest" Value="{OnPlatform 50, iOS=50, Android=56}"/>
+        <Setter Property="WidthRequest" Value="{OnPlatform 50, iOS=50, Android=56}"/>
+        <Setter Property="Margin" Value="10,0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Gray900}"/>
+    </Style>
+
+    <Style x:Key="DetailActionPlayButtonStyle" TargetType="Button" BaseResourceKey="DetailActionButtonStyle">
+        <Setter Property="CornerRadius" Value="{OnPlatform 28, iOS=28, Android=30}"/>
+        <Setter Property="HeightRequest" Value="{OnPlatform 56, iOS=56, Android=60}"/>
+        <Setter Property="WidthRequest" Value="{OnPlatform 56, iOS=56, Android=60}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
+    </Style>
+
+    <Style x:Key="NowPlayingActionButtonStyle" TargetType="Button" BaseResourceKey="DetailActionButtonStyle">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="CancelButtonStyle" TargetType="Button">
+        <Setter Property="BorderColor"  Value="{StaticResource White}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style TargetType="controls:SectionHeaderButton">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+        <Setter Property="FontSize" Value="Large"/>
+    </Style>
+
+    <Style x:Key="SeparatorItem" TargetType="BoxView">
+        <Setter Property="BackgroundColor" Value="{StaticResource SeparatorDarkColor}" />
+        <Setter Property="HeightRequest" Value=".5" />
+    </Style>
+
+    <Style TargetType="controls:BottomFlyoutPage">
+        <Setter Property="FlyoutBackgroundColor" Value="{StaticResource DarkBackground}"/>
+    </Style>
+    
+    <Style TargetType="controls:FlyoutButton">
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
+    <Style TargetType="controls:AudioPlayer">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkBackground}"/>
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+    </Style>
+
+    <!-- doesnt work. viewcell hasnt that possibility-->
+    <Style TargetType="controls:HeaderedTextCell" ApplyToDerivedTypes="True">
+        <Setter Property="TitleColor" Value="{StaticResource PrimaryDarkLabelColor}"/>
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+    </Style>
+    
+    <Style x:Key="ContextMenuButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextTransform" Value="None"/>
+        <Setter Property="Text" Value="···"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="TextColor" Value="{StaticResource PrimaryDarkLabelColor}"/>
+    </Style>
+
+    <Style x:Key="CollectionViewLabelStyle" TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource PrimaryDarkLabelColor}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontSize" Value="{OnIdiom Phone=14, Tablet=16}"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource Gray600}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+    </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+    </Style>
+    
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource SecondaryDarkLabelColor}"/>
+    </Style>
+    
+    <Style TargetType="Page" ApplyToDerivedTypes="True">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkBackground}"/>
+    </Style>
+
+    <Style TargetType="prism:PrismNavigationPage" ApplyToDerivedTypes="True">
+        <Setter Property="BarBackgroundColor" Value="{StaticResource DarkBackground}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkBackground}"/>
+    </Style>
+
+    <Style TargetType="bse:TabbedContainerPage" ApplyToDerivedTypes="True">
+        <Setter Property="BarBackgroundColor" Value="{StaticResource Gray950}"/>
+        <Setter Property="SelectedTabColor" Value="{StaticResource White}"/>
+        <Setter Property="UnselectedTabColor" Value="{StaticResource Gray500}"/>
+    </Style>
+
+    <Style TargetType="ffimageloading:CachedImage" ApplyToDerivedTypes="True">
+        <Setter Property="LoadingPlaceholder" Value="musical_notes_outline.png"/>
+    </Style>
+    
+</ResourceDictionary>

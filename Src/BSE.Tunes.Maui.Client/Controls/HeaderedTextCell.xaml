@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ViewCell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+          x:Class="BSE.Tunes.Maui.Client.Controls.HeaderedTextCell">
+    <Border BackgroundColor="Transparent" Margin="10">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="{OnPlatform 15, iOS=15, Android=10}" />
+        </Border.StrokeShape>
+        <Grid RowDefinitions="Auto,Auto" Margin="10">
+            <Label Text="{Binding Title}" FontSize="Medium" TextColor="{Binding TitleColor}"/>
+            <Grid ColumnDefinitions="*, 50" Grid.Row="1">
+                <Grid Grid.Column="0" RowDefinitions="Auto,Auto" Padding="0,10">
+                    <Label Grid.Row="0" Text="{Binding Text}" TextColor="{Binding TextColor}"/>
+                    <Label Grid.Row="1" Text="{Binding Detail}" TextColor="{Binding DetailColor}"/>
+                </Grid>
+                <Image IsVisible="{Binding IsEnabled}" Grid.Column="1" Source="chevron_forward_outline.png" HeightRequest="24"/>
+            </Grid>
+        </Grid>
+    </Border>
+</ViewCell>

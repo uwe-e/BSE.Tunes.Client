@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
+             xmlns:acrylic="clr-namespace:Xe.AcrylicView;assembly=Xe.AcrylicView"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             x:Class="BSE.Tunes.Maui.Client.Views.AlbumDetailPage"
+             x:Name="page">
+
+    <ContentPage.Content>
+        <Grid>
+            <ScrollView>
+                <CollectionView Margin="10,0" ItemsSource="{Binding Items}">
+                    <CollectionView.Header>
+                        <Grid Margin="0,0,0,15">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Image HeightRequest="{OnIdiom Default=150, Tablet=250}"
+                                   Aspect="AspectFill" Source="{Binding ImageSource}"/>
+                            <acrylic:AcrylicView EffectStyle="ExtraDark" VerticalOptions="Fill" >
+                                <acrylic:AcrylicView.Background>
+                                    <LinearGradientBrush EndPoint="0,1">
+                                        <GradientStop Color="Transparent" Offset="0.1" />
+                                        <GradientStop Color="{StaticResource DarkBackground}" Offset="0.9" />
+                                    </LinearGradientBrush>
+                                </acrylic:AcrylicView.Background>
+
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Image Grid.Row="0" Aspect="AspectFit"
+                                           HeightRequest="{OnIdiom Default=150, Tablet=250}" 
+                                           WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
+
+                                    <Label x:Name="infoTitle" Text="{Binding Album.Title}"
+                                               HorizontalOptions="Center"
+                                               LineBreakMode="TailTruncation"
+                                               Grid.Row="1" FontSize="Medium" TextColor="{StaticResource White}"/>
+                                    <Label x:Name="infoSubTitle" Text="{Binding Album.Artist.Name}"
+                                               HorizontalOptions="Center"
+                                               LineBreakMode="TailTruncation"
+                                               Grid.Row="2" TextColor="{StaticResource Gray300}"/>
+                                    <Label x:Name="albumGenre"
+                                               HorizontalOptions="Center"
+                                               LineBreakMode="TailTruncation"
+                                               Grid.Row="3" TextColor="{StaticResource Gray300}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Album.Year}"/>
+                                                <Span Text=" "/>
+                                                <Span Text="{Binding Album.Genre.Name}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <StackLayout Grid.Row="4" Margin="20" HorizontalOptions="Center" Orientation="Horizontal">
+                                        <Button ImageSource="shuffle.png" Command="{Binding PlayAllRandomizedCommand}"
+                                                Style="{DynamicResource DetailActionButtonStyle}"/>
+                                        <Button ImageSource="detail_action_play.png"
+                                                Command="{Binding PlayAllCommand}"
+                                                Style="{DynamicResource DetailActionPlayButtonStyle}"/>
+                                        <Button ImageSource="ellipsis_vertical.png"
+                                                Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Album}"
+                                                Style="{DynamicResource DetailActionButtonStyle}"/>
+                                    </StackLayout>
+
+                                </Grid>
+
+                            </acrylic:AcrylicView>
+
+                        </Grid>
+
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand,
+                                                            Source={x:Reference page}}"
+                                                          CommandParameter="{Binding}"/>
+                                </StackLayout.GestureRecognizers>
+                                <Grid Margin="3" HeightRequest="40">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
+                                                          CommandParameter="{Binding}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding Number}"
+                                           Grid.Column="0"
+                                           Style="{DynamicResource CollectionViewLabelStyle}"
+                                           VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding Title}"
+                                           Grid.Column="1"
+                                           Style="{DynamicResource CollectionViewLabelStyle}"
+                                           VerticalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Button Grid.Column="2"
+                                            Text="..."
+                                            Style="{DynamicResource ContextMenuButtonStyle}"
+                                            Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                            CommandParameter="{Binding}"/>
+                                </Grid>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.Footer>
+                        <Grid IsVisible="{Binding HasFurtherAlbums}" Margin="0,15,0,0">
+                            <controls:HeaderedCollectionView Title="{x:Static strings:AppResources.AlbumsDetailPage_FurtherAlbums_Header_Text}"
+                                     IsBusy="{Binding IsQueryBusy}"
+                                     IsVisible="{Binding HasFurtherAlbums}"
+                                     HeaderButtonStyle="{DynamicResource SectionHeaderButtonStyle}"
+                                     ActivityIndicatorColor="{DynamicResource SecondaryDarkLabelColor}"
+                                     ItemsSource="{Binding Albums}"
+                                     SelectedItem="{Binding SelectedAlbum}"
+                                     SelectionChangedCommand="{Binding SelectAlbumCommand}"
+                                     SelectionChangedCommandParameter="{Binding SelectedAlbum}"
+                                     RemainingItemsThreshold="10"
+                                     RemainingItemsThresholdReachedCommand="{Binding LoadMoreAlbumsCommand}"
+                                     HeightRequest="{OnIdiom Default=220, Tablet=230}">
+                                <controls:HeaderedCollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <templates:ViewItemTemplate Padding="0,0,10,0"/>
+                                    </DataTemplate>
+                                </controls:HeaderedCollectionView.ItemTemplate>
+                            </controls:HeaderedCollectionView>
+                        </Grid>
+                    </CollectionView.Footer>
+                </CollectionView>
+            </ScrollView>
+            <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
+                <ActivityIndicator IsRunning="{Binding IsBusy}"/>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+
+</ContentPage>

@@ -1,0 +1,8 @@
+{
+  "solution": {
+    "path": "BSE.Tunes.Client.sln",
+    "projects": [
+      "Src\\BSE.Tunes.Maui.Client\\BSE.Tunes.Maui.Client.csproj"
+    ]
+  }
+}

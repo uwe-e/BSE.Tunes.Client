@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<bse:TabbedContainerPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                         xmlns:bse="clr-namespace:BSE.Maui.Controls;assembly=BSE.Maui.Controls"
+                         xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+                         xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+                         xmlns:views="clr-namespace:BSE.Tunes.Maui.Client.Views"
+                         xmlns:prism="http://prismlibrary.com"
+                         xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+                         xmlns:bseandroid="clr-namespace:BSE.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=BSE.Maui.Controls"
+                         ios:TabbedPage.TranslucencyMode="Translucent"
+                         bseandroid:TabbedContainerPage.IsSwipePagingEnabled="False"
+                         NavigationPage.HasNavigationBar="False"
+                         BarBackgroundColor="#121212"
+                         x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
+    
+    <bse:TabbedContainerPage.Children>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarTextColor="{StaticResource White}">
+            <x:Arguments>
+               <views:HomePage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.AlbumsPage_Title}" IconImageSource="albums.png" BarTextColor="{StaticResource White}">
+            <x:Arguments>
+                <views:AlbumsPage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.PlaylistsPage_Title}" IconImageSource="playlist.png" BarTextColor="{StaticResource White}">
+            <x:Arguments>
+                <views:PlaylistsPage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SearchPage_Title}" IconImageSource="search.png" BarTextColor="{StaticResource White}" >
+            <x:Arguments>
+                <views:SearchPage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png">
+            <x:Arguments>
+                <views:SettingsPage/>
+            </x:Arguments>
+        </prism:PrismNavigationPage>
+    </bse:TabbedContainerPage.Children>
+
+    <bse:TabbedContainerPage.BottomView>
+        <controls:AudioPlayer HeightRequest="{OnPlatform 160, iOS=60, Android=160}"
+                              SelectTrackCommand="{Binding SelectTrackCommand}"
+                              SelectTrackCommandParameter="{Binding CurrentTrack}"
+                              PlayCommand="{Binding PlayCommand}"
+                              PlayNextCommand="{Binding PlayNextCommand}"
+                              Track="{Binding CurrentTrack, Mode=TwoWay}"
+                              Cover="{Binding CoverSource, Mode=TwoWay}"
+                              PlayerState="{Binding PlayerState, Mode=TwoWay}"
+                              Progress="{Binding Progress}"/>
+    </bse:TabbedContainerPage.BottomView>
+    
+</bse:TabbedContainerPage>

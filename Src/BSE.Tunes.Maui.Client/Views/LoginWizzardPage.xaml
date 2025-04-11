@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
+             x:Class="BSE.Tunes.Maui.Client.Views.LoginWizzardPage"
+             NavigationPage.HasNavigationBar="False"
+             Title="LoginWizzardPage">
+    <Grid>
+
+        <ScrollView HorizontalOptions="Center">
+            <ScrollView.VerticalOptions>
+                <OnIdiom x:TypeArguments="LayoutOptions"
+                         Default="CenterAndExpand"
+                         Phone="FillAndExpand" />
+            </ScrollView.VerticalOptions>
+
+            <StackLayout Spacing="0"
+                         Margin="{OnIdiom Desktop='30', Tablet='200,50', Phone='20,32'}"
+                         VerticalOptions="FillAndExpand"
+                         WidthRequest="{OnPlatform  Default='-1', WinUI='350'}">
+
+                <Grid RowSpacing="0" VerticalOptions="CenterAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Label Text="{x:Static strings:AppResources.LoginWizzardPage_Label_UserName_Text}"/>
+
+                    <Entry Text="{Binding UserName, Mode=TwoWay}"
+                           Placeholder="{x:Static strings:AppResources.LoginPage_Entry_Placeholder_EnterUserName}"
+                           ReturnCommand="{Binding SaveCommand}"
+                           ReturnType="Done"
+                           Margin="0,8"
+                           Grid.Row="1"/>
+
+                    <Label Text="{x:Static strings:AppResources.LoginWizzardPage_Label_Passwort_Text}"
+                           Grid.Row="2"/>
+
+                    <Entry Text="{Binding Password, Mode=TwoWay}"
+                           IsPassword="true"
+                           Placeholder="{x:Static strings:AppResources.LoginPage_Entry_Placeholder_EnterPassword}"
+                           ReturnCommand="{Binding SaveCommand}"
+                           ReturnType="Done"
+                           Margin="0,8"
+                           Grid.Row="3"/>
+                    
+                    <Button Text="{x:Static strings:AppResources.LoginPage_Button_Text_Login}"
+                            Command="{Binding SaveCommand}"
+                            Grid.Row="4"/>
+
+                </Grid>
+
+            </StackLayout>
+
+        </ScrollView>
+
+    </Grid>
+</ContentPage>
