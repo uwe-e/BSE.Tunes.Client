@@ -1,6 +1,6 @@
 # BSEtunes .NET MAUI client
 
-This is the .NET MAUI cross platform client of the BSEtunes system. With this client you can play singles, whole albums, the content of your self created playlists and randomized, the whole content of your selected BSEtunes.
+This is the .NET MAUI cross platform client of the BSEtunes system, which is our private "neighborhood Spotify". With this client you can play single tracks, whole albums, the content of your self created playlists and randomized, the whole content of your selected BSEtunes.
 
 ![BSEtunes Android Homescreen](/docs/images/android-tabled-home-screen-800.jpg)
 
