@@ -11,7 +11,7 @@
     <Grid Margin="10" RowDefinitions="Auto,*">
         <SearchBar Grid.Row="0" Placeholder="{x:Static strings:AppResources.SearchPage_SearchBar_Placeholder}"
                    Text="{Binding TextValue, Mode=TwoWay}"
-                   BackgroundColor="{StaticResource Gray600}"
+                   BackgroundColor="{StaticResource DarkBackground}"
                    TextColor="{StaticResource White}"
                    CancelButtonColor="{StaticResource White}"
                    PlaceholderColor="{DynamicResource SecondaryLabelColor}">
