@@ -28,8 +28,18 @@
                             </Image.GestureRecognizers>
                         </Image>
                         <Grid Grid.Column="1" RowDefinitions="5*,5*">
-                            <Label Grid.Row="0" TextColor="{TemplateBinding TextColor}" FontSize="Medium" VerticalTextAlignment="End" Text="{TemplateBinding Track.Name}"/>
-                            <Label Grid.Row="1" TextColor="{TemplateBinding TextColor}" FontSize="Small" VerticalTextAlignment="Start" Text="{TemplateBinding Track.Album.Artist.Name}"/>
+                            <Label Grid.Row="0" 
+                                   Text="{TemplateBinding Track.Name}"
+                                   TextColor="{TemplateBinding TextColor}"
+                                   VerticalTextAlignment="End"
+                                   LineBreakMode="TailTruncation"
+                                   FontSize="Medium"/>
+                            <Label Grid.Row="1"
+                                   Text="{TemplateBinding Track.Album.Artist.Name}"
+                                   TextColor="{TemplateBinding TextColor}"
+                                   VerticalTextAlignment="Start"
+                                   LineBreakMode="TailTruncation"
+                                   FontSize="Small"/>
                         </Grid>
                         <ImageButton x:Name="PART_PlayButton" Grid.Column="2" Clicked="OnPlayClicked"  Source="play.png" Aspect="AspectFit">
                             <VisualStateManager.VisualStateGroups>

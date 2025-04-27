@@ -114,7 +114,7 @@
     </Style>
 
     <Style TargetType="Entry">
-        <Setter Property="TextColor" Value="{StaticResource White}"/>
+        <Setter Property="TextColor" Value="{StaticResource Black}"/>
     </Style>
     
     <Style TargetType="ActivityIndicator">
@@ -126,6 +126,10 @@
         <Setter Property="BackgroundColor" Value="{StaticResource DarkBackground}"/>
     </Style>
 
+    <Style TargetType="TableView">
+        <Setter Property="BackgroundColor" Value="{StaticResource DarkBackground}"/>
+    </Style>
+    
     <Style TargetType="prism:PrismNavigationPage" ApplyToDerivedTypes="True">
         <Setter Property="BarBackgroundColor" Value="{StaticResource DarkBackground}"/>
         <Setter Property="BackgroundColor" Value="{StaticResource DarkBackground}"/>
