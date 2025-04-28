@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -32,7 +33,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(async(panel) => await SelectItemAsync(panel));
 
-        public ObservableCollection<GridPanel> Items => _items ??= new ObservableCollection<GridPanel>();
+        public ObservableCollection<GridPanel> Items => _items ??= [];
 
         public bool IsActive
         {
@@ -84,6 +85,19 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 Items.Clear();
                 _isActivated = false;
                 RaiseIsActiveChanged();
+            });
+
+            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            {
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(PlaylistsPage), uniqueTrack.UniqueId))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
+
+                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+                }
             });
 
         }

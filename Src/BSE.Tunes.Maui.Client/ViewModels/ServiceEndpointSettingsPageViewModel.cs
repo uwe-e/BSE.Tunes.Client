@@ -1,18 +1,17 @@
-﻿using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class ServiceEndpointSettingsPageViewModel(
-        INavigationService navigationService,
-        ISettingsService settingsService,
-        IResourceService resourceService,
-        IPageDialogService pageDialogService) : BaseSettingsPageViewModel(navigationService)
+    public class ServiceEndpointSettingsPageViewModel : BaseSettingsPageViewModel
     {
         private string _serviceEndPoint;
-        private readonly ISettingsService _settingsService = settingsService;
-        private readonly IResourceService _resourceService = resourceService;
-        private readonly IPageDialogService _pageDialogService = pageDialogService;
+        private readonly ISettingsService _settingsService;
+        private readonly IResourceService _resourceService;
+        private readonly IPageDialogService _pageDialogService;
+        private readonly IEventAggregator _eventAggregator;
 
         public string ServiceEndPoint
         {
@@ -24,6 +23,32 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 SetProperty(ref _serviceEndPoint, value);
             }
+        }
+
+        public ServiceEndpointSettingsPageViewModel(
+            INavigationService navigationService,
+            ISettingsService settingsService,
+            IResourceService resourceService,
+            IPageDialogService pageDialogService,
+            IEventAggregator eventAggregator) : base(navigationService)
+        {
+            _settingsService = settingsService;
+            _resourceService = resourceService;
+            _pageDialogService = pageDialogService;
+            _eventAggregator = eventAggregator;
+            
+            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            {
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(ServiceEndpointSettingsPage), uniqueTrack.UniqueId))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
+
+                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+                }
+            });
         }
 
         public override void LoadSettings()
