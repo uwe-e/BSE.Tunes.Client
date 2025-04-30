@@ -37,18 +37,23 @@
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,10" ColumnDefinitions="*,50">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.SelectItemCommand, Source={x:Reference page}}"
+                                                                    CommandParameter="{Binding}"/>
+                                        </Grid.GestureRecognizers>
                                         <controls:ListViewItem ImageSource="{Binding ImageSource}"
                                                            Title="{Binding Title}"
                                                            SubTitle="{Binding SubTitle}"
                                                            TitleBackgroundColor="{StaticResource PrimaryLabelColor}"
                                                            SubTitleBackgroundColor="{StaticResource PrimaryLabelColor}"
                                                            Grid.Column="0"/>
-                                        <Button Grid.Column="1"
+                                        <!--<Button Grid.Column="1"
                                                 Text="..."
                                                 TextColor="{StaticResource White}"
                                                 Style="{DynamicResource ContextMenuButtonStyle}"
                                                 Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
-                                                CommandParameter="{Binding}"/>
+                                                CommandParameter="{Binding}"/>-->
+                                        <Image Grid.Column="1" Source="chevron_forward_outline.png" HeightRequest="18"/>
                                     </Grid>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>

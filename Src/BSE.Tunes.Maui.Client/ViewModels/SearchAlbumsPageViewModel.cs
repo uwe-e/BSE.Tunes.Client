@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
+using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
@@ -58,6 +59,18 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 }
             }
             PageNumber = Items.Count;
+        }
+
+        protected override async void SelectItem(GridPanel obj)
+        {
+            if (obj?.Data is Album album)
+            {
+                var navigationParams = new NavigationParameters{
+                    { "album", album }
+                };
+
+                await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
+            }
         }
 
         protected override Task OpenFlyoutAsync(object obj)

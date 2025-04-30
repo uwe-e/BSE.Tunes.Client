@@ -114,7 +114,8 @@
     </Style>
 
     <Style TargetType="Entry">
-        <Setter Property="TextColor" Value="{OnPlatform Default={StaticResource Black}, Android={StaticResource White}}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
+        <Setter Property="TextColor" Value="{StaticResource Black}"/>
     </Style>
     
     <Style TargetType="ActivityIndicator">
