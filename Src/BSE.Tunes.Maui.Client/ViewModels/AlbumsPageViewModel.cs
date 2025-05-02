@@ -1,5 +1,5 @@
-﻿
-
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -22,6 +22,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _selectItemCommand;
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
+        private readonly IEventAggregator _eventAggregator;
 
         public ICommand LoadMoreItemsCommand => _loadMoreItemsCommand ??= new DelegateCommand(async () =>
            {
@@ -37,7 +38,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             return HasItems && TotalNumberOfItems > PageNumber;
         }
 
-        public ObservableCollection<GridPanel> Items => _items ??= new ObservableCollection<GridPanel>();
+        public ObservableCollection<GridPanel> Items => _items ??= [];
 
         public bool IsActive
         {
@@ -74,12 +75,27 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public AlbumsPageViewModel(
             INavigationService navigationService,
             IDataService dataService,
-            IImageService imageService) : base(navigationService)
+            IImageService imageService,
+            IEventAggregator eventAggregator) : base(navigationService)
         {
             _dataService = dataService;
             _imageService = imageService;
-
+            _eventAggregator = eventAggregator;
+            
             PageSize = 40;
+
+            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            {
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(AlbumsPage), uniqueTrack.UniqueId))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
+
+                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+                }
+            });
         }
 
         private void RaiseIsActiveChanged()

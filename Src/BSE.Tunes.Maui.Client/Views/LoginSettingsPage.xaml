@@ -14,7 +14,7 @@
                                            Text="{x:Static strings:AppResources.LoginSettingsPage_SectionAccount_Description_Text}"
                                            TextColor="{StaticResource PrimaryDarkLabelColor}"
                                            Detail="{Binding BindingContext.UserName, Source={x:Reference settingsPage}}"
-                                           DetailColor="{StaticResource PrimaryDarkLabelColor}"
+                                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
                                            IsEnabled="False"/>
                 <ViewCell>
                     <Button Text="{x:Static strings:AppResources.LoginSettingsPage_ButtonDelete_Text}"

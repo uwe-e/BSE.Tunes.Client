@@ -1,8 +1,13 @@
 # BSEtunes .NET MAUI client
 
-This is the .NET MAUI cross platform client of the BSEtunes system. With this client you can play singles, whole albums, the content of your self created playlists and randomized, the whole content of your selected BSEtunes.
+This is the .NET MAUI cross platform client of the BSEtunes system, which is our private "neighborhood Spotify". With this client you can play single tracks, whole albums, the content of your self created playlists and randomized, the whole content of your selected BSEtunes.
 
+## Android
 ![BSEtunes Android Homescreen](/docs/images/android-tabled-home-screen-800.jpg)
+
+## IOS
+
+![BSEtunes IOS Homescreen](/docs/images/ios-homescreen.800.jpg)
 
 #### Semi Important Information
 
@@ -13,3 +18,13 @@ Due to the copyrights of the streamed music files, the load of our server and pe
 
 ### Globalization
 The App supports globalization. Currently available languages are german and english.
+
+## Tools
+
+The App was created using the following tools
+- [Prism.DryIoc.Maui](https://prismlibrary.com): MVVM framework for building loosely coupled, modular, maintainable, and testable XAML applications.
+- [Microsoft.Maui.Graphics.Skia](https://github.com/dotnet/maui): a cross-platform 2D graphics API for .NET platforms based on Google's Skia Graphics Library.
+- [FFImageLoading.Maui](https://github.com/microspaze/FFImageLoading.Maui): Image loading, caching & transforming library for Xamarin
+- [CommunityToolkit.Maui.MediaElement](https://github.com/CommunityToolkit/Maui): Control for playing video and audio
+- [AcrylicView.Maui](https://github.com/sswi/AcrylicView.MAUI): Control for drawing acrylic effects
+

@@ -15,6 +15,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _textChangedCommand;
         private ICommand _showAllAlbumSearchResultsCommand;
         private ICommand _showAllTrackSearchResultsCommand;
+        private ICommand _selectItemCommand;
         private bool _hasAlbums;
         private bool _hasTracks;
         private ObservableCollection<GridPanel> _albums;
@@ -25,9 +26,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private CancellationTokenSource _cancellationTokenSource;
         private string _textValue;
-
+        
         public ICommand TextChangedCommand => _textChangedCommand
             ??= new DelegateCommand<string>(async (textValue) => await TextChangedAsync(textValue));
+
+        public ICommand SelectItemCommand => _selectItemCommand
+            ??= new DelegateCommand<GridPanel>(async (item) => await SelectItemAsync(item));
 
         public ICommand ShowAllAlbumSearchResultsCommand => _showAllAlbumSearchResultsCommand
            ??= new DelegateCommand(async() => await ShowAllAlbumSearchResults());
@@ -206,6 +210,18 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
+        private async Task SelectItemAsync(GridPanel item)
+        {
+            if (item?.Data is Album album)
+            {
+                var navigationParams = new NavigationParameters{
+                    { "album", album }
+                };
+                
+                await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
+            }
+        }
+        
         private async Task ShowAllAlbumSearchResults()
         {
             var navigationParams = new NavigationParameters

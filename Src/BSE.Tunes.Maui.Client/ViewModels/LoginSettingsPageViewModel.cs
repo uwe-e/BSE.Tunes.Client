@@ -1,18 +1,17 @@
-﻿using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class LoginSettingsPageViewModel(
-        INavigationService navigationService,
-        ISettingsService settingsService,
-        IResourceService resourceService,
-        IPageDialogService pageDialogService) : BaseSettingsPageViewModel(navigationService)
+    public class LoginSettingsPageViewModel : BaseSettingsPageViewModel
     {
         private string _userName;
-        private readonly ISettingsService _settingsService = settingsService;
-        private readonly IResourceService _resourceService = resourceService;
-        private readonly IPageDialogService _pageDialogService = pageDialogService;
+        private readonly ISettingsService _settingsService;
+        private readonly IResourceService _resourceService;
+        private readonly IPageDialogService _pageDialogService;
+        private readonly IEventAggregator _eventAggregator;
 
         public string UserName
         {
@@ -24,6 +23,32 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 SetProperty(ref _userName, value);
             }
+        }
+
+        public LoginSettingsPageViewModel(
+            INavigationService navigationService,
+            ISettingsService settingsService,
+            IResourceService resourceService,
+            IPageDialogService pageDialogService,
+            IEventAggregator eventAggregator) : base(navigationService)
+        {
+            _settingsService = settingsService;
+            _resourceService = resourceService;
+            _pageDialogService = pageDialogService;
+            _eventAggregator = eventAggregator;
+            
+            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            {
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(LoginSettingsPage), uniqueTrack.UniqueId))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
+
+                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+                }
+            });
         }
 
         public async override void DeleteSettings()

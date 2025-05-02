@@ -35,7 +35,7 @@
                 <views:SearchPage/>
             </x:Arguments>
         </prism:PrismNavigationPage>
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png">
+        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.SettingsPage_Title}" IconImageSource="settings.png" BarTextColor="{StaticResource White}">
             <x:Arguments>
                 <views:SettingsPage/>
             </x:Arguments>

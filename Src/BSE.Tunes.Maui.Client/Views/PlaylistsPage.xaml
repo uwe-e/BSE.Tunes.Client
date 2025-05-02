@@ -19,7 +19,7 @@
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <templates:ViewItemTemplate HeightRequest="{OnIdiom Phone=200, Tablet=230}">
+                    <templates:ViewItemTemplate Margin="0,15" HeightRequest="{OnIdiom Phone=180, Tablet=230}">
                         <templates:ViewItemTemplate.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=albumsView}}" CommandParameter="{Binding}"/>
                         </templates:ViewItemTemplate.GestureRecognizers>

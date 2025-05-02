@@ -19,12 +19,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private bool _isQueryBusy;
         private bool _hasFurtherAlbums;
         private int _pageNumber;
-        private int _pageSize;
+        private readonly int _pageSize;
         private bool _hasItems;
         private ObservableCollection<GridPanel> _albums;
         private ICommand _selectAlbumCommand;
         private ICommand _loadMoreAlbumssCommand;
-        private SubscriptionToken _albumInfoSelectionToken;
+        private readonly SubscriptionToken _albumInfoSelectionToken;
 
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ??= new DelegateCommand(async () => await LoadMoreAlbumsAsync());
 
@@ -60,7 +60,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             INavigationService navigationService,
             IFlyoutNavigationService flyoutNavigationService,
             IEventAggregator eventAggregator,
-            IResourceService resourceService,
             IDataService dataService,
             IImageService imageService,
             IMediaManager mediaManager) : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)

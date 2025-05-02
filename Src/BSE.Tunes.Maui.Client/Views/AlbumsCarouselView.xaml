@@ -10,22 +10,20 @@
         <Grid.Behaviors>
             <behaviours:OrientationBehavior/>
         </Grid.Behaviors>
-        <!--<VisualStateManager.VisualStateGroups>
+        <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="OrientationStates">
                 <VisualState x:Name="Portrait">
                     <VisualState.Setters>
-                        <Setter TargetName="carouselView" Property="IsVisible" Value="True"/>
-                        <Setter TargetName="randomAlbumsView" Property="IsVisible" Value="False"/>
+                        <Setter TargetName="randomAlbumsView" Property="HeightRequest" Value="{OnIdiom Default=300, Tablet=355}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Landscape">
                     <VisualState.Setters>
-                        <Setter TargetName="carouselView" Property="IsVisible" Value="False"/>
-                        <Setter TargetName="randomAlbumsView" Property="IsVisible" Value="True"/>
+                        <Setter TargetName="randomAlbumsView" Property="HeightRequest" Value="{OnIdiom Default=200, Tablet=230}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>-->
+        </VisualStateManager.VisualStateGroups>
 
         <CollectionView x:Name="randomAlbumsView"
                     ItemsSource="{Binding Items}"
@@ -35,11 +33,8 @@
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border HeightRequest="{OnIdiom Default=295, Tablet=355}"
-                            WidthRequest="{OnIdiom Default=295, Tablet=355}">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10" />
-                        </Border.StrokeShape>
+                    <Border HeightRequest="{Binding Height, Source={x:Reference randomAlbumsView}}"
+                            WidthRequest="{Binding Height, Source={RelativeSource Self}}">
                         <Grid>
 
                             <ffimageloading:CachedImage Source="{Binding ImageSource}" Aspect="AspectFill"/>

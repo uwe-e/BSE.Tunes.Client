@@ -13,7 +13,7 @@
             </Setter>
             <Setter Property="WidthRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="180" Tablet="190"/>
                 </Setter.Value>
             </Setter>
         </Style>
@@ -21,27 +21,23 @@
         <Style TargetType="ffimageloading:CachedImage" x:Key="ViewItemImageStyle">
             <Setter Property="WidthRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="180" Tablet="190"/>
                 </Setter.Value>
             </Setter>
             <Setter Property="HeightRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="160" Tablet="190"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="188" Tablet="190"/>
                 </Setter.Value>
             </Setter>
         </Style>
     </ContentView.Resources>
 
-    <!--<Grid>-->
     <Grid Style="{StaticResource ViewItemTemplateStyle}" Margin="0" RowDefinitions="*, Auto, Auto">
         <!-- the previously used frame didnt support tab gestures -->
-        <Border  Padding="0" StrokeThickness="0">
+        <Border Padding="0" StrokeThickness="0">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="3" />
             </Border.StrokeShape>
-            <!--<Image Style="{StaticResource ViewItemImageStyle}"
-                       Source="{Binding ImageSource}"
-                       Aspect="AspectFill"/>-->
             <ffimageloading:CachedImage Source="{Binding ImageSource}"
                                         Aspect="AspectFill"
                                         Style="{StaticResource ViewItemImageStyle}" />
@@ -56,5 +52,5 @@
                    TextColor="{StaticResource Gray300}"
                    LineBreakMode="TailTruncation"/>
     </Grid>
-    <!--</Grid>-->
+
 </ContentView>

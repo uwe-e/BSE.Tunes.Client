@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
@@ -44,15 +45,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
             {
-                //if (PageUtilities.IsCurrentPageTypeOf(typeof(CacheSettingsPage)))
-                //{
-                //    var navigationParams = new NavigationParameters
-                //    {
-                //        { "album", uniqueTrack.Album }
-                //    };
+                if (PageUtilities.IsCurrentPageTypeOf(typeof(CacheSettingsPage), uniqueTrack.UniqueId))
+                {
+                    var navigationParams = new NavigationParameters
+                    {
+                        { "album", uniqueTrack.Album }
+                    };
 
-                //    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                //}
+                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+                }
             });
         }
 
