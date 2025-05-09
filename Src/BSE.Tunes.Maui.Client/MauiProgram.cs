@@ -1,11 +1,11 @@
-﻿using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Maui.Controls;
+using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
-using BSE.Maui.Controls;
-using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui;
-using Xe.AcrylicView;
+using BSE.Tunes.MediaExtensions;
 using FFImageLoading.Maui;
+using Microsoft.Extensions.Logging;
+using Xe.AcrylicView;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -13,14 +13,14 @@ namespace BSE.Tunes.Maui.Client
     {
         public static MauiApp CreateMauiApp()
         {
-
+            //.UseMauiCommunityToolkitMediaElement()
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseMauiCommunityToolkitMediaElement()
                 .UseFFImageLoading()
                 .UseAcrylicView()
                 .UseBSEControls()
+                .UseBSEMediaElementExtension()
                 .UsePrism(prism =>
                 {
                     //prism.OnAppStart(async navigationService =>
@@ -57,7 +57,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterForRegionNavigation<RandomPlayerButtonView, RandomPlayerButtonViewModel>();
                         container.RegisterSingleton<IRequestService, RequestService>();
                         container.RegisterSingleton<IResourceService, ResourceService>();
-                        container.RegisterSingleton<IDataService, DataService>(); 
+                        container.RegisterSingleton<IDataService, DataService>();
                         container.RegisterSingleton<ISettingsService, SettingsService>();
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
@@ -91,7 +91,7 @@ namespace BSE.Tunes.Maui.Client
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                }).ConfigureMauiHandlers((handlers)=>
+                }).ConfigureMauiHandlers((handlers) =>
                 {
 #if IOS
                     //handlers.AddHandler(typeof(ExtendedTabbedPage), typeof(BSE.Tunes.Maui.Client.Platforms.iOS.Renderers.ExtendedTabbedRenderer));
@@ -104,7 +104,7 @@ namespace BSE.Tunes.Maui.Client
 #endif
             //builder.Services.AddTransient<PlaylistActionToolbarPage>();
             //builder.Services.AddTransient<PlaylistActionToolbarPageViewModel>();
-           // builder.UseMauiCompatibility();
+            // builder.UseMauiCompatibility();
 
             return builder.Build();
         }
