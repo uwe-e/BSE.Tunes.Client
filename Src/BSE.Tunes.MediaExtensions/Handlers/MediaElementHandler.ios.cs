@@ -10,12 +10,15 @@ public class MediaElementHandler : CommunityToolkit.Maui.Core.Handlers.MediaElem
 
     protected override MauiMediaElement CreatePlatformView()
     {
-        mediaManager ??= new(MauiContext,
+        //mediaManager ??= new(MauiContext,
+        //    VirtualView,
+        //    Dispatcher.GetForCurrentThread() ?? throw new InvalidOperationException($"{nameof(IDispatcher)} cannot be null"));
+        mediaManager = new BSE.Tunes.MediaExtensions.Views.MediaManager(MauiContext,
             VirtualView,
             Dispatcher.GetForCurrentThread() ?? throw new InvalidOperationException($"{nameof(IDispatcher)} cannot be null"));
+        
         // Create and return your custom platform view here
-
-        (_, playerViewController) = mediaManager.CreatePlatformView();
+        (_, playerViewController) = ((BSE.Tunes.MediaExtensions.Views.MediaManager)mediaManager).CreateCustomPlatformView();
 
         return new(playerViewController, VirtualView);
         //return null;

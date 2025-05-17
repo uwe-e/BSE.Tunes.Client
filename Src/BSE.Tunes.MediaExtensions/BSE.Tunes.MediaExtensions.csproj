@@ -26,7 +26,7 @@
     <_MauiTargetPlatformIsmacOS Condition="'$(_MauiTargetPlatformIdentifier)' == 'macos'">True</_MauiTargetPlatformIsmacOS>
     <_MauiTargetPlatformIsWindows Condition="'$(_MauiTargetPlatformIdentifier)' == 'windows'">True</_MauiTargetPlatformIsWindows>
   </PropertyGroup>
-
+<!--
   <ItemGroup Condition=" '$(_MauiTargetPlatformIsAndroid)' != 'True' ">
     <Compile Remove="**\**\*.Android.cs" />
     <None Include="**\**\*.Android.cs" />
@@ -56,6 +56,39 @@
     <MauiXaml Remove="**\Platforms\Windows\**\*.xaml" />
     <None Include="**\Platforms\Windows\**\*.xaml" />
   </ItemGroup>
+-->
+
+  <ItemGroup Condition=" '$(_MauiTargetPlatformIsAndroid)' != 'True' ">
+    <Compile Remove="**\*.Android.cs" />
+    <None Include="**\*.Android.cs" />
+    <Compile Remove="**\Platforms\Android\**\*.cs" />
+    <None Include="**\Platforms\Android\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(_MauiTargetPlatformIsiOS)' != 'True' AND '$(_MauiTargetPlatformIsMacCatalyst)' != 'True'">
+    <Compile Remove="**\*.iOS.cs" />
+    <None Include="**\*.iOS.cs" />
+    <Compile Remove="**\Platforms\iOS\**\*.cs" />
+    <None Include="**\Platforms\iOS\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(_MauiTargetPlatformIsMacCatalyst)' != 'True' ">
+    <Compile Remove="**\*.MacCatalyst.cs" />
+    <None Include="**\*.MacCatalyst.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Compile Remove="**\MacCatalyst\**\*.cs" />
+    <None Include="**\MacCatalyst\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(_MauiTargetPlatformIsWindows)' != 'True' ">
+    <Compile Remove="**\*.Windows.cs" />
+    <None Include="**\*.Windows.cs" />
+    <Compile Remove="**\Platforms\Windows\**\*.cs" />
+    <None Include="**\Platforms\Windows\**\*.cs" />
+    <MauiXaml Remove="**\Platforms\Windows\**\*.xaml" />
+    <None Include="**\Platforms\Windows\**\*.xaml" />
+  </ItemGroup>
+  
+
 <!--
   <ItemGroup>
     <Compile Include="Handlers\MediaElementHandler.ios.cs" />
@@ -70,7 +103,6 @@
 	  <Folder Include="Platforms\Android\" />
 	  <Folder Include="Platforms\MacCatalyst\" />
 	  <Folder Include="Platforms\Windows\" />
-	  <Folder Include="Views\" />
 	</ItemGroup>
 
 </Project>

@@ -150,7 +150,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BSE.Maui\src\BSE.Maui.Controls\BSE.Maui.Controls.csproj" />
-    <ProjectReference Include="..\BSE.Tunes.MediaElement\BSE.Tunes.MediaExtensions.csproj" />
     <ProjectReference Include="..\BSE.Tunes.MediaExtensions\BSE.Tunes.MediaExtensions.csproj" />
   </ItemGroup>
 
