@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Core.Primitives;
-using CommunityToolkit.Maui.Views;
 using System.Reflection;
 
 namespace BSE.Tunes.MediaExtensions.Extensions
