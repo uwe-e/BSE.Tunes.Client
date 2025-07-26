@@ -8,7 +8,6 @@ using CommunityToolkit.Maui.Views;
 using CoreFoundation;
 using Foundation;
 using Microsoft.Extensions.Logging;
-using UIKit;
 
 namespace BSE.Tunes.MediaExtensions.Views
 {
@@ -72,7 +71,10 @@ namespace BSE.Tunes.MediaExtensions.Views
                 Player.Volume = (float)MediaElement.Volume;
             }
 
-            UIApplication.SharedApplication.BeginReceivingRemoteControlEvents();
+            /* In iOS 7.1 and later, use the shared MPRemoteCommandCenter object to register for remote control events.
+             * You do not need to call this method when using the shared command center object.
+            */
+            //UIApplication.SharedApplication.BeginReceivingRemoteControlEvents();
 
             PlayerViewController.UpdatesNowPlayingInfoCenter = false;
 
@@ -87,16 +89,6 @@ namespace BSE.Tunes.MediaExtensions.Views
             return (Player, PlayerViewController);
         }
 
-        protected override void PlatformPlay()
-        {
-            base.PlatformPlay();
-        }
-
-        protected override void PlatformPause()
-        {
-            base.PlatformPause();
-        }
-
         protected override void PlatformUpdateSource()
         {
             MediaElement.InvokeCurrentStateChanged(MediaElementState.Opening);
@@ -106,9 +98,9 @@ namespace BSE.Tunes.MediaExtensions.Views
             {
                 return;
             }
-            //metaData ??= new(Player);
-            //Metadata.ClearNowPlaying();
-            
+            metaData ??= new(Player);
+            Metadata.ClearNowPlaying();
+
             PlayerViewController?.ContentOverlayView?.Subviews?.FirstOrDefault()?.RemoveFromSuperview();
 
             if (MediaElement.Source is UriMediaSource uriMediaSource)
@@ -133,7 +125,7 @@ namespace BSE.Tunes.MediaExtensions.Views
                 ? new AVPlayerItem(asset) : null;
 
 
-            //metaData.SetMetadata(PlayerItem, MediaElement);
+            metaData.SetMetadata(PlayerItem, MediaElement);
             CurrentItemErrorObserver?.Dispose();
 
             Player.ReplaceCurrentItemWithPlayerItem(PlayerItem);

@@ -27,24 +27,24 @@ public class Metadata
     public Metadata(AVPlayer player)
     {
         _player = player;
-        //MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = nowPlayingInfoDefault;
+        MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = nowPlayingInfoDefault;
 
-        //var commandCenter = MPRemoteCommandCenter.Shared;
+        var commandCenter = MPRemoteCommandCenter.Shared;
 
-        //commandCenter.TogglePlayPauseCommand.Enabled = true;
-        //commandCenter.TogglePlayPauseCommand.AddTarget(ToggleCommand);
+        commandCenter.TogglePlayPauseCommand.Enabled = true;
+        commandCenter.TogglePlayPauseCommand.AddTarget(ToggleCommand);
 
-        //commandCenter.PlayCommand.Enabled = true;
-        //commandCenter.PlayCommand.AddTarget(PlayCommand);
+        commandCenter.PlayCommand.Enabled = true;
+        commandCenter.PlayCommand.AddTarget(PlayCommand);
 
-        //commandCenter.PauseCommand.Enabled = true;
-        //commandCenter.PauseCommand.AddTarget(PauseCommand);
+        commandCenter.PauseCommand.Enabled = true;
+        commandCenter.PauseCommand.AddTarget(PauseCommand);
     }
 
     /// <summary>
 	/// The metadata for the currently playing media.
 	/// </summary>
-	//public MPNowPlayingInfo NowPlayingInfo { get; } = new();
+	public MPNowPlayingInfo NowPlayingInfo { get; } = new();
 
     public static void ClearNowPlaying() => MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = nowPlayingInfoDefault;
 
@@ -56,31 +56,14 @@ public class Metadata
             return;
         }
 
-        //NowPlayingInfo.Title = mediaElement.MetadataTitle;
-        //NowPlayingInfo.Artist = mediaElement.MetadataArtist;
-        //NowPlayingInfo.PlaybackDuration = playerItem?.Duration.Seconds ?? 0;
-        //NowPlayingInfo.IsLiveStream = false;
-        //NowPlayingInfo.PlaybackRate = mediaElement.Speed;
-        //NowPlayingInfo.ElapsedPlaybackTime = playerItem?.CurrentTime.Seconds ?? 0;
-        //NowPlayingInfo.Artwork = new(boundsSize: new(320, 240), requestHandler: _ => GetImage(mediaElement.MetadataArtworkUrl));
-        //MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = NowPlayingInfo;
-        MPNowPlayingInfo nowPlayingInfo = new MPNowPlayingInfo();
-        nowPlayingInfo.Title = mediaElement.MetadataTitle;
-        nowPlayingInfo.Artist = mediaElement.MetadataArtist;
-        ////nowPlayingInfo.AlbumTitle = mediaElement.m.MetadataAlbum;
-
-        MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = nowPlayingInfo;
-
-        //var commandCenter = MPRemoteCommandCenter.Shared;
-
-        //commandCenter.TogglePlayPauseCommand.Enabled = true;
-        //commandCenter.TogglePlayPauseCommand.AddTarget(ToggleCommand);
-
-        //commandCenter.PlayCommand.Enabled = true;
-        //commandCenter.PlayCommand.AddTarget(PlayCommand);
-
-        //commandCenter.PauseCommand.Enabled = true;
-        //commandCenter.PauseCommand.AddTarget(PauseCommand);
+        NowPlayingInfo.Title = mediaElement.MetadataTitle;
+        NowPlayingInfo.Artist = mediaElement.MetadataArtist;
+        NowPlayingInfo.PlaybackDuration = playerItem?.Duration.Seconds ?? 0;
+        NowPlayingInfo.IsLiveStream = false;
+        NowPlayingInfo.PlaybackRate = mediaElement.Speed;
+        NowPlayingInfo.ElapsedPlaybackTime = playerItem?.CurrentTime.Seconds ?? 0;
+        NowPlayingInfo.Artwork = new(boundsSize: new(320, 240), requestHandler: _ => GetImage(mediaElement.MetadataArtworkUrl));
+        MPNowPlayingInfoCenter.DefaultCenter.NowPlaying = NowPlayingInfo;
     }
 
     static UIImage GetImage(string imageUri)
