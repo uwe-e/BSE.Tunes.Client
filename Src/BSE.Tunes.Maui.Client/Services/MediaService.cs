@@ -13,19 +13,19 @@ namespace BSE.Tunes.Maui.Client.Services
                 false,
                 propertyChanged: RegisterAsMediaServicePropertyChanged);
 
-        public static bool GetRegisterAsMediaService(MediaElement target)
+        public static bool GetRegisterAsMediaService(CommunityToolkit.Maui.Views.MediaElement target)
         {
             return (bool)target.GetValue(RegisterAsMediaServiceProperty);
         }
 
-        public static void SetRegisterAsMediaService(MediaElement target, bool value)
+        public static void SetRegisterAsMediaService(CommunityToolkit.Maui.Views.MediaElement target, bool value)
         {
             target.SetValue(RegisterAsMediaServiceProperty, value);
         }
 
         private static void RegisterAsMediaServicePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is MediaElement mediaElement && newValue is bool toRegister && toRegister)
+            if (bindable is CommunityToolkit.Maui.Views.MediaElement mediaElement && newValue is bool toRegister && toRegister)
             {
                 var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
                 playerService?.RegisterAsMediaService(mediaElement);
@@ -39,7 +39,7 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly ISettingsService _settingsService;
         private readonly IRequestService _requestService;
         private readonly IStorageService _storageService;
-        private MediaElement _mediaElement;
+        private CommunityToolkit.Maui.Views.MediaElement _mediaElement;
 
         private PlayerState _currentPlayerState;
 
@@ -65,7 +65,7 @@ namespace BSE.Tunes.Maui.Client.Services
             _storageService = storageService;
         }
 
-        public void RegisterAsMediaService(MediaElement mediaElement)
+        public void RegisterAsMediaService(CommunityToolkit.Maui.Views.MediaElement mediaElement)
         {
             if (_mediaElement == null && mediaElement != null)
             {
