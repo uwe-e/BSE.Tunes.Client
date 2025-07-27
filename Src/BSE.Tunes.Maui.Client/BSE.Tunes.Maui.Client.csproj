@@ -57,6 +57,7 @@
     <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#020202" BaseSize="256,256" />
     <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
+    <MauiImage Update="Resources\Images\logo.svg" Color="#020202" BaseSize="256,256"/>
     <MauiImage Update="Resources\Images\albums.svg" Resize="True" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\add_circle_outline.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />
     <MauiImage Update="Resources\Images\chevron_down_outline.svg" Resize="True" TintColor="#FFFFFF" BaseSize="32,32" />

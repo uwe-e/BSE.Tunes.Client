@@ -5,10 +5,20 @@
              xmlns:services="clr-namespace:BSE.Tunes.Maui.Client.Services"
              x:Class="BSE.Tunes.Maui.Client.Views.SplashPage"
              Title="SplashPage">
-    <Grid HeightRequest="50">
-        <toolkit:MediaElement x:Name="MediaElement"
+    <Grid HeightRequest="256">
+        
+        <Image Source="logo.png"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               HeightRequest="256"
+               WidthRequest="256"/>
+
+        <Grid HeightRequest="50">
+
+            <toolkit:MediaElement x:Name="MediaElement"
                               IsVisible="False" services:MediaService.RegisterAsMediaService="True"
                               ShouldShowPlaybackControls="False" />
-        <ActivityIndicator IsRunning="True"/>
+            <ActivityIndicator IsRunning="True"/>
+        </Grid>
     </Grid>
 </ContentPage>
