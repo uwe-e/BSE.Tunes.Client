@@ -5,10 +5,23 @@
              xmlns:services="clr-namespace:BSE.Tunes.Maui.Client.Services"
              x:Class="BSE.Tunes.Maui.Client.Views.SplashPage"
              Title="SplashPage">
-    <Grid HeightRequest="50">
-        <toolkit:MediaElement x:Name="MediaElement"
+    <Grid HeightRequest="256">
+        <!--
+            On Android the sizing of an image on the splashscreen fails.
+            This is the reason why this logo image is smaller
+        -->
+        <Image Source="logo.png"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               HeightRequest="{OnPlatform 256, Android=192}"
+               WidthRequest="{OnPlatform 256, Android=192}"/>
+
+        <Grid HeightRequest="40">
+
+            <toolkit:MediaElement x:Name="MediaElement"
                               IsVisible="False" services:MediaService.RegisterAsMediaService="True"
                               ShouldShowPlaybackControls="False" />
-        <ActivityIndicator IsRunning="True"/>
+            <ActivityIndicator IsRunning="True"/>
+        </Grid>
     </Grid>
 </ContentPage>

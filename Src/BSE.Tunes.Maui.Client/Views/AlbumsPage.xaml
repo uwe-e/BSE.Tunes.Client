@@ -27,7 +27,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
         <Grid IsVisible="{Binding IsBusy}"
-              HeightRequest="50">
+              HeightRequest="40">
             <ActivityIndicator IsRunning="{Binding IsBusy}"/>
         </Grid>
     </Grid>

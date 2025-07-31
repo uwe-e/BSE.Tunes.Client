@@ -5,6 +5,7 @@
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              xmlns:prism="http://prismlibrary.com"
              x:Class="BSE.Tunes.Maui.Client.Views.SearchPage"
+             HideSoftInputOnTapped="True"
              Title="{x:Static strings:AppResources.SearchPage_Title}"
              x:Name="page">
 
@@ -96,7 +97,7 @@
                         </StackLayout>
                     </Grid>
                 </Grid>
-                <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
+                <Grid IsVisible="{Binding IsBusy}" HeightRequest="40">
                     <ActivityIndicator IsRunning="{Binding IsBusy}"/>
                 </Grid>
             </Grid>
