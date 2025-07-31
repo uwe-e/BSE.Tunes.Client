@@ -6,14 +6,17 @@
              x:Class="BSE.Tunes.Maui.Client.Views.SplashPage"
              Title="SplashPage">
     <Grid HeightRequest="256">
-        
+        <!--
+            On Android the sizing of an image on the splashscreen fails.
+            This is the reason why this logo image is smaller
+        -->
         <Image Source="logo.png"
                HorizontalOptions="Center"
                VerticalOptions="Center"
-               HeightRequest="256"
-               WidthRequest="256"/>
+               HeightRequest="{OnPlatform 256, Android=192}"
+               WidthRequest="{OnPlatform 256, Android=192}"/>
 
-        <Grid HeightRequest="50">
+        <Grid HeightRequest="40">
 
             <toolkit:MediaElement x:Name="MediaElement"
                               IsVisible="False" services:MediaService.RegisterAsMediaService="True"

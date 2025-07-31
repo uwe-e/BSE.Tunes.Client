@@ -96,7 +96,7 @@
                         </StackLayout>
                     </Grid>
                 </Grid>
-                <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
+                <Grid IsVisible="{Binding IsBusy}" HeightRequest="40">
                     <ActivityIndicator IsRunning="{Binding IsBusy}"/>
                 </Grid>
             </Grid>
