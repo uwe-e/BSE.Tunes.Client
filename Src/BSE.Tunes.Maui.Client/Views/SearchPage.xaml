@@ -5,6 +5,7 @@
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              xmlns:prism="http://prismlibrary.com"
              x:Class="BSE.Tunes.Maui.Client.Views.SearchPage"
+             HideSoftInputOnTapped="True"
              Title="{x:Static strings:AppResources.SearchPage_Title}"
              x:Name="page">
 
