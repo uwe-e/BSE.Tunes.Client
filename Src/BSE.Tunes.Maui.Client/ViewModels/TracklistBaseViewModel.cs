@@ -22,13 +22,17 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
 
-        public ICommand OpenFlyoutCommand => _openFlyoutCommand ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
+        public ICommand OpenFlyoutCommand => _openFlyoutCommand
+            ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
 
-        public ICommand PlayCommand => _playCommand ??= new DelegateCommand<GridPanel>(PlayTrack);
+        public ICommand PlayCommand => _playCommand
+            ??= new DelegateCommand<GridPanel>(async(gridPanel) => await PlayTrackAsync(gridPanel), CanExecutePlayTrack);
 
-        public DelegateCommand PlayAllCommand => _playAllCommand ??= new DelegateCommand(PlayAll, CanPlayAll);
+        public DelegateCommand PlayAllCommand => _playAllCommand
+            ??= new DelegateCommand(async() => await PlayAllAsync(), CanPlayAll);
 
-        public DelegateCommand PlayAllRandomizedCommand => _playAllRandomizedCommand ??= new DelegateCommand(PlayAllRandomized, CanPlayAllRandomized);
+        public DelegateCommand PlayAllRandomizedCommand => _playAllRandomizedCommand
+            ??= new DelegateCommand(async() => await PlayAllRandomizedAsync(), CanPlayAllRandomized);
 
         public ObservableCollection<GridPanel> Items => _items ??= [];
 
@@ -146,32 +150,52 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             };
             await NavigationService.NavigateAsync(nameof(PlaylistSelectorDialogPage), navigationParams);
         }
-
-        protected virtual void PlayTrack(GridPanel panel)
+        protected virtual bool CanExecutePlayTrack(GridPanel panel)
         {
+            throw new NotImplementedException();
         }
+
+        //protected virtual Task PlayTrackAsync(GridPanel panel)
+        //{
+        //    //return Task.Run(() => PlayTrack(panel));
+        //}
+
+        protected virtual Task PlayTrackAsync(GridPanel panel)
+        {
+            return Task.CompletedTask;
+        }
+
+        //protected virtual void PlayTrack(GridPanel panel)
+        //{
+        //}
 
         protected virtual bool CanPlayAll()
         {
             return Items.Count > 0;
         }
 
-        protected virtual void PlayAll()
+        protected virtual Task PlayAllAsync()
         {
+            return Task.CompletedTask;
         }
+
+        //protected virtual void PlayAll()
+        //{
+        //}
 
         protected virtual bool CanPlayAllRandomized()
         {
             return CanPlayAll();
         }
 
-        protected virtual void PlayAllRandomized()
+        protected virtual Task PlayAllRandomizedAsync()
         {
+            return Task.CompletedTask;
         }
 
-        protected virtual void PlayTracks(IEnumerable<int> trackIds, PlayerMode playerMode)
+        public virtual async Task PlayTracksAsync(IEnumerable<int> trackIds, PlayerMode playerMode)
         {
-            _mediaManager.PlayTracks(new ObservableCollection<int>(trackIds), playerMode);
+            await _mediaManager.PlayTracksAsync(new ObservableCollection<int>(trackIds), playerMode);
         }
 
         protected virtual ObservableCollection<int> GetTrackIds()

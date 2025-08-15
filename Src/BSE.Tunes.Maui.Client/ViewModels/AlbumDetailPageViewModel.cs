@@ -24,6 +24,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ObservableCollection<GridPanel> _albums;
         private ICommand _selectAlbumCommand;
         private ICommand _loadMoreAlbumssCommand;
+        private bool _canExecutePlayTrack = true;
         private readonly SubscriptionToken _albumInfoSelectionToken;
 
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ??= new DelegateCommand(async () => await LoadMoreAlbumsAsync());
@@ -95,14 +96,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             LoadData(album);
         }
 
-        protected override void PlayAll()
+        protected override async Task PlayAllAsync()
         {
-            PlayTracks(GetTrackIds(), PlayerMode.CD);
+            await PlayTracksAsync(GetTrackIds(), PlayerMode.CD);
         }
 
-        protected override void PlayAllRandomized()
+        protected override async Task PlayAllRandomizedAsync()
         {
-            PlayTracks(GetTrackIds().ToRandomCollection(), PlayerMode.CD);
+            await PlayTracksAsync(GetTrackIds().ToRandomCollection(), PlayerMode.CD);
         }
 
         protected override ObservableCollection<int> GetTrackIds()
@@ -110,16 +111,29 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             return new ObservableCollection<int>(Items.Select(track => ((Track)track.Data).Id));
         }
 
-        protected override void PlayTrack(GridPanel panel)
+        protected override bool CanExecutePlayTrack(GridPanel panel)
+        {
+            return _canExecutePlayTrack;
+        }
+
+        protected override async Task PlayTrackAsync(GridPanel panel)
         {
             if (panel?.Data is Track track)
             {
-                PlayTracks(new List<int>
+                if (CanExecutePlayTrack(panel))
                 {
-                    track.Id
-                }, PlayerMode.Song);
+                    _canExecutePlayTrack = false;
+
+                    await PlayTracksAsync(new List<int>
+                        {
+                            track.Id
+                        }, PlayerMode.Song);
+
+                    _canExecutePlayTrack = true;
+                }
             }
         }
+
         private void LoadData(Album album)
         {
             _ = LoadAlbumAsync(album);

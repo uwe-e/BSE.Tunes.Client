@@ -137,20 +137,87 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public async Task SetTrackAsync(Track track, Uri coverUri)
         {
-            if (track != null)
+            if (track != null && track.Guid != Guid.Empty)
             {
-                var requestUri = GetRequestUri(track.Guid);
-                using var httpClient = await _requestService.GetHttpClient();
-                using var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
-                if (response.IsSuccessStatusCode)
+                //using (HttpClient httpClient = await _requestService.GetHttpClient())
+                HttpClient httpClient = await _requestService.GetHttpClient();
                 {
-                    var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
-                    using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                    await response.Content.CopyToAsync(fileStream);
-                    _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
-                    _mediaElement.MetadataTitle = track.Name ?? string.Empty;
-                    _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
-                    _mediaElement.Source = MediaSource.FromFile(filePath);
+                    var requestUri = GetRequestUri(track.Guid);
+                    using (HttpResponseMessage response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
+                            //using (FileStream fileStream = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                            //{
+                            try
+                            {
+                                using (var contentStream = await response.Content.ReadAsStreamAsync())
+                                {
+                                    try
+                                    {
+
+                                        //using (FileStream fileStream = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                                        using (FileStream fileStream = File.OpenWrite(filePath))
+                                        {
+                                            try
+                                            {
+                                                await contentStream.CopyToAsync(fileStream);
+                                                try
+                                                {
+                                                    _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
+                                                    _mediaElement.MetadataTitle = track.Name ?? string.Empty;
+                                                    _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
+                                                    _mediaElement.Source = MediaSource.FromFile(filePath);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    // Handle exceptions related to setting metadata
+                                                    Console.WriteLine($"Error 4 setting metadata: {ex.Message}");
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                // Handle exceptions related to setting metadata
+                                                Console.WriteLine($"Error 3 this is it setting metadata: {ex.Message}");
+                                            }
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // Handle exceptions related to setting metadata
+                                        Console.WriteLine($"Error 2 setting metadata: {ex.Message}");
+                                    }
+                                }
+                                //await response.Content.CopyToAsync(fileStream);
+                                //try
+                                //{
+                                //    _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
+                                //    _mediaElement.MetadataTitle = track.Name ?? string.Empty;
+                                //    _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
+                                //    _mediaElement.Source = MediaSource.FromFile(filePath);
+                                //}
+                                //catch (Exception ex)
+                                //{
+                                //    // Handle exceptions related to setting metadata
+                                //    Console.WriteLine($"Error 3 setting metadata: {ex.Message}");
+                                //}
+
+                            }
+
+                            catch (Exception ex)
+                            {
+                                // Handle exceptions related to file operations
+                                Console.WriteLine($"Error 1 setting track: {ex.Message}");
+                            }
+                            //}
+                        }
+                        else
+                        {
+                            // Handle the case where the request was not successful
+                            Console.WriteLine($"Failed to fetch track. Status code: {response.StatusCode}");
+                        }
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
     public class PlaylistDetailPageViewModel : TracklistBaseViewModel
     {
         private Playlist _playlist;
+        private bool _canExecutePlayTrack = true;
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
@@ -83,25 +84,37 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             LoadData(playlist);
         }
 
-        protected override void PlayTrack(GridPanel panel)
+        protected override bool CanExecutePlayTrack(GridPanel panel)
+        {
+            return _canExecutePlayTrack;
+        }
+
+        protected override async Task PlayTrackAsync(GridPanel panel)
         {
             if (panel?.Data is PlaylistEntry entry)
             {
-                PlayTracks(new List<int>
+                if (CanExecutePlayTrack(panel))
                 {
-                    entry.TrackId
-                }, PlayerMode.Song);
+                    _canExecutePlayTrack = false;
+                    
+                    await PlayTracksAsync(new List<int>
+                    {
+                        entry.TrackId
+                    }, PlayerMode.Song);
+
+                    _canExecutePlayTrack = true;
+                }
             }
         }
 
-        protected override void PlayAll()
+        protected override async Task PlayAllAsync()
         {
-            PlayTracks(GetTrackIds(), PlayerMode.Playlist);
+            await PlayTracksAsync(GetTrackIds(), PlayerMode.Playlist);
         }
 
-        protected override void PlayAllRandomized()
+        protected override async Task PlayAllRandomizedAsync()
         {
-            PlayTracks(GetTrackIds().ToRandomCollection(), PlayerMode.Playlist);
+            await PlayTracksAsync(GetTrackIds().ToRandomCollection(), PlayerMode.Playlist);
         }
 
         protected override ObservableCollection<int> GetTrackIds()

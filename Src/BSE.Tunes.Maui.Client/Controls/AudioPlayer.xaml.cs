@@ -6,7 +6,8 @@ namespace BSE.Tunes.Maui.Client.Controls
 {
     public partial class AudioPlayer : ContentView, IPlayerController, IPlayerElement
     {
-        private ImageButton _imageButton;
+        private ImageButton _playButton;
+        private ImageButton _playNextButton;
         private ProgressBar _progressBar;
 
         public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
@@ -189,11 +190,11 @@ namespace BSE.Tunes.Maui.Client.Controls
             if (newValue is PlayerState playState)
             {
                 if (playState == PlayerState.Playing) {
-                    VisualStateManager.GoToState(player._imageButton, "Pause");
+                    VisualStateManager.GoToState(player._playButton, "Pause");
                 }
                 else
                 {
-                    VisualStateManager.GoToState(player._imageButton, "Play");
+                    VisualStateManager.GoToState(player._playButton, "Play");
                 }
 
             }
@@ -296,7 +297,8 @@ namespace BSE.Tunes.Maui.Client.Controls
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _imageButton = base.GetTemplateChild("PART_PlayButton") as ImageButton;
+            _playButton = base.GetTemplateChild("PART_PlayButton") as ImageButton;
+            _playNextButton = base.GetTemplateChild("PART_PlayNextButton") as ImageButton;
             _progressBar = base.GetTemplateChild("PART_ProgressBar") as ProgressBar;
         }
 
@@ -475,6 +477,14 @@ namespace BSE.Tunes.Maui.Client.Controls
                 if (player.PlayNextCommand != null)
                 {
                     player.IsPlayNextEnabled = player.PlayNextCommand.CanExecute(player.PlayNextCommandParameter);
+                }
+                if (player.IsPlayNextEnabled)
+                {
+                    VisualStateManager.GoToState(player._playNextButton, "Enabled");
+                }
+                else
+                {
+                    VisualStateManager.GoToState(player._playNextButton, "Disabled");
                 }
             }
         }
