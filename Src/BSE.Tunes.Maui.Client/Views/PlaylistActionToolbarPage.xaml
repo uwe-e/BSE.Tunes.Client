@@ -39,7 +39,7 @@
             </controls:FlyoutButton>
 
             <controls:FlyoutButton Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_PlayNext}"
-                                   ImageSource="disc_outline.png"
+                                   ImageSource="list_add_next_outline.png"
                                    Command="{Binding QueueAsNextCommand}">
                 <controls:FlyoutButton.Behaviors>
                     <bsebehaviours:HorizontalContentAlignmentBehaviour HorizontalContentAlignment="Start"/>
