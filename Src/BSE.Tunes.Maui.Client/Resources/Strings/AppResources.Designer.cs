@@ -358,6 +358,15 @@ namespace BSE.Tunes.Maui.Client.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play next.
+        /// </summary>
+        internal static string ManageAlbumsPage_Button_PlayNext {
+            get {
+                return ResourceManager.GetString("ManageAlbumsPage_Button_PlayNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove from playlist.
         /// </summary>
         internal static string ManageAlbumsPage_Button_RemoveFromPlaylist {

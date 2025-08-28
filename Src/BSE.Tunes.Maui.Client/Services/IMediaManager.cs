@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Collections;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
@@ -8,19 +9,21 @@ namespace BSE.Tunes.Maui.Client.Services
     {
         event Action<PlayerState> PlayerStateChanged;
         event Action<MediaState> MediaStateChanged;
+        event NotifyCollectionChangedEventHandler PlaylistCollectionChanged;
         NavigableCollection<int> Playlist { get; set; }
         PlayerMode PlayerMode { get; }
         PlayerState PlayerState { get; }
         Track CurrentTrack { get; }
         bool CanPlay();
         void Play();
-        void PlayTracks(PlayerMode playerMode);
-        void PlayTracks(ObservableCollection<int> trackIds, PlayerMode playerMode);
+        Task PlayTracksAsync(PlayerMode playerMode);
+        Task PlayTracksAsync(ObservableCollection<int> trackIds, PlayerMode playerMode);
         bool CanPlayPreviousTrack();
-        void PlayPreviousTrack();
+        Task PlayPreviousTrackAsync();
         bool CanPlayNextTrack();
-        void PlayNextTrack();
+        Task PlayNextTrackAsync();
         void Pause();
+        Task InsertTracksToPlayQueueAsync(ObservableCollection<int> trackIds, PlayerMode playerMode);
         void Disconnect();
     }
 }

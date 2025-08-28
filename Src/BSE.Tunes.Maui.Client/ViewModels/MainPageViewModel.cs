@@ -13,7 +13,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private DelegateCommand<Track> _selectTrackCommand;
 
         public DelegateCommand<Track> SelectTrackCommand => _selectTrackCommand
-            ??= new DelegateCommand<Track>(SelectTrack, CanSelectTrack);
+            ??= new DelegateCommand<Track>(async(track) => await SelectTrackAsync(track), CanSelectTrack);
 
         public Uri CoverSource
         {
@@ -60,7 +60,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             return track != null;
         }
 
-        private async void SelectTrack(Track track)
+        private async Task SelectTrackAsync(Track track)
         {
             var navigationParams = new NavigationParameters
             {

@@ -1,6 +1,8 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
+using System.Collections.Specialized;
+using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
@@ -8,7 +10,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IMediaManager _mediaManager;
-        private DelegateCommand _playCommand;
+        private ICommand _playCommand;
         private DelegateCommand _playNextCommand;
         private DelegateCommand _playPreviousCommand;
         private PlayerState _playerState;
@@ -16,9 +18,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private Track _currentTrack;
         private double _progress;
 
-        public DelegateCommand PlayCommand => _playCommand ??= new DelegateCommand(Play);
-        public DelegateCommand PlayNextCommand => _playNextCommand ??= new DelegateCommand(PlayNext, CanPlayNext);
-        public DelegateCommand PlayPreviousCommand => _playPreviousCommand ??= new DelegateCommand(PlayPrevious, CanPlayPrevious);
+        public ICommand PlayCommand => _playCommand ??= new DelegateCommand(async() => await PlayAsync());
+        public DelegateCommand PlayNextCommand => _playNextCommand ??= new DelegateCommand(async() => await PlayNextAsync(), CanPlayNext);
+        public DelegateCommand PlayPreviousCommand => _playPreviousCommand ??= new DelegateCommand(async () => await PlayPreviousAsync(), CanPlayPrevious);
 
         public PlayerState PlayerState
         {
@@ -52,11 +54,18 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _mediaManager = mediaManager;
             _mediaManager.PlayerStateChanged += OnPlayerStateChanged;
             _mediaManager.MediaStateChanged += OnMediaStateChanged;
+            _mediaManager.PlaylistCollectionChanged += OnPlaylistCollectionChanged;
 
             _eventAggregator.GetEvent<MediaProgressChangedEvent>().Subscribe((progress) =>
             {
                 Progress = progress;
             }, ThreadOption.UIThread);
+        }
+
+        protected virtual void OnPlaylistCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            PlayPreviousCommand.RaiseCanExecuteChanged();
+            PlayNextCommand.RaiseCanExecuteChanged();
         }
 
         protected virtual void OnTrackChanged(Track track)
@@ -88,7 +97,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IsPlaying = state == PlayerState.Playing;
         }
 
-        private void Play()
+        private async Task PlayAsync()
         {
             switch (PlayerState)
             {
@@ -96,7 +105,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 case PlayerState.Stopped:
                     if (_mediaManager.CanPlay())
                     {
-                        _mediaManager.PlayTracks(PlayerMode.Playlist);
+                        await _mediaManager.PlayTracksAsync(PlayerMode.Playlist);
                     }
                     break;
                 case PlayerState.Paused:
@@ -111,12 +120,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private bool CanPlayNext()
         {
-            return _mediaManager.CanPlayNextTrack();
+            bool canPlayNext = _mediaManager.CanPlayNextTrack();
+            return canPlayNext;
+            //return _mediaManager.CanPlayNextTrack();
         }
 
-        private void PlayNext()
+        private async Task PlayNextAsync()
         {
-            _mediaManager.PlayNextTrack();
+            await _mediaManager.PlayNextTrackAsync();
         }
         
         private bool CanPlayPrevious()
@@ -124,9 +135,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             return _mediaManager.CanPlayPreviousTrack();
         }
 
-        private void PlayPrevious()
+        private async Task PlayPreviousAsync()
         {
-            _mediaManager.PlayPreviousTrack();
+            await _mediaManager.PlayPreviousTrackAsync();
         }
     }
 }

@@ -86,8 +86,8 @@
     <Style x:Key="ContextMenuButtonStyle" TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="TextTransform" Value="None"/>
-        <Setter Property="Text" Value="···"/>
-        <Setter Property="FontSize" Value="20"/>
+        <!--<Setter Property="Text" Value="···"/>
+        <Setter Property="FontSize" Value="20"/>-->
         <Setter Property="TextColor" Value="{StaticResource PrimaryDarkLabelColor}"/>
     </Style>
 

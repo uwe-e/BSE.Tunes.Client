@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Models.Contract;
+using BSE.Tunes.Maui.Client.Utils;
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 
@@ -130,28 +131,55 @@ namespace BSE.Tunes.Maui.Client.Services
             _mediaElement?.Stop();
         }
 
-        public void SetTrack(Track track)
-        {
-            // Implementation needed
-        }
-
         public async Task SetTrackAsync(Track track, Uri coverUri)
         {
-            if (track != null)
+            if (track == null || track.Guid == Guid.Empty)
+                return;
+
+            HttpClient httpClient = await _requestService.GetHttpClient();
+            var requestUri = GetRequestUri(track.Guid);
+
+            var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
+
+            try
             {
-                var requestUri = GetRequestUri(track.Guid);
-                using var httpClient = await _requestService.GetHttpClient();
-                using var response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
-                if (response.IsSuccessStatusCode)
+                /*
+                 * Sometimes we get on an Android device a .NET exception with the message: "Error while copying content to a stream."
+                 * and deeper this message: "Cannot access a disposed object. Object name: 'Java.IO.InputStreamInvoker'"
+                 * 
+                 * As a workaround we retry the HTTP request and the stream copy up to 3 times with a delay of 500 milliseconds between attempts.
+                 */
+                await RetryHelper.RetryAsync(async () =>
                 {
-                    var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
-                    using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                    await response.Content.CopyToAsync(fileStream);
-                    _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
-                    _mediaElement.MetadataTitle = track.Name ?? string.Empty;
-                    _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
-                    _mediaElement.Source = MediaSource.FromFile(filePath);
-                }
+                    using HttpResponseMessage response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine($"Failed to fetch track. Status code: {response.StatusCode}");
+                        return;
+                    }
+
+                    using var contentStream = await response.Content.ReadAsStreamAsync();
+                    using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
+                    await contentStream.CopyToAsync(fileStream);
+                }, maxAttempts: 3, delayMilliseconds: 500);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error writing track file: {ex.Message}");
+                return;
+            }
+
+            try
+            {
+                _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
+                _mediaElement.MetadataTitle = track.Name ?? string.Empty;
+                _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
+                _mediaElement.Source = MediaSource.FromFile(filePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error setting media metadata: {ex.Message}");
             }
         }
 
@@ -161,5 +189,28 @@ namespace BSE.Tunes.Maui.Client.Services
             builder.Path = Path.Combine(builder.Path, $"/api/files/audio/{guid}");
             return builder.Uri;
         }
+
+        //static async Task RetryAsync(Func<Task> operation, int maxAttempts = 3)
+        //{
+        //    int attempt = 0;
+        //    while (attempt < maxAttempts)
+        //    {
+        //        try
+        //        {
+        //            await operation();
+        //            return;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            attempt++;
+        //            Task.Delay(500).Wait(); // Wait before retrying
+        //            Console.WriteLine($"Attempt {attempt} failed: {ex.Message}");
+        //            if (attempt >= maxAttempts)
+        //                throw; // rethrow the last exception
+        //        }
+        //    }
+
+        //    throw new InvalidOperationException("Retry logic failed unexpectedly.");
+        //}
     }
 }

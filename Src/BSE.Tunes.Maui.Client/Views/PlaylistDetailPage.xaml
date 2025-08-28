@@ -37,7 +37,7 @@
                                 <Button ImageSource="detail_action_play.png"
                                         Command="{Binding PlayAllCommand}"
                                         Style="{DynamicResource DetailActionPlayButtonStyle}"/>
-                                <Button ImageSource="ellipsis_vertical.png"
+                                <Button ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
                                         Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Playlist}"
                                         Style="{DynamicResource DetailActionButtonStyle}"/>
                             </StackLayout>
@@ -73,11 +73,20 @@
                                        LineBreakMode="TailTruncation"/>
                                 <Label Grid.Row="1" Margin="10,0"
                                        VerticalTextAlignment="Start"
-                                       Text="{Binding SubTitle}"
-                                       LineBreakMode="TailTruncation"/>
+                                       TextColor="{StaticResource Gray300}"
+                                       LineBreakMode="TailTruncation">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Data.Artist}"/>
+                                            <Span Text=" &#x00B7; "/>
+                                            <Span Text="{Binding Data.Duration}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                             </Grid>
 
                             <Button Grid.Column="2"
+                                    ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
                                     Style="{DynamicResource ContextMenuButtonStyle}"
                                     Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
                                     CommandParameter="{Binding}"/>

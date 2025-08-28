@@ -2,6 +2,7 @@
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -10,14 +11,17 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         INavigationService navigationService,
         IImageService imageService,
         IEventAggregator eventAggregator,
+        IMediaManager mediaManager,
         IFlyoutNavigationService flyoutNavigationService) : ViewModelBase(navigationService)
     {
         private ICommand _closeFlyoutCommand;
         private ICommand _addToPlaylistCommand;
         private ICommand _removeFromPlaylistCommand;
+        private ICommand _queueAsNextCommand;
         private ICommand _removePlaylistCommand;
         private ICommand _displayAlbumInfoCommand;
         private bool _canRemovePlaylist;
+        private bool _canQueueAsNext;
         private bool _canRemoveFromPlaylist;
         private bool _canDisplayAlbumInfo;
         private PlaylistActionContext _playlistActionContext;
@@ -26,6 +30,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private string _title;
         private readonly IImageService _imageService = imageService;
         private readonly IEventAggregator _eventAggregator = eventAggregator;
+        private readonly IMediaManager _mediaManager = mediaManager;
         private readonly IFlyoutNavigationService _flyoutNavigationService = flyoutNavigationService;
 
         public ICommand CloseFlyoutCommand => _closeFlyoutCommand
@@ -36,6 +41,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public ICommand RemoveFromPlaylistCommand => _removeFromPlaylistCommand
            ??= new DelegateCommand(async() => await RemoveFromPlaylistAsync());
+
+        public ICommand QueueAsNextCommand => _queueAsNextCommand
+            ??= new DelegateCommand(async() => await QueueTrackAsNextAsync());
 
         public ICommand RemovePlaylistCommand => _removePlaylistCommand
              ??= new DelegateCommand(async() => await RemovePlaylistAsync());
@@ -78,6 +86,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             set => SetProperty<bool>(ref _canDisplayAlbumInfo, value);
         }
 
+        public bool CanQueueAsNext
+        {
+            get => _canQueueAsNext;
+            set => SetProperty<bool>(ref _canQueueAsNext, value);
+        }
+
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             _playlistActionContext = parameters.GetValue<PlaylistActionContext>("source");
@@ -85,6 +99,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 //comes from the nowplaying page and is used only there
                 CanDisplayAlbumInfo = (bool)_playlistActionContext?.DisplayAlbumInfo;
+                CanQueueAsNext = true;
                 Title = track.Name;
                 SubTitle = track.Album.Artist.Name;
                 ImageSource = _imageService.GetBitmapSource(track.Album.AlbumId, true);
@@ -106,6 +121,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 CanRemoveFromPlaylist = true;
                 CanDisplayAlbumInfo = true;
+                CanQueueAsNext = true;
                 Title = playlistEntry.Track?.Name;
                 SubTitle = playlistEntry.Artist;
                 ImageSource = _imageService.GetBitmapSource(playlistEntry.AlbumId, true);
@@ -137,6 +153,28 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 _playlistActionContext.ActionMode = PlaylistActionMode.RemoveFromPlaylist;
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
+            }
+        }
+        
+        private async Task QueueTrackAsNextAsync()
+        {
+            await CloseFlyoutAsync();
+
+            if (_playlistActionContext != null)
+            {
+                int? trackId = null;
+                if (_playlistActionContext.Data is Track track)
+                {
+                    trackId = track.Id;
+                }
+                else if (_playlistActionContext.Data is PlaylistEntry playlistEntry && playlistEntry.Track != null)
+                {
+                    trackId = playlistEntry.Track.Id;
+                }
+                if (trackId.HasValue)
+                {
+                    await _mediaManager.InsertTracksToPlayQueueAsync(new ObservableCollection<int> { trackId.Value }, PlayerMode.Song);
+                }
             }
         }
 

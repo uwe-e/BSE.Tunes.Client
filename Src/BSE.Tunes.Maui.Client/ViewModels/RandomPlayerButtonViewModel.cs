@@ -15,7 +15,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private DelegateCommand _playRandomCommand;
         private string _text;
 
-        public DelegateCommand PlayRandomCommand => _playRandomCommand ??= new DelegateCommand(PlayRandom, CanPlayRandom);
+        public DelegateCommand PlayRandomCommand => _playRandomCommand ??= new DelegateCommand(async() => await PlayRandomAsync(), CanPlayRandom);
 
         public string Text
         {
@@ -85,12 +85,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             return _trackIds?.Count > 0;
         }
 
-        private void PlayRandom()
+        private async Task PlayRandomAsync()
         {
             _trackIds = _trackIds?.ToRandomCollection();
             if (_trackIds != null)
             {
-                _mediaManager.PlayTracks(new ObservableCollection<int>(_trackIds), PlayerMode.Random);
+                await _mediaManager.PlayTracksAsync(new ObservableCollection<int>(_trackIds), PlayerMode.Random);
             }
         }
     }
