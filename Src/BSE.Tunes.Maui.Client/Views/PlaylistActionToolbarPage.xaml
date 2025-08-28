@@ -38,7 +38,8 @@
                 </controls:FlyoutButton.Behaviors>
             </controls:FlyoutButton>
 
-            <controls:FlyoutButton Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_PlayNext}"
+            <controls:FlyoutButton IsVisible="{Binding CanQueueAsNext}"
+                                   Text="{x:Static strings:AppResources.ManageAlbumsPage_Button_PlayNext}"
                                    ImageSource="list_add_next_outline.png"
                                    Command="{Binding QueueAsNextCommand}">
                 <controls:FlyoutButton.Behaviors>

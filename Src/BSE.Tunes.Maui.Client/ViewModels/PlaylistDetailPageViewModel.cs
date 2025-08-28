@@ -145,7 +145,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 {
                     ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id);
 
-                    foreach (var entry in Playlist.Entries?.OrderBy(pe => pe.SortOrder))
+                    foreach (PlaylistEntry entry in Playlist.Entries?.OrderBy(pe => pe.SortOrder))
                     {
                         if (entry != null)
                         {

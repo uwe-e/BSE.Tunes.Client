@@ -73,8 +73,16 @@
                                        LineBreakMode="TailTruncation"/>
                                 <Label Grid.Row="1" Margin="10,0"
                                        VerticalTextAlignment="Start"
-                                       Text="{Binding SubTitle}"
-                                       LineBreakMode="TailTruncation"/>
+                                       TextColor="{StaticResource Gray300}"
+                                       LineBreakMode="TailTruncation">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Data.Artist}"/>
+                                            <Span Text=" &#x00B7; "/>
+                                            <Span Text="{Binding Data.Duration}"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                             </Grid>
 
                             <Button Grid.Column="2"
