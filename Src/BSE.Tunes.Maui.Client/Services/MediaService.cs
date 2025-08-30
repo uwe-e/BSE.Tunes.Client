@@ -190,27 +190,5 @@ namespace BSE.Tunes.Maui.Client.Services
             return builder.Uri;
         }
 
-        //static async Task RetryAsync(Func<Task> operation, int maxAttempts = 3)
-        //{
-        //    int attempt = 0;
-        //    while (attempt < maxAttempts)
-        //    {
-        //        try
-        //        {
-        //            await operation();
-        //            return;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            attempt++;
-        //            Task.Delay(500).Wait(); // Wait before retrying
-        //            Console.WriteLine($"Attempt {attempt} failed: {ex.Message}");
-        //            if (attempt >= maxAttempts)
-        //                throw; // rethrow the last exception
-        //        }
-        //    }
-
-        //    throw new InvalidOperationException("Retry logic failed unexpectedly.");
-        //}
     }
 }
