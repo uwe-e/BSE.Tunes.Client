@@ -28,7 +28,7 @@
                             </controls:ListViewItem.GestureRecognizers>
                         </controls:ListViewItem>
                         <Button Grid.Column="1"
-                                Text="..."
+                                ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
                                 TextColor="{StaticResource White}"
                                 Style="{DynamicResource ContextMenuButtonStyle}"
                                 Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"

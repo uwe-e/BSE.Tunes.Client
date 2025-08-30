@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
@@ -14,11 +15,35 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly ISettingsService _settingsService;
         private readonly ITimerService _timerService;
         private double _oldProgress;
+        private NavigableCollection<int> _playlist;
 
         public event Action<PlayerState> PlayerStateChanged;
         public event Action<MediaState> MediaStateChanged;
+        public event NotifyCollectionChangedEventHandler PlaylistCollectionChanged;
 
-        public NavigableCollection<int> Playlist { get; set; }
+        public NavigableCollection<int> Playlist
+        {
+            get
+            {
+                return _playlist;
+            }
+            set
+            {
+                if (_playlist != null)
+                {
+                    _playlist.CollectionChanged -= OnPlaylistCollectionChanged;
+                }
+
+                _playlist = value;
+                _playlist.CollectionChanged += OnPlaylistCollectionChanged;
+            }
+        }
+
+        private void OnPlaylistCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            NotifyCollectionChangedEventHandler handler = PlaylistCollectionChanged;
+            handler?.Invoke(this, e);
+        }
 
         public PlayerMode PlayerMode { get; private set; }
 
@@ -70,18 +95,18 @@ namespace BSE.Tunes.Maui.Client.Services
             _mediaService.Play();
         }
 
-        public async void PlayTracks(PlayerMode playerMode)
+        public async Task PlayTracksAsync(PlayerMode playerMode)
         {
             PlayerMode = playerMode;
             int trackId = Playlist?.FirstOrDefault() ?? 0;
             await PlayTrackAsync(trackId);
         }
 
-        public void PlayTracks(ObservableCollection<int> trackIds, PlayerMode playerMode)
+        public async Task PlayTracksAsync(ObservableCollection<int> trackIds, PlayerMode playerMode)
         {
             _mediaService.Stop();
             Playlist = trackIds.ToNavigableCollection();
-            PlayTracks(playerMode);
+            await PlayTracksAsync(playerMode);
         }
 
         public bool CanPlayPreviousTrack()
@@ -89,7 +114,7 @@ namespace BSE.Tunes.Maui.Client.Services
             return Playlist?.CanMovePrevious ?? false;
         }
 
-        public async void PlayPreviousTrack()
+        public async Task PlayPreviousTrackAsync()
         {
             if (CanPlayPreviousTrack())
             {
@@ -102,10 +127,12 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public bool CanPlayNextTrack()
         {
-            return Playlist?.CanMoveNext ?? false;
+            var canMoveNext = Playlist?.CanMoveNext ?? false;
+            return canMoveNext;
+            //return Playlist?.CanMoveNext ?? false;
         }
 
-        public async void PlayNextTrack()
+        public async Task PlayNextTrackAsync()
         {
             if (CanPlayNextTrack())
             {
@@ -113,6 +140,29 @@ namespace BSE.Tunes.Maui.Client.Services
                 {
                     await PlayTrackAsync(Playlist.Current);
                 }
+            }
+        }
+
+        public async Task InsertTracksToPlayQueueAsync(ObservableCollection<int> trackIds, PlayerMode playerMode)
+        {
+            if (trackIds == null || trackIds.Count == 0)
+                return;
+
+            if ((PlayerState == PlayerState.Playing || PlayerState == PlayerState.Paused)
+                && Playlist != null && Playlist.Count > 0)
+            {
+                int index = Playlist.IndexOf(Playlist.Current);
+                // Pre-calculate insert positions to avoid shifting on each insert
+                int insertIndex = index + 1;
+                // Use a for loop for better performance with index math
+                for (int i = 0; i < trackIds.Count; i++)
+                {
+                    Playlist.Insert(insertIndex + i, trackIds[i]);
+                }
+            }
+            else
+            {
+                await PlayTracksAsync(trackIds, playerMode);
             }
         }
 
@@ -151,9 +201,10 @@ namespace BSE.Tunes.Maui.Client.Services
                     }
                     break;
                 case MediaState.Ended:
-                    if (PlayerMode != PlayerMode.None && PlayerMode != PlayerMode.Song && CanPlayNextTrack())
+                    //if (PlayerMode != PlayerMode.None && PlayerMode != PlayerMode.Song && CanPlayNextTrack())
+                    if (PlayerMode != PlayerMode.None && CanPlayNextTrack())
                     {
-                        PlayNextTrack();
+                        await PlayNextTrackAsync();
                     }
                     break;
             }
@@ -185,5 +236,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 });
             }
         }
+
+        
     }
 }

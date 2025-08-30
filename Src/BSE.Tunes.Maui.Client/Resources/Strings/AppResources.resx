@@ -219,6 +219,9 @@
   <data name="ManageAlbumsPage_Button_DisplayAlbumInfo" xml:space="preserve">
     <value>Show album</value>
   </data>
+  <data name="ManageAlbumsPage_Button_PlayNext" xml:space="preserve">
+    <value>Play next</value>
+  </data>
   <data name="ManageAlbumsPage_Button_RemoveFromPlaylist" xml:space="preserve">
     <value>Remove from playlist</value>
   </data>

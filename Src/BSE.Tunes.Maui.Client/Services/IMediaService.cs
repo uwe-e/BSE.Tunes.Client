@@ -6,7 +6,7 @@ namespace BSE.Tunes.Maui.Client.Services
 {
     public interface IMediaService
     {
-        void RegisterAsMediaService(CommunityToolkit.Maui.Views.MediaElement mediaElement);
+        void RegisterAsMediaService(MediaElement mediaElement);
         event Action<PlayerState> PlayerStateChanged;
         event Action<MediaState> MediaStateChanged;
         void Disconnect();
@@ -14,7 +14,6 @@ namespace BSE.Tunes.Maui.Client.Services
         void Play();
         void Pause();
         void Stop();
-        void SetTrack(Track track);
         Task SetTrackAsync(Track track, Uri coverUri);
     }
 }

@@ -11,6 +11,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IEventAggregator _eventAggregator;
+        private bool _canExecutePlayTrack = true;
 
         public SearchTracksPageViewModel(
             INavigationService navigationService,
@@ -60,14 +61,26 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             PageNumber = Items.Count;
         }
 
-        protected override void PlayTrack(GridPanel panel)
+        protected override bool CanExecutePlayTrack(GridPanel panel)
+        {
+            return _canExecutePlayTrack;
+        }
+
+        protected override async Task PlayTrackAsync(GridPanel panel)
         {
             if (panel?.Data is Track track)
             {
-                PlayTracks(new List<int>
+                if (CanExecutePlayTrack(panel))
                 {
-                    track.Id
-                }, PlayerMode.Song);
+                    _canExecutePlayTrack = false;
+                    
+                    await PlayTracksAsync(new List<int>
+                    {
+                        track.Id
+                    }, PlayerMode.Song);
+
+                    _canExecutePlayTrack = false;
+                }
             }
         }
 
