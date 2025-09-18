@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using BSE.Tunes.MediaExtensions;
+using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
 using Microsoft.Extensions.Logging;
 using Xe.AcrylicView;
@@ -20,6 +21,7 @@ namespace BSE.Tunes.Maui.Client
                 .UseFFImageLoading()
                 .UseAcrylicView()
                 .UseBSEControls()
+                .UseMauiCommunityToolkitMediaElement()
                 .UseBSEMediaElementExtension()
                 .UsePrism(prism =>
                 {

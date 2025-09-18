@@ -25,7 +25,7 @@
     <ApplicationTitle>BSEtunes</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.bse.tunes.maui.client</ApplicationId>
+    <ApplicationId>com.bsetunes.bse.tunes.maui.client</ApplicationId>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
@@ -46,6 +46,10 @@
     <ProvisioningType>automatic</ProvisioningType>
     <CodesignKey>Apple Development: Created via API (HJ33TCN7C3)</CodesignKey>
     <CodesignProvision>VS: WildCard Development</CodesignProvision>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
