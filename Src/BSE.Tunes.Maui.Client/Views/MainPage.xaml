@@ -15,11 +15,11 @@
                          x:Class="BSE.Tunes.Maui.Client.Views.MainPage">
     
     <bse:TabbedContainerPage.Children>
-        <prism:PrismNavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarTextColor="{StaticResource White}">
+        <NavigationPage Title="{x:Static strings:AppResources.HomePage_Title}" IconImageSource="home.png" BarTextColor="{StaticResource White}">
             <x:Arguments>
                <views:HomePage/>
             </x:Arguments>
-        </prism:PrismNavigationPage>
+        </NavigationPage>
         <prism:PrismNavigationPage Title="{x:Static strings:AppResources.AlbumsPage_Title}" IconImageSource="albums.png" BarTextColor="{StaticResource White}">
             <x:Arguments>
                 <views:AlbumsPage/>
