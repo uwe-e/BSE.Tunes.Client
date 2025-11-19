@@ -6,6 +6,7 @@
              xmlns:acrylic="clr-namespace:Xe.AcrylicView;assembly=Xe.AcrylicView"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumDetailPage"
+             Title=""
              x:Name="page">
 
     <ContentPage.Content>

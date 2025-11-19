@@ -13,6 +13,7 @@ public partial class BottomFlyoutPage : ContentPage
     private Button _dismissButton;
     private double _pageHeight;
     private double _flyoutHeight;
+    public event EventHandler<SizeAllocatedEventArgs> ContentSizeAllocated;
 
     public static readonly BindableProperty FlyoutBackgroundColorProperty =
            BindableProperty.Create(nameof(FlyoutBackgroundColor), typeof(Color), typeof(BottomFlyoutPage), default(Color));
@@ -87,6 +88,18 @@ public partial class BottomFlyoutPage : ContentPage
         _fader.HeightRequest = _pageHeight;
 
         base.OnSizeAllocated(width, height);
+
+
+        // Raise the new event so subscribers can react to size changes
+        OnContentSizeAllocatedCompleted(new SizeAllocatedEventArgs(width, height));
+
+        // Start the appearing animation. Formerly done in FlyoutNavigationService, but there was a timing problem.
+        //_ = AppearingAnimation();
+    }
+
+    protected virtual void OnContentSizeAllocatedCompleted(SizeAllocatedEventArgs e)
+    {
+        ContentSizeAllocated?.Invoke(this, e);
     }
 
     public async Task DisappearingAnimation()

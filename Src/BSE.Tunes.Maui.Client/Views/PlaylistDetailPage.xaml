@@ -7,6 +7,7 @@
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.PlaylistDetailPage"
+             Title=""
              x:Name="page">
 
     <Grid>

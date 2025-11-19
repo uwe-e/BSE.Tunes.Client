@@ -26,16 +26,17 @@
                                 <RoundRectangle CornerRadius="10,10,0,0" />
                             </Border.StrokeShape>
                         </Border>
-                        <StackLayout Grid.Row="0" Margin="10,10,10,0"
+                        <Grid RowDefinitions="Auto,*" Grid.Row="0" Margin="10,10,10,0"
                                      BackgroundColor="{TemplateBinding FlyoutBackgroundColor}">
                             <ContentPresenter />
-                            <StackLayout >
+                            <Grid RowDefinitions="Auto,Auto" Grid.Row="1">
                                 <BoxView Style="{DynamicResource SeparatorItem}" />
-                                <controls:FlyoutButton x:Name="PART_DismissButton" HorizontalContentAlignment="Center"
+                                <controls:FlyoutButton x:Name="PART_DismissButton" Grid.Row="1" HorizontalContentAlignment="Center"
+                                                       Margin="0,0,0,5"
                                                        Text="{TemplateBinding CloseButtonText}"/>
 
-                            </StackLayout>
-                        </StackLayout>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </ContentView>
             </Grid>

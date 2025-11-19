@@ -124,7 +124,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             };
 
             var navigationParams = new NavigationParameters{
-                { "source", source }
+                { "source", source },
+                { KnownNavigationParameters.UseModalNavigation, true},
+                { KnownNavigationParameters.Animated, false}
             };
 
             await _flyoutNavigationService.ShowFlyoutAsync(nameof(PlaylistActionToolbarPage), navigationParams);

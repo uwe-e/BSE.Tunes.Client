@@ -7,6 +7,7 @@
              x:Class="BSE.Tunes.Maui.Client.Views.SearchPage"
              HideSoftInputOnTapped="True"
              Title="{x:Static strings:AppResources.SearchPage_Title}"
+             IconImageSource="search.png"
              x:Name="page">
 
     <Grid Margin="10" RowDefinitions="Auto,*">

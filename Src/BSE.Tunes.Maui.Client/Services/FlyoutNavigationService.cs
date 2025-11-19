@@ -53,6 +53,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 if (page is BottomFlyoutPage flyoutPage)
                 {
                     _flyoutPage = flyoutPage;
+                    flyoutPage.ContentSizeAllocated += OnContentSizeAllocated;
                     var currentPage = GetCurrentPage();
                     await ProcessNavigation(page, navigationSegments, parameters, useModalNavigation, pageAnimation);
 
@@ -61,7 +62,6 @@ namespace BSE.Tunes.Maui.Client.Services
                         await DoPush(currentPage, page, useModalNavigation, pageAnimation);
                     });
 
-                    await flyoutPage.AppearingAnimation();
                 }
                 return new NavigationResult();
             }
@@ -69,6 +69,15 @@ namespace BSE.Tunes.Maui.Client.Services
             {
                 System.Diagnostics.Trace.WriteLine($"{exception.Message} {exception.InnerException?.Message}");
                 return new NavigationResult(exception);
+            }
+        }
+
+        private async void OnContentSizeAllocated(object sender, SizeAllocatedEventArgs e)
+        {
+            if (sender is BottomFlyoutPage flyoutPage)
+            {
+                flyoutPage.ContentSizeAllocated -= OnContentSizeAllocated;
+                await flyoutPage.AppearingAnimation();
             }
         }
     }

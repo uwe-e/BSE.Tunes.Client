@@ -21,7 +21,6 @@
                             <ColumnDefinition Width="32"/>
                             <ColumnDefinition Width="32"/>
                         </Grid.ColumnDefinitions>
-                        <!-- The toolkit:MediaElement is now placed on the splashpage. It doesnt work here on ios-->
                         <toolkit:MediaElement x:Name="MediaElement"
                                               IsVisible="False" services:MediaService.RegisterAsMediaService="True"
                                               ShouldShowPlaybackControls="False" />

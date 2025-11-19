@@ -5,7 +5,8 @@
              xmlns:behaviours="clr-namespace:BSE.Tunes.Maui.Client.Behaviours"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              x:Class="BSE.Tunes.Maui.Client.Views.PlaylistsPage"
-             Title="{x:Static strings:AppResources.PlaylistsPage_Title}">
+             Title="{x:Static strings:AppResources.PlaylistsPage_Title}"
+             IconImageSource="playlist.png">
 
     <Grid>
         <CollectionView x:Name="albumsView"  ItemsSource="{Binding Items}"
