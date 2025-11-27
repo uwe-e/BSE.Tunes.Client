@@ -5,10 +5,10 @@ namespace BSE.Tunes.Maui.Client.Controls;
 public partial class AlbumPlayerItem : PlayableItemBase
 {
     public static readonly BindableProperty CoverProperty
-            = BindableProperty.Create(nameof(Cover),
-                typeof(ImageSource),
-                typeof(AlbumPlayerItem),
-                default(ImageSource));
+        = BindableProperty.Create(nameof(Cover),
+            typeof(ImageSource),
+            typeof(AlbumPlayerItem),
+            default(ImageSource));
 
     public ImageSource Cover
     {
@@ -35,15 +35,13 @@ public partial class AlbumPlayerItem : PlayableItemBase
     }
 
     public static readonly BindableProperty PlayRandomizedCommandProperty
-            = BindableProperty.Create(
-                nameof(AlbumPlayerItem),
-                typeof(ICommand),
-                typeof(AlbumPlayerItem),
-                null,
-                propertyChanging: OnPlayRandomizedCommandChanging,
-                propertyChanged: OnPlayRandomizedCommandChanged);
-
-
+        = BindableProperty.Create(
+            nameof(PlayRandomizedCommand),
+            typeof(ICommand),
+            typeof(AlbumPlayerItem),
+            null,
+            propertyChanging: OnPlayRandomizedCommandChanging,
+            propertyChanged: OnPlayRandomizedCommandChanged);
 
     public ICommand PlayRandomizedCommand
     {
@@ -53,13 +51,11 @@ public partial class AlbumPlayerItem : PlayableItemBase
 
     public static readonly BindableProperty PlayRandomizedCommandParameterProperty
         = BindableProperty.Create(
-            nameof(AlbumPlayerItem),
+            nameof(PlayRandomizedCommandParameter),
             typeof(object),
             typeof(AlbumPlayerItem),
             null,
-            propertyChanged: (bindable, oldvalue, newvalue) => PlayRandomizedCommandCanExecuteChanged(bindable, EventArgs.Empty));
-
-
+            propertyChanged: OnPlayRandomizedCommandParameterChanged);
 
     public object PlayRandomizedCommandParameter
     {
@@ -84,34 +80,40 @@ public partial class AlbumPlayerItem : PlayableItemBase
 
     private static void OnPlayRandomizedCommandChanging(BindableObject bindable, object oldValue, object newValue)
     {
-        AlbumPlayerItem item = (AlbumPlayerItem)bindable;
-        if (oldValue != null)
+        if (oldValue is ICommand oldCmd && bindable is AlbumPlayerItem item)
         {
-            (oldValue as ICommand).CanExecuteChanged -= item.OnPlayRandomizedCommandCanExecuteChanged;
-        }
-    }
-    private static void OnPlayRandomizedCommandChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        AlbumPlayerItem item = (AlbumPlayerItem)bindable;
-        if (newValue is ICommand newCommand)
-        {
-            newCommand.CanExecuteChanged += item.OnPlayRandomizedCommandCanExecuteChanged;
-        }
-        if (item.PlayCommand != null)
-        {
-            PlayRandomizedCommandCanExecuteChanged(item, EventArgs.Empty);
+            oldCmd.CanExecuteChanged -= item.OnPlayRandomizedCommandCanExecuteChanged;
         }
     }
 
-    private void OnPlayRandomizedCommandCanExecuteChanged(object sender, EventArgs e)
+    private static void OnPlayRandomizedCommandChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        AlbumPlayerItem.PlayRandomizedCommandCanExecuteChanged(this, EventArgs.Empty);
-    }
-    private static void PlayRandomizedCommandCanExecuteChanged(BindableObject bindable, EventArgs empty)
-    {
-        if (bindable is AlbumPlayerItem control)
+        if (bindable is not AlbumPlayerItem item)
+            return;
+
+        if (newValue is ICommand newCmd)
         {
-            control.PlayRandomizedCommand?.CanExecute(control.PlayRandomizedCommandParameter);
+            newCmd.CanExecuteChanged += item.OnPlayRandomizedCommandCanExecuteChanged;
+            // initial evaluation to keep behavior compatible with previous implementation
+            PlayRandomizedCommandCanExecuteChanged(item);
         }
     }
+
+    private void OnPlayRandomizedCommandCanExecuteChanged(object? sender, EventArgs e)
+    {
+        PlayRandomizedCommandCanExecuteChanged(this);
+    }
+
+    private static void PlayRandomizedCommandCanExecuteChanged(BindableObject bindable)
+    {
+        if (bindable is AlbumPlayerItem control && control.PlayRandomizedCommand is ICommand cmd)
+        {
+            // call CanExecute for side-effects or to trigger command internals if needed;
+            // result is intentionally ignored to preserve previous behavior.
+            _ = cmd.CanExecute(control.PlayRandomizedCommandParameter);
+        }
+    }
+
+    private static void OnPlayRandomizedCommandParameterChanged(BindableObject bindable, object oldValue, object newValue)
+        => PlayRandomizedCommandCanExecuteChanged(bindable);
 }

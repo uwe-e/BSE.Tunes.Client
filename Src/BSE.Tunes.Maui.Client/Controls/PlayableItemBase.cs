@@ -23,13 +23,13 @@ public abstract class PlayableItemBase : ContentView
     }
 
     public static readonly BindableProperty PlayCommandProperty
-            = BindableProperty.Create(
-                nameof(PlayableItemBase),
-                typeof(ICommand),
-                typeof(PlayableItemBase),
-                null,
-                propertyChanging: OnPlayCommandChanging,
-                propertyChanged: OnPlayCommandChanged);
+        = BindableProperty.Create(
+            nameof(PlayCommand),
+            typeof(ICommand),
+            typeof(PlayableItemBase),
+            null,
+            propertyChanging: OnPlayCommandChanging,
+            propertyChanged: OnPlayCommandChanged);
 
     public ICommand PlayCommand
     {
@@ -39,11 +39,11 @@ public abstract class PlayableItemBase : ContentView
 
     public static readonly BindableProperty PlayCommandParameterProperty
         = BindableProperty.Create(
-            nameof(PlayableItemBase),
+            nameof(PlayCommandParameter),
             typeof(object),
             typeof(PlayableItemBase),
             null,
-            propertyChanged: (bindable, oldvalue, newvalue) => PlayCommandCanExecuteChanged(bindable, EventArgs.Empty));
+            propertyChanged: OnPlayCommandParameterChanged);
 
     public object PlayCommandParameter
     {
@@ -52,13 +52,13 @@ public abstract class PlayableItemBase : ContentView
     }
 
     public static readonly BindableProperty OpenFlyoutCommandProperty
-            = BindableProperty.Create(
-                nameof(PlayableItemBase),
-                typeof(ICommand),
-                typeof(PlayableItemBase),
-                null,
-                propertyChanging: OnOpenFlyoutCommandChanging,
-                propertyChanged: OnOpenFlyoutCommandChanged);
+        = BindableProperty.Create(
+            nameof(OpenFlyoutCommand),
+            typeof(ICommand),
+            typeof(PlayableItemBase),
+            null,
+            propertyChanging: OnOpenFlyoutCommandChanging,
+            propertyChanged: OnOpenFlyoutCommandChanged);
 
     public ICommand OpenFlyoutCommand
     {
@@ -68,18 +68,18 @@ public abstract class PlayableItemBase : ContentView
 
     public static readonly BindableProperty OpenFlyoutCommandParameterProperty
         = BindableProperty.Create(
-            nameof(PlayableItemBase),
+            nameof(OpenFlyoutCommandParameter),
             typeof(object),
             typeof(PlayableItemBase),
             null,
-            propertyChanged: (bindable, oldvalue, newvalue) => OpenFlyoutCommandCanExecuteChanged(bindable, EventArgs.Empty));
+            propertyChanged: OnOpenFlyoutCommandParameterChanged);
 
     public object OpenFlyoutCommandParameter
     {
         get => GetValue(OpenFlyoutCommandParameterProperty);
         set => SetValue(OpenFlyoutCommandParameterProperty, value);
     }
-    
+
     private void OnFlyoutOpenClicked(object sender, EventArgs e)
     {
         OpenFlyoutCommand?.Execute(OpenFlyoutCommandParameter);
@@ -92,71 +92,76 @@ public abstract class PlayableItemBase : ContentView
 
     private static void OnPlayCommandChanging(BindableObject bindable, object oldValue, object newValue)
     {
-        PlayableItemBase item = (PlayableItemBase)bindable;
-        if (oldValue != null)
+        if (oldValue is ICommand oldCmd && bindable is PlayableItemBase item)
         {
-            (oldValue as ICommand).CanExecuteChanged -= item.OnPlayCommandCanExecuteChanged;
+            oldCmd.CanExecuteChanged -= item.OnPlayCommandCanExecuteChanged;
         }
     }
 
     private static void OnPlayCommandChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        PlayableItemBase item = (PlayableItemBase)bindable;
-        if (newValue is ICommand newCommand)
+        if (bindable is not PlayableItemBase item)
+            return;
+
+        if (newValue is ICommand newCmd)
         {
-            newCommand.CanExecuteChanged += item.OnPlayCommandCanExecuteChanged;
-        }
-        if (item.PlayCommand != null)
-        {
-            PlayCommandCanExecuteChanged(item, EventArgs.Empty);
+            newCmd.CanExecuteChanged += item.OnPlayCommandCanExecuteChanged;
+            // Trigger an initial evaluation (keeps behavior compatible with prior implementation)
+            PlayCommandCanExecuteChanged(item);
         }
     }
 
-    private void OnPlayCommandCanExecuteChanged(object sender, EventArgs e)
+    private void OnPlayCommandCanExecuteChanged(object? sender, EventArgs e)
     {
-        PlayableItemBase.PlayCommandCanExecuteChanged(this, EventArgs.Empty);
+        PlayCommandCanExecuteChanged(this);
     }
 
-    private static void PlayCommandCanExecuteChanged(BindableObject bindable, EventArgs empty)
+    private static void PlayCommandCanExecuteChanged(BindableObject bindable)
     {
-        if (bindable is PlayableItemBase control)
+        if (bindable is PlayableItemBase control && control.PlayCommand is ICommand cmd)
         {
-            control.PlayCommand?.CanExecute(control.PlayCommandParameter);
+            // evaluate CanExecute; result intentionally ignored to preserve previous behavior
+            // (some command implementations perform side-effects on CanExecute calls).
+            _ = cmd.CanExecute(control.PlayCommandParameter);
         }
     }
 
     private static void OnOpenFlyoutCommandChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        PlayableItemBase item = (PlayableItemBase)bindable;
-        if (newValue is ICommand newCommand)
+        if (bindable is not PlayableItemBase item)
+            return;
+
+        if (newValue is ICommand newCmd)
         {
-            newCommand.CanExecuteChanged += item.OnOpenFlyoutCommandCanExecuteChanged;
-        }
-        if (item.PlayCommand != null)
-        {
-            OpenFlyoutCommandCanExecuteChanged(item, EventArgs.Empty);
+            newCmd.CanExecuteChanged += item.OnOpenFlyoutCommandCanExecuteChanged;
+            OpenFlyoutCommandCanExecuteChanged(item);
         }
     }
 
     private static void OnOpenFlyoutCommandChanging(BindableObject bindable, object oldValue, object newValue)
     {
-        PlayableItemBase item = (PlayableItemBase)bindable;
-        if (oldValue != null)
+        if (oldValue is ICommand oldCmd && bindable is PlayableItemBase item)
         {
-            (oldValue as ICommand).CanExecuteChanged -= item.OnOpenFlyoutCommandCanExecuteChanged;
+            oldCmd.CanExecuteChanged -= item.OnOpenFlyoutCommandCanExecuteChanged;
         }
     }
 
-    private static void OpenFlyoutCommandCanExecuteChanged(BindableObject bindable, EventArgs empty)
+    private static void OpenFlyoutCommandCanExecuteChanged(BindableObject bindable)
     {
-        if (bindable is PlayableItemBase control)
+        if (bindable is PlayableItemBase control && control.OpenFlyoutCommand is ICommand cmd)
         {
-            control.OpenFlyoutCommand?.CanExecute(control.OpenFlyoutCommandParameter);
+            _ = cmd.CanExecute(control.OpenFlyoutCommandParameter);
         }
     }
 
-    private void OnOpenFlyoutCommandCanExecuteChanged(object sender, EventArgs e)
+    private void OnOpenFlyoutCommandCanExecuteChanged(object? sender, EventArgs e)
     {
-        PlayableItemBase.OpenFlyoutCommandCanExecuteChanged(this, EventArgs.Empty);
+        OpenFlyoutCommandCanExecuteChanged(this);
     }
+
+    private static void OnPlayCommandParameterChanged(BindableObject bindable, object oldValue, object newValue)
+        => PlayCommandCanExecuteChanged(bindable);
+
+    private static void OnOpenFlyoutCommandParameterChanged(BindableObject bindable, object oldValue, object newValue)
+        => OpenFlyoutCommandCanExecuteChanged(bindable);
 }
