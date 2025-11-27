@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:PlayableItemBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             x:Class="BSE.Tunes.Maui.Client.Controls.AlbumPlayerItem">
+
+    <controls:PlayableItemBase.ControlTemplate>
+        <ControlTemplate>
+            <Grid RowDefinitions="*,Auto,Auto" VerticalOptions="Start">
+                <Image Grid.Row="0" Aspect="AspectFit"
+                       VerticalOptions="Fill"
+                       WidthRequest="{OnIdiom Default=150, Tablet=250}"
+                       Source="{TemplateBinding Cover}"/>
+
+                <VerticalStackLayout Grid.Row="1">
+                    <Label x:Name="infoTitle" Text="{TemplateBinding Title}"
+                           HorizontalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           FontSize="Medium" TextColor="{StaticResource White}"/>
+                    <Label x:Name="infoSubTitle" Text="{TemplateBinding SubTitle}"
+                           HorizontalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           TextColor="{StaticResource Gray300}"/>
+                    <Label x:Name="albumGenre" HorizontalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           TextColor="{StaticResource Gray300}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{TemplateBinding Year}"/>
+                                <Span Text=" "/>
+                                <Span Text="{TemplateBinding Genre}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+
+                <StackLayout Grid.Row="2" Margin="20" HorizontalOptions="Center" Orientation="Horizontal">
+                    <Button ImageSource="shuffle.png" Clicked="OnPlayAllRandomizedClicked"
+                            Style="{DynamicResource DetailActionButtonStyle}"/>
+                    <Button ImageSource="detail_action_play.png" Clicked="OnPlayAllClicked"
+                            Style="{DynamicResource DetailActionPlayButtonStyle}"/>
+                    <Button ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
+                            Clicked="OnFlyoutOpenClicked"
+                            Style="{DynamicResource DetailActionButtonStyle}"/>
+                </StackLayout>
+
+            </Grid>
+        </ControlTemplate>
+    </controls:PlayableItemBase.ControlTemplate>
+    
+</controls:PlayableItemBase>
