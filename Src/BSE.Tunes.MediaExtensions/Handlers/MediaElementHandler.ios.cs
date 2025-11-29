@@ -12,6 +12,7 @@ namespace BSE.Tunes.MediaExtensions.Handlers;
 public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiMediaElement>, IDisposable
 {
     AVPlayerViewController? playerViewController;
+    bool disposed;
 
     protected MediaManager? MediaManager { get; set; }
 
@@ -69,7 +70,6 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
 
     protected override void DisconnectHandler(Views.MauiMediaElement platformView)
     {
-        platformView.Dispose();
         Dispose();
         base.DisconnectHandler(platformView);
     }
@@ -152,12 +152,20 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
     /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
+        if (disposed)
+        {
+            return;
+        }
+
         if (disposing)
         {
             MediaManager?.Dispose();
             MediaManager = null;
-            PlatformDispose();
         }
+        
+        PlatformDispose();
+
+        disposed = true;
     }
 
     void PlatformDispose()
