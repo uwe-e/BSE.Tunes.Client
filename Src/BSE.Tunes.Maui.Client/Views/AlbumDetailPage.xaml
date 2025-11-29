@@ -137,27 +137,17 @@
                         </VisualState.Setters>
                     </VisualState>
 
-                    <VisualState x:Name="TabletPortrait">
+                    <VisualState x:Name="TabletLayout">
                         <VisualState.StateTriggers>
-                            <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Portrait"/>
-                        </VisualState.StateTriggers>
-                        <VisualState.Setters>
-                            <Setter TargetName="PhoneLayout" Property="IsVisible" Value="False"/>
-                            <Setter TargetName="TabletLayout" Property="IsVisible" Value="True"/>
-                            <!--<Setter TargetName="TabletLayout" Property="ColumnDefinitions" Value="40*,60*"/>-->
-                        </VisualState.Setters>
-                    </VisualState>
-
-                    <VisualState x:Name="TabletLandscape">
-                        <VisualState.StateTriggers>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Tablet"/>
                             <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Landscape"/>
                         </VisualState.StateTriggers>
                         <VisualState.Setters>
                             <Setter TargetName="PhoneLayout" Property="IsVisible" Value="False"/>
                             <Setter TargetName="TabletLayout" Property="IsVisible" Value="True"/>
-                            <!--<Setter TargetName="TabletLayout" Property="ColumnDefinitions" Value="*,*"/>-->
                         </VisualState.Setters>
                     </VisualState>
+
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
 

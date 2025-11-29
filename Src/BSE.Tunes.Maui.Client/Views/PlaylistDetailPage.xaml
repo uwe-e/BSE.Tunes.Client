@@ -45,8 +45,8 @@
             <!-- Tablet layout: CollectionView constrained in a Grid column -->
             <Grid x:Name="TabletLayout" IsVisible="False">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40*"/>
-                    <ColumnDefinition Width="60*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Album info (left column) -->
