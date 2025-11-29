@@ -1,6 +1,4 @@
-using System;
 using System.Globalization;
-using Microsoft.Maui.Controls;
 
 namespace BSE.Tunes.Maui.Client.Converters
 {
@@ -9,12 +7,11 @@ namespace BSE.Tunes.Maui.Client.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values == null) return false;
-            foreach (var v in values)
-            {
-                if (v is string s && !string.IsNullOrWhiteSpace(s))
-                    return true;
-            }
-            return false;
+
+            return values
+                .OfType<string>()
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Any();
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <controls:PlayableItemBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                           xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
                            xmlns:conv="clr-namespace:BSE.Tunes.Maui.Client.Converters"
                            xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
                            x:Class="BSE.Tunes.Maui.Client.Controls.AlbumPlayerItem">
@@ -12,7 +13,7 @@
     <controls:PlayableItemBase.ControlTemplate>
         <ControlTemplate>
             <Grid RowDefinitions="*,Auto,Auto" VerticalOptions="Start">
-                <Image Grid.Row="0" Aspect="AspectFit"
+                <ffimageloading:CachedImage Grid.Row="0" Aspect="AspectFit"
                        VerticalOptions="Fill"
                        WidthRequest="{OnIdiom Default=150, Tablet=250}"
                        Source="{TemplateBinding Cover}"/>

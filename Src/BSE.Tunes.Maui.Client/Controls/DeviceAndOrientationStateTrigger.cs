@@ -3,10 +3,10 @@
     public class DeviceAndOrientationStateTrigger : StateTriggerBase
     {
         public static readonly BindableProperty IdiomProperty =
-            BindableProperty.Create(nameof(Idiom ), typeof(string), typeof(DeviceAndOrientationStateTrigger), DeviceIdiom.Phone.ToString(),
+            BindableProperty.Create(nameof(Idiom), typeof(string), typeof(DeviceAndOrientationStateTrigger), DeviceIdiom.Phone.ToString(),
                 propertyChanged: (b, o, n) => ((DeviceAndOrientationStateTrigger)b).UpdateState());
 
-        public string Idiom 
+        public string Idiom
         {
             get => (string)GetValue(IdiomProperty);
             set => SetValue(IdiomProperty, value);

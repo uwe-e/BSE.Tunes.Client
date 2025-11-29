@@ -16,7 +16,7 @@
 
     <!--
         The IconImageSource values used in the tabs (home.png, albums.png, etc.) are configured at the different content pages.
-        The reason for this is a missbehavior in the current version of Prism.
+        The reason for this is a misbehavior in the current version of Prism.
     -->
     <prism:PrismNavigationPage>
         <x:Arguments>

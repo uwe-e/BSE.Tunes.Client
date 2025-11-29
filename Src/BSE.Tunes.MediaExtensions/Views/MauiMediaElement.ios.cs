@@ -12,7 +12,7 @@ namespace BSE.Tunes.MediaExtensions.Views
         /// <summary>
         /// Initializes a new instance of the <see cref="MauiMediaElement"/> class.
         /// </summary>
-        /// <param name="playerViewController"><The <see cref="AVPlayerViewController"/> that acts as the platform media player./param>
+        /// <param name="playerViewController"><The <see cref="AVPlayerViewController"/> that acts as the platform media player.</param>
         /// <param name="virtualView">The <see cref="MediaElement"/> used as the VirtualView for this <see cref="MauiMediaElement"/>.</param>
         /// <exception cref="InvalidOperationException">Thrown when <paramref name="playerViewController"/><c>.View</c> is <see langword="null"/>.</exception>
         public MauiMediaElement(AVPlayerViewController playerViewController, MediaElement virtualView)

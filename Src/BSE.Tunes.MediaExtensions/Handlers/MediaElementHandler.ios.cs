@@ -122,7 +122,7 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
         handler.MediaManager?.UpdateSource();
     }
 
-    // <summary>
+    /// <summary>
     /// Maps the stop operation request between the abstract <see cref="MediaElement"/> and platform counterpart.
     /// </summary>
     /// <param name="handler">The associated handler.</param>
