@@ -17,10 +17,10 @@
                WidthRequest="{OnPlatform 256, Android=192}"/>
 
         <Grid HeightRequest="40">
-
-            <toolkit:MediaElement x:Name="MediaElement"
+            <!-- The MediaElement is now located in Audioplayer ContentView Control where it belongs-->
+            <!--<toolkit:MediaElement x:Name="MediaElement"
                               IsVisible="False" services:MediaService.RegisterAsMediaService="True"
-                              ShouldShowPlaybackControls="False" />
+                              ShouldShowPlaybackControls="False" />-->
             <ActivityIndicator IsRunning="True"/>
         </Grid>
     </Grid>

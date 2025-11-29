@@ -3,7 +3,6 @@ using AVKit;
 using BSE.Tunes.MediaExtensions.Extensions;
 using BSE.Tunes.MediaExtensions.Primitives;
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using CoreFoundation;
 using Foundation;
@@ -89,14 +88,14 @@ namespace BSE.Tunes.MediaExtensions.Views
             return (Player, PlayerViewController);
         }
 
-        protected override void PlatformUpdateSource()
+        protected override ValueTask PlatformUpdateSource()
         {
             MediaElement.InvokeCurrentStateChanged(MediaElementState.Opening);
 
             AVAsset? asset = null;
             if (Player is null)
             {
-                return;
+                return ValueTask.CompletedTask;
             }
             metaData ??= new(Player);
             Metadata.ClearNowPlaying();
@@ -162,6 +161,8 @@ namespace BSE.Tunes.MediaExtensions.Views
             {
                 MediaElement.InvokeCurrentStateChanged(MediaElementState.None);
             }
+
+            return ValueTask.CompletedTask;
         }
 
         protected override void Dispose(bool disposing)

@@ -3,79 +3,204 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
-             xmlns:acrylic="clr-namespace:Xe.AcrylicView;assembly=Xe.AcrylicView"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumDetailPage"
+             Title=""
              x:Name="page">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="TrackItemTemplate">
+                <controls:TrackItem Number="{Binding Number}"
+                                    Title="{Binding Title}"
+                                    SubTitle="{Binding Data.Album.Artist.Name}"
+                                    Duration="{Binding Data.Duration}"
+                                    PlayCommand="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
+                                    PlayCommandParameter="{Binding}"
+                                    OpenFlyoutCommand="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                    OpenFlyoutCommandParameter="{Binding}"/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
+
         <Grid>
+            <!-- Phone layout: CollectionView is scrollable and contains all visible elements -->
+            <CollectionView x:Name="PhoneLayout" IsVisible="False" ItemsSource="{Binding Items}"
+                                ItemTemplate="{StaticResource TrackItemTemplate}"
+                                Margin="20,0,10,0">
+                    <CollectionView.Header>
+                        <controls:AlbumPlayerItem Cover="{Binding ImageSource}"
+                                                  Title="{Binding Album.Title}"
+                                                  SubTitle="{Binding Album.Artist.Name}"
+                                                  Year="{Binding Album.Year}"
+                                                  Genre="{Binding Album.Genre.Name}"
+                                                  PlayCommand="{Binding PlayAllCommand}"
+                                                  PlayRandomizedCommand="{Binding PlayAllRandomizedCommand}"
+                                                  OpenFlyoutCommand="{Binding OpenFlyoutCommand}"
+                                                  OpenFlyoutCommandParameter="{Binding Album}"/>
+                    </CollectionView.Header>
+                    <CollectionView.Footer>
+                        <Grid IsVisible="{Binding HasFurtherAlbums}" Margin="0,15,0,10">
+                            <controls:HeaderedCollectionView Title="{x:Static strings:AppResources.AlbumsDetailPage_FurtherAlbums_Header_Text}"
+                                                             IsBusy="{Binding IsQueryBusy}"
+                                                             IsVisible="{Binding HasFurtherAlbums}"
+                                                             HeaderButtonStyle="{DynamicResource SectionHeaderButtonStyle}"
+                                                             ActivityIndicatorColor="{DynamicResource SecondaryDarkLabelColor}"
+                                                             ItemsSource="{Binding Albums}"
+                                                             SelectedItem="{Binding SelectedAlbum}"
+                                                             SelectionChangedCommand="{Binding SelectAlbumCommand}"
+                                                             SelectionChangedCommandParameter="{Binding SelectedAlbum}"
+                                                             RemainingItemsThreshold="10"
+                                                             RemainingItemsThresholdReachedCommand="{Binding LoadMoreAlbumsCommand}"
+                                                             HeightRequest="{OnIdiom Default=220, Tablet=230}">
+                                <controls:HeaderedCollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <templates:ViewItemTemplate Padding="0,0,10,25"/>
+                                    </DataTemplate>
+                                </controls:HeaderedCollectionView.ItemTemplate>
+                            </controls:HeaderedCollectionView>
+                        </Grid>
+                    </CollectionView.Footer>
+                </CollectionView>
+
+            <!-- Tablet layout: CollectionView constrained in a Grid column -->
+            <Grid x:Name="TabletLayout" IsVisible="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Album info (left column) -->
+                <Grid Grid.Column="0">
+
+                    <!-- AlbumInfo in a reusable control -->
+                    <controls:AlbumPlayerItem Cover="{Binding ImageSource}"
+                                              Title="{Binding Album.Title}"
+                                              SubTitle="{Binding Album.Artist.Name}"
+                                              Year="{Binding Album.Year}"
+                                              Genre="{Binding Album.Genre.Name}"
+                                              PlayCommand="{Binding PlayAllCommand}"
+                                              PlayRandomizedCommand="{Binding PlayAllRandomizedCommand}"
+                                              OpenFlyoutCommand="{Binding OpenFlyoutCommand}"
+                                              OpenFlyoutCommandParameter="{Binding Album}"/>
+                </Grid>
+
+                <!-- Track list (right column) - constrained by parent Grid so it will scroll itself -->
+                <CollectionView Grid.Column="1"
+                                Margin="10,0"
+                                ItemsSource="{Binding Items}"
+                                ItemTemplate="{StaticResource TrackItemTemplate}">
+                    <!-- reuse your ItemTemplate and Footer here -->
+
+                    <CollectionView.Footer>
+                        <Grid IsVisible="{Binding HasFurtherAlbums}" Margin="0,15,0,30" >
+                            <controls:HeaderedCollectionView Title="{x:Static strings:AppResources.AlbumsDetailPage_FurtherAlbums_Header_Text}"
+                                         IsBusy="{Binding IsQueryBusy}"
+                                         IsVisible="{Binding HasFurtherAlbums}"
+                                         HeaderButtonStyle="{DynamicResource SectionHeaderButtonStyle}"
+                                         ActivityIndicatorColor="{DynamicResource SecondaryDarkLabelColor}"
+                                         ItemsSource="{Binding Albums}"
+                                         SelectedItem="{Binding SelectedAlbum}"
+                                         SelectionChangedCommand="{Binding SelectAlbumCommand}"
+                                         SelectionChangedCommandParameter="{Binding SelectedAlbum}"
+                                         RemainingItemsThreshold="10"
+                                         RemainingItemsThresholdReachedCommand="{Binding LoadMoreAlbumsCommand}"
+                                         HeightRequest="{OnIdiom Default=220, Tablet=230}">
+                                <controls:HeaderedCollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <templates:ViewItemTemplate Padding="0,0,10,45"/>
+                                    </DataTemplate>
+                                </controls:HeaderedCollectionView.ItemTemplate>
+                            </controls:HeaderedCollectionView>
+                        </Grid>
+                    </CollectionView.Footer>
+
+                </CollectionView>
+            </Grid>
+
+            <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
+                <ActivityIndicator IsRunning="{Binding IsBusy}"/>
+            </Grid>
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="LayoutByOrientation">
+                    <VisualState x:Name="PhoneLayout">
+                        <VisualState.StateTriggers>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Phone"/>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Phone" Orientation="Landscape"/>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter TargetName="PhoneLayout" Property="IsVisible" Value="True"/>
+                            <Setter TargetName="TabletLayout" Property="IsVisible" Value="False"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="TabletLayout">
+                        <VisualState.StateTriggers>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Tablet"/>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Landscape"/>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter TargetName="PhoneLayout" Property="IsVisible" Value="False"/>
+                            <Setter TargetName="TabletLayout" Property="IsVisible" Value="True"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+        </Grid>
+
+        <!--<Grid>
             <ScrollView>
                 <CollectionView Margin="10,0" ItemsSource="{Binding Items}">
                     <CollectionView.Header>
-                        <Grid Margin="0,0,0,15">
+                        <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Image HeightRequest="{OnIdiom Default=150, Tablet=250}"
-                                   Aspect="AspectFill" Source="{Binding ImageSource}"/>
-                            <acrylic:AcrylicView EffectStyle="ExtraDark" VerticalOptions="Fill" >
-                                <acrylic:AcrylicView.Background>
-                                    <LinearGradientBrush EndPoint="0,1">
-                                        <GradientStop Color="Transparent" Offset="0.1" />
-                                        <GradientStop Color="{StaticResource DarkBackground}" Offset="0.9" />
-                                    </LinearGradientBrush>
-                                </acrylic:AcrylicView.Background>
 
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+                            <Image Grid.Row="0" Aspect="AspectFit"
+                                    HeightRequest="{OnIdiom Default=150, Tablet=250}" 
+                                    WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
 
-                                    <Image Grid.Row="0" Aspect="AspectFit"
-                                           HeightRequest="{OnIdiom Default=150, Tablet=250}" 
-                                           WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
+                            <Label x:Name="infoTitle" Text="{Binding Album.Title}"
+                                        HorizontalOptions="Center"
+                                        LineBreakMode="TailTruncation"
+                                        Grid.Row="1" FontSize="Medium" TextColor="{StaticResource White}"/>
+                            <Label x:Name="infoSubTitle" Text="{Binding Album.Artist.Name}"
+                                        HorizontalOptions="Center"
+                                        LineBreakMode="TailTruncation"
+                                        Grid.Row="2" TextColor="{StaticResource Gray300}"/>
+                            <Label x:Name="albumGenre"
+                                        HorizontalOptions="Center"
+                                        LineBreakMode="TailTruncation"
+                                        Grid.Row="3" TextColor="{StaticResource Gray300}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Album.Year}"/>
+                                        <Span Text=" "/>
+                                        <Span Text="{Binding Album.Genre.Name}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
 
-                                    <Label x:Name="infoTitle" Text="{Binding Album.Title}"
-                                               HorizontalOptions="Center"
-                                               LineBreakMode="TailTruncation"
-                                               Grid.Row="1" FontSize="Medium" TextColor="{StaticResource White}"/>
-                                    <Label x:Name="infoSubTitle" Text="{Binding Album.Artist.Name}"
-                                               HorizontalOptions="Center"
-                                               LineBreakMode="TailTruncation"
-                                               Grid.Row="2" TextColor="{StaticResource Gray300}"/>
-                                    <Label x:Name="albumGenre"
-                                               HorizontalOptions="Center"
-                                               LineBreakMode="TailTruncation"
-                                               Grid.Row="3" TextColor="{StaticResource Gray300}">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding Album.Year}"/>
-                                                <Span Text=" "/>
-                                                <Span Text="{Binding Album.Genre.Name}"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-
-                                    <StackLayout Grid.Row="4" Margin="20" HorizontalOptions="Center" Orientation="Horizontal">
-                                        <Button ImageSource="shuffle.png" Command="{Binding PlayAllRandomizedCommand}"
-                                                Style="{DynamicResource DetailActionButtonStyle}"/>
-                                        <Button ImageSource="detail_action_play.png"
-                                                Command="{Binding PlayAllCommand}"
-                                                Style="{DynamicResource DetailActionPlayButtonStyle}"/>
-                                        <Button ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
-                                                Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Album}"
-                                                Style="{DynamicResource DetailActionButtonStyle}"/>
-                                    </StackLayout>
-
-                                </Grid>
-
-                            </acrylic:AcrylicView>
+                            <StackLayout Grid.Row="4" Margin="20" HorizontalOptions="Center" Orientation="Horizontal">
+                                <Button ImageSource="shuffle.png" Command="{Binding PlayAllRandomizedCommand}"
+                                        Style="{DynamicResource DetailActionButtonStyle}"/>
+                                <Button ImageSource="detail_action_play.png"
+                                        Command="{Binding PlayAllCommand}"
+                                        Style="{DynamicResource DetailActionPlayButtonStyle}"/>
+                                <Button ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
+                                        Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Album}"
+                                        Style="{DynamicResource DetailActionButtonStyle}"/>
+                            </StackLayout>
 
                         </Grid>
 
@@ -157,7 +282,7 @@
             <Grid IsVisible="{Binding IsBusy}" HeightRequest="50">
                 <ActivityIndicator IsRunning="{Binding IsBusy}"/>
             </Grid>
-        </Grid>
+        </Grid>-->
     </ContentPage.Content>
 
 </ContentPage>

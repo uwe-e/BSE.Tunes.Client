@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:PlayableItemBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+             x:Class="BSE.Tunes.Maui.Client.Controls.TrackItem">
+    <controls:PlayableItemBase.ControlTemplate>
+        <ControlTemplate>
+            <Grid ColumnDefinitions="25,*,50" Margin="0,5">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnItemTapped"/>
+                </Grid.GestureRecognizers>
+                <Label Text="{TemplateBinding Number}"
+                       Grid.Column="0"
+                       Style="{DynamicResource CollectionViewLabelStyle}"
+                       VerticalTextAlignment="Start"/>
+                <Grid Grid.Column="1" RowDefinitions="5*,5*">
+                    <Label Text="{TemplateBinding Title}"
+                           Grid.Row="0"
+                           Style="{DynamicResource CollectionViewLabelStyle}"
+                           VerticalTextAlignment="End"
+                           LineBreakMode="TailTruncation"/>
+                    <Label VerticalTextAlignment="Start"
+                           Grid.Row="1" TextColor="{StaticResource Gray300}"
+                           LineBreakMode="TailTruncation">
+
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{TemplateBinding SubTitle}"/>
+                                <Span Text=" &#x00B7; "/>
+                                <Span Text="{TemplateBinding Duration}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                        
+                    </Label>
+                </Grid>
+                <Button Grid.Column="2"
+                        ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
+                        Style="{DynamicResource ContextMenuButtonStyle}"
+                        Clicked="OnFlyoutOpenClicked"/>
+            </Grid>
+        </ControlTemplate>
+    </controls:PlayableItemBase.ControlTemplate>
+</controls:PlayableItemBase>
