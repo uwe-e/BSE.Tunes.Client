@@ -81,7 +81,7 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
 	/// <param name="mediaElement">The associated <see cref="MediaElement"/> instance.</param>
 	/// <param name="args">The associated event arguments for this request.</param>
 	/// <remarks><paramref name="args"/> is not used.</remarks>
-    public static void MapPauseRequested(MediaElementHandler handler, MediaElement element, object? arg3)
+    public static void MapPauseRequested(MediaElementHandler handler, MediaElement mediaElement, object? args)
     {
         handler.MediaManager?.Pause();
     }
@@ -111,11 +111,10 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
     }
 
     /// <summary>
-	/// Maps the status update between the abstract <see cref="MediaElement"/> and platform counterpart.
+	/// Maps the source update between the abstract <see cref="MediaElement"/> and platform counterpart.
 	/// </summary>
 	/// <param name="handler">The associated handler.</param>
 	/// <param name="mediaElement">The associated <see cref="MediaElement"/> instance.</param>
-	/// <param name="args">The associated event arguments for this request.</param>
 	/// <remarks><paramref name="args"/> is not used.</remarks>
     public static void MapSource(MediaElementHandler handler, MediaElement mediaElement)
     {
@@ -160,9 +159,8 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
             PlatformDispose();
         }
     }
-    partial void PlatformDispose();
 
-    partial void PlatformDispose()
+    void PlatformDispose()
     {
         playerViewController?.Dispose();
         playerViewController = null;

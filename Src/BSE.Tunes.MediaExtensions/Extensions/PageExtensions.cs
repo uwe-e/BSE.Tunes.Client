@@ -2,13 +2,13 @@
 {
     public static class PageExtensions
     {
-        public static Page GetCurrentPage(this Page currentPpage)
+        public static Page GetCurrentPage(this Page currentPage)
         {
-            if (currentPpage.NavigationProxy.ModalStack.LastOrDefault() is Page modal)
+            if (currentPage.NavigationProxy.ModalStack.LastOrDefault() is Page modal)
             {
                 return modal;
             }
-            return currentPpage;
+            return currentPage;
         }
     }
 }

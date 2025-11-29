@@ -22,10 +22,22 @@
             set => SetValue(OrientationProperty, value);
         }
 
-        public DeviceAndOrientationStateTrigger()
+        protected override void OnAttached()
         {
-            DeviceDisplay.MainDisplayInfoChanged += OnDisplayInfoChanged;
-            UpdateState();
+            base.OnAttached();
+
+            if (!DesignMode.IsDesignModeEnabled)
+            {
+                UpdateState();
+                DeviceDisplay.MainDisplayInfoChanged += OnDisplayInfoChanged;
+            }
+        }
+
+        protected override void OnDetached()
+        {
+            base.OnDetached();
+
+            DeviceDisplay.MainDisplayInfoChanged -= OnDisplayInfoChanged;
         }
 
         private void OnDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e) => UpdateState();
