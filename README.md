@@ -9,7 +9,7 @@ This is the .NET MAUI cross platform client of the BSEtunes system, which is our
 
 ## IOS
 
-![BSEtunes IOS Homescreen](/docs/images/ios-homescreen.800.jpg)
+![BSEtunes IOS Homescreen](/docs/images/ios-responsivity.gif)
 
 #### Semi Important Information
 
