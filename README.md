@@ -28,7 +28,6 @@ The App was created using the following libraries
 - [Microsoft.Maui.Graphics.Skia](https://github.com/dotnet/maui): a cross-platform 2D graphics API for .NET platforms based on Google's Skia Graphics Library.
 - [FFImageLoading.Maui](https://github.com/microspaze/FFImageLoading.Maui): Image loading, caching & transforming library for Xamarin
 - [CommunityToolkit.Maui.MediaElement](https://github.com/CommunityToolkit/Maui): Control for playing video and audio
-- [AcrylicView.Maui](https://github.com/sswi/AcrylicView.MAUI): Control for drawing acrylic effects
 
 ## BSE System
 
