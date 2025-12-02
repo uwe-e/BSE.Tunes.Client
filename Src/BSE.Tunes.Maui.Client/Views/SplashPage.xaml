@@ -17,7 +17,7 @@
                WidthRequest="{OnPlatform 256, Android=192}"/>
 
         <Grid HeightRequest="40">
-            <!-- The MediaElement is now located in Audioplayer ContentView Control where it belongs-->
+            <!-- The MediaElement is now located in AudioPlayer ContentView Control where it belongs-->
             <!--<toolkit:MediaElement x:Name="MediaElement"
                               IsVisible="False" services:MediaService.RegisterAsMediaService="True"
                               ShouldShowPlaybackControls="False" />-->

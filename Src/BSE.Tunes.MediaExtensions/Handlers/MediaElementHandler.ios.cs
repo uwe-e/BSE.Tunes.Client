@@ -131,13 +131,9 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
     {
         handler.MediaManager?.Stop();
     }
-    //private static void MapShouldShowPlaybackControls(MediaElementHandler handler, MediaElement element)
-    //{
-    //    throw new NotImplementedException();
-    //}
 
     /// <summary>
-    /// Releases the managed and unmanaged resources used by the <see cref="MediaElement"/>.
+    /// Releases the managed and unmanaged resources used by the <see cref="MediaElementHandler"/>.
     /// </summary>
     public void Dispose()
     {
@@ -146,7 +142,7 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
     }
 
     /// <summary>
-    /// Releases the unmanaged resources used by the <see cref="MediaElement"/> and optionally releases the managed resources.
+    /// Releases the unmanaged resources used by the <see cref="MediaElementHandler"/> and optionally releases the managed resources.
     /// </summary>
     /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)

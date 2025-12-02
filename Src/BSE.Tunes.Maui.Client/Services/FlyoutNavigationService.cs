@@ -74,10 +74,17 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private async void OnContentSizeAllocated(object sender, SizeAllocatedEventArgs e)
         {
-            if (sender is BottomFlyoutPage flyoutPage)
+            try
             {
-                flyoutPage.ContentSizeAllocated -= OnContentSizeAllocated;
-                await flyoutPage.AppearingAnimation();
+                if (sender is BottomFlyoutPage flyoutPage)
+                {
+                    flyoutPage.ContentSizeAllocated -= OnContentSizeAllocated;
+                    await flyoutPage.AppearingAnimation();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"Exception in {nameof(OnContentSizeAllocated)}: {ex.Message} {ex.InnerException?.Message}");
             }
         }
     }
