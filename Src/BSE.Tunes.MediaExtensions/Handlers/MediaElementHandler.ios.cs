@@ -117,7 +117,7 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, Views.MauiM
 	/// <param name="mediaElement">The associated <see cref="MediaElement"/> instance.</param>
     public static void MapSource(MediaElementHandler handler, MediaElement mediaElement)
     {
-        handler.MediaManager?.UpdateSource();
+        _ = handler.MediaManager?.UpdateSource();
     }
 
     /// <summary>
