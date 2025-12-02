@@ -105,7 +105,7 @@
                             </VisualState.Setters>
                         </VisualState>
 
-                        <VisualState x:Name="TableLayout">
+                        <VisualState x:Name="TabletLayout">
                             <VisualState.StateTriggers>
                                 <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Portrait"/>
                                 <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Landscape"/>

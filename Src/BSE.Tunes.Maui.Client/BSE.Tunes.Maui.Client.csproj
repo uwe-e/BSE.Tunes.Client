@@ -52,11 +52,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
-<!--
-  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-    <PackageReference Include="Xamarin.AndroidX.LocalBroadcastManager" />
-  </ItemGroup>
-  -->
+
   <PropertyGroup>
     <PackageVersion>1.0.4</PackageVersion>
   </PropertyGroup>

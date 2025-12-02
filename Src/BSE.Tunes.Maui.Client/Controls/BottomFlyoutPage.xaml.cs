@@ -92,9 +92,6 @@ public partial class BottomFlyoutPage : ContentPage
 
         // Raise the new event so subscribers can react to size changes
         OnContentSizeAllocatedCompleted(new SizeAllocatedEventArgs(width, height));
-
-        // Start the appearing animation. Formerly done in FlyoutNavigationService, but there was a timing problem.
-        //_ = AppearingAnimation();
     }
 
     protected virtual void OnContentSizeAllocatedCompleted(SizeAllocatedEventArgs e)
