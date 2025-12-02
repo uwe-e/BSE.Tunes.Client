@@ -11,7 +11,7 @@
         <ScrollView>
             <StackLayout>
 
-                <ContentView prism:RegionManager.RegionName="AlbumsCarousel" MinimumHeightRequest="200"/>
+                <ContentView prism:RegionManager.RegionName="AlbumsCarousel"/>
 
                 <ContentView prism:RegionManager.RegionName="RandomPlayerButton" Margin="5,10" HeightRequest="80"/>
                 
