@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:behaviours="clr-namespace:BSE.Tunes.Maui.Client.Behaviours"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+             xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
              x:Class="BSE.Tunes.Maui.Client.Views.AlbumsCarouselView">
 
     <Grid>
-        <Grid.Behaviors>
-            <behaviours:OrientationBehavior/>
-        </Grid.Behaviors>
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="OrientationStates">
-                <VisualState x:Name="Portrait">
+            <VisualStateGroup x:Name="LayoutByOrientation">
+                <VisualState x:Name="PhonePortrait">
+                    <VisualState.StateTriggers>
+                        <controls:DeviceAndOrientationStateTrigger Idiom="Phone" Orientation="Portrait"/>
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter TargetName="randomAlbumsView" Property="HeightRequest" Value="{OnIdiom Default=300, Tablet=355}"/>
+                        <Setter TargetName="randomAlbumsView" Property="HeightRequest" Value="300"/>
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Landscape">
+                <VisualState x:Name="PhoneLandscape">
+                    <VisualState.StateTriggers>
+                        <controls:DeviceAndOrientationStateTrigger Idiom="Phone" Orientation="Landscape"/>
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter TargetName="randomAlbumsView" Property="HeightRequest" Value="{OnIdiom Default=200, Tablet=230}"/>
+                        <Setter TargetName="randomAlbumsView" Property="HeightRequest" Value="200"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

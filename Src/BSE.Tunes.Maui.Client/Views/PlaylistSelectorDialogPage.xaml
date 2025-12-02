@@ -36,10 +36,12 @@
             <CollectionView Grid.Row="2" ItemsSource="{Binding PlaylistFlyoutItems}" >
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="0,5,0,10" ColumnDefinitions="60,*">
+                        <Grid Padding="0,5,0,10" ColumnDefinitions="Auto,*">
                             <ffimageloading:CachedImage Source="{Binding ImageSource}"
                                                         Grid.Column="0"
-                                                        WidthRequest="50"/>
+                                                        Aspect="AspectFit"
+                                                        HeightRequest="60"
+                                                        WidthRequest="60"/>
                             <Label Margin="10,0" Text="{Binding Text}"
                                    Grid.Column="1"
                                    VerticalTextAlignment="Center"/>

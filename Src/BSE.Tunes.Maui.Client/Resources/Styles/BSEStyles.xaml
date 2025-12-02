@@ -134,6 +134,7 @@
     <Style TargetType="prism:PrismNavigationPage" ApplyToDerivedTypes="True">
         <Setter Property="BarBackgroundColor" Value="{StaticResource DarkBackground}"/>
         <Setter Property="BackgroundColor" Value="{StaticResource DarkBackground}"/>
+        <Setter Property="BarTextColor" Value="{StaticResource White}"/>
     </Style>
 
     <Style TargetType="bse:TabbedContainerPage" ApplyToDerivedTypes="True">

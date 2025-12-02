@@ -3,102 +3,104 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:templates="clr-namespace:BSE.Tunes.Maui.Client.Views.Templates"
-             xmlns:acrylic="clr-namespace:Xe.AcrylicView;assembly=Xe.AcrylicView"
              xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.PlaylistDetailPage"
+             Title=""
              x:Name="page">
 
-    <Grid>
-        <CollectionView Margin="10,0" ItemsSource="{Binding Items}">
-            <CollectionView.Header>
-                <Grid Margin="0,0,0,15" RowDefinitions="*,Auto">
-                    <ffimageloading:CachedImage HeightRequest="{OnIdiom Default=150, Tablet=250}"
-                               Aspect="AspectFill" Source="{Binding ImageSource}"/>
-                    <acrylic:AcrylicView EffectStyle="Dark" VerticalOptions="Fill" >
-                        <acrylic:AcrylicView.Background>
-                            <LinearGradientBrush EndPoint="0,1">
-                                <GradientStop Color="Transparent" Offset="0.1" />
-                                <GradientStop Color="{StaticResource DarkBackground}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </acrylic:AcrylicView.Background>
-                        <Grid RowDefinitions="*,Auto,Auto">
-                            <ffimageloading:CachedImage Grid.Row="0" Aspect="AspectFit"
-                                       HeightRequest="{OnIdiom Default=150, Tablet=250}" 
-                                       WidthRequest="{OnIdiom Default=150, Tablet=250}" Source="{Binding ImageSource}"/>
-                            <Label x:Name="infoTitle" Text="{Binding Playlist.Name}"
-                                   HorizontalOptions="Center"
-                                   LineBreakMode="TailTruncation"
-                                   Grid.Row="1" FontSize="Medium" TextColor="{StaticResource White}"/>
-                            <StackLayout Grid.Row="2" Margin="20" HorizontalOptions="Center" Orientation="Horizontal">
-                                <Button ImageSource="shuffle.png"
-                                        Command="{Binding PlayAllRandomizedCommand}"
-                                        Style="{DynamicResource DetailActionButtonStyle}"/>
-                                <Button ImageSource="detail_action_play.png"
-                                        Command="{Binding PlayAllCommand}"
-                                        Style="{DynamicResource DetailActionPlayButtonStyle}"/>
-                                <Button ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
-                                        Command="{Binding OpenFlyoutCommand}" CommandParameter="{Binding Playlist}"
-                                        Style="{DynamicResource DetailActionButtonStyle}"/>
-                            </StackLayout>
-                        </Grid>
-                    </acrylic:AcrylicView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="TrackItemTemplate">
+                <controls:CoverTrackItem Cover="{Binding ImageSource}"
+                                    Title="{Binding Title}"
+                                    SubTitle="{Binding Data.Artist}"
+                                    Duration="{Binding Data.Duration}"
+                                    PlayCommand="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
+                                    PlayCommandParameter="{Binding}"
+                                    OpenFlyoutCommand="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
+                                    OpenFlyoutCommandParameter="{Binding}"/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
+    <ContentPage.Content>
+
+        <Grid>
+            <!-- Phone layout: CollectionView is scrollable and contains all visible elements -->
+            <CollectionView x:Name="PhoneLayout" IsVisible="False" ItemsSource="{Binding Items}"
+                            ItemTemplate="{StaticResource TrackItemTemplate}"
+                            Margin="20,0,10,0">
+                <CollectionView.Header>
+                    <controls:AlbumPlayerItem Cover="{Binding ImageSource}"
+                          Title="{Binding Playlist.Name}"
+                          PlayCommand="{Binding PlayAllCommand}"
+                          PlayRandomizedCommand="{Binding PlayAllRandomizedCommand}"
+                          OpenFlyoutCommand="{Binding OpenFlyoutCommand}"
+                          OpenFlyoutCommandParameter="{Binding Playlist}"/>
+                </CollectionView.Header>
+
+            </CollectionView>
+
+            <!-- Tablet layout: CollectionView constrained in a Grid column -->
+            <Grid x:Name="TabletLayout" IsVisible="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Album info (left column) -->
+                <Grid Grid.Column="0">
+
+                    <!-- AlbumInfo in a reusable control -->
+                    <controls:AlbumPlayerItem Cover="{Binding ImageSource}"
+                                              Title="{Binding Playlist.Name}"
+                                              PlayCommand="{Binding PlayAllCommand}"
+                                              PlayRandomizedCommand="{Binding PlayAllRandomizedCommand}"
+                                              OpenFlyoutCommand="{Binding OpenFlyoutCommand}"
+                                              OpenFlyoutCommandParameter="{Binding Playlist}"/>
                 </Grid>
-            </CollectionView.Header>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout>
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand,Source={x:Reference page}}"
-                                                      CommandParameter="{Binding}"/>
-                        </StackLayout.GestureRecognizers>
-                        <Grid Margin="3,10" HeightRequest="50">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Path=BindingContext.PlayCommand, Source={x:Reference page}}"
-                                                          CommandParameter="{Binding}"/>
-                            </Grid.GestureRecognizers>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="50"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Source="{Binding ImageSource}"
-                                                                Aspect="AspectFill" HeightRequest="50"/>
-                            <Grid Grid.Column="1" RowDefinitions="5*,5*">
-                                <Label Grid.Row="0" Margin="10,0"
-                                       VerticalTextAlignment="End"
-                                       Text="{Binding Title}"
-                                       Style="{DynamicResource CollectionViewLabelStyle}"
-                                       LineBreakMode="TailTruncation"/>
-                                <Label Grid.Row="1" Margin="10,0"
-                                       VerticalTextAlignment="Start"
-                                       TextColor="{StaticResource Gray300}"
-                                       LineBreakMode="TailTruncation">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{Binding Data.Artist}"/>
-                                            <Span Text=" &#x00B7; "/>
-                                            <Span Text="{Binding Data.Duration}"/>
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                            </Grid>
 
-                            <Button Grid.Column="2"
-                                    ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
-                                    Style="{DynamicResource ContextMenuButtonStyle}"
-                                    Command="{Binding Path=BindingContext.OpenFlyoutCommand, Source={x:Reference page}}"
-                                    CommandParameter="{Binding}"/>
-                        </Grid>
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        <Grid IsVisible="{Binding IsBusy}" HeightRequest="40">
-            <ActivityIndicator IsRunning="{Binding IsBusy}"/>
+                <!-- Track list (right column) - constrained by parent Grid so it will scroll itself -->
+                <CollectionView Grid.Column="1"
+                    Margin="10,0"
+                    ItemsSource="{Binding Items}"
+                    ItemTemplate="{StaticResource TrackItemTemplate}">
+                </CollectionView>
+            </Grid>
+
+            <Grid IsVisible="{Binding IsBusy}" HeightRequest="40">
+                <ActivityIndicator IsRunning="{Binding IsBusy}"/>
+            </Grid>
+
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="LayoutByOrientation">
+                    <VisualState x:Name="PhoneLayout">
+                        <VisualState.StateTriggers>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Phone"/>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Phone" Orientation="Landscape"/>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter TargetName="PhoneLayout" Property="IsVisible" Value="True"/>
+                            <Setter TargetName="TabletLayout" Property="IsVisible" Value="False"/>
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="TabletLayout">
+                        <VisualState.StateTriggers>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Tablet"/>
+                            <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Landscape"/>
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter TargetName="PhoneLayout" Property="IsVisible" Value="False"/>
+                            <Setter TargetName="TabletLayout" Property="IsVisible" Value="True"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
         </Grid>
 
-    </Grid>
+    </ContentPage.Content>
 
 </ContentPage>

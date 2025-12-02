@@ -4,7 +4,8 @@
              xmlns:strings="clr-namespace:BSE.Tunes.Maui.Client.Resources.Strings"
              xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
              x:Class="BSE.Tunes.Maui.Client.Views.SettingsPage"
-             Title="{x:Static strings:AppResources.SettingsPage_Title}">
+             Title="{x:Static strings:AppResources.SettingsPage_Title}"
+             IconImageSource="settings.png">
 
     <TableView Intent="Settings" HasUnevenRows="True" x:Name="settingsView">
         <TableRoot>

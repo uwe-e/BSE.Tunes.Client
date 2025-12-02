@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:PlayableItemBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                           xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+                           xmlns:conv="clr-namespace:BSE.Tunes.Maui.Client.Converters"
+                           xmlns:controls="clr-namespace:BSE.Tunes.Maui.Client.Controls"
+                           x:Class="BSE.Tunes.Maui.Client.Controls.AlbumPlayerItem">
+
+    <controls:PlayableItemBase.Resources>
+        <conv:AnyStringNotNullOrEmptyMultiConverter x:Key="AnyNotEmpty"/>
+    </controls:PlayableItemBase.Resources>
+
+    <controls:PlayableItemBase.ControlTemplate>
+        <ControlTemplate>
+            <Grid x:Name="infoContainer"
+                  RowDefinitions="*,Auto"
+                  VerticalOptions="Start"
+                  HorizontalOptions="Fill">
+
+                <!-- Portrait-->
+                <Grid x:Name="imageContainer" Grid.Row="0"
+                      VerticalOptions="Start"
+                      Margin="40,0">
+                    <ffimageloading:CachedImage x:Name="image" Grid.Row="0" Aspect="AspectFit"
+                                                Source="{TemplateBinding Cover}"/>
+                </Grid>
+                <Grid x:Name="controlContainer" Grid.Row="1" RowDefinitions="Auto, Auto">
+                    <VerticalStackLayout Grid.Row="0" Margin="10">
+                        <Label x:Name="infoTitle" Text="{TemplateBinding Title}"
+                           HorizontalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           FontSize="Medium" TextColor="{StaticResource White}"/>
+                        <Label x:Name="infoSubTitle" Text="{TemplateBinding SubTitle}"
+                           HorizontalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           TextColor="{StaticResource Gray300}">
+                            <Label.Triggers>
+                                <!-- Hide when SubTitle is empty string -->
+                                <DataTrigger TargetType="Label" Binding="{TemplateBinding SubTitle}" Value="">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                                <!-- Hide when SubTitle is null -->
+                                <DataTrigger TargetType="Label" Binding="{TemplateBinding SubTitle}" Value="{x:Null}">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                        <Label x:Name="albumGenre" HorizontalOptions="Center"
+                           LineBreakMode="TailTruncation"
+                           TextColor="{StaticResource Gray300}">
+                            <Label.IsVisible>
+                                <MultiBinding Converter="{StaticResource AnyNotEmpty}">
+                                    <Binding Path="Year" Source="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Genre" Source="{RelativeSource TemplatedParent}"/>
+                                </MultiBinding>
+                            </Label.IsVisible>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{TemplateBinding Year}"/>
+                                    <Span Text=" "/>
+                                    <Span Text="{TemplateBinding Genre}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+
+                    <StackLayout Grid.Row="1" Margin="20" HorizontalOptions="Center" Orientation="Horizontal">
+                        <Button ImageSource="shuffle.png" Clicked="OnPlayAllRandomizedClicked"
+                            Style="{DynamicResource DetailActionButtonStyle}"/>
+                        <Button ImageSource="detail_action_play.png" Clicked="OnPlayAllClicked"
+                            Style="{DynamicResource DetailActionPlayButtonStyle}"/>
+                        <Button ImageSource="{OnIdiom Default=ellipsis_vertical_large.png,Phone=ellipsis_vertical.png}"
+                            Clicked="OnFlyoutOpenClicked"
+                            Style="{DynamicResource DetailActionButtonStyle}"/>
+                    </StackLayout>
+                </Grid>
+                
+                <!-- Only for debugging-->
+                <!--<Label FontSize="30" Margin="40,0,0,0" Text="{Binding Height, Source={x:Reference infoContainer}}"/>-->
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="LayoutByOrientation">
+                        <VisualState x:Name="PhonePortrait">
+                            <VisualState.StateTriggers>
+                                <controls:DeviceAndOrientationStateTrigger Idiom="Phone" Orientation="Portrait"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter TargetName="infoContainer" Property="RowDefinitions" Value="*,Auto"/>
+                                <Setter TargetName="infoContainer" Property="ColumnDefinitions" Value="*"/>
+                                <Setter TargetName="imageContainer" Property="Grid.Row" Value="0"/>
+                                <Setter TargetName="image" Property="HeightRequest" Value="{Binding Width, Source={x:Reference imageContainer}}"/>
+                                <Setter TargetName="controlContainer" Property="Grid.Row" Value="1"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="PhoneLandscape">
+                            <VisualState.StateTriggers>
+                                <controls:DeviceAndOrientationStateTrigger Idiom="Phone" Orientation="Landscape"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter TargetName="infoContainer" Property="RowDefinitions" Value="*"/>
+                                <Setter TargetName="infoContainer" Property="ColumnDefinitions" Value="*,*"/>
+                                <Setter TargetName="imageContainer" Property="Grid.Column" Value="0"/>
+                                <Setter TargetName="imageContainer" Property="VerticalOptions" Value="Fill"/>
+                                <Setter TargetName="controlContainer" Property="Grid.Column" Value="1"/>
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="TabletLayout">
+                            <VisualState.StateTriggers>
+                                <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Portrait"/>
+                                <controls:DeviceAndOrientationStateTrigger Idiom="Tablet" Orientation="Landscape"/>
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter TargetName="infoContainer" Property="RowDefinitions" Value="*,Auto"/>
+                                <Setter TargetName="infoContainer" Property="ColumnDefinitions" Value="*"/>
+                                <Setter TargetName="imageContainer" Property="Grid.Row" Value="0"/>
+                                <Setter TargetName="image" Property="WidthRequest" Value="{Binding Width, Source={x:Reference imageContainer}}"/>
+                                <Setter TargetName="controlContainer" Property="Grid.Row" Value="1"/>
+                            </VisualState.Setters>
+                        </VisualState>
+
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+
+            </Grid>
+        </ControlTemplate>
+    </controls:PlayableItemBase.ControlTemplate>
+
+</controls:PlayableItemBase>

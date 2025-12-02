@@ -6,7 +6,6 @@ using BSE.Tunes.MediaExtensions;
 using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
 using Microsoft.Extensions.Logging;
-using Xe.AcrylicView;
 
 namespace BSE.Tunes.Maui.Client
 {
@@ -19,7 +18,6 @@ namespace BSE.Tunes.Maui.Client
             builder
                 .UseMauiApp<App>()
                 .UseFFImageLoading()
-                .UseAcrylicView()
                 .UseBSEControls()
                 .UseMauiCommunityToolkitMediaElement()
                 .UseBSEMediaElementExtension()
