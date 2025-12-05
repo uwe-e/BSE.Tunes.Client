@@ -35,14 +35,14 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleIdentifier</key>
-	<string></string>
+	<string>com.bsetunes.client</string>
 	<key>CFBundleDisplayName</key>
 	<string>BSEtunes</string>
-  <key>UIBackgroundModes</key>
-  <array>
-    <string>audio</string>
-  </array>
-  <key>UILaunchStoryboardName</key>
-  <string>MauiSplash</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>MauiSplash</string>
 </dict>
 </plist>

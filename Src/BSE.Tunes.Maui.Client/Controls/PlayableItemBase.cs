@@ -80,12 +80,12 @@ public abstract class PlayableItemBase : ContentView
         set => SetValue(OpenFlyoutCommandParameterProperty, value);
     }
 
-    private void OnFlyoutOpenClicked(object sender, EventArgs e)
+    protected void OnFlyoutOpenClicked(object sender, EventArgs e)
     {
         OpenFlyoutCommand?.Execute(OpenFlyoutCommandParameter);
     }
 
-    private void OnItemTapped(object sender, TappedEventArgs e)
+    protected void OnItemTapped(object sender, TappedEventArgs e)
     {
         PlayCommand?.Execute(PlayCommandParameter);
     }
