@@ -68,12 +68,12 @@ public partial class AlbumPlayerItem : PlayableItemBase
         InitializeComponent();
     }
 
-    private void OnPlayAllClicked(object sender, EventArgs e)
+    protected void OnPlayAllClicked(object sender, EventArgs e)
     {
         PlayCommand?.Execute(PlayCommandParameter);
     }
 
-    private void OnPlayAllRandomizedClicked(object sender, EventArgs e)
+    protected void OnPlayAllRandomizedClicked(object sender, EventArgs e)
     {
         PlayRandomizedCommand?.Execute(PlayRandomizedCommandParameter);
     }

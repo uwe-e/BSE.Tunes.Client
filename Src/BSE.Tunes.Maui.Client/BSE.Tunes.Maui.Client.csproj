@@ -43,18 +43,18 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
-    <ProvisioningType>automatic</ProvisioningType>
-    <CodesignKey>Apple Development: Created via API (HJ33TCN7C3)</CodesignKey>
-    <CodesignProvision>VS: WildCard Development</CodesignProvision>
+  <PropertyGroup>
+    <PackageVersion>1.0.5</PackageVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageVersion>1.0.4</PackageVersion>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignProvision></CodesignProvision>
+    <ProvisioningType>manual</ProvisioningType>
   </PropertyGroup>
   
   <ItemGroup>
