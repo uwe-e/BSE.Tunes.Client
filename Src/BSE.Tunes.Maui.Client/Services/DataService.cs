@@ -27,35 +27,27 @@ namespace BSE.Tunes.Maui.Client.Services
             builder.AppendToPath("api/tunes/IsHostAccessible");
 
             using var client = await _requestService.GetHttpClient(false).ConfigureAwait(false);
-            // CancellationTokenSource class that will be canceled after the specified delay in milliseconds.
+            // CancellationTokenSource that will be canceled after the specified delay in seconds.
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var response = await client.GetAsync(builder.Uri, cts.Token);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Health check failed with status code {(int)response.StatusCode} ({response.StatusCode}).");
+            }
+
+            var serialized = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(serialized))
+            {
+                throw new FormatException("Health endpoint returned empty response; expected boolean \"true\".");
+            }
+
             try
             {
-                using var response = await client.GetAsync(builder.Uri, cts.Token);
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new HttpRequestException($"Health check failed with status code {(int)response.StatusCode} ({response.StatusCode}).");
-                }
-
-                var serialized = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrWhiteSpace(serialized))
-                {
-                    throw new FormatException("Health endpoint returned empty response; expected boolean \"true\".");
-                }
-
-                try
-                {
-                    return JsonSerializer.Deserialize<bool>(serialized);
-                }
-                catch (JsonException jsonEx)
-                {
-                    throw new FormatException("Health endpoint returned invalid response; expected boolean \"true\".", jsonEx);
-                }
+                return JsonSerializer.Deserialize<bool>(serialized);
             }
-            catch (Exception)
+            catch (JsonException jsonEx)
             {
-                throw;
+                throw new FormatException("Health endpoint returned invalid response; expected boolean \"true\".", jsonEx);
             }
         }
 

@@ -12,7 +12,7 @@
         /// <param name="name">The name of the target to navigate to.</param>
         /// <param name="parameters">The navigation parameters</param>
         /// <returns></returns>
-        public async static Task<INavigationResult> RestartAndNavigateAsync(this INavigationService navigationService, string name, INavigationParameters parameters = null)
+        public static async Task<INavigationResult> RestartAndNavigateAsync(this INavigationService navigationService, string name, INavigationParameters parameters = null)
         {
             var container = ContainerLocator.Container;
             var regionManager = container.Resolve<IRegionManager>();
@@ -25,5 +25,4 @@
             return await navigationService.NavigateAsync(name, parameters);
         }
     }
-    
 }

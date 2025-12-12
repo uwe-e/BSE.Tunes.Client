@@ -49,9 +49,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
 
             /* 
-             * if theres a valid url, use it.
+             * if there's a valid url, use it.
              * Valid urls are urls with a http or https scheme.
-             * an url with the scheme "http" is valid for debugging reasons.
+             * a URL with the scheme "http" is valid for debugging reasons.
             */
             if (Uri.TryCreate(input, UriKind.Absolute, out Uri uriResult) &&
                 (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
@@ -73,7 +73,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
 
             try
-            { 
+            {
                 
                 if (String.IsNullOrEmpty(serviceEndPoint))
                 {
@@ -96,7 +96,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         }
                     }
                     catch (Exception)
-                    { 
+                    {
                         await NavigationService.CreateBuilder()
                                 .UseAbsoluteNavigation()
                                 .AddSegment<LoginWizzardPage>()
