@@ -32,34 +32,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         try
                         {
                             await _authenticationService.RequestRefreshTokenAsync(user.Token);
-                            _navigationService.CreateBuilder()
+                            await _navigationService.CreateBuilder()
                                 .UseAbsoluteNavigation()
                                 .AddSegment<MainPage>()
-                                .Navigate();
+                                .NavigateAsync();
                         }
                         catch (Exception)
                         {
-                            _navigationService.CreateBuilder()
+                            await _navigationService.CreateBuilder()
                                  .UseAbsoluteNavigation()
                                  .AddSegment<LoginWizzardPage>()
-                                 .Navigate();
+                                 .NavigateAsync();
                         }
                     }
                     else
                     {
-                        _navigationService.CreateBuilder()
+                        await _navigationService.CreateBuilder()
                                 .UseAbsoluteNavigation()
                                 .AddSegment<LoginWizzardPage>()
-                                .Navigate();
+                                .NavigateAsync();
                     }
                 }
             }
             catch (Exception)
             {
-                _navigationService.CreateBuilder()
+                await _navigationService.CreateBuilder()
                                 .UseAbsoluteNavigation()
                                 .AddSegment<ServiceEndpointWizzardPageViewModel>()
-                                .Navigate();
+                                .NavigateAsync();
             }
         }
 

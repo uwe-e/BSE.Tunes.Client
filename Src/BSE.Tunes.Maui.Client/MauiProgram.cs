@@ -13,7 +13,6 @@ namespace BSE.Tunes.Maui.Client
     {
         public static MauiApp CreateMauiApp()
         {
-            //.UseMauiCommunityToolkitMediaElement()
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -23,12 +22,6 @@ namespace BSE.Tunes.Maui.Client
                 .UseBSEMediaElementExtension()
                 .UsePrism(prism =>
                 {
-                    //prism.OnAppStart(async navigationService =>
-                    //{
-                    //    var result = await navigationService.NavigateAsync("SplashPage");
-                    //})
-                    //prism.OnAppStart(navigationService => navigationService.CreateBuilder()
-                    //.AddSegment<SplashPageViewModel>())
                     prism.RegisterTypes(container =>
                     {
                         container.RegisterForNavigation<MainPage, MainPageViewModel>();
@@ -77,12 +70,6 @@ namespace BSE.Tunes.Maui.Client
 
 
                     })
-                    //.OnInitialized(containerProvider =>
-                    //{
-                    //    var regionManager = containerProvider.Resolve<IRegionManager>();
-                    //    regionManager.RequestNavigate("AlbumsCarousel", nameof(AlbumsCarouselView));
-                    //    //regionManager.RegisterViewWithRegion("AlbumsCarouselView", nameof(AlbumsCarouselView));
-                    //})
                     .CreateWindow(navigationService => navigationService.CreateBuilder()
                     .AddSegment<SplashPageViewModel>()
                     .NavigateAsync(HandleNavigationError));
@@ -102,9 +89,6 @@ namespace BSE.Tunes.Maui.Client
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            //builder.Services.AddTransient<PlaylistActionToolbarPage>();
-            //builder.Services.AddTransient<PlaylistActionToolbarPageViewModel>();
-            // builder.UseMauiCompatibility();
 
             return builder.Build();
         }

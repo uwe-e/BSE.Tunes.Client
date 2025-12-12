@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Services;
+﻿using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -52,10 +53,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             try
             {
                 await _authenticationService.LoginAsync(UserName, Password);
-                NavigationService.CreateBuilder()
-                                .UseAbsoluteNavigation()
-                                .AddSegment<MainPage>()
-                                .Navigate();
+                var result = await NavigationService.RestartAndNavigateAsync("/" + nameof(SplashPage));
+                if (!result.Success)
+                {
+                    // log result.Exception or message to debug output
+                    System.Diagnostics.Debug.WriteLine(result.Exception);
+                }
             }
             catch (Exception)
             {

@@ -547,6 +547,16 @@ namespace BSE.Tunes.Maui.Client.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The web server is currently unavailable or you have entered the address incorrectly.
+        ///If the address is correct, please try again later..
+        /// </summary>
+        internal static string ServiceEndpointPageViewModel_NotAvailableExceptionMessage {
+            get {
+                return ResourceManager.GetString("ServiceEndpointPageViewModel_NotAvailableExceptionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do you want to delete the address for this BSETunes?.
         /// </summary>
         internal static string ServiceEndpointSettingsPage_ActionSheet_Title {
