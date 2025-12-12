@@ -74,12 +74,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async void DeleteAction()
         {
-            //if (await PlayerManager.CloseAsync())
-            {
                 _settingsService.ServiceEndPoint = null;
-
-                await NavigationService.NavigateAsync($"/{nameof(NavigationPage)}/{nameof(ServiceEndpointWizzardPage)}");
-            }
+                await NavigationService.NavigateAsync($"/{nameof(ServiceEndpointWizzardPage)}");
         }
     }
 }

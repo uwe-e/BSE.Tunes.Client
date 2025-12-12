@@ -23,25 +23,40 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public async Task<bool> IsEndPointAccessibleAsync(string serviceEndPoint)
         {
-            bool isAccessible = false;
             var builder = new UriBuilder(serviceEndPoint);
             builder.AppendToPath("api/tunes/IsHostAccessible");
 
-            using (var client = await _requestService.GetHttpClient(false))
+            using var client = await _requestService.GetHttpClient(false).ConfigureAwait(false);
+            // CancellationTokenSource class that will be canceled after the specified delay in milliseconds.
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            try
             {
+                using var response = await client.GetAsync(builder.Uri, cts.Token);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Health check failed with status code {(int)response.StatusCode} ({response.StatusCode}).");
+                }
+
+                var serialized = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrWhiteSpace(serialized))
+                {
+                    throw new FormatException("Health endpoint returned empty response; expected boolean \"true\".");
+                }
+
                 try
                 {
-                    var responseMessage = await client.GetAsync(builder.Uri);
-                    var serialized = await responseMessage.Content.ReadAsStringAsync();
-                    isAccessible = await Task.Run(() => JsonSerializer.Deserialize<bool>(serialized));
+                    return JsonSerializer.Deserialize<bool>(serialized);
                 }
-                catch (Exception)
+                catch (JsonException jsonEx)
                 {
-                    throw;
+                    throw new FormatException("Health endpoint returned invalid response; expected boolean \"true\".", jsonEx);
                 }
             }
-
-            return isAccessible;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public Task<ObservableCollection<Album>> GetAlbumsByArtist(int artistId, int skip = 0, int limit = 10)

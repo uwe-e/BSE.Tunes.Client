@@ -69,12 +69,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async void DeleteAction()
         {
-            //if (await PlayerManager.CloseAsync())
-            {
-                _settingsService.User = null;
+            _settingsService.User = null;
 
-                await NavigationService.NavigateAsync($"/{nameof(NavigationPage)}/{nameof(LoginWizzardPage)}");
-            }
+            await NavigationService.NavigateAsync($"/{nameof(NavigationPage)}/{nameof(LoginWizzardPage)}");
         }
 
         public override void LoadSettings()
