@@ -28,7 +28,7 @@
     <ApplicationId>com.bsetunes.bse.tunes.maui.client</ApplicationId>
 
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
@@ -47,11 +47,13 @@
     <PackageVersion>1.0.5</PackageVersion>
   </PropertyGroup>
 
+  <!-- Release build for android distribution -->
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
     <AndroidPackageFormat>apk</AndroidPackageFormat>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+  
+  <!-- Release build for ios distribution -->
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net9.0-ios'">
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignProvision></CodesignProvision>
     <ProvisioningType>manual</ProvisioningType>

@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
@@ -40,29 +41,44 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private async void Save()
         {
             string serviceEndPoint = null;
+            var input = ServiceEndPoint?.Trim();
+
+            if (String.IsNullOrEmpty(input))
+            {
+                return; // Safeguard; command should prevent this.
+            }
 
             /* 
-             * if theres a valid url, use it.
+             * if there's a valid url, use it.
              * Valid urls are urls with a http or https scheme.
-             * an url with the scheme "http" is valid for debugging reasons.
+             * a URL with the scheme "http" is valid for debugging reasons.
             */
-            if (Uri.TryCreate(ServiceEndPoint, UriKind.Absolute, out Uri uriResult))
+            if (Uri.TryCreate(input, UriKind.Absolute, out Uri uriResult) &&
+                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
                 serviceEndPoint = uriResult.AbsoluteUri;
             }
             else
             {
-                //invalid urls have no scheme
-                if (!ServiceEndPoint?.StartsWith(Uri.UriSchemeHttps) ?? false)
+                var hasScheme = input.StartsWith(Uri.UriSchemeHttp + "://", StringComparison.OrdinalIgnoreCase)
+                                || input.StartsWith(Uri.UriSchemeHttps + "://", StringComparison.OrdinalIgnoreCase);
+
+                var candidate = hasScheme ? input : (Uri.UriSchemeHttps + "://" + input);
+
+                if (Uri.TryCreate(candidate, UriKind.Absolute, out uriResult) &&
+                    (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
-                    //build a valid url with a https scheme. That should be the default scheme.
-                    var uriBuilder = new UriBuilder(Uri.UriSchemeHttps, ServiceEndPoint);
-                    serviceEndPoint = uriBuilder.Uri.AbsoluteUri;
+                    serviceEndPoint = uriResult.AbsoluteUri;
                 }
             }
 
             try
             {
+                if (String.IsNullOrEmpty(serviceEndPoint))
+                {
+                    throw new InvalidOperationException("The service endpoint is not a valid URL.");
+                }
+            
                 await _dataService.IsEndPointAccessibleAsync(serviceEndPoint);
                 _settingsService.ServiceEndPoint = serviceEndPoint;
                 if (_settingsService.User is User user)
@@ -70,35 +86,41 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     try
                     {
                         await _authenticationService.RequestRefreshTokenAsync(user.Token);
-                        NavigationService.CreateBuilder()
-                                .UseAbsoluteNavigation()
-                                .AddSegment<MainPage>()
-                                .Navigate();
+
+                        var result = await NavigationService.RestartAndNavigateAsync("/" + nameof(SplashPage));
+                        if (!result.Success)
+                        {
+                            // log result.Exception or message to debug output
+                            System.Diagnostics.Debug.WriteLine(result.Exception);
+                        }
                     }
                     catch (Exception)
                     {
-                        NavigationService.CreateBuilder()
+                        await NavigationService.CreateBuilder()
                                 .UseAbsoluteNavigation()
                                 .AddSegment<LoginWizzardPage>()
-                                .Navigate();
+                                .NavigateAsync();
                     }
                 }
                 else
                 {
-                    NavigationService.CreateBuilder()
+                    await NavigationService.CreateBuilder()
                                 .UseAbsoluteNavigation()
                                 .AddSegment<LoginWizzardPage>()
-                                .Navigate();
+                                .NavigateAsync();
                 }
             }
             catch (Exception exception)
             {
+                System.Diagnostics.Debug.WriteLine(nameof(Save) + ":" + exception.Message);
+
                 var title = _resourceService.GetString("AlertDialog_Error_Title_Text");
+                string message = _resourceService.GetString("ServiceEndpointPageViewModel_NotAvailableExceptionMessage");
                 var dialogResult = _resourceService.GetString("Dialog_Result_Cancel");
 
                 await _pageDialogService.DisplayAlertAsync(
                     title,
-                    exception.Message,
+                    message,
                     dialogResult);
             }
         }
