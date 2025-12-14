@@ -74,7 +74,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             try
             {
-                
                 if (String.IsNullOrEmpty(serviceEndPoint))
                 {
                     throw new InvalidOperationException("The service endpoint is not a valid URL.");

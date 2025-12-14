@@ -11,15 +11,17 @@
         /// <param name="navigationService">Service for handling navigation between views</param>
         /// <param name="name">The name of the target to navigate to.</param>
         /// <param name="parameters">The navigation parameters</param>
-        /// <returns></returns>
+        /// <returns>indicating whether the request was successful or if there was an encountered <see cref="Exception"/>.</returns>
         public static async Task<INavigationResult> RestartAndNavigateAsync(this INavigationService navigationService, string name, INavigationParameters parameters = null)
         {
             var container = ContainerLocator.Container;
             var regionManager = container.Resolve<IRegionManager>();
 
-            // Clear regions
-            foreach (var region in regionManager.Regions.ToList())
-                regionManager.Regions.Remove(region.Name);
+            if(regionManager != null)
+            {   // Clear regions
+                foreach (var region in regionManager.Regions.ToList())
+                    regionManager.Regions.Remove(region.Name);
+            }
 
             // navigate to the specified target
             return await navigationService.NavigateAsync(name, parameters);
