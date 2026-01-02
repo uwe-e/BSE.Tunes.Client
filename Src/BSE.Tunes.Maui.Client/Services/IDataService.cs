@@ -13,6 +13,7 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<ObservableCollection<Album>> GetNewestAlbums(int limit);
         Task<int> GetNumberOfAlbumsByGenre(int? genreId);
         Task<ObservableCollection<Album>> GetAlbumsByGenre(int? genreId, int skip, int limit);
+        Uri GetAlbumCoverUriById(Guid albumId, bool asThumbnail = false);
         Uri GetImage(Guid imageId, bool asThumbnail = false);
         Task<Playlist> AppendToPlaylist(Playlist playlist);
         Task DeletePlaylist(int playlistId);

@@ -2,6 +2,8 @@
 {
     public interface IRequestService
     {
+        Task<T> GetAsync<T>(string path);
+        Task<T> GetAsync<T>(string path, CancellationToken token);
         Task<T> GetAsync<T>(Uri uri);
         Task<T> GetAsync<T>(Uri uri, CancellationToken token);
         Task<U> PostAsync<U, T>(Uri uri, T from);

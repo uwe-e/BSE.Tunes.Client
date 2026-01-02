@@ -66,7 +66,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 _mediaManager.Playlist = _trackIds.ToNavigableCollection();
                 PlayRandomCommand.RaiseCanExecuteChanged();
             }
-            await LoadSystemInfo();
+            //await LoadSystemInfo();
 
             IsBusy = false;
         }

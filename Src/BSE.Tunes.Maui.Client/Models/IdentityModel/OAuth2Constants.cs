@@ -15,6 +15,7 @@ namespace BSE.Tunes.Maui.Client.Models.IdentityModel
         public const string Error = "error";
         public const string IdentityToken = "id_token";
         public const string RefreshToken = "refresh_token";
+        public const string UserId = "user_id";
         public const string TokenType = "token_type";
         public const string GrantType = "grant_type";
 

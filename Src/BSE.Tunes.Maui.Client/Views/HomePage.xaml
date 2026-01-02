@@ -11,13 +11,13 @@
         <ScrollView>
             <StackLayout>
 
-                <ContentView prism:RegionManager.RegionName="AlbumsCarousel"/>
+                <!--<ContentView prism:RegionManager.RegionName="AlbumsCarousel"/>-->
 
                 <ContentView prism:RegionManager.RegionName="RandomPlayerButton" Margin="5,10" HeightRequest="80"/>
                 
-                <ContentView prism:RegionManager.RegionName="FeaturedAlbums" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>
+                <!--<ContentView prism:RegionManager.RegionName="FeaturedAlbums" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>
                 
-                <ContentView prism:RegionManager.RegionName="FeaturedPlaylists" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>
+                <ContentView prism:RegionManager.RegionName="FeaturedPlaylists" Margin="5,10" HeightRequest="{OnIdiom Default=220, Tablet=260}"/>-->
 
             </StackLayout>
         </ScrollView>

@@ -1,11 +1,28 @@
-﻿using System.Text;
+﻿using BSE.Tunes.Maui.Client.Extensions;
+using System.Text;
 using System.Text.Json;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
-    public class RequestService(IAuthenticationService authenticationService) : IRequestService
+    public class RequestService(
+        IAuthenticationService authenticationService,
+        ISettingsService settingsService) : IRequestService
     {
         private readonly IAuthenticationService _authenticationService = authenticationService;
+        private readonly ISettingsService _settingsService = settingsService;
+
+        public async Task<T> GetAsync<T>(string path)
+        {
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            builder.AppendToPath(path);
+
+            return await GetAsync<T>(builder.Uri);
+        }
+
+        public Task<T> GetAsync<T>(string path, CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<TResult> GetAsync<TResult>(Uri uri)
         {
@@ -15,7 +32,12 @@ namespace BSE.Tunes.Maui.Client.Services
                 var responseMessage = await client.GetAsync(uri);
                 //responseMessage.EnsureExtendedSuccessStatusCode();
                 var serialized = await responseMessage.Content.ReadAsStringAsync();
-                result = JsonSerializer.Deserialize<TResult>(serialized);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                result = JsonSerializer.Deserialize<TResult>(serialized, options);
             }
             return result;
         }
@@ -73,13 +95,20 @@ namespace BSE.Tunes.Maui.Client.Services
             //    throw new ConnectivityException();
             //}
             var httpClient = new HttpClient();
-            var tokenResponse = _authenticationService.TokenResponse;
-            if (withRefreshToken && tokenResponse != null)
+            var accessToken = await _authenticationService.GetAuthTokenAsync();
+            if (!string.IsNullOrEmpty(accessToken))
             {
-                tokenResponse = await _authenticationService.RequestRefreshTokenAsync(tokenResponse.RefreshToken);
-                httpClient.SetBearerToken(tokenResponse.AccessToken);
+                httpClient.SetBearerToken(accessToken);
             }
+            //var tokenResponse = _authenticationService.TokenResponse;
+            //if (withRefreshToken && tokenResponse != null)
+            //{
+            //    tokenResponse = await _authenticationService.RequestRefreshTokenAsync(tokenResponse.RefreshToken);
+            //    httpClient.SetBearerToken(tokenResponse.AccessToken);
+            //}
             return httpClient;
         }
+
+        
     }
 }

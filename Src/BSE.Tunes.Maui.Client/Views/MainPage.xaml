@@ -25,7 +25,7 @@
             <views:HomePage/>
         </x:Arguments>
     </prism:PrismNavigationPage>
-    <prism:PrismNavigationPage>
+    <!--<prism:PrismNavigationPage>
         <x:Arguments>
             <views:AlbumsPage/>
         </x:Arguments>
@@ -39,7 +39,7 @@
         <x:Arguments>
             <views:SearchPage/>
         </x:Arguments>
-    </prism:PrismNavigationPage>
+    </prism:PrismNavigationPage>-->
     <prism:PrismNavigationPage>
         <x:Arguments>
             <views:SettingsPage/>

@@ -8,7 +8,9 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             get;
         }
-        Task<bool> LoginAsync(string userName, string password);
+        Task<bool> SignInAsync(string userName, string password);
+        Task<string> GetAuthTokenAsync();
+
         Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken);
     }
 }

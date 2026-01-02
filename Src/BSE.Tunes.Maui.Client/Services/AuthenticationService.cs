@@ -2,6 +2,7 @@
 using BSE.Tunes.Maui.Client.Models.IdentityModel;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 
 namespace BSE.Tunes.Maui.Client.Services
@@ -15,7 +16,10 @@ namespace BSE.Tunes.Maui.Client.Services
             private set;
         }
 
-        public async Task<bool> LoginAsync(string userName, string password)
+        public UserToken UserToken { get; private set; }
+
+
+        public async Task<bool> SignInAsync(string userName, string password)
         {
             var fields = new Dictionary<string, string>
             {
@@ -26,12 +30,24 @@ namespace BSE.Tunes.Maui.Client.Services
 
             try
             {
-                TokenResponse = await RequestAsync(fields);
+                var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+                builder.AppendToPath("login");
+
+                UserToken = await RequestAsync(builder.Uri, fields);
                 _settingsService.User = new Models.User
                 {
                     UserName = userName,
-                    Token = this.TokenResponse.RefreshToken
+                    Token = UserToken.RefreshToken
                 };
+                await _settingsService
+                    .SetUserTokenAsync(
+                    new UserToken
+                    {
+                        AccessToken = UserToken.AccessToken,
+                        RefreshToken = UserToken.RefreshToken,
+                        ExpiresAt = UserToken.ExpiresAt
+                    }).ConfigureAwait(false);
+                
                 return true;
             }
             catch (Exception)
@@ -59,6 +75,66 @@ namespace BSE.Tunes.Maui.Client.Services
             }
             
             return TokenResponse;
+        }
+
+        public async Task<string> GetAuthTokenAsync()
+        {
+            var userToken = await _settingsService.GetUserTokenAsync().ConfigureAwait(false);
+
+            if (userToken is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+
+            if (userToken.ExpiresAt.Subtract(DateTimeOffset.Now).TotalMinutes > 5)
+            {
+                return userToken.AccessToken;
+            }
+
+            var userId = userToken.AccessToken.ParseJwtToken().Subject ?? string.Empty;
+
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            builder.AppendToPath("refresh");
+
+            var fields = new Dictionary<string, string>
+            {
+                //{ OAuth2Constants.GrantType, OAuth2Constants.GrantTypes.RefreshToken },
+                { OAuth2Constants.RefreshToken, userToken.RefreshToken },
+                { OAuth2Constants.UserId, userId }
+                //{ "refreshToken", userToken.RefreshToken },
+                //{ "userId", userId }
+            };
+
+            try
+            {
+                UserToken = await RequestAsync(builder.Uri, fields);
+                _settingsService.Token = UserToken.RefreshToken;
+                await _settingsService
+                    .SetUserTokenAsync(
+                    new UserToken
+                    {
+                        AccessToken = UserToken.AccessToken,
+                        RefreshToken = UserToken.RefreshToken,
+                        ExpiresAt = UserToken.ExpiresAt
+                    }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return UserToken.AccessToken;
+        }
+
+        private async Task<UserToken> RequestAsync(Uri uri, Dictionary<string, string> fields)
+        {
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.PostAsJsonAsync(uri, fields);
+
+            response.EnsureSuccessStatusCode();
+            
+            return await response.Content.ReadFromJsonAsync<UserToken>();
+
         }
 
         private async Task<TokenResponse> RequestAsync(Dictionary<string, string> fields)
@@ -98,5 +174,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
             return Convert.ToBase64String(encoding.GetBytes(credential));
         }
+
+        
     }
 }

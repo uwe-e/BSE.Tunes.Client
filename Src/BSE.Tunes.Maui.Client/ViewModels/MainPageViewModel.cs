@@ -47,7 +47,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             if (track != null)
             {
-                Uri coverSource = _dataService.GetImage(track.Album.AlbumId, true);
+                Uri coverSource = _dataService.GetAlbumCoverUriById(track.Album.AlbumId, true);
                 if (coverSource != null && !coverSource.Equals(CoverSource))
                 {
                     CoverSource = coverSource;

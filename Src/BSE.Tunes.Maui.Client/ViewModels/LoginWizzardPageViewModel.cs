@@ -52,7 +52,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             try
             {
-                await _authenticationService.LoginAsync(UserName, Password);
+                await _authenticationService.SignInAsync(UserName, Password);
                 var result = await NavigationService.RestartAndNavigateAsync("/" + nameof(SplashPage));
                 if (!result.Success)
                 {

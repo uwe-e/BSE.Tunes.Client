@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace BSE.Tunes.Maui.Client.Services
@@ -24,7 +25,8 @@ namespace BSE.Tunes.Maui.Client.Services
         public async Task<bool> IsEndPointAccessibleAsync(string serviceEndPoint)
         {
             var builder = new UriBuilder(serviceEndPoint);
-            builder.AppendToPath("api/tunes/IsHostAccessible");
+            //builder.AppendToPath("api/tunes/IsHostAccessible");
+            builder.AppendToPath("api/system/is-host-accessible");
 
             using var client = await _requestService.GetHttpClient(false).ConfigureAwait(false);
             // CancellationTokenSource that will be canceled after the specified delay in seconds.
@@ -99,6 +101,17 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/albums/search/?query={query}&skip={skip}&limit={limit}";
             return _requestService.GetAsync<Album[]>(new UriBuilder(strUrl).Uri, token);
         }
+        
+        public Uri GetAlbumCoverUriById(Guid albumId, bool asThumbnail = false)
+        {
+            var builder = new UriBuilder(_settingsService.ServiceEndPoint);
+            builder.AppendToPath(string.Format($"api/albums/{albumId}/cover/"));
+            if (asThumbnail)
+            {
+                builder.AppendToPath($"{asThumbnail}");
+            }
+            return builder.Uri;
+        }
 
         public Task<int> GetNumberOfAlbumsByGenre(int? genreId)
         {
@@ -125,14 +138,19 @@ namespace BSE.Tunes.Maui.Client.Services
         }
         public Task<Track> GetTrackById(int trackId)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/tracks/{trackId}";
-            return _requestService.GetAsync<Track>(new UriBuilder(strUrl).Uri);
+            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/tracks/{trackId}";
+            //return _requestService.GetAsync<Track>(new UriBuilder(strUrl).Uri);
+            return _requestService.GetAsync<Track>($"api/tracks/{trackId}");
         }
 
         public Task<ObservableCollection<int>> GetTrackIdsByGenre(int? genreId = null)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/tracks/genre/{genreId ?? 0}";
-            return _requestService.GetAsync<ObservableCollection<int>>(new UriBuilder(strUrl).Uri);
+            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/tracks/genre/{genreId ?? 0}";
+            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/tracks/genre/{genreId}";
+            //var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            //builder.AppendToPath($"/api/tracks/genre/{genreId}");
+            //return _requestService.GetAsync<ObservableCollection<int>>(builder.Uri);
+            return _requestService.GetAsync<ObservableCollection<int>>($"api/tracks/genre/{genreId}");
         }
 
         public Task<Track[]> GetTrackSearchResults(string query, int skip, int limit)
@@ -199,5 +217,7 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/playlist/update";
             return _requestService.PutAsync<Playlist, Playlist>(new UriBuilder(strUrl).Uri, playlist);
         }
+
+        
     }
 }
