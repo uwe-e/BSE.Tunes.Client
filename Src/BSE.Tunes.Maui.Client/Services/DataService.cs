@@ -125,10 +125,13 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.GetAsync<ObservableCollection<Album>>(new UriBuilder(strUrl).Uri);
         }
         
-        public Task<SystemInfo> GetSystemInfo()
+        public async Task<SystemInfo> GetAvailableTrackCount()
         {
-             string strUrl = $"{_settingsService.ServiceEndPoint}/api/system";
-            return _requestService.GetAsync<SystemInfo>(new UriBuilder(strUrl).Uri);
+            var trackCount = await _requestService.GetAsync<int>($"api/tracks/count");
+            return new SystemInfo
+            {
+                NumberTracks = trackCount
+            };
         }
 
         public Task<Track[]> GetTracksByAlbumId(int albumId)

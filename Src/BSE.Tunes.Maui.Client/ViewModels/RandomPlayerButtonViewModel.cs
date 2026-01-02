@@ -66,14 +66,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 _mediaManager.Playlist = _trackIds.ToNavigableCollection();
                 PlayRandomCommand.RaiseCanExecuteChanged();
             }
-            //await LoadSystemInfo();
+            await LoadSystemInfo();
 
             IsBusy = false;
         }
 
         private async Task LoadSystemInfo()
         {
-            var sysInfo = await _dataService.GetSystemInfo();
+            var sysInfo = await _dataService.GetAvailableTrackCount();
             if (sysInfo != null)
             {
                 Text = string.Format(_resourceService.GetString("HomePage_RandomPlayerButton_Button_Text"), sysInfo.NumberTracks);
