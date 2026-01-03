@@ -61,8 +61,12 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public Task<ObservableCollection<Album>> GetFeaturedAlbums(int limit)
         {
-            string strUrl = string.Format("{0}/api/v2/albums/featured?limit={1}", this._settingsService.ServiceEndPoint, limit);
-            return _requestService.GetAsync<ObservableCollection<Album>>(new UriBuilder(strUrl).Uri);
+            // Use Dictionary<string, string> for parameters as per IRequestService signature
+            var parameters = new Dictionary<string, string> {
+                { "limit", limit.ToString() }
+            };
+            
+            return _requestService.GetAsync<ObservableCollection<Album>>("api/albums/featured", parameters);
         }
 
         public Task<ObservableCollection<Album>> GetNewestAlbums(int limit)

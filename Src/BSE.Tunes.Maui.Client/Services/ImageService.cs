@@ -198,7 +198,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private Uri GetImageUrl(bool asThumbnail, Guid id)
         {
-            return _dataService.GetImage(id, asThumbnail);
+            return _dataService.GetAlbumCoverUriById(id, asThumbnail);
         }
 
         public async Task RemoveStitchedBitmaps(int playlistId)

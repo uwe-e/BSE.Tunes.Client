@@ -4,6 +4,8 @@
     {
         Task<T> GetAsync<T>(string path);
         Task<T> GetAsync<T>(string path, CancellationToken token);
+        Task<T> GetAsync<T>(string path, Dictionary<string, string> parameters);
+        Task<T> GetAsync<T>(string path, Dictionary<string, string> parameters, CancellationToken token);
         Task<T> GetAsync<T>(Uri uri);
         Task<T> GetAsync<T>(Uri uri, CancellationToken token);
         Task<U> PostAsync<U, T>(Uri uri, T from);

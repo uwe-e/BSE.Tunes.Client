@@ -19,9 +19,30 @@ namespace BSE.Tunes.Maui.Client.Services
             return await GetAsync<T>(builder.Uri);
         }
 
-        public Task<T> GetAsync<T>(string path, CancellationToken token)
+        public async Task<T> GetAsync<T>(string path, CancellationToken token)
         {
-            throw new NotImplementedException();
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            builder.AppendToPath(path);
+
+            return await GetAsync<T>(builder.Uri, token);
+        }
+
+        public async Task<T> GetAsync<T>(string path, Dictionary<string, string> parameters)
+        {
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            builder.AppendToPath(path);
+            builder.AppendQueryParameters(parameters);
+
+            return await GetAsync<T>(builder.Uri);
+        }
+        
+        public async Task<T> GetAsync<T>(string path, Dictionary<string, string> parameters, CancellationToken token)
+        {
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            builder.AppendToPath(path);
+            builder.AppendQueryParameters(parameters);
+
+            return await GetAsync<T>(builder.Uri, token);
         }
 
         public async Task<TResult> GetAsync<TResult>(Uri uri)
