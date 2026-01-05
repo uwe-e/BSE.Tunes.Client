@@ -4,6 +4,7 @@ using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using BSEtunes.Domain.Enums;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -70,7 +71,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
 
             _pageSize = 10;
-            _pageNumber = 0;
+            _pageNumber = 1;
             _hasItems = true;
             HasFurtherAlbums = false;
 
@@ -190,13 +191,35 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 IsQueryBusy = true;
                 try
                 {
-                    var albums = await _dataService.GetAlbumsByArtist(Album.Artist.Id, _pageNumber, _pageSize);
-                    if (albums == null || albums.Count == 0)
+                    PagedResult<Album> pagedAlbums = await _dataService.GetPagedAlbums(
+                        null,
+                        Album.Artist.Id,
+                        null,
+                        null,
+                        null,
+                        _pageNumber,
+                        _pageSize,
+                        AlbumSortOption.Title);
+
+                    if (pagedAlbums?.Items == null|| !pagedAlbums.Items.Any())
                     {
                         _hasItems = false;
                         return;
                     }
-                    foreach (var album in albums)
+
+                    HasFurtherAlbums = pagedAlbums.TotalCount > 1;
+                    
+                    if(pagedAlbums.TotalPages == _pageNumber)
+                    {
+                        _hasItems = false;
+                    }
+
+                    if (pagedAlbums.HasNextPage)
+                    {
+                        _pageNumber++;
+                    }
+
+                    foreach (var album in pagedAlbums.Items)
                     {
                         if (album != null)
                         {
@@ -209,11 +232,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             });
                         }
                     }
-                    if (Albums.Count > 1)
-                    {
-                        HasFurtherAlbums = true;
-                    }
-                    _pageNumber = Albums.Count;
                 }
                 finally
                 {

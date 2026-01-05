@@ -25,12 +25,12 @@
             <views:HomePage/>
         </x:Arguments>
     </prism:PrismNavigationPage>
-    <!--<prism:PrismNavigationPage>
+    <prism:PrismNavigationPage>
         <x:Arguments>
             <views:AlbumsPage/>
         </x:Arguments>
     </prism:PrismNavigationPage>
-    <prism:PrismNavigationPage>
+    <!--<prism:PrismNavigationPage>
         <x:Arguments>
             <views:PlaylistsPage/>
         </x:Arguments>

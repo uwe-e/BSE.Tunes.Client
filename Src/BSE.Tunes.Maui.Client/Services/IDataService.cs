@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Models.Contract;
+using BSEtunes.Domain.Enums;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.Maui.Client.Services
@@ -13,6 +14,15 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<ObservableCollection<Album>> GetNewestAlbums(int limit);
         Task<int> GetNumberOfAlbumsByGenre(int? genreId);
         Task<ObservableCollection<Album>> GetAlbumsByGenre(int? genreId, int skip, int limit);
+        Task<PagedResult<Album>> GetPagedAlbums(
+            string? genre,
+            int? artistId,
+            string? artistName,
+            int? yearFrom,
+            int? yearTo,
+            int pageNumber,
+            int pageSize,
+            AlbumSortOption albumSortOption = AlbumSortOption.Title);
         Uri GetAlbumCoverUriById(Guid albumId, bool asThumbnail = false);
         Uri GetImage(Guid imageId, bool asThumbnail = false);
         Task<Playlist> AppendToPlaylist(Playlist playlist);

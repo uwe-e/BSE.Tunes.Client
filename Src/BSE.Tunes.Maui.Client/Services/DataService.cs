@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
+using BSEtunes.Domain.Enums;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text.Json;
@@ -63,16 +64,22 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             // Use Dictionary<string, string> for parameters as per IRequestService signature
             var parameters = new Dictionary<string, string> {
+                { "sortBy", AlbumSortOption.Random.ToString() },
                 { "limit", limit.ToString() }
             };
-            
-            return _requestService.GetAsync<ObservableCollection<Album>>("api/albums/featured", parameters);
+
+            return _requestService.GetAsync<ObservableCollection<Album>>("api/albums", parameters);
         }
 
         public Task<ObservableCollection<Album>> GetNewestAlbums(int limit)
         {
-            string strUrl = string.Format("{0}/api/v2/albums/newest?limit={0}", this._settingsService.ServiceEndPoint, limit);
-            return _requestService.GetAsync<ObservableCollection<Album>>(new UriBuilder(strUrl).Uri);
+            // Use Dictionary<string, string> for parameters as per IRequestService signature
+            var parameters = new Dictionary<string, string> {
+                { "sortBy", AlbumSortOption.NewestDesc.ToString()  },
+                { "limit", limit.ToString() }
+            };
+
+            return _requestService.GetAsync<ObservableCollection<Album>>("api/albums", parameters);
         }
 
         public Uri GetImage(Guid imageId, bool asThumbnail = false)
@@ -88,8 +95,9 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public Task<Album> GetAlbumById(int albumId)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/{albumId}";
-            return _requestService.GetAsync<Album>(new UriBuilder(strUrl).Uri);
+            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/{albumId}";
+            //return _requestService.GetAsync<Album>(new UriBuilder(strUrl).Uri);
+            return _requestService.GetAsync<Album>($"api/albums/{albumId}");
         }
         
         public Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit)
@@ -136,6 +144,47 @@ namespace BSE.Tunes.Maui.Client.Services
             {
                 NumberTracks = trackCount
             };
+        }
+        public Task<PagedResult<Album>> GetPagedAlbums(
+            string genre,
+            int? artistId,
+            string artistName,
+            int? yearFrom,
+            int? yearTo,
+            int pageNumber,
+            int pageSize,
+            AlbumSortOption albumSortOption = AlbumSortOption.Title)
+        {
+            // Use Dictionary<string, string> for parameters as per IRequestService signature
+            var parameters = new Dictionary<string, string>(7)
+            {
+                ["sortBy"] = albumSortOption.ToString(),
+                ["pageNumber"] = pageNumber.ToString(),
+                ["pageSize"] = pageSize.ToString()
+            };
+
+            if (!string.IsNullOrWhiteSpace(genre))
+            {
+                parameters["genre"] = genre;
+            }
+            if (artistId.HasValue)
+            {
+                parameters["artistId"] = artistId.Value.ToString();
+            }
+            if (!string.IsNullOrWhiteSpace(artistName))
+            {
+                parameters["artistName"] = artistName;
+            }
+            if (yearFrom.HasValue)
+            {
+                parameters["yearFrom"] = yearFrom.Value.ToString();
+            }
+            if (yearTo.HasValue)
+            {
+                parameters["yearTo"] = yearTo.Value.ToString();
+            }
+
+            return _requestService.GetAsync<PagedResult<Album>>("api/albums/paged", parameters);
         }
 
         public Task<Track[]> GetTracksByAlbumId(int albumId)
@@ -225,6 +274,6 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.PutAsync<Playlist, Playlist>(new UriBuilder(strUrl).Uri, playlist);
         }
 
-        
+
     }
 }

@@ -4,6 +4,7 @@ using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using BSEtunes.Domain.Enums;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -18,24 +19,29 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private int _pageNumber;
         private int _totalNumberOfItems;
         private ObservableCollection<GridPanel> _items;
-        private ICommand _loadMoreItemsCommand;
+        private ICommand _remainingItemsThresholdReachedCommand;
         private ICommand _selectItemCommand;
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
 
-        public ICommand LoadMoreItemsCommand => _loadMoreItemsCommand ??= new DelegateCommand(async () =>
-           {
-               PageSize = 40;
-               await LoadMoreItemsAsync();
-           }, HasMoreItems);
+        public ICommand RemainingItemsThresholdReachedCommand => _remainingItemsThresholdReachedCommand ??= new DelegateCommand(async () =>
+        {
+            if (IsBusy || !HasMoreItems())
+            {
+                return;
+            }
+
+            PageNumber++;
+            await FetchAndPopulateAlbumsAsync();
+        });
 
         public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(SelectItem);
 
 
         private bool HasMoreItems()
         {
-            return HasItems && TotalNumberOfItems > PageNumber;
+            return HasItems && (PageNumber * PageSize) < TotalNumberOfItems;
         }
 
         public ObservableCollection<GridPanel> Items => _items ??= [];
@@ -81,8 +87,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _dataService = dataService;
             _imageService = imageService;
             _eventAggregator = eventAggregator;
-            
-            PageSize = 40;
+
+            PageNumber = 1;
+            PageSize = 30;
 
             _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
             {
@@ -111,16 +118,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task LoadAlbumsAsync(int? genreId)
         {
-            TotalNumberOfItems = await _dataService.GetNumberOfAlbumsByGenre(genreId);
-            HasItems = TotalNumberOfItems > 0;
-            if (HasItems)
-            {
-                IsBusy = false;
-                await LoadMoreItemsAsync();
-            }
+            IsBusy = false;
+            Items.Clear();
+            PageNumber = 1;
+
+            await FetchAndPopulateAlbumsAsync();
         }
 
-        private async Task LoadMoreItemsAsync()
+        private async Task FetchAndPopulateAlbumsAsync()
         {
             if (IsBusy)
             {
@@ -130,28 +135,43 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IsBusy = true;
             try
             {
-                var albums = await _dataService.GetAlbumsByGenre(null, PageNumber, PageSize);
-                if (albums != null)
+                PagedResult<Album> pagedAlbums = await _dataService.GetPagedAlbums(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    PageNumber,
+                    PageSize,
+                    AlbumSortOption.Artist);
+
+                if (PageNumber == 1)
                 {
-                    foreach (var album in albums)
+                    TotalNumberOfItems = pagedAlbums.TotalCount;
+                    HasItems = TotalNumberOfItems > 0;
+                }
+
+                if (pagedAlbums?.Items != null)
+                {
+                    foreach (var album in pagedAlbums.Items)
                     {
-                        if (album != null)
+                        Items.Add(new GridPanel
                         {
-                            Items.Add(new GridPanel
-                            {
-                                Title = album.Title,
-                                SubTitle = album.Artist.Name,
-                                ImageSource = _imageService.GetBitmapSource(album.AlbumId, true),
-                                Data = album
-                            });
-                        }
+                            Title = album.Title,
+                            SubTitle = album.Artist.Name,
+                            ImageSource = _imageService.GetBitmapSource(album.AlbumId, true),
+                            Data = album
+                        });
                     }
-                    PageNumber = Items.Count;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                if (PageNumber > 1)
+                {
+                    PageNumber--; // Rollback on failure during lazy loading
+                }
             }
             finally
             {
