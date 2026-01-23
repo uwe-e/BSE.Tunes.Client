@@ -143,22 +143,23 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 Playlist = await _dataService.GetPlaylistById(playlist.Id, _settingsService.User.UserName);
                 if (Playlist != null)
                 {
-                    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id);
+                    //ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id);
+                    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds);
 
-                    foreach (PlaylistEntry entry in Playlist.Entries?.OrderBy(pe => pe.SortOrder))
-                    {
-                        if (entry != null)
-                        {
-                            Items.Add(new GridPanel
-                            {
-                                Id = entry.Id,
-                                Title = entry.Name,
-                                SubTitle = entry.Artist,
-                                ImageSource = _imageService.GetBitmapSource(entry.AlbumId, true),
-                                Data = entry
-                            });
-                        }
-                    }
+                    //foreach (PlaylistEntry entry in Playlist.Entries?.OrderBy(pe => pe.SortOrder))
+                    //{
+                    //    if (entry != null)
+                    //    {
+                    //        Items.Add(new GridPanel
+                    //        {
+                    //            Id = entry.Id,
+                    //            Title = entry.Name,
+                    //            SubTitle = entry.Artist,
+                    //            ImageSource = _imageService.GetBitmapSource(entry.AlbumId, true),
+                    //            Data = entry
+                    //        });
+                    //    }
+                    //}
 
                     PlayAllCommand.RaiseCanExecuteChanged();
                     PlayAllRandomizedCommand.RaiseCanExecuteChanged();

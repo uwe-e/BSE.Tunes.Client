@@ -136,7 +136,7 @@ namespace BSE.Tunes.Maui.Client.Services
             if (track == null || track.Guid == Guid.Empty)
                 return;
 
-            HttpClient httpClient = await _requestService.GetHttpClient();
+            HttpClient httpClient = await _requestService.GetHttpClientAsync();
             var requestUri = GetRequestUri(track.Guid);
 
             var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);

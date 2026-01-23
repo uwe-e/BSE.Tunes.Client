@@ -12,7 +12,7 @@
         <CollectionView x:Name="albumsView"  ItemsSource="{Binding Items}"
                         ItemSizingStrategy="MeasureFirstItem"
                         RemainingItemsThreshold="10"
-                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreItemsCommand}"
+                        RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
                         behaviours:GridItemsLayoutBehavior.EnableResponsiveSpan="True">
             <CollectionView.ItemsLayout>
                 <!-- The number of spans is calculated within the GridItemsLayoutBehavior -->

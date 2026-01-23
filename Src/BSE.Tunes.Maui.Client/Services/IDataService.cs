@@ -1,5 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Models.Contract;
-using BSEtunes.Domain.Enums;
+using BSEtunes.Contracts.Enums;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.Maui.Client.Services
@@ -27,7 +27,9 @@ namespace BSE.Tunes.Maui.Client.Services
         Uri GetImage(Guid imageId, bool asThumbnail = false);
         Task<Playlist> AppendToPlaylist(Playlist playlist);
         Task DeletePlaylist(int playlistId);
+        Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize);
         Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit);
+        //Task<PagedResult<PlaylistEntryEntity>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize);
         Task<Playlist> GetPlaylistById(int playlistId, string userName);
         Task<Playlist> GetPlaylistByIdWithNumberOfEntries(int playlistId, string userName);
         Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit);

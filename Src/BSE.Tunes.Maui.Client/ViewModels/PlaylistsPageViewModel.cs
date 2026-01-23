@@ -15,21 +15,28 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private bool _isActive;
         private bool _isActivated;
         private bool _hasItems;
-        private ICommand _loadMoreItemsCommand;
+        private ICommand _remainingItemsThresholdReachedCommand;
         private int _pageSize;
         private ObservableCollection<GridPanel> _items;
         private int _pageNumber;
         private ICommand _selectItemCommand;
+        private int _totalNumberOfItems;
         private readonly IDataService _dataService;
         private readonly ISettingsService _settingsService;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IResourceService _resourceService;
 
-        public ICommand LoadMoreItemsCommand => _loadMoreItemsCommand ??= new DelegateCommand(async () =>
+        public ICommand RemainingItemsThresholdReachedCommand => _remainingItemsThresholdReachedCommand ??= new DelegateCommand(async () =>
         {
-            await LoadMoreItemsAsync();
-        }, HasMoreItems);
+            if (IsBusy || !HasMoreItems())
+            {
+                return;
+            }
+
+            PageNumber++;
+            await FetchAndPopulateAlbumsAsync();
+        });
 
         public ICommand SelectItemCommand => _selectItemCommand ??= new DelegateCommand<GridPanel>(async(panel) => await SelectItemAsync(panel));
 
@@ -40,6 +47,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             get => _isActive;
             set => SetProperty(ref _isActive, value, RaiseIsActiveChanged);
         }
+
+        public bool HasItems
+        {
+            get => _hasItems;
+            set => SetProperty(ref _hasItems, value);
+        }
+
         public int PageSize
         {
             get => _pageSize;
@@ -50,6 +64,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             get => _pageNumber;
             set => SetProperty(ref _pageNumber, value);
+        }
+
+        public int TotalNumberOfItems
+        {
+            get => _totalNumberOfItems;
+            set => SetProperty(ref _totalNumberOfItems, value);
         }
 
         public event EventHandler IsActiveChanged;
@@ -68,6 +88,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _eventAggregator = eventAggregator;
             _resourceService = resourceService;
 
+            PageNumber = 1;
             PageSize = 20;
 
             _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(args =>
@@ -106,64 +127,68 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             if (IsActive && !_isActivated)
             {
-                IsBusy = false;
                 _isActivated = true;
-                _hasItems = true;
-                _pageNumber = 0;
-                
-                _ = LoadMoreItemsAsync();
+                IsBusy = false;
+                Items.Clear();
+                PageNumber = 1;
+
+                _ = FetchAndPopulateAlbumsAsync();
             }
             IsActiveChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private bool HasMoreItems()
         {
-            return _hasItems;
+            return HasItems && (PageNumber * PageSize) < TotalNumberOfItems; ;
         }
 
-        private async Task LoadMoreItemsAsync()
+        private async Task FetchAndPopulateAlbumsAsync()
         {
             if (IsBusy)
             {
                 return;
             }
 
-            if (_hasItems) {
-                IsBusy = true;
+            IsBusy = true;
 
-                try
+            try
+            {
+                PagedResult<Playlist> pagedResult = await _dataService.GetPagedPlaylistsByOwnerAsync(_pageNumber, PageSize);
+
+                if (PageNumber == 1)
                 {
-                    var playlists = await _dataService.GetPlaylistsByUserName(_settingsService.User.UserName, _pageNumber, PageSize);
-                    if (playlists == null || playlists.Count == 0)
-                    {
-                        _hasItems = false;
-                        return;
-                    }
+                    TotalNumberOfItems = pagedResult.TotalCount;
+                    HasItems = TotalNumberOfItems > 0;
+                }
 
-                    foreach (var playlst in playlists)
+                if (pagedResult?.Items != null)
+                {
+                    foreach (var playlist in pagedResult.Items)
                     {
-                        if (playlst != null)
+                        if (playlist != null)
                         {
-                            var playlist = await _dataService.GetPlaylistByIdWithNumberOfEntries(playlst.Id, _settingsService.User.UserName);
-                            if (playlist != null)
+                            Items.Add(new GridPanel
                             {
-                                Items.Add(new GridPanel
-                                {
-                                    Title = playlist.Name,
-                                    SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("PlaylistItem_PartNumberOfEntries")}",
-                                    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id),
-                                    Data = playlist
-                                });
-                            }
+                                Title = playlist.Name,
+                                SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("PlaylistItem_PartNumberOfEntries")}",
+                                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, asThumbnail: true),
+                                Data = playlist
+                            });
                         }
                     }
-                    _pageNumber = Items.Count;
                 }
-                finally
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                if (PageNumber > 1)
                 {
-                    IsBusy = false;
+                    PageNumber--; // Rollback on failure during lazy loading
                 }
-
+            }
+            finally
+            {
+                IsBusy = false;
             }
 
         }

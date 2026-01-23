@@ -1,8 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
-using BSEtunes.Domain.Enums;
+using BSEtunes.Contracts.Enums;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Text.Json;
 
 namespace BSE.Tunes.Maui.Client.Services
@@ -29,7 +28,7 @@ namespace BSE.Tunes.Maui.Client.Services
             //builder.AppendToPath("api/tunes/IsHostAccessible");
             builder.AppendToPath("api/system/is-host-accessible");
 
-            using var client = await _requestService.GetHttpClient(false).ConfigureAwait(false);
+            using var client = await _requestService.GetHttpClientAsync(false).ConfigureAwait(false);
             // CancellationTokenSource that will be canceled after the specified delay in seconds.
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             using var response = await client.GetAsync(builder.Uri, cts.Token);
@@ -238,18 +237,33 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{playlistId}";
             return _requestService.DeleteAsync(new UriBuilder(strUrl).Uri);
         }
+
+        public Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
+        {
+            var parameters = new Dictionary<string, string> {
+                { "pageNumber", pageNumber.ToString() },
+                { "pageSize", pageSize.ToString() }
+            };
+            return _requestService.GetAsync<PagedResult<Playlist>>("api/playlists/paged", parameters);
+        }
         public Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit)
         {
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/?skip={skip}&limit={limit}";
             return _requestService.GetAsync<ObservableCollection<Playlist>>(new UriBuilder(strUrl).Uri);
         }
-        
+        //public Task<PagedResult<PlaylistEntryEntity>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
         public Task<Playlist> GetPlaylistById(int playlistId, string userName)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}";
-            return _requestService.GetAsync<Playlist>(new UriBuilder(strUrl).Uri);
+            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}";
+            //return _requestService.GetAsync<Playlist>(new UriBuilder(strUrl).Uri);
+            return _requestService.GetAsync<Playlist>($"api/playlists/{playlistId}");
         }
 
+        [Obsolete("Use GetPlaylistById instead.")]
         public Task<Playlist> GetPlaylistByIdWithNumberOfEntries(int playlistId, string userName)
         {
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}/$count";
@@ -273,7 +287,6 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/playlist/update";
             return _requestService.PutAsync<Playlist, Playlist>(new UriBuilder(strUrl).Uri, playlist);
         }
-
-
+       
     }
 }

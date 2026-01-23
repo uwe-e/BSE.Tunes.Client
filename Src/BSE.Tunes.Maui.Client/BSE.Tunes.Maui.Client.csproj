@@ -166,9 +166,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ASP.Net\BSEtunes\src\BSEtunes.Domain\BSEtunes.Domain.csproj" />
     <ProjectReference Include="..\..\..\BSE.Maui\src\BSE.Maui.Controls\BSE.Maui.Controls.csproj" />
     <ProjectReference Include="..\BSE.Tunes.MediaExtensions\BSE.Tunes.MediaExtensions.csproj" />
+    <ProjectReference Include="..\..\..\..\ASP.Net\BSEtunes\src\BSEtunes.Contracts\BSEtunes.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

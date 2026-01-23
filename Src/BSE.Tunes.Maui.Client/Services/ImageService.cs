@@ -43,6 +43,37 @@ namespace BSE.Tunes.Maui.Client.Services
             return absoluteUri;
 
         }
+        
+        public async Task<string> GetStitchedBitmapSourceAsync(int playlistId, IList<string> albumCoverIds, int width = 300, bool asThumbnail = false)
+        {
+            if (playlistId <= 0)
+            {
+                return null;
+            }
+
+            string fileName = asThumbnail ? $"{playlistId}{ThumbnailPart}" : $"{playlistId}";
+            fileName += $"_{width}.png";
+            
+            if (_storageService.TryToGetImagePath(fileName, out string fullName))
+            {
+                return fullName;
+            }
+
+            // Parse GUIDs efficiently without LINQ/ObservableCollection overhead
+            Guid[] albumIds = new Guid[albumCoverIds.Count];
+            for (int i = 0; i < albumCoverIds.Count; i++)
+            {
+                albumIds[i] = Guid.Parse(albumCoverIds[i]);
+            }
+
+            SKImage stitchedImage = await Combine(albumIds, width, width, asThumbnail);
+
+            using SKData encoded = stitchedImage.Encode(SKEncodedImageFormat.Png, 100);
+            using System.IO.Stream outFile = System.IO.File.OpenWrite(fullName);
+            encoded.SaveTo(outFile);
+
+            return fullName;
+        }
 
         public async Task<string> GetStitchedBitmapSourceAsync(int playlistId, int width = 300, bool asThumbnail = false)
         {
@@ -74,75 +105,80 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private async Task<SKImage> Combine(IEnumerable<Guid> albumIds, int width, int height, bool asThumbnail = false)
         {
-            //read all images into memory
-            List<SKBitmap> images = [];
+            // Pre-calculate dimensions
+            int innerWidth = width / 2;
+            int innerHeight = innerWidth;
+            
+            // Pre-create SKRect array to avoid Span across await boundary
+            SKRect[] positions = new SKRect[4]
+            {
+                new SKRect(0, 0, innerWidth, innerHeight),                    // index 0
+                new SKRect(innerWidth, innerHeight, width, height),           // index 1
+                new SKRect(innerWidth, 0, width, innerHeight),                // index 2
+                new SKRect(0, innerHeight, innerWidth, height)                // index 3
+            };
+
+            SKRect fullRect = new SKRect(0, 0, width, height);
+
+            // Use array with known capacity to reduce allocations
+            List<SKBitmap> images = new List<SKBitmap>(4);
             SKImage finalImage = null;
 
             try
             {
+                // Download images in parallel for better performance
+                var downloadTasks = new List<Task<SKBitmap>>(4);
+                
                 foreach (var id in albumIds)
                 {
                     string imageUri = GetImageUrl(asThumbnail, id).AbsoluteUri;
                     if (imageUri != null)
                     {
-                        var bitmap = await CreateBitmapFromStream(imageUri);
-                        if (bitmap != null)
-                        {
-                            images.Add(bitmap);
-                        }
+                        downloadTasks.Add(CreateBitmapFromStream(imageUri));
                     }
                 }
 
-                //get a surface so we can draw an image
+                var bitmaps = await Task.WhenAll(downloadTasks);
+                
+                // Filter out nulls
+                for (int i = 0; i < bitmaps.Length; i++)
+                {
+                    if (bitmaps[i] != null)
+                    {
+                        images.Add(bitmaps[i]);
+                    }
+                }
+
+                // Create surface and draw
                 using (var tempSurface = SKSurface.Create(new SKImageInfo(width, height)))
                 {
-                    //get the drawing canvas of the surface
                     var canvas = tempSurface.Canvas;
-
-                    //set background color
                     canvas.Clear(SKColors.Transparent);
 
                     if (images.Count == 1)
                     {
-                        canvas.DrawBitmap(images[0], SKRect.Create(0, 0, width, height));
+                        canvas.DrawBitmap(images[0], fullRect);
                     }
                     else
                     {
-                        var innerWidth = width / 2;
-                        var innerHeight = innerWidth;
-                        int index = 0;
-
-                        foreach (SKBitmap image in images)
+                        int count = Math.Min(images.Count, 4);
+                        for (int i = 0; i < count; i++)
                         {
-                            int x = 0;
-                            int y = 0;
-
-                            if (index == 1 || index == 2)
-                            {
-                                x += innerWidth;
-                            }
-                            if (index == 1 || index == 3)
-                            {
-                                y += innerHeight;
-                            }
-
-                            canvas.DrawBitmap(image, SKRect.Create(x, y, innerWidth, innerHeight));
-                            index++;
+                            canvas.DrawBitmap(images[i], positions[i]);
                         }
                     }
-                    // return the surface as a manageable image
+                    
                     finalImage = tempSurface.Snapshot();
                 }
 
-                //return the image that was just drawn
                 return finalImage;
             }
             finally
             {
-                //clean up memory
-                foreach (SKBitmap image in images)
+                // Clean up memory
+                for (int i = 0; i < images.Count; i++)
                 {
-                    image.Dispose();
+                    images[i].Dispose();
                 }
             }
         }
@@ -154,7 +190,9 @@ namespace BSE.Tunes.Maui.Client.Services
             {
                 if (!asThumbnail)
                 {
-                    bitmap = bitmap.Resize(new SKImageInfo(300, 300), SKFilterQuality.Medium);
+                    bitmap = bitmap.Resize(
+                        new SKImageInfo(300, 300),
+                        new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
                 }
                 using SKImage image = SKImage.FromBitmap(bitmap);
                 using (SKData encoded = image.Encode(SKEncodedImageFormat.Jpeg, 90))
@@ -172,7 +210,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
             if (imageUri != null)
             {
-                using var httpClient = await _requestService.GetHttpClient();
+                using var httpClient = await _requestService.GetHttpClientAsync();
                 try
                 {
                     var stream = await httpClient.GetStreamAsync(imageUri);
@@ -208,5 +246,7 @@ namespace BSE.Tunes.Maui.Client.Services
             await _imageCacheService.InvalidateCacheEntryAsync(searchPattern);
             await _storageService.DeleteCachedImagesAsync(searchPattern);
         }
+
+        
     }
 }
