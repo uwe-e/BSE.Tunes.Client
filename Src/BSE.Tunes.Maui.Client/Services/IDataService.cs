@@ -29,7 +29,7 @@ namespace BSE.Tunes.Maui.Client.Services
         Task DeletePlaylist(int playlistId);
         Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize);
         Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit);
-        //Task<PagedResult<PlaylistEntryEntity>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize);
+        Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize);
         Task<Playlist> GetPlaylistById(int playlistId, string userName);
         Task<Playlist> GetPlaylistByIdWithNumberOfEntries(int playlistId, string userName);
         Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit);

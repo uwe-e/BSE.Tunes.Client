@@ -1,5 +1,8 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
+using BSE.Tunes.Maui.Client.Services.Mappers;
+using BSEtunes.Contracts.DTOs.Common;
+using BSEtunes.Contracts.DTOs.Playlists;
 using BSEtunes.Contracts.Enums;
 using System.Collections.ObjectModel;
 using System.Text.Json;
@@ -10,11 +13,16 @@ namespace BSE.Tunes.Maui.Client.Services
     {
         private readonly IRequestService _requestService;
         private readonly ISettingsService _settingsService;
+        private readonly IMapper _mapper;
 
-        public DataService(IRequestService requestService, ISettingsService settingsService)
+        public DataService(
+            IRequestService requestService,
+            ISettingsService settingsService,
+            IMapper mapper)
         {
             _requestService = requestService;
             _settingsService = settingsService;
+            _mapper = mapper;
         }
 
         public Task<bool> IsEndPointAccessibleAsync()
@@ -25,7 +33,6 @@ namespace BSE.Tunes.Maui.Client.Services
         public async Task<bool> IsEndPointAccessibleAsync(string serviceEndPoint)
         {
             var builder = new UriBuilder(serviceEndPoint);
-            //builder.AppendToPath("api/tunes/IsHostAccessible");
             builder.AppendToPath("api/system/is-host-accessible");
 
             using var client = await _requestService.GetHttpClientAsync(false).ConfigureAwait(false);
@@ -251,10 +258,26 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/?skip={skip}&limit={limit}";
             return _requestService.GetAsync<ObservableCollection<Playlist>>(new UriBuilder(strUrl).Uri);
         }
-        //public Task<PagedResult<PlaylistEntryEntity>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public async Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize)
+        {
+            var parameters = new Dictionary<string, string> {
+                { "pageNumber", pageNumber.ToString() },
+                { "pageSize", pageSize.ToString() }
+            };
+
+            var dtoResult = await _requestService.GetAsync<PagedResultDto<PlaylistEntryDto>>($"api/playlists/{playlistId}/entries", parameters);
+            return new PagedResult<PlaylistEntry>
+            {
+                Items = _mapper.MapCollection<PlaylistEntry>(dtoResult.Items).ToList() ?? new List<PlaylistEntry>(),
+                TotalCount = dtoResult.TotalCount,
+                PageNumber = dtoResult.PageNumber,
+                PageSize = dtoResult.PageSize,
+                TotalPages = dtoResult.TotalPages,
+                HasPreviousPage = dtoResult.HasPreviousPage,
+                HasNextPage = dtoResult.HasNextPage,
+
+            };
+        }
 
         public Task<Playlist> GetPlaylistById(int playlistId, string userName)
         {
@@ -269,6 +292,8 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}/$count";
             return _requestService.GetAsync<Playlist>(new UriBuilder(strUrl).Uri);
         }
+
+        //public Task<>
 
         public Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit)
         {

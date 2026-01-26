@@ -1,5 +1,6 @@
 ﻿using BSE.Maui.Controls;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Maui.Client.Services.Mappers;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using BSE.Tunes.MediaExtensions;
@@ -55,6 +56,11 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<ITimerService, TimerService>();
+                        container.RegisterSingleton<IMapper>(containerProvider =>
+                        {
+                            return new Services.Mappers.Mapper(
+                                new Services.Mappers.Profiles.DtoMappingProfile());
+                        });
                         /*
                          * since we use the ffimageloading features,
                          * it's no longer enough to clear the file cache, 

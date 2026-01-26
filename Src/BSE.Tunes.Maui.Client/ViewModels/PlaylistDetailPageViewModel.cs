@@ -160,6 +160,26 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     //        });
                     //    }
                     //}
+                    var pagedEntries = await _dataService.GetPagedPlaylistEntriesByIdAsync(playlist.Id, 1, 30);
+                    if (pagedEntries?.Items != null)
+                    {
+                        foreach (PlaylistEntry entry in pagedEntries.Items.OrderBy(pe => pe.SortOrder))
+                        {
+                            if (entry != null)
+                            {
+                                Items.Add(new GridPanel
+                                {
+                                    Id = entry.Id,
+                                    Title = entry.Name,
+                                    SubTitle = entry.Track?.Album?.Artist?.Name,
+                                    ImageSource = _imageService.GetBitmapSource(entry.AlbumId, true),
+                                    Data = entry
+                                });
+                            }
+                        }
+                    }
+
+
 
                     PlayAllCommand.RaiseCanExecuteChanged();
                     PlayAllRandomizedCommand.RaiseCanExecuteChanged();
@@ -168,6 +188,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 }
             }
         }
+
+
 
         private async Task UpdateCurrentPlaylistAsync(PlaylistActionContext managePlaylistContext)
         {
