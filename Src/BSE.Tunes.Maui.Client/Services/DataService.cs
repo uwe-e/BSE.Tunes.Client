@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services.Mappers;
+using BSEtunes.Contracts.DTOs.Albums;
 using BSEtunes.Contracts.DTOs.Common;
 using BSEtunes.Contracts.DTOs.Playlists;
 using BSEtunes.Contracts.Enums;
@@ -66,26 +67,26 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.GetAsync<ObservableCollection<Album>>(new UriBuilder(strUrl).Uri);
         }
 
-        public Task<ObservableCollection<Album>> GetFeaturedAlbums(int limit)
+        public async Task<IList<Album>> GetFeaturedAlbums(int limit)
         {
-            // Use Dictionary<string, string> for parameters as per IRequestService signature
             var parameters = new Dictionary<string, string> {
                 { "sortBy", AlbumSortOption.Random.ToString() },
                 { "limit", limit.ToString() }
             };
 
-            return _requestService.GetAsync<ObservableCollection<Album>>("api/albums", parameters);
+            var dtoResult = await _requestService.GetAsync<List<AlbumDto>>("api/albums", parameters);
+            return _mapper.MapCollection<Album>(dtoResult).ToList();
         }
 
-        public Task<ObservableCollection<Album>> GetNewestAlbums(int limit)
+        public async Task<IList<Album>> GetNewestAlbums(int limit)
         {
-            // Use Dictionary<string, string> for parameters as per IRequestService signature
             var parameters = new Dictionary<string, string> {
                 { "sortBy", AlbumSortOption.NewestDesc.ToString()  },
                 { "limit", limit.ToString() }
             };
 
-            return _requestService.GetAsync<ObservableCollection<Album>>("api/albums", parameters);
+            var dtoResult = await _requestService.GetAsync<IList<AlbumDto>>("api/albums", parameters);
+            return _mapper.MapCollection<Album>(dtoResult).ToList();
         }
 
         public Uri GetImage(Guid imageId, bool asThumbnail = false)
@@ -99,11 +100,10 @@ namespace BSE.Tunes.Maui.Client.Services
             return builder.Uri;
         }
 
-        public Task<Album> GetAlbumById(int albumId)
+        public async Task<Album> GetAlbumById(int albumId)
         {
-            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/{albumId}";
-            //return _requestService.GetAsync<Album>(new UriBuilder(strUrl).Uri);
-            return _requestService.GetAsync<Album>($"api/albums/{albumId}");
+            var dtoResult = await _requestService.GetAsync<AlbumDto>($"api/albums/{albumId}");
+            return _mapper.Map<Album>(dtoResult)!;
         }
         
         public Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit)
@@ -151,7 +151,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 NumberTracks = trackCount
             };
         }
-        public Task<PagedResult<Album>> GetPagedAlbums(
+        public async Task<PagedResult<Album>> GetPagedAlbums(
             string genre,
             int? artistId,
             string artistName,
@@ -190,7 +190,17 @@ namespace BSE.Tunes.Maui.Client.Services
                 parameters["yearTo"] = yearTo.Value.ToString();
             }
 
-            return _requestService.GetAsync<PagedResult<Album>>("api/albums/paged", parameters);
+            var dtoResult = await _requestService.GetAsync<PagedResultDto<AlbumDto>>("api/albums/paged", parameters);
+            return new PagedResult<Album>
+            {
+                Items = _mapper.MapCollection<Album>(dtoResult.Items).ToList() ?? new List<Album>(),
+                TotalCount = dtoResult.TotalCount,
+                PageNumber = dtoResult.PageNumber,
+                PageSize = dtoResult.PageSize,
+                TotalPages = dtoResult.TotalPages,
+                HasPreviousPage = dtoResult.HasPreviousPage,
+                HasNextPage = dtoResult.HasNextPage,
+            };
         }
 
         public Task<Track[]> GetTracksByAlbumId(int albumId)
@@ -198,21 +208,15 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/{albumId}/tracks";
             return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri);
         }
-        public Task<Track> GetTrackById(int trackId)
+        public async Task<Track> GetTrackById(int trackId)
         {
-            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/tracks/{trackId}";
-            //return _requestService.GetAsync<Track>(new UriBuilder(strUrl).Uri);
-            return _requestService.GetAsync<Track>($"api/tracks/{trackId}");
+            var dtoResult = await _requestService.GetAsync<TrackDto>($"api/tracks/{trackId}");
+            return _mapper.Map<Track>(dtoResult);
         }
 
-        public Task<ObservableCollection<int>> GetTrackIdsByGenre(int? genreId = null)
+        public Task<IList<int>> GetTrackIdsByGenre(int? genreId = null)
         {
-            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/tracks/genre/{genreId ?? 0}";
-            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/tracks/genre/{genreId}";
-            //var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
-            //builder.AppendToPath($"/api/tracks/genre/{genreId}");
-            //return _requestService.GetAsync<ObservableCollection<int>>(builder.Uri);
-            return _requestService.GetAsync<ObservableCollection<int>>($"api/tracks/genre/{genreId}");
+            return _requestService.GetAsync<IList<int>>($"api/tracks/genre/{genreId}");
         }
 
         public Task<Track[]> GetTrackSearchResults(string query, int skip, int limit)
@@ -245,13 +249,24 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.DeleteAsync(new UriBuilder(strUrl).Uri);
         }
 
-        public Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
         {
             var parameters = new Dictionary<string, string> {
                 { "pageNumber", pageNumber.ToString() },
                 { "pageSize", pageSize.ToString() }
             };
-            return _requestService.GetAsync<PagedResult<Playlist>>("api/playlists/paged", parameters);
+            var dtoResult = await _requestService.GetAsync<PagedResultDto<PlaylistDto>>("api/playlists/paged", parameters);
+            
+            return new PagedResult<Playlist>
+            {
+                Items = _mapper.MapCollection<Playlist>(dtoResult.Items).ToList() ?? new List<Playlist>(),
+                TotalCount = dtoResult.TotalCount,
+                PageNumber = dtoResult.PageNumber,
+                PageSize = dtoResult.PageSize,
+                TotalPages = dtoResult.TotalPages,
+                HasPreviousPage = dtoResult.HasPreviousPage,
+                HasNextPage = dtoResult.HasNextPage,
+            };
         }
         public Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit)
         {
@@ -275,15 +290,13 @@ namespace BSE.Tunes.Maui.Client.Services
                 TotalPages = dtoResult.TotalPages,
                 HasPreviousPage = dtoResult.HasPreviousPage,
                 HasNextPage = dtoResult.HasNextPage,
-
             };
         }
 
-        public Task<Playlist> GetPlaylistById(int playlistId, string userName)
+        public async Task<Playlist> GetPlaylistById(int playlistId, string userName)
         {
-            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}";
-            //return _requestService.GetAsync<Playlist>(new UriBuilder(strUrl).Uri);
-            return _requestService.GetAsync<Playlist>($"api/playlists/{playlistId}");
+            var dtoResult = await _requestService.GetAsync<PlaylistDto>($"api/playlists/{playlistId}");
+            return _mapper.Map<Playlist>(dtoResult)!;
         }
 
         [Obsolete("Use GetPlaylistById instead.")]
@@ -292,8 +305,6 @@ namespace BSE.Tunes.Maui.Client.Services
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}/$count";
             return _requestService.GetAsync<Playlist>(new UriBuilder(strUrl).Uri);
         }
-
-        //public Task<>
 
         public Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit)
         {

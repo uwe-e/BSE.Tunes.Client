@@ -10,8 +10,8 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<Album> GetAlbumById(int albumId);
         Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit);
         Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit, CancellationToken token);
-        Task<ObservableCollection<Album>> GetFeaturedAlbums(int limit);
-        Task<ObservableCollection<Album>> GetNewestAlbums(int limit);
+        Task<IList<Album>> GetFeaturedAlbums(int limit);
+        Task<IList<Album>> GetNewestAlbums(int limit);
         Task<int> GetNumberOfAlbumsByGenre(int? genreId);
         Task<ObservableCollection<Album>> GetAlbumsByGenre(int? genreId, int skip, int limit);
         Task<PagedResult<Album>> GetPagedAlbums(
@@ -38,7 +38,7 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<SystemInfo> GetAvailableTrackCount();
         Task<Track[]> GetTracksByAlbumId(int albumId);
         Task<Track> GetTrackById(int trackId);
-        Task<ObservableCollection<int>> GetTrackIdsByGenre(int? genreId = null);
+        Task<IList<int>> GetTrackIdsByGenre(int? genreId = null);
         Task<Track[]> GetTrackSearchResults(string query, int skip, int limit);
         Task<Track[]> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token);
         Task<bool> IsEndPointAccessibleAsync();

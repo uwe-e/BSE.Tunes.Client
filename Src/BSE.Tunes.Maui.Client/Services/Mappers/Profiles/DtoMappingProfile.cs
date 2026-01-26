@@ -36,6 +36,19 @@ namespace BSE.Tunes.Maui.Client.Services.Mappers.Profiles
                     if (dto.Artist == null)
                         throw new InvalidOperationException($"Album {dto.Id} has null Artist");
 
+                    var alb = new Album
+                    {
+                        Id = dto.Id,
+                        AlbumId = dto.AlbumId,
+                        Title = dto.Title ?? string.Empty,
+                        Year = dto.Year,
+                        Thumbnail = dto.Thumbnail,
+                        Cover = dto.Cover,
+                        Genre = mapper.Map<Genre>(dto.Genre),
+                        Artist = mapper.Map<Artist>(dto.Artist)!,
+                        Tracks = mapper.MapCollection<Track>(dto.Tracks).ToArray()
+                    };
+
                     return new Album
                     {
                         Id = dto.Id,
@@ -54,12 +67,6 @@ namespace BSE.Tunes.Maui.Client.Services.Mappers.Profiles
                 .ConvertUsing((dto, mapper) =>
                 {
                     if (dto == null) return null;
-
-                    if (dto.Album == null)
-                        throw new InvalidOperationException($"Track {dto.Id} has null Album");
-
-                    if (dto.Album.Artist == null)
-                        throw new InvalidOperationException($"Album {dto.Album.Id} has null Artist");
 
                     return new Track
                     {
@@ -96,6 +103,24 @@ namespace BSE.Tunes.Maui.Client.Services.Mappers.Profiles
                         Track = track!
                     };
                 });
+            
+            CreateMap<PlaylistDto, Playlist>()
+                .ConvertUsing((dto, mapper) =>
+                {
+                    if (dto == null) return null;
+                    
+                    return new Playlist
+                    {
+                        Id = dto.Id,
+                        Guid = dto.Guid,
+                        Name = dto.Name ?? string.Empty,
+                        NumberEntries = dto.EntryCount.HasValue ? dto.EntryCount.Value : 0,
+                        UserName = dto.Owner ?? string.Empty,
+                        CoverAlbumIds = dto.CoverAlbumIds != null ? new List<string>(dto.CoverAlbumIds) : new List<string>(),
+                        Entries = mapper.MapCollection<PlaylistEntry>(dto.Entries).ToList()
+                    };
+                });
+
         }
     }
 }   

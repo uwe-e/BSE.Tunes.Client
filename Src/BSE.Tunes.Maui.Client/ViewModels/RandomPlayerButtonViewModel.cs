@@ -50,7 +50,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task LoadDataAsync()
         {
-            ObservableCollection<int> trackIds = await _dataService.GetTrackIdsByGenre();
+            ObservableCollection<int> trackIds = new(
+                //When GetTrackIdsByGenre returns null, we fallback to an empty list
+                await _dataService.GetTrackIdsByGenre() ?? []
+            );
             if (trackIds != null)
             {
                 _trackIds = trackIds.ToRandomCollection();

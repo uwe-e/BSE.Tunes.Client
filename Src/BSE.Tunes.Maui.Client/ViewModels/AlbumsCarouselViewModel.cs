@@ -49,7 +49,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private async Task LoadDataAsync()
         {
             Items.Clear();
-            var albums = await _dataService.GetFeaturedAlbums(6);
+            IList<Album> albums = await _dataService.GetFeaturedAlbums(6);
             if (albums != null)
             {
                 foreach (var album in albums)
