@@ -5,6 +5,7 @@ using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
@@ -12,6 +13,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
     {
         private Playlist _playlist;
         private bool _canExecutePlayTrack = true;
+        private int _pageNumber;
+        private readonly int _pageSize;
+        private bool _hasItems;
+        private ICommand _remainingPlaylistEntriesThresholdReachedCommand;
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
@@ -22,6 +27,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             get => _playlist;
             set => SetProperty<Playlist>(ref _playlist, value);
         }
+
+        public ICommand RemainingPlaylistEntriesThresholdReachedCommand => _remainingPlaylistEntriesThresholdReachedCommand ??= new DelegateCommand(async () =>
+        {
+            if (Playlist != null)
+            {
+                await FetchPlaylistEntriesAsync(Playlist.Id);
+            }
+        });
 
         public PlaylistDetailPageViewModel(
             INavigationService navigationService,
@@ -36,6 +49,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _eventAggregator = eventAggregator;
             _settingsService = settingsService;
+
+            _pageSize = 20;
+            _pageNumber = 1;
+            _hasItems = true;
 
             _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
             {
@@ -78,10 +95,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             });
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             Playlist playlist = parameters.GetValue<Playlist>("playlist");
-            LoadData(playlist);
+            await LoadDataAsync(playlist);
         }
 
         protected override bool CanExecutePlayTrack(GridPanel panel)
@@ -128,11 +145,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await UpdateCurrentPlaylistAsync(managePlaylistContext);
         }
 
-        private void LoadData(Playlist playlist)
-        {
-            _ = LoadDataAsync(playlist);
-        }
-
         private async Task LoadDataAsync(Playlist playlist)
         {
             if (playlist != null)
@@ -143,53 +155,77 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 Playlist = await _dataService.GetPlaylistById(playlist.Id, _settingsService.User.UserName);
                 if (Playlist != null)
                 {
-                    //ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id);
-                    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds);
-
-                    //foreach (PlaylistEntry entry in Playlist.Entries?.OrderBy(pe => pe.SortOrder))
-                    //{
-                    //    if (entry != null)
-                    //    {
-                    //        Items.Add(new GridPanel
-                    //        {
-                    //            Id = entry.Id,
-                    //            Title = entry.Name,
-                    //            SubTitle = entry.Artist,
-                    //            ImageSource = _imageService.GetBitmapSource(entry.AlbumId, true),
-                    //            Data = entry
-                    //        });
-                    //    }
-                    //}
-                    var pagedEntries = await _dataService.GetPagedPlaylistEntriesByIdAsync(playlist.Id, 1, 30);
-                    if (pagedEntries?.Items != null)
-                    {
-                        foreach (PlaylistEntry entry in pagedEntries.Items.OrderBy(pe => pe.SortOrder))
-                        {
-                            if (entry != null)
-                            {
-                                Items.Add(new GridPanel
-                                {
-                                    Id = entry.Id,
-                                    Title = entry.Name,
-                                    SubTitle = entry.Track?.Album?.Artist?.Name,
-                                    ImageSource = _imageService.GetBitmapSource(entry.AlbumId, true),
-                                    Data = entry
-                                });
-                            }
-                        }
-                    }
-
-
+                    IsBusy = false;
+                    
+                    // Start both tasks concurrently
+                    var imageTask = _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds);
+                    var entriesTask = FetchPlaylistEntriesAsync(playlist.Id);
+                    
+                    // Await both tasks
+                    ImageSource = await imageTask;
+                    await entriesTask;
 
                     PlayAllCommand.RaiseCanExecuteChanged();
                     PlayAllRandomizedCommand.RaiseCanExecuteChanged();
-
-                    IsBusy = false;
                 }
             }
         }
 
+        private async Task FetchPlaylistEntriesAsync(int playlistId)
+        {
+            if (IsBusy)
+            {
+                return;
+            }
 
+            if (_hasItems)
+            {
+                IsBusy = true;
+                try
+                {
+                    var pagedEntries = await _dataService.GetPagedPlaylistEntriesByIdAsync(
+                                        playlistId,
+                                        _pageNumber,
+                                        _pageSize);
+
+                    if (pagedEntries?.Items == null || !pagedEntries.Items.Any())
+                    {
+                        _hasItems = false;
+                        return;
+                    }
+
+                    if (pagedEntries.TotalPages == _pageNumber)
+                    {
+                        _hasItems = false;
+                    }
+
+                    if (pagedEntries.HasNextPage)
+                    {
+                        _pageNumber++;
+                    }
+
+                    foreach (PlaylistEntry entry in pagedEntries.Items.OrderBy(pe => pe.SortOrder))
+                    {
+                        if (entry != null)
+                        {
+                            Items.Add(new GridPanel
+                            {
+                                Id = entry.Id,
+                                Title = entry.Name,
+                                SubTitle = entry.Track?.Album?.Artist?.Name,
+                                ImageSource = _imageService.GetBitmapSource(entry.AlbumId, true),
+                                Data = entry
+                            });
+                        }
+                    }
+                }
+                finally
+                {
+                    IsBusy = false;
+
+                }
+            }
+        }
 
         private async Task UpdateCurrentPlaylistAsync(PlaylistActionContext managePlaylistContext)
         {
