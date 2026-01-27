@@ -38,7 +38,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
             using var client = await _requestService.GetHttpClientAsync(false).ConfigureAwait(false);
             // CancellationTokenSource that will be canceled after the specified delay in seconds.
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             using var response = await client.GetAsync(builder.Uri, cts.Token);
             if (!response.IsSuccessStatusCode)
             {
@@ -278,11 +278,11 @@ namespace BSE.Tunes.Maui.Client.Services
                 HasNextPage = dtoResult.HasNextPage,
             };
         }
-        public Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/?skip={skip}&limit={limit}";
-            return _requestService.GetAsync<ObservableCollection<Playlist>>(new UriBuilder(strUrl).Uri);
-        }
+        //public Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit)
+        //{
+        //    string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/?skip={skip}&limit={limit}";
+        //    return _requestService.GetAsync<ObservableCollection<Playlist>>(new UriBuilder(strUrl).Uri);
+        //}
         public async Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize)
         {
             var parameters = new Dictionary<string, string>(2) {
