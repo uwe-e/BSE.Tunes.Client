@@ -39,6 +39,7 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<Track[]> GetTracksByAlbumId(int albumId);
         Task<Track> GetTrackById(int trackId);
         Task<IList<int>> GetTrackIdsByGenre(int? genreId = null);
+        Task<IList<int>> GetTrackIdsByPlaylistId(int playlistId, bool randomize = false);
         Task<Track[]> GetTrackSearchResults(string query, int skip, int limit);
         Task<Track[]> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token);
         Task<bool> IsEndPointAccessibleAsync();

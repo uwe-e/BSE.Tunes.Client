@@ -162,7 +162,7 @@ namespace BSE.Tunes.Maui.Client.Services
             AlbumSortOption albumSortOption = AlbumSortOption.Title)
         {
             // Use Dictionary<string, string> for parameters as per IRequestService signature
-            var parameters = new Dictionary<string, string>(7)
+            var parameters = new Dictionary<string, string>(3)
             {
                 ["sortBy"] = albumSortOption.ToString(),
                 ["pageNumber"] = pageNumber.ToString(),
@@ -219,6 +219,16 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.GetAsync<IList<int>>($"api/tracks/genre/{genreId}");
         }
 
+        public Task<IList<int>> GetTrackIdsByPlaylistId(int playlistId, bool randomize = false)
+        {
+            var parameters = new Dictionary<string, string>(1)
+            {
+                ["randomize"] = randomize.ToString(),
+            };
+
+            return _requestService.GetAsync<IList<int>>($"api/playlists/{playlistId}/trackids", parameters);
+        }
+
         public Task<Track[]> GetTrackSearchResults(string query, int skip, int limit)
         {
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/tracks/search/?query={query}&skip={skip}&limit={limit}";
@@ -251,7 +261,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public async Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
         {
-            var parameters = new Dictionary<string, string> {
+            var parameters = new Dictionary<string, string>(2) {
                 { "pageNumber", pageNumber.ToString() },
                 { "pageSize", pageSize.ToString() }
             };
@@ -275,7 +285,7 @@ namespace BSE.Tunes.Maui.Client.Services
         }
         public async Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize)
         {
-            var parameters = new Dictionary<string, string> {
+            var parameters = new Dictionary<string, string>(2) {
                 { "pageNumber", pageNumber.ToString() },
                 { "pageSize", pageSize.ToString() }
             };

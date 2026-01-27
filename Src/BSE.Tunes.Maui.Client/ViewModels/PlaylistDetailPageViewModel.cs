@@ -126,18 +126,20 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected override async Task PlayAllAsync()
         {
-            await PlayTracksAsync(GetTrackIds(), PlayerMode.Playlist);
+            IList<int> trackIds = await _dataService.GetTrackIdsByPlaylistId(Playlist.Id);
+            await PlayTracksAsync(trackIds, PlayerMode.Playlist);
         }
 
         protected override async Task PlayAllRandomizedAsync()
         {
-            await PlayTracksAsync(GetTrackIds().ToRandomCollection(), PlayerMode.Playlist);
+            IList<int> trackIds = await _dataService.GetTrackIdsByPlaylistId(Playlist.Id, randomize: true);
+            await PlayTracksAsync(trackIds, PlayerMode.Playlist);
         }
 
-        protected override ObservableCollection<int> GetTrackIds()
-        {
-            return new ObservableCollection<int>(Items.Select(track => ((PlaylistEntry)track.Data).TrackId));
-        }
+        //protected override ObservableCollection<int> GetTrackIds()
+        //{
+        //    return new ObservableCollection<int>(Items.Select(track => ((PlaylistEntry)track.Data).TrackId));
+        //}
 
         protected override async Task RemoveFromPlaylistAsync(PlaylistActionContext managePlaylistContext)
         {
