@@ -2,15 +2,18 @@
 {
     public interface IRequestService
     {
+        Task DeleteAsync(Uri uri);
+        Task DeleteAsync(string path);
         Task<T> GetAsync<T>(string path);
         Task<T> GetAsync<T>(string path, CancellationToken token);
         Task<T> GetAsync<T>(string path, Dictionary<string, string> parameters);
         Task<T> GetAsync<T>(string path, Dictionary<string, string> parameters, CancellationToken token);
         Task<T> GetAsync<T>(Uri uri);
         Task<T> GetAsync<T>(Uri uri, CancellationToken token);
+        Task<HttpClient> GetHttpClientAsync(bool withRefreshToken = true);
         Task<U> PostAsync<U, T>(Uri uri, T from);
         Task<U> PutAsync<U, T>(Uri uri, T from);
-        Task DeleteAsync(Uri uri);
-        Task<HttpClient> GetHttpClientAsync(bool withRefreshToken = true);
+        
+        
     }
 }

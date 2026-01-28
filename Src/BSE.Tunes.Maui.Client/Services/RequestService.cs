@@ -16,6 +16,22 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly IAuthenticationService _authenticationService = authenticationService;
         private readonly ISettingsService _settingsService = settingsService;
 
+        public async Task DeleteAsync(string path)
+        {
+            var builder = new UriBuilder(_settingsService.ServiceEndPoint);
+            builder.AppendToPath(path);
+
+            using (var client = await GetHttpClientAsync())
+                await client.DeleteAsync(builder.Uri);
+
+        }
+
+        public async Task DeleteAsync(Uri uri)
+        {
+            using var client = await GetHttpClientAsync();
+            var responseMessage = await client.DeleteAsync(uri);
+        }
+
         public async Task<T> GetAsync<T>(string path)
         {
             var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
@@ -40,7 +56,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
             return await GetAsync<T>(builder.Uri);
         }
-        
+
         public async Task<T> GetAsync<T>(string path, Dictionary<string, string> parameters, CancellationToken token)
         {
             var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
@@ -100,34 +116,8 @@ namespace BSE.Tunes.Maui.Client.Services
             return result;
         }
 
-        public async Task DeleteAsync(Uri uri)
-        {
-            using var client = await GetHttpClientAsync();
-            var responseMessage = await client.DeleteAsync(uri);
-        }
-
-        //public async Task<HttpClient> GetHttpClientAsync(bool withRefreshToken = true)
-        //{
-        //    var httpClient = _httpClientFactory.CreateClient();
-
-        //    if (withRefreshToken)
-        //    {
-        //        var accessToken = await _authenticationService.GetAuthTokenAsync();
-        //        if (!string.IsNullOrEmpty(accessToken))
-        //        {
-        //            httpClient.SetBearerToken(accessToken);
-        //        }
-        //    }
-
-        //    return httpClient;
-        //}
-
         public async Task<HttpClient> GetHttpClientAsync(bool withRefreshToken = true)
         {
-            //if (Connectivity.NetworkAccess != NetworkAccess.Internet)
-            //{
-            //    throw new ConnectivityException();
-            //}
             var httpClient = new HttpClient();
             if (withRefreshToken)
             {
@@ -137,12 +127,6 @@ namespace BSE.Tunes.Maui.Client.Services
                     httpClient.SetBearerToken(accessToken);
                 }
             }
-            //var tokenResponse = _authenticationService.TokenResponse;
-            //if (withRefreshToken && tokenResponse != null)
-            //{
-            //    tokenResponse = await _authenticationService.RequestRefreshTokenAsync(tokenResponse.RefreshToken);
-            //    httpClient.SetBearerToken(tokenResponse.AccessToken);
-            //}
             return httpClient;
         }
     }

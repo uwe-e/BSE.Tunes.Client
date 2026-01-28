@@ -115,7 +115,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 CanRemovePlaylist = true;
                 Title = playlist.Name;
-                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, 50, true);
+                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, 50, true);
             }
             if (_playlistActionContext?.Data is PlaylistEntry playlistEntry)
             {

@@ -255,8 +255,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public Task DeletePlaylist(int playlistId)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{playlistId}";
-            return _requestService.DeleteAsync(new UriBuilder(strUrl).Uri);
+            return _requestService.DeleteAsync($"api/playlists/{playlistId}");
         }
 
         public async Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
