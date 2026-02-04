@@ -21,6 +21,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IMediaManager _mediaManager;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
+        private SubscriptionToken _basePlaylistActionToken;
 
         public ICommand OpenFlyoutCommand => _openFlyoutCommand
             ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
@@ -62,40 +63,51 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
+            _basePlaylistActionToken = _eventAggregator
+                .GetEvent<PlaylistActionContextChanged>()
+                .Subscribe(
+                    OnPlaylistActionChanged,
+                    ThreadOption.UIThread);
+        }
+
+        private async void OnPlaylistActionChanged(PlaylistActionContext context)
+        {
+            switch (context.ActionMode)
             {
-                if (args is PlaylistActionContext managePlaylistContext)
-                {
-                    switch (managePlaylistContext.ActionMode)
-                    {
-                        case PlaylistActionMode.AddToPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await AddToPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.SelectPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await SelectPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.CreatePlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await CreateNewPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.RemoveFromPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await RemoveFromPlaylistAsync(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.RemovePlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await RemovePlaylistAsync(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.PlaylistDeleted:
-                            //managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            // closes the open PlaylistDetailPage
-                            await NavigationService.GoBackAsync();
-                            break;
-                    }
-                }
-            }, ThreadOption.UIThread);
+                case PlaylistActionMode.AddToPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await AddToPlaylist(context);
+                    break;
+                case PlaylistActionMode.SelectPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await SelectPlaylist(context);
+                    break;
+                case PlaylistActionMode.CreatePlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await CreateNewPlaylist(context);
+                    break;
+                case PlaylistActionMode.RemoveFromPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await RemoveFromPlaylistAsync(context);
+                    break;
+                case PlaylistActionMode.RemovePlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await RemovePlaylistAsync(context);
+                    break;
+                case PlaylistActionMode.PlaylistDeleted:
+                    //managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                    // closes the open PlaylistDetailPage
+                    await NavigationService.GoBackAsync();
+                    break;
+                case PlaylistActionMode.PlaylistUpdated:
+                    await OnPlaylistUpdatedAsync(context);
+                    break;
+            }
+        }
+
+        protected virtual Task OnPlaylistUpdatedAsync(PlaylistActionContext context)
+        {
+            return Task.CompletedTask;
         }
 
         private async Task CreateNewPlaylist(PlaylistActionContext managePlaylistContext)

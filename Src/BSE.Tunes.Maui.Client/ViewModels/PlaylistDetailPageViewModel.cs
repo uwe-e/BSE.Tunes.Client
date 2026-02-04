@@ -58,44 +58,44 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 if (args is PlaylistActionContext managePlaylistContext)
                 {
-                    if (managePlaylistContext.ActionMode == PlaylistActionMode.PlaylistUpdated)
-                    {
-                        var playlist = await _dataService.GetPlaylistById(Playlist.Id);
-                        ImageSource = null;
+                    //if (managePlaylistContext.ActionMode == PlaylistActionMode.PlaylistUpdated)
+                    //{
+                    //    var playlist = await _dataService.GetPlaylistById(Playlist.Id);
+                    //    ImageSource = null;
 
-                        // If there's a playlistentry that has changed and there's no playlistTo object,
-                        // then it's probably an entry within this current playlist detail that has been removed.
-                        var shouldUpdateImage = managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry;
-                        var isTargetPlaylist = managePlaylistContext.PlaylistTo?.Id == Playlist.Id;
+                    //    // If there's a playlistentry that has changed and there's no playlistTo object,
+                    //    // then it's probably an entry within this current playlist detail that has been removed.
+                    //    var shouldUpdateImage = managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry;
+                    //    var isTargetPlaylist = managePlaylistContext.PlaylistTo?.Id == Playlist.Id;
 
-                        if (shouldUpdateImage || isTargetPlaylist)
-                        {
-                            ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id, playlist.CoverAlbumIds);
+                    //    if (shouldUpdateImage || isTargetPlaylist)
+                    //    {
+                    //        ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id, playlist.CoverAlbumIds);
 
-                            if (isTargetPlaylist)
-                            {
-                                Items.Clear();
-                                _pageNumber = 1;
-                                _hasItems = true;
-                                await FetchPlaylistEntriesAsync(Playlist.Id);
-                            }
-                        }
+                    //        if (isTargetPlaylist)
+                    //        {
+                    //            Items.Clear();
+                    //            _pageNumber = 1;
+                    //            _hasItems = true;
+                    //            await FetchPlaylistEntriesAsync(Playlist.Id);
+                    //        }
+                    //    }
 
 
-                        //// if there's a playlistentry that has changed..
-                        //// and there's no playlistTo object, then it's probably an entry within this current playlist detail that has been removed. 
-                        //if (managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry playlistEntry)
-                        //{
-                        //    //if so, then we need a new image
-                        //    ImageSource = null;
-                        //    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id);
-                        //}
+                    //    //// if there's a playlistentry that has changed..
+                    //    //// and there's no playlistTo object, then it's probably an entry within this current playlist detail that has been removed. 
+                    //    //if (managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry playlistEntry)
+                    //    //{
+                    //    //    //if so, then we need a new image
+                    //    //    ImageSource = null;
+                    //    //    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id);
+                    //    //}
 
-                        //if (managePlaylistContext.PlaylistTo?.Id == Playlist.Id)
-                        //{
-                        //    await LoadDataAsync(managePlaylistContext.PlaylistTo);
-                        //}
-                    }
+                    //    //if (managePlaylistContext.PlaylistTo?.Id == Playlist.Id)
+                    //    //{
+                    //    //    await LoadDataAsync(managePlaylistContext.PlaylistTo);
+                    //    //}
+                    //}
                     if (managePlaylistContext.ActionMode == PlaylistActionMode.ShowAlbum)
                     {
                         await ShowAlbumAsync(managePlaylistContext);
@@ -158,10 +158,30 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             await PlayTracksAsync(trackIds, PlayerMode.Playlist);
         }
 
-        //protected override ObservableCollection<int> GetTrackIds()
-        //{
-        //    return new ObservableCollection<int>(Items.Select(track => ((PlaylistEntry)track.Data).TrackId));
-        //}
+        protected override async Task OnPlaylistUpdatedAsync(PlaylistActionContext context)
+        {
+            var playlist = await _dataService.GetPlaylistById(Playlist.Id);
+            ImageSource = null;
+
+            // If there's a playlistentry that has changed and there's no playlistTo object,
+            // then it's probably an entry within this current playlist detail that has been removed.
+            var shouldUpdateImage = context.PlaylistTo == null && context.Data is PlaylistEntry;
+            var isTargetPlaylist = context.PlaylistTo?.Id == Playlist.Id;
+
+            if (shouldUpdateImage || isTargetPlaylist)
+            {
+                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id, playlist.CoverAlbumIds);
+
+                if (isTargetPlaylist)
+                {
+                    Items.Clear();
+                    _pageNumber = 1;
+                    _hasItems = true;
+                    await FetchPlaylistEntriesAsync(Playlist.Id);
+                }
+            }
+
+        }
 
         protected override async Task RemoveFromPlaylistAsync(PlaylistActionContext managePlaylistContext)
         {
