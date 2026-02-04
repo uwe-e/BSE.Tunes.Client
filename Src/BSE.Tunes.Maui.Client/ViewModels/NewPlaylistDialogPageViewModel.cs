@@ -61,12 +61,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             try
             {
-                var playlist = await _dataService.InsertPlaylist(new Playlist
-                {
-                    Name = PlaylistName,
-                    UserName = _settingsService.User.UserName,
-                    Guid = Guid.NewGuid()
-                });
+                var playlist = await _dataService.CreatePlaylistAsync(PlaylistName);
 
                 await CloseDialogAsync();
                 

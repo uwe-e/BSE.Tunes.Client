@@ -5,6 +5,7 @@ using BSEtunes.Contracts.DTOs.Albums;
 using BSEtunes.Contracts.DTOs.Common;
 using BSEtunes.Contracts.DTOs.Playlists;
 using BSEtunes.Contracts.Enums;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 
@@ -59,6 +60,16 @@ namespace BSE.Tunes.Maui.Client.Services
             {
                 throw new FormatException("Health endpoint returned invalid response; expected boolean \"true\".", jsonEx);
             }
+        }
+
+        public async Task<Playlist> CreatePlaylistAsync(string playlistName)
+        {
+            var dtoResult = await _requestService.PostAsync<PlaylistDto, CreatePlaylistDto>("api/playlists", new CreatePlaylistDto
+            {
+                Name = playlistName
+            }).ConfigureAwait(false);
+            
+            return _mapper.Map<Playlist>(dtoResult)!;
         }
 
         public Task<ObservableCollection<Album>> GetAlbumsByArtist(int artistId, int skip = 0, int limit = 10)
@@ -247,15 +258,28 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.PostAsync<bool, History>(new UriBuilder(strUrl).Uri, history);
         }
 
-        public Task<Playlist> AppendToPlaylist(Playlist playlist)
+        public async Task AppendToPlaylist(int playlistId, IList<int> trackIds)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/playlist/append";
-            return _requestService.PutAsync<Playlist, Playlist>(new UriBuilder(strUrl).Uri, playlist);
+            var appendPlaylistEntriesDto = new AppendPlaylistEntriesDto
+            {
+                TrackIds = trackIds as List<int> ?? new List<int>(trackIds)
+            };
+            
+            await _requestService.PostAsync($"api/playlists/{playlistId}/entries", appendPlaylistEntriesDto);
         }
 
         public Task DeletePlaylist(int playlistId)
         {
             return _requestService.DeleteAsync($"api/playlists/{playlistId}");
+        }
+
+        public async Task DeletePlaylistEntryAsync(PlaylistEntry playlistEntry)
+        {
+            if (playlistEntry == null)
+            {
+                throw new ArgumentNullException(nameof(playlistEntry));
+            }
+            await _requestService.DeleteAsync($"api/playlists/{playlistEntry.PlaylistId}/entries/{playlistEntry.Id}");
         }
 
         public async Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
@@ -302,7 +326,7 @@ namespace BSE.Tunes.Maui.Client.Services
             };
         }
 
-        public async Task<Playlist> GetPlaylistById(int playlistId, string userName)
+        public async Task<Playlist> GetPlaylistById(int playlistId)
         {
             var dtoResult = await _requestService.GetAsync<PlaylistDto>($"api/playlists/{playlistId}");
             return _mapper.Map<Playlist>(dtoResult)!;

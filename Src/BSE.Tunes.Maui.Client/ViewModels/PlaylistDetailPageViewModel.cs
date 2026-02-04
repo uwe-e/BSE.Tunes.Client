@@ -60,19 +60,41 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 {
                     if (managePlaylistContext.ActionMode == PlaylistActionMode.PlaylistUpdated)
                     {
-                        // if there's a playlistentry that has changed..
-                        // and there's no playlistTo object, then it's probably an entry within this current playlist detail that has been removed. 
-                        if (managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry playlistEntry)
+                        var playlist = await _dataService.GetPlaylistById(Playlist.Id);
+                        ImageSource = null;
+
+                        // If there's a playlistentry that has changed and there's no playlistTo object,
+                        // then it's probably an entry within this current playlist detail that has been removed.
+                        var shouldUpdateImage = managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry;
+                        var isTargetPlaylist = managePlaylistContext.PlaylistTo?.Id == Playlist.Id;
+
+                        if (shouldUpdateImage || isTargetPlaylist)
                         {
-                            //if so, then we need a new image
-                            ImageSource = null;
-                            ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id);
+                            ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id, playlist.CoverAlbumIds);
+
+                            if (isTargetPlaylist)
+                            {
+                                Items.Clear();
+                                _pageNumber = 1;
+                                _hasItems = true;
+                                await FetchPlaylistEntriesAsync(Playlist.Id);
+                            }
                         }
 
-                        if (managePlaylistContext.PlaylistTo?.Id == Playlist.Id)
-                        {
-                            await LoadDataAsync(managePlaylistContext.PlaylistTo);
-                        }
+
+                        //// if there's a playlistentry that has changed..
+                        //// and there's no playlistTo object, then it's probably an entry within this current playlist detail that has been removed. 
+                        //if (managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry playlistEntry)
+                        //{
+                        //    //if so, then we need a new image
+                        //    ImageSource = null;
+                        //    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id);
+                        //}
+
+                        //if (managePlaylistContext.PlaylistTo?.Id == Playlist.Id)
+                        //{
+                        //    await LoadDataAsync(managePlaylistContext.PlaylistTo);
+                        //}
                     }
                     if (managePlaylistContext.ActionMode == PlaylistActionMode.ShowAlbum)
                     {
@@ -154,7 +176,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 Items.Clear();
                 ImageSource = null;
 
-                Playlist = await _dataService.GetPlaylistById(playlist.Id, _settingsService.User.UserName);
+                Playlist = await _dataService.GetPlaylistById(playlist.Id);
                 if (Playlist != null)
                 {
                     IsBusy = false;
@@ -236,12 +258,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 Playlist.Entries.Remove(playlistEntry);
 
-                var playlist = await _dataService.UpdatePlaylist(Playlist);
+                await _dataService.DeletePlaylistEntryAsync(playlistEntry);
 
                 GridPanel panel = Items.Where(p => p.Id == playlistEntry.Id).FirstOrDefault<GridPanel>();
                 Items.Remove(panel);
 
-                await _imageService.RemoveStitchedBitmaps(playlist.Id);
+                await _imageService.RemoveStitchedBitmaps(playlistEntry.PlaylistId);
 
                 managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);

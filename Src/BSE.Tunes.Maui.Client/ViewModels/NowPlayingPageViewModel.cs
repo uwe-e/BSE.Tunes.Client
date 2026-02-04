@@ -156,7 +156,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         Guid = Guid.NewGuid()
                     });
 
-                    await _dataService.AppendToPlaylist(playlistTo);
+                    await _dataService.AppendToPlaylist(playlistTo.Id, [track.Id]);
                     await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
 
                     managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;

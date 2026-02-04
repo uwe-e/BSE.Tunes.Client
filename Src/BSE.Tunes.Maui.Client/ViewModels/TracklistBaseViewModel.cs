@@ -89,7 +89,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             await RemovePlaylistAsync(managePlaylistContext);
                             break;
                         case PlaylistActionMode.PlaylistDeleted:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                            //managePlaylistContext.ActionMode = PlaylistActionMode.None;
                             // closes the open PlaylistDetailPage
                             await NavigationService.GoBackAsync();
                             break;
@@ -241,23 +241,19 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             var playlistTo = managePlaylistContext.PlaylistTo;
             if (playlistTo != null && tracks != null)
             {
-                foreach (var track in tracks)
-                {
-                    if (track != null)
-                    {
-                        playlistTo.Entries.Add(new PlaylistEntry
-                        {
-                            PlaylistId = playlistTo.Id,
-                            TrackId = track.Id,
-                            Guid = Guid.NewGuid()
-                        });
-                    }
-                }
-                await _dataService.AppendToPlaylist(playlistTo);
-                await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
+                var trackIds = tracks
+                    .Where(track => track != null)
+                    .Select(track => track.Id)
+                    .ToList();
 
-                managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
-                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
+                if (trackIds.Count > 0)
+                {
+                    await _dataService.AppendToPlaylist(playlistTo.Id, trackIds);
+                    await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
+
+                    managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
+                    _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
+                }
             }
         }
         

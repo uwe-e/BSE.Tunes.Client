@@ -6,6 +6,7 @@ namespace BSE.Tunes.Maui.Client.Services
 {
     public interface IDataService
     {
+        Task<Playlist> CreatePlaylistAsync(string playlistName);
         Task<ObservableCollection<Album>> GetAlbumsByArtist(int artistId, int skip, int limit);
         Task<Album> GetAlbumById(int albumId);
         Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit);
@@ -25,12 +26,13 @@ namespace BSE.Tunes.Maui.Client.Services
             AlbumSortOption albumSortOption = AlbumSortOption.Title);
         Uri GetAlbumCoverUriById(Guid albumId, bool asThumbnail = false);
         Uri GetImage(Guid imageId, bool asThumbnail = false);
-        Task<Playlist> AppendToPlaylist(Playlist playlist);
+        Task AppendToPlaylist(int playlistId, IList<int> trackIds);
         Task DeletePlaylist(int playlistId);
+        Task DeletePlaylistEntryAsync(PlaylistEntry playlistEntry);
         Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize);
         //Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit);
         Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize);
-        Task<Playlist> GetPlaylistById(int playlistId, string userName);
+        Task<Playlist> GetPlaylistById(int playlistId);
         Task<Playlist> GetPlaylistByIdWithNumberOfEntries(int playlistId, string userName);
         Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit);
         Task<Playlist> InsertPlaylist(Playlist playlist);
@@ -45,5 +47,6 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<bool> IsEndPointAccessibleAsync();
         Task<bool> IsEndPointAccessibleAsync(string serviceEndPoint);
         Task<bool> UpdateHistory(History history);
+        
     }
 }

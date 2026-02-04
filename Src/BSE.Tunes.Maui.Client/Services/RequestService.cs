@@ -89,29 +89,51 @@ namespace BSE.Tunes.Maui.Client.Services
             }
             return result;
         }
-
-        public async Task<T> PostAsync<T, TRequest>(Uri uri, TRequest from)
+        
+        public async Task PostAsync<T>(string path, T content)
         {
-            T result = default;
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            builder.AppendToPath(path);
+
+            await PostAsync<T, T>(builder.Uri, content);
+        }
+
+        public async Task<U> PostAsync<U, T>(string path, T content)
+        {
+            var builder = new UriBuilder(this._settingsService.ServiceEndPoint);
+            builder.AppendToPath(path);
+            
+            return await PostAsync<U, T>(builder.Uri, content);
+        }
+
+        public async Task<U> PostAsync<U, T>(Uri uri, T content)
+        {
+            U result = default;
             using (var client = await GetHttpClientAsync())
             {
-                var serialized = await Task.Run(() => JsonSerializer.Serialize(from, _defaultJsonOptions));
+                var serialized = JsonSerializer.Serialize(content, _defaultJsonOptions);
                 using var responseMessage = await client.PostAsync(uri, new StringContent(serialized, Encoding.UTF8, "application/json"));
-                var responseData = await responseMessage.Content.ReadAsStringAsync();
-                result = JsonSerializer.Deserialize<T>(responseData, _defaultJsonOptions);
+
+                if (responseMessage.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return default;
+                }
+
+                using var stream = await responseMessage.Content.ReadAsStreamAsync();
+                result = await JsonSerializer.DeserializeAsync<U>(stream, _defaultJsonOptions);
             }
             return result;
         }
 
-        public async Task<TResult> PutAsync<TResult, TRequest>(Uri uri, TRequest from)
+        public async Task<TResult> PutAsync<TResult, TRequest>(Uri uri, TRequest content)
         {
             TResult result = default;
             using (var client = await GetHttpClientAsync())
             {
-                var serialized = await Task.Run(() => JsonSerializer.Serialize(from, _defaultJsonOptions));
+                var serialized = JsonSerializer.Serialize(content, _defaultJsonOptions);
                 using var responseMessage = await client.PutAsync(uri, new StringContent(serialized, Encoding.UTF8, "application/json"));
-                var responseData = await responseMessage.Content.ReadAsStringAsync();
-                result = JsonSerializer.Deserialize<TResult>(responseData, _defaultJsonOptions);
+                using var stream = await responseMessage.Content.ReadAsStreamAsync();
+                result = await JsonSerializer.DeserializeAsync<TResult>(stream, _defaultJsonOptions);
             }
             return result;
         }
@@ -129,5 +151,7 @@ namespace BSE.Tunes.Maui.Client.Services
             }
             return httpClient;
         }
+
+        
     }
 }

@@ -187,25 +187,25 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 /*
                  * This event has a unique identifier that can be used to prevent multiple execution.
                  */
-                var uniqueTrack = new UniqueAlbum
+                var uniqueAlbum = new UniqueAlbum
                 {
                     UniqueId = Guid.NewGuid()
                 };
 
                 if (_playlistActionContext.Data is Track track)
                 {
-                    uniqueTrack.Album = track.Album;
+                    uniqueAlbum.Album = track.Album;
                 }
                 if (_playlistActionContext.Data is Album album)
                 {
-                    uniqueTrack.Album = album;
+                    uniqueAlbum.Album = album;
                 }
                 if (_playlistActionContext.Data is PlaylistEntry playlistEntry)
                 {
-                    uniqueTrack.Album = playlistEntry.Track.Album;
+                    uniqueAlbum.Album = playlistEntry.Track.Album;
                 }
 
-                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
+                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueAlbum);
             }
         }
 
@@ -215,6 +215,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             if (_playlistActionContext != null)
             {
+                Console.WriteLine($"{nameof(PlaylistDetailPageViewModel)}.{nameof(RemovePlaylistAsync)}: Removing playlist...");
                 _playlistActionContext.ActionMode = PlaylistActionMode.RemovePlaylist;
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
             }

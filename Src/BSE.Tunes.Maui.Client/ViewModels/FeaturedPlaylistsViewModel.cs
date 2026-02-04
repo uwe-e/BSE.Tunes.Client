@@ -39,7 +39,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 .Subscribe(OnRefresh, ThreadOption.UIThread, keepSubscriberReferenceAlive: false);
 
             _playlistActionToken = _eventAggregator.GetEvent<PlaylistActionContextChanged>()
-                .Subscribe(OnPlaylistActionChanged, ThreadOption.UIThread, keepSubscriberReferenceAlive: false);
+                .Subscribe(
+                    OnPlaylistActionChanged,
+                    filter: context => context.ActionMode is 
+                        PlaylistActionMode.PlaylistUpdated or
+                        PlaylistActionMode.PlaylistDeleted);
         }
         public void Dispose()
         {
@@ -66,42 +70,35 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private void OnPlaylistActionChanged(PlaylistActionContext args)
         {
-            if (args is { ActionMode: PlaylistActionMode.PlaylistUpdated or PlaylistActionMode.PlaylistDeleted })
-            {
-                IsBusy = true;
-                LoadData();
-            };
+            // PlaylistActionMode will be filtered in subscription
+            OnRefresh();
         }
 
-        private void LoadData()
+        private async void LoadData()
         {
             // Cancel previous load operation
             _loadCancellation?.Cancel();
             _loadCancellation = new CancellationTokenSource();
 
-            Task.Run(async () =>
+            try
             {
-                try
-                {
-                    await LoadDataAsync(_loadCancellation.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    // Expected when cancellation is requested
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Failed to load playlists: {ex}");
-                    IsBusy = false;
-                }
-            });
+                await LoadDataAsync(_loadCancellation.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when cancellation is requested
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load playlists: {ex}");
+                IsBusy = false;
+            }
         }
 
         private async Task LoadDataAsync(CancellationToken cancellationToken)
         {
+            _items.Clear();
             var pagedResult = await _dataService.GetPagedPlaylistsByOwnerAsync(1, 6);
-
-            // Fix: Use .Any() instead of .Count for IEnumerable<T>
             if (pagedResult.Items != null && pagedResult.Items.Any())
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -112,23 +109,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     CreateGridPanelAsync(playlist, resourceString, cancellationToken));
 
                 var gridPanels = await Task.WhenAll(tasks);
+                
+                _items = new ObservableCollection<GridPanel>(gridPanels);
+                RaisePropertyChanged(nameof(Items));
+                IsBusy = false;
+            }
 
-                // Update collection on UI thread
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    _items = new ObservableCollection<GridPanel>(gridPanels);
-                    RaisePropertyChanged(nameof(Items));
-                    IsBusy = false;
-                });
-            }
-            else
-            {
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    _items.Clear();
-                    IsBusy = false;
-                });
-            }
+            IsBusy = false;
         }
 
         private async Task<GridPanel> CreateGridPanelAsync(Playlist playlist, string resourceString, CancellationToken cancellationToken)
