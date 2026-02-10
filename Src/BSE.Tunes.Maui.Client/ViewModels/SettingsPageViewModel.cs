@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Windows.Input;
@@ -7,7 +8,7 @@ using IResourceService = BSE.Tunes.Maui.Client.Services.IResourceService;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class SettingsPageViewModel : ViewModelBase, IActiveAware
+    public class SettingsPageViewModel : ViewModelBase, IActiveAware, IAlbumInfoSelectionHandler
     {
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
@@ -117,19 +118,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         break;
                 }
             });
-
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        }
+        public async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(SettingsPage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(SettingsPage), uniqueTrack.UniqueId))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
 
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
+        }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            this.SubscribeToAlbumSelection(_eventAggregator);
+            base.OnNavigatedTo(parameters);
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            // Only unsubscribe from album selection events if this page is not being navigated from modally,
+            if (!parameters.IsModalNavigation())
+            {
+                this.UnsubscribeFromAlbumSelection();
+            }
+            base.OnNavigatedFrom(parameters);
         }
 
         private void RaiseIsActiveChanged()
@@ -178,5 +194,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             await NavigationService.NavigateAsync(nameof(CacheSettingsPage));
         }
+
+        
     }
 }

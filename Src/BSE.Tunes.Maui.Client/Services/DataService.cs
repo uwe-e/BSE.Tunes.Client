@@ -117,18 +117,35 @@ namespace BSE.Tunes.Maui.Client.Services
             return _mapper.Map<Album>(dtoResult)!;
         }
         
-        public Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit)
+        public async Task<PagedResult<Album>> GetAlbumSearchResults(string query, int skip, int limit)
         {
-            query = System.Web.HttpUtility.UrlEncode(query);
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/albums/search/?query={query}&skip={skip}&limit={limit}";
-            return _requestService.GetAsync<Album[]>(new UriBuilder(strUrl).Uri);
+            return await GetAlbumSearchResults(query, skip, limit, CancellationToken.None);
         }
 
-        public Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit, CancellationToken token)
+        public async Task<PagedResult<Album>> GetAlbumSearchResults(string query, int skip, int limit, CancellationToken token)
         {
-            query = System.Web.HttpUtility.UrlEncode(query);
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/albums/search/?query={query}&skip={skip}&limit={limit}";
-            return _requestService.GetAsync<Album[]>(new UriBuilder(strUrl).Uri, token);
+            var parameters = new Dictionary<string, string>(3)
+            {
+                ["query"] = query.ToString(),
+                ["pageNumber"] = skip.ToString(),
+                ["pageSize"] = limit.ToString()
+            };
+
+            var dtoResult = await _requestService.GetAsync<PagedResultDto<AlbumDto>>("api/search/albums", parameters);
+
+            return new PagedResult<Album>
+            {
+                Items = _mapper.MapCollection<Album>(dtoResult.Items).ToList() ?? new List<Album>(),
+                TotalCount = dtoResult.TotalCount,
+                PageNumber = dtoResult.PageNumber,
+                PageSize = dtoResult.PageSize,
+                TotalPages = dtoResult.TotalPages,
+                HasPreviousPage = dtoResult.HasPreviousPage,
+                HasNextPage = dtoResult.HasNextPage,
+            };
+            //query = System.Web.HttpUtility.UrlEncode(query);
+            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/albums/search/?query={query}&skip={skip}&limit={limit}";
+            //return _requestService.GetAsync<Album[]>(new UriBuilder(strUrl).Uri, token);
         }
         
         public Uri GetAlbumCoverUriById(Guid albumId, bool asThumbnail = false)
@@ -240,16 +257,35 @@ namespace BSE.Tunes.Maui.Client.Services
             return _requestService.GetAsync<IList<int>>($"api/playlists/{playlistId}/trackids", parameters);
         }
 
-        public Task<Track[]> GetTrackSearchResults(string query, int skip, int limit)
+        public async Task<PagedResult<Track>> GetTrackSearchResults(string query, int skip, int limit)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/tracks/search/?query={query}&skip={skip}&limit={limit}";
-            return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri);
+            return await GetTrackSearchResults(query, skip, limit, CancellationToken.None);
         }
 
-        public Task<Track[]> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token)
+        public async Task<PagedResult<Track>> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/tracks/search/?query={query}&skip={skip}&limit={limit}";
-            return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri, token);
+            var parameters = new Dictionary<string, string>(3)
+            {
+                ["query"] = query.ToString(),
+                ["pageNumber"] = skip.ToString(),
+                ["pageSize"] = limit.ToString()
+            };
+
+            var dtoResult = await _requestService.GetAsync<PagedResultDto<TrackDto>>("api/search/tracks", parameters);
+
+            return new PagedResult<Track>
+            {
+                Items = _mapper.MapCollection<Track>(dtoResult.Items).ToList() ?? new List<Track>(),
+                TotalCount = dtoResult.TotalCount,
+                PageNumber = dtoResult.PageNumber,
+                PageSize = dtoResult.PageSize,
+                TotalPages = dtoResult.TotalPages,
+                HasPreviousPage = dtoResult.HasPreviousPage,
+                HasNextPage = dtoResult.HasNextPage,
+            };
+
+            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/tracks/search/?query={query}&skip={skip}&limit={limit}";
+            //return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri, token);
         }
 
         public Task<bool> UpdateHistory(History history)

@@ -1,5 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
@@ -31,7 +31,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IStorageService storageService,
             IResourceService resourceService,
             IPageDialogService pageDialogService,
-            IEventAggregator eventAggregator) : base(navigationService)
+            IEventAggregator eventAggregator) : base(navigationService, eventAggregator)
         {
             _storageService = storageService;
             _resourceService = resourceService;
@@ -43,18 +43,19 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 LoadSettings();
             });
 
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        }
+
+        public async override void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(CacheSettingsPage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(CacheSettingsPage), uniqueTrack.UniqueId))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
 
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
         }
 
         public async override void LoadSettings()
@@ -92,5 +93,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             _eventAggregator.GetEvent<CacheChangedEvent>().Publish(CacheChangeMode.Removed);
         }
+
+        
     }
 }

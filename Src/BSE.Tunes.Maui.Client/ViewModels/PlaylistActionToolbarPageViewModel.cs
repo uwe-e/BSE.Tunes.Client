@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -24,10 +25,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private bool _canQueueAsNext;
         private bool _canRemoveFromPlaylist;
         private bool _canDisplayAlbumInfo;
+        private bool _canDisplayAlbumInfoFromDialog;
         private PlaylistActionContext _playlistActionContext;
         private string _imageSource;
         private string _subTitle;
         private string _title;
+        
         private readonly IImageService _imageService = imageService;
         private readonly IEventAggregator _eventAggregator = eventAggregator;
         private readonly IMediaManager _mediaManager = mediaManager;
@@ -86,6 +89,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             set => SetProperty<bool>(ref _canDisplayAlbumInfo, value);
         }
 
+        public bool CanDisplayAlbumInfoFromDialog
+        {
+            get => _canDisplayAlbumInfoFromDialog;
+            set => SetProperty<bool>(ref _canDisplayAlbumInfoFromDialog, value);
+        }
+
         public bool CanQueueAsNext
         {
             get => _canQueueAsNext;
@@ -99,6 +108,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 //comes from the nowplaying page and is used only there
                 CanDisplayAlbumInfo = (bool)_playlistActionContext?.DisplayAlbumInfo;
+                CanDisplayAlbumInfoFromDialog = (bool)_playlistActionContext?.DisplayAlbumInfoFromDialog;
                 CanQueueAsNext = true;
                 Title = track.Name;
                 SubTitle = track.Album.Artist.Name;
@@ -192,20 +202,20 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     UniqueId = Guid.NewGuid()
                 };
 
-                if (_playlistActionContext.Data is Track track)
+                uniqueAlbum.Album = _playlistActionContext.Data switch
                 {
-                    uniqueAlbum.Album = track.Album;
-                }
-                if (_playlistActionContext.Data is Album album)
-                {
-                    uniqueAlbum.Album = album;
-                }
-                if (_playlistActionContext.Data is PlaylistEntry playlistEntry)
-                {
-                    uniqueAlbum.Album = playlistEntry.Track.Album;
-                }
+                    Track track => track.Album,
+                    Album album => album,
+                    PlaylistEntry playlistEntry => playlistEntry.Track.Album,
+                    _ => null
+                };
 
-                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueAlbum);
+                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(new AlbumSelectionContext
+                {
+                    UniqueAlbum = uniqueAlbum,
+                    Mode = CanDisplayAlbumInfoFromDialog ? AlbumSelectionMode.Preparation
+                        : AlbumSelectionMode.Direct,
+                });
             }
         }
 
@@ -215,7 +225,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             if (_playlistActionContext != null)
             {
-                Console.WriteLine($"{nameof(PlaylistDetailPageViewModel)}.{nameof(RemovePlaylistAsync)}: Removing playlist...");
+                Debug.WriteLine($"{nameof(PlaylistDetailPageViewModel)}.{nameof(RemovePlaylistAsync)}: Removing playlist...");
                 _playlistActionContext.ActionMode = PlaylistActionMode.RemovePlaylist;
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
             }

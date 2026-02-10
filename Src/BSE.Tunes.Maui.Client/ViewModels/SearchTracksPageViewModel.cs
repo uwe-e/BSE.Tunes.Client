@@ -1,16 +1,14 @@
-﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
-using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class SearchTracksPageViewModel : BaseSearchPageViewModel
+    public class SearchTracksPageViewModel : BaseSearchPageViewModel, IAlbumInfoSelectionHandler
     {
         private readonly IDataService _dataService;
-        private readonly IEventAggregator _eventAggregator;
+        private readonly IImageService _imageService;
         private bool _canExecutePlayTrack = true;
 
         public SearchTracksPageViewModel(
@@ -23,42 +21,49 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
             _dataService = dataService;
-            _eventAggregator = eventAggregator;
+            _imageService = imageService;
+        }
 
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        public async override void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(SearchTracksPage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(SearchTracksPage)))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
         }
 
         protected async override Task GetSearchResults()
         {
-            var tracks = await _dataService.GetTrackSearchResults(Query, PageNumber, PageSize);
-            if (tracks.Length == 0)
+            var pagedResult = await _dataService.GetTrackSearchResults(Query, PageNumber, PageSize);
+            
+            UpdatePaginationState(
+                hasItems: pagedResult?.Items is { Count: > 0 },
+                hasNextPage: pagedResult?.HasNextPage ?? false
+                );
+
+            if (!HasItems && pagedResult?.Items is not { Count: > 0 })
             {
-                HasItems = false;
+                return;
             }
-            foreach (var track in tracks)
-            {
-                if (track != null)
+
+            var gridPanels = pagedResult.Items
+                .Where(track => track != null) // Keep if API might return nulls
+                .Select(track => new GridPanel
                 {
-                    Items.Add(new GridPanel
-                    {
-                        Title = track.Name,
-                        SubTitle = track.Album.Artist.Name,
-                        ImageSource = _dataService.GetImage(track.Album.AlbumId, true)?.AbsoluteUri,
-                        Data = track
-                    });
-                }
+                    Title = track.Name,
+                    SubTitle = track.Album.Artist.Name,
+                    ImageSource = _imageService.GetBitmapSource(track.Album.AlbumId, true),
+                    Data = track
+                });
+
+            foreach (var panel in gridPanels)
+            {
+                Items.Add(panel);
             }
-            PageNumber = Items.Count;
         }
 
         protected override bool CanExecutePlayTrack(GridPanel panel)
@@ -73,13 +78,15 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 if (CanExecutePlayTrack(panel))
                 {
                     _canExecutePlayTrack = false;
-                    
-                    await PlayTracksAsync(new List<int>
-                    {
-                        track.Id
-                    }, PlayerMode.Song);
 
-                    _canExecutePlayTrack = false;
+                    try
+                    {
+                        await PlayTracksAsync(new List<int> { track.Id }, PlayerMode.Song);
+                    }
+                    finally
+                    {
+                        _canExecutePlayTrack = true; 
+                    }
                 }
             }
         }

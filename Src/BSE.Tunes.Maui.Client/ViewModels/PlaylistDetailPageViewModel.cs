@@ -1,10 +1,8 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -20,7 +18,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly ISettingsService _settingsService;
 
         public Playlist Playlist
         {
@@ -42,83 +39,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IDataService dataService,
             IMediaManager mediaManager,
             IImageService imageService,
-            IEventAggregator eventAggregator,
-            ISettingsService settingsService) : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
+            IEventAggregator eventAggregator) : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
             _dataService = dataService;
             _imageService = imageService;
             _eventAggregator = eventAggregator;
-            _settingsService = settingsService;
 
             _pageSize = 20;
             _pageNumber = 1;
             _hasItems = true;
+        }
 
-            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
+        public override async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(PlaylistDetailPage)))
             {
-                if (args is PlaylistActionContext managePlaylistContext)
-                {
-                    //if (managePlaylistContext.ActionMode == PlaylistActionMode.PlaylistUpdated)
-                    //{
-                    //    var playlist = await _dataService.GetPlaylistById(Playlist.Id);
-                    //    ImageSource = null;
-
-                    //    // If there's a playlistentry that has changed and there's no playlistTo object,
-                    //    // then it's probably an entry within this current playlist detail that has been removed.
-                    //    var shouldUpdateImage = managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry;
-                    //    var isTargetPlaylist = managePlaylistContext.PlaylistTo?.Id == Playlist.Id;
-
-                    //    if (shouldUpdateImage || isTargetPlaylist)
-                    //    {
-                    //        ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id, playlist.CoverAlbumIds);
-
-                    //        if (isTargetPlaylist)
-                    //        {
-                    //            Items.Clear();
-                    //            _pageNumber = 1;
-                    //            _hasItems = true;
-                    //            await FetchPlaylistEntriesAsync(Playlist.Id);
-                    //        }
-                    //    }
-
-
-                    //    //// if there's a playlistentry that has changed..
-                    //    //// and there's no playlistTo object, then it's probably an entry within this current playlist detail that has been removed. 
-                    //    //if (managePlaylistContext.PlaylistTo == null && managePlaylistContext.Data is PlaylistEntry playlistEntry)
-                    //    //{
-                    //    //    //if so, then we need a new image
-                    //    //    ImageSource = null;
-                    //    //    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id);
-                    //    //}
-
-                    //    //if (managePlaylistContext.PlaylistTo?.Id == Playlist.Id)
-                    //    //{
-                    //    //    await LoadDataAsync(managePlaylistContext.PlaylistTo);
-                    //    //}
-                    //}
-                    if (managePlaylistContext.ActionMode == PlaylistActionMode.ShowAlbum)
-                    {
-                        await ShowAlbumAsync(managePlaylistContext);
-                    }
-                }
-            });
-
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
-            {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(PlaylistDetailPage)))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
                         {KnownNavigationParameters.Animated,  true },
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
-                    await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
+            }
         }
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
+            base.OnNavigatedTo(parameters);
+            
             Playlist playlist = parameters.GetValue<Playlist>("playlist");
             await LoadDataAsync(playlist);
         }
@@ -185,7 +133,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected override async Task RemoveFromPlaylistAsync(PlaylistActionContext managePlaylistContext)
         {
-            await base.RemoveFromPlaylistAsync(managePlaylistContext);
             await UpdateCurrentPlaylistAsync(managePlaylistContext);
         }
 
@@ -271,42 +218,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
-        private async Task UpdateCurrentPlaylistAsync(PlaylistActionContext managePlaylistContext)
+        private async Task UpdateCurrentPlaylistAsync(PlaylistActionContext context)
         {
             IsBusy = true;
-            if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
+            if (context.Data is PlaylistEntry playlistEntry)
             {
                 Playlist.Entries.Remove(playlistEntry);
 
                 await _dataService.DeletePlaylistEntryAsync(playlistEntry);
 
-                GridPanel panel = Items.Where(p => p.Id == playlistEntry.Id).FirstOrDefault<GridPanel>();
-                Items.Remove(panel);
+                int entryId = playlistEntry.Id;
+                int playlistId = playlistEntry.PlaylistId;
 
-                await _imageService.RemoveStitchedBitmaps(playlistEntry.PlaylistId);
+                for (int i = Items.Count - 1; i >= 0; i--)
+                {
+                    if (Items[i].Id == entryId)
+                    {
+                        Items.RemoveAt(i);
+                        break;
+                    }
+                }
 
-                managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
-                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
+                await _imageService.RemoveStitchedBitmaps(playlistId);
+
+                context.ActionMode = PlaylistActionMode.PlaylistUpdated;
+                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(context);
 
             }
             IsBusy = false;
-        }
-
-        private async Task ShowAlbumAsync(PlaylistActionContext managePlaylistContext)
-        {
-            if (managePlaylistContext?.Data is PlaylistEntry playlistEntry)
-            {
-                var album = playlistEntry.Track?.Album;
-                if (album != null)
-                {
-                    var navigationParams = new NavigationParameters
-                    {
-                        {KnownNavigationParameters.Animated,  true },
-                        { "album", album }
-                    };
-                    await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
-                }
-            }
         }
     }
 }

@@ -1,16 +1,14 @@
-﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
-using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class SearchAlbumsPageViewModel : BaseSearchPageViewModel
+    public class SearchAlbumsPageViewModel : BaseSearchPageViewModel, IAlbumInfoSelectionHandler
     {
         private readonly IDataService _dataService;
-        private readonly IEventAggregator _eventAggregator;
+        private readonly IImageService _imageService;
 
         public SearchAlbumsPageViewModel(
             INavigationService navigationService,
@@ -22,43 +20,48 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
             _dataService = dataService;
-            _eventAggregator = eventAggregator;
-
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
-            {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(SearchAlbumsPage)))
-                {
-                    var navigationParams = new NavigationParameters
-                    {
-                        { "album", uniqueTrack.Album }
-                    };
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+            _imageService = imageService;
         }
 
+        public async override void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(SearchAlbumsPage)))
+            {
+                var navigationParams = new NavigationParameters
+                    {
+                        { "album", context.UniqueAlbum.Album }
+                    };
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
+        }
         protected async override Task GetSearchResults()
         {
-            var albums = await _dataService.GetAlbumSearchResults(Query, PageNumber, PageSize);
-            if (albums.Length == 0)
+            var pagedResult = await _dataService.GetAlbumSearchResults(Query, PageNumber, PageSize);
+
+            UpdatePaginationState(
+                hasItems: pagedResult?.Items is { Count: > 0 },
+                hasNextPage: pagedResult?.HasNextPage ?? false
+                );
+
+            if (!HasItems && pagedResult?.Items is not { Count: > 0 })
             {
-                HasItems = false;
+                return;
             }
 
-            foreach (var album in albums)
-            {
-                if (album != null)
+            var gridPanels = pagedResult.Items
+                .Where(album => album != null) // Keep if API might return nulls
+                .Select(album => new GridPanel
                 {
-                    Items.Add(new GridPanel
-                    {
-                        Title = album.Title,
-                        SubTitle = album.Artist.Name,
-                        ImageSource = _dataService.GetImage(album.AlbumId, true)?.AbsoluteUri,
-                        Data = album
-                    });
-                }
+                    Title = album.Title,
+                    SubTitle = album.Artist.Name,
+                    ImageSource = _imageService.GetBitmapSource(album.AlbumId, true),
+                    Data = album
+                });
+
+            foreach (var panel in gridPanels)
+            {
+                Items.Add(panel);
             }
-            PageNumber = Items.Count;
         }
 
         protected override async void SelectItem(GridPanel obj)

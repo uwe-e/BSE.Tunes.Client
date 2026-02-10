@@ -1,5 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
+﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -10,7 +9,7 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class AlbumsPageViewModel : ViewModelBase, IActiveAware
+    public class AlbumsPageViewModel : ViewModelBase, IActiveAware, IAlbumInfoSelectionHandler
     {
         private bool _isActive;
         private bool _isActivated;
@@ -90,20 +89,37 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             PageNumber = 1;
             PageSize = 30;
+        }
 
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        public async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(AlbumsPage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(AlbumsPage), uniqueTrack.UniqueId))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
 
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
         }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            this.SubscribeToAlbumSelection(_eventAggregator);
+            base.OnNavigatedTo(parameters);
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            // Only unsubscribe from album selection events if this page is not being navigated from modally,
+            if (!parameters.IsModalNavigation())
+            {
+                this.UnsubscribeFromAlbumSelection();
+            }
+            base.OnNavigatedFrom(parameters);
+        }
+
 
         private void RaiseIsActiveChanged()
         {

@@ -9,7 +9,6 @@
         RemoveFromPlaylist = 4,
         RemovePlaylist = 5,
         PlaylistDeleted = 6,
-        PlaylistUpdated = 7,
-        ShowAlbum = 8
+        PlaylistUpdated = 7
     }
 }

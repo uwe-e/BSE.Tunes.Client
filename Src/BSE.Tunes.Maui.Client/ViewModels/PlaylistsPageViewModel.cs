@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class PlaylistsPageViewModel : ViewModelBase, IActiveAware
+    public class PlaylistsPageViewModel : ViewModelBase, IActiveAware, IAlbumInfoSelectionHandler
     {
         private bool _isActive;
         private bool _isActivated;
@@ -22,7 +22,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _selectItemCommand;
         private int _totalNumberOfItems;
         private readonly IDataService _dataService;
-        private readonly ISettingsService _settingsService;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IResourceService _resourceService;
@@ -77,13 +76,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public PlaylistsPageViewModel(
             INavigationService navigationService,
             IDataService dataService,
-            ISettingsService settingsService,
             IImageService imageService,
             IEventAggregator eventAggregator,
             IResourceService resourceService) : base(navigationService)
         {
             _dataService = dataService;
-            _settingsService = settingsService;
             _imageService = imageService;
             _eventAggregator = eventAggregator;
             _resourceService = resourceService;
@@ -108,19 +105,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 RaiseIsActiveChanged();
             });
 
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        }
+        public async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(PlaylistsPage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(PlaylistsPage), uniqueTrack.UniqueId))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
 
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
+        }
 
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            this.SubscribeToAlbumSelection(_eventAggregator);
+            base.OnNavigatedTo(parameters);
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            // Only unsubscribe from album selection events if this page is not being navigated from modally,
+            if (!parameters.IsModalNavigation())
+            {
+                this.UnsubscribeFromAlbumSelection();
+            }
+            base.OnNavigatedFrom(parameters);
         }
 
         private void RaiseIsActiveChanged()

@@ -1,5 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
+﻿using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
@@ -12,7 +11,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 {
     public class AlbumDetailPageViewModel : TracklistBaseViewModel
     {
-        private readonly IEventAggregator _eventAggregator;
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private Album _album;
@@ -26,7 +24,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _selectAlbumCommand;
         private ICommand _loadMoreAlbumssCommand;
         private bool _canExecutePlayTrack = true;
-        private readonly SubscriptionToken _albumInfoSelectionToken;
 
         public ICommand LoadMoreAlbumsCommand => _loadMoreAlbumssCommand ??= new DelegateCommand(async () => await LoadMoreAlbumsAsync());
 
@@ -66,7 +63,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IImageService imageService,
             IMediaManager mediaManager) : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
-            _eventAggregator = eventAggregator;
             _dataService = dataService;
             _imageService = imageService;
 
@@ -74,27 +70,27 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _pageNumber = 1;
             _hasItems = true;
             HasFurtherAlbums = false;
-
-            _albumInfoSelectionToken = _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
-            {
-                /*Sometimes we have more than one AlbumDetailPage.
-                 * For preventing the execution of this event in all these pages, we check an identifier for its use.
-                */
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(AlbumDetailPage), uniqueTrack.UniqueId))
-                {
-                    var navigationParams = new NavigationParameters
-                    {
-                        { "album", uniqueTrack.Album }
-                    };
-                    await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
-                }
-            });
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
+            base.OnNavigatedTo(parameters);
+            
             Album album = parameters.GetValue<Album>("album");
             LoadData(album);
+        }
+
+        public override async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(AlbumDetailPage)))
+            {
+                var navigationParams = new NavigationParameters
+                    {
+                        {KnownNavigationParameters.Animated,  true },
+                        { "album", context.UniqueAlbum.Album }
+                    };
+                await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
+            }
         }
 
         protected override async Task PlayAllAsync()
@@ -261,5 +257,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
             }
         }
+        
     }
 }

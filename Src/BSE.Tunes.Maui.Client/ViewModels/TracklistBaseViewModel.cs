@@ -3,12 +3,13 @@ using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using BSE.Tunes.Maui.Client.Extensions;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class TracklistBaseViewModel : ViewModelBase
+    public abstract class TracklistBaseViewModel : ViewModelBase, IAlbumInfoSelectionHandler
     {
         private ObservableCollection<GridPanel> _items;
         private string _imageSource;
@@ -21,7 +22,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IMediaManager _mediaManager;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
-        private SubscriptionToken _basePlaylistActionToken;
+        private readonly SubscriptionToken _basePlaylistActionToken;
 
         public ICommand OpenFlyoutCommand => _openFlyoutCommand
             ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
@@ -68,6 +69,34 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 .Subscribe(
                     OnPlaylistActionChanged,
                     ThreadOption.UIThread);
+        }
+
+        /// <summary>
+        /// Handles the selection of an album, which can be triggered from various contexts
+        /// such as album lists or search results. The method receives an AlbumSelectionContext that provides details
+        /// about the selected album and the context of the selection. Implementing this method allows derived 
+        /// view models to respond appropriately to album selections, such as navigating to an album detail page
+        /// or updating the UI with album information.
+        /// </summary>
+        /// <param name="context"></param>
+        public abstract void HandleShowAlbum(AlbumSelectionContext context);
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            // Only subscribe to album selection events if this page is not being navigated to modally,
+            // to avoid handling events in the background when a dialog is open
+            this.SubscribeToAlbumSelection(_eventAggregator);
+            base.OnNavigatedTo(parameters);
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            // Only unsubscribe from album selection events if this page is not being navigated from modally,
+            if (!parameters.IsModalNavigation())
+            {
+                this.UnsubscribeFromAlbumSelection();
+            }
+            base.OnNavigatedFrom(parameters);
         }
 
         private async void OnPlaylistActionChanged(PlaylistActionContext context)
@@ -227,10 +256,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 tracks = album.Tracks;
                 // if the method is called from a search page, the tracks are null. We need to load them
-                if (tracks == null)
-                {
-                    tracks = await _dataService.GetTracksByAlbumId(album.Id);
-                }
+                tracks ??= await _dataService.GetTracksByAlbumId(album.Id);
             }
             if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
             {
@@ -280,5 +306,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
             }
         }
+
+        
     }
 }

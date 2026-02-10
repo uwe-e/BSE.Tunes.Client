@@ -9,8 +9,8 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<Playlist> CreatePlaylistAsync(string playlistName);
         Task<ObservableCollection<Album>> GetAlbumsByArtist(int artistId, int skip, int limit);
         Task<Album> GetAlbumById(int albumId);
-        Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit);
-        Task<Album[]> GetAlbumSearchResults(string query, int skip, int limit, CancellationToken token);
+        Task<PagedResult<Album>> GetAlbumSearchResults(string query, int skip, int limit);
+        Task<PagedResult<Album>> GetAlbumSearchResults(string query, int skip, int limit, CancellationToken token);
         Task<IList<Album>> GetFeaturedAlbums(int limit);
         Task<IList<Album>> GetNewestAlbums(int limit);
         Task<int> GetNumberOfAlbumsByGenre(int? genreId);
@@ -42,8 +42,8 @@ namespace BSE.Tunes.Maui.Client.Services
         Task<Track> GetTrackById(int trackId);
         Task<IList<int>> GetTrackIdsByGenre(int? genreId = null);
         Task<IList<int>> GetTrackIdsByPlaylistId(int playlistId, bool randomize = false);
-        Task<Track[]> GetTrackSearchResults(string query, int skip, int limit);
-        Task<Track[]> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token);
+        Task<PagedResult<Track>> GetTrackSearchResults(string query, int skip, int limit);
+        Task<PagedResult<Track>> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token);
         Task<bool> IsEndPointAccessibleAsync();
         Task<bool> IsEndPointAccessibleAsync(string serviceEndPoint);
         Task<bool> UpdateHistory(History history);

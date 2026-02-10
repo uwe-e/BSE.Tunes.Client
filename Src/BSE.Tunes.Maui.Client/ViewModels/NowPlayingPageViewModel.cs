@@ -52,26 +52,44 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _mediaManager = mediaManager;
 
+            //_eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            //{
+            //    // because of preventing the multiple execution of the event, we unsubscribe this event
+            //    _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Unsubscribe(_albumInfoSelectionToken);
+
+            //    await CloseDialog();
+
+            //    _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
+            //});
+            //_albumInfoSelectionToken ??= _eventAggregator
+            //        .GetEvent<AlbumInfoSelectionEvent>()
+            //        .Subscribe(uniqueAlbum => OnAlbumInfoSelected(uniqueAlbum),
+            //            ThreadOption.UIThread,
+            //            keepSubscriberReferenceAlive: true);
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
-            if (_playlistActionToken == null)
-            {
-                _playlistActionToken = _eventAggregator
+            _playlistActionToken ??= _eventAggregator
                     .GetEvent<PlaylistActionContextChanged>()
                     .Subscribe(
                         OnPlaylistActionChanged,
                         ThreadOption.UIThread);
-            }
 
-            if (_albumInfoSelectionToken == null)
-            {
-                _albumInfoSelectionToken = _eventAggregator
-                    .GetEvent<AlbumInfoSelectionEvent>()
-                    .ShowAlbum(uniqueTrack => OnAlbumInfoSelected(uniqueTrack));
-            }
-            
+            _albumInfoSelectionToken ??= _eventAggregator
+                   .GetEvent<AlbumInfoSelectionEvent>()
+                   .Subscribe(OnAlbumInfoSelected,
+                       filter: context => context.Mode == AlbumSelectionMode.Preparation);
+
+            //_albumInfoSelectionToken ??= _eventAggregator
+            //       .GetEvent<AlbumInfoSelectionEvent>()
+            //       .Subscribe(uniqueAlbum => OnAlbumInfoSelected(uniqueAlbum),
+            //           ThreadOption.UIThread,
+            //           keepSubscriberReferenceAlive: false);
+            //_albumInfoSelectionToken ??= _eventAggregator
+            //        .GetEvent<AlbumInfoSelectionEvent>()
+            //        .ShowAlbum(uniqueTrack => OnAlbumInfoSelected(uniqueTrack));
+
             if (parameters.GetValue<Track>("source") is Track currentTrack)
             {
                 CurrentTrack = currentTrack;
@@ -87,8 +105,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _playlistActionToken?.Dispose();
             _playlistActionToken = null;
 
-            _albumInfoSelectionToken?.Dispose();
-            _albumInfoSelectionToken = null;
+            //_albumInfoSelectionToken?.Dispose();
+            //_albumInfoSelectionToken = null;
 
             base.OnNavigatedFrom(parameters);
         }
@@ -119,13 +137,17 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
         
-        private async void OnAlbumInfoSelected(UniqueAlbum uniqueTrack)
+        private async void OnAlbumInfoSelected(AlbumSelectionContext context)
         {
             await CloseDialog();
 
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
+            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(new AlbumSelectionContext
+            {
+                UniqueAlbum = context.UniqueAlbum,
+                Mode = AlbumSelectionMode.Direct
+            });
         }
-
+        
         private async Task CloseDialog()
         {
             var navigationParams = new NavigationParameters
@@ -140,6 +162,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             var source = new PlaylistActionContext
             {
+                DisplayAlbumInfoFromDialog = true,
                 DisplayAlbumInfo = true,
                 Data = obj,
             };

@@ -1,20 +1,18 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Models.Contract;
-using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class HomePageViewModel : ViewModelBase, IInitialize
+    public class HomePageViewModel : ViewModelBase, IInitialize, IAlbumInfoSelectionHandler
     {
         private readonly IRegionManager _regionManager;
-        private readonly IResourceService _resourceService;
         private readonly IEventAggregator _eventAggregator;
         private ICommand _refreshCommand;
         private bool _isRefreshing;
-        private SubscriptionToken _albumInfoSelectionToken;
 
         public ICommand RefreshCommand => _refreshCommand ??= new DelegateCommand(RefreshView);
 
@@ -33,28 +31,44 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public HomePageViewModel(
             INavigationService navigationService,
             IRegionManager regionManager,
-            IResourceService resourceService,
             IEventAggregator eventAggregator) : base(navigationService)
 
         {
             _regionManager = regionManager;
-            _resourceService = resourceService;
             _eventAggregator = eventAggregator;
 
             _eventAggregator.GetEvent<AlbumSelectedEvent>().Subscribe(SelectAlbum, ThreadOption.UIThread);
             _eventAggregator.GetEvent<PlaylistSelectedEvent>().Subscribe(SelectPlaylist, ThreadOption.UIThread);
 
-            _albumInfoSelectionToken = _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        }
+        
+        public async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(HomePage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(HomePage)))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
+        }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+
+            this.SubscribeToAlbumSelection(_eventAggregator);
+            base.OnNavigatedTo(parameters);
+        }
+        
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            if (!parameters.IsModalNavigation())
+            {
+                this.UnsubscribeFromAlbumSelection();
+            }
+
+            base.OnNavigatedFrom(parameters);
         }
 
         private void RefreshView()
@@ -102,7 +116,5 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 await NavigationService.NavigateAsync($"{nameof(PlaylistDetailPage)}", navigationParams);
             }
         }
-
-
     }
 }
