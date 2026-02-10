@@ -5,7 +5,6 @@ using BSEtunes.Contracts.DTOs.Albums;
 using BSEtunes.Contracts.DTOs.Common;
 using BSEtunes.Contracts.DTOs.Playlists;
 using BSEtunes.Contracts.Enums;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 
@@ -70,12 +69,6 @@ namespace BSE.Tunes.Maui.Client.Services
             }).ConfigureAwait(false);
             
             return _mapper.Map<Playlist>(dtoResult)!;
-        }
-
-        public Task<ObservableCollection<Album>> GetAlbumsByArtist(int artistId, int skip = 0, int limit = 10)
-        {
-            string strUrl = $"{this._settingsService.ServiceEndPoint}/api/v2/artists/{artistId}/albums?skip={skip}&limit={limit}";
-            return _requestService.GetAsync<ObservableCollection<Album>>(new UriBuilder(strUrl).Uri);
         }
 
         public async Task<IList<Album>> GetFeaturedAlbums(int limit)
@@ -157,18 +150,6 @@ namespace BSE.Tunes.Maui.Client.Services
                 builder.AppendToPath($"{asThumbnail}");
             }
             return builder.Uri;
-        }
-
-        public Task<int> GetNumberOfAlbumsByGenre(int? genreId)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/genre/{genreId ?? 0}/count";
-            return _requestService.GetAsync<int>(new UriBuilder(strUrl).Uri);
-        }
-
-        public Task<ObservableCollection<Album>> GetAlbumsByGenre(int? genreId, int skip, int limit)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/genre/{genreId ?? 0}/?skip={skip}&limit={limit}";
-            return _requestService.GetAsync<ObservableCollection<Album>>(new UriBuilder(strUrl).Uri);
         }
         
         public async Task<SystemInfo> GetAvailableTrackCount()
@@ -368,23 +349,10 @@ namespace BSE.Tunes.Maui.Client.Services
             return _mapper.Map<Playlist>(dtoResult)!;
         }
 
-        [Obsolete("Use GetPlaylistById instead.")]
-        public Task<Playlist> GetPlaylistByIdWithNumberOfEntries(int playlistId, string userName)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}/$count";
-            return _requestService.GetAsync<Playlist>(new UriBuilder(strUrl).Uri);
-        }
-
         public Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit)
         {
             string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}/imageids/?limit={limit}";
             return _requestService.GetAsync<ObservableCollection<Guid>>(new UriBuilder(strUrl).Uri);
-        }
-
-        public Task<Playlist> InsertPlaylist(Playlist playlist)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/playlist/insert";
-            return _requestService.PostAsync<Playlist, Playlist>(new UriBuilder(strUrl).Uri, playlist);
         }
 
         public Task<Playlist> UpdatePlaylist(Playlist playlist)

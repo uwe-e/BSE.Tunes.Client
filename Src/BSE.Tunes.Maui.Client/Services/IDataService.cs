@@ -7,14 +7,11 @@ namespace BSE.Tunes.Maui.Client.Services
     public interface IDataService
     {
         Task<Playlist> CreatePlaylistAsync(string playlistName);
-        Task<ObservableCollection<Album>> GetAlbumsByArtist(int artistId, int skip, int limit);
         Task<Album> GetAlbumById(int albumId);
         Task<PagedResult<Album>> GetAlbumSearchResults(string query, int skip, int limit);
         Task<PagedResult<Album>> GetAlbumSearchResults(string query, int skip, int limit, CancellationToken token);
         Task<IList<Album>> GetFeaturedAlbums(int limit);
         Task<IList<Album>> GetNewestAlbums(int limit);
-        Task<int> GetNumberOfAlbumsByGenre(int? genreId);
-        Task<ObservableCollection<Album>> GetAlbumsByGenre(int? genreId, int skip, int limit);
         Task<PagedResult<Album>> GetPagedAlbums(
             string? genre,
             int? artistId,
@@ -33,9 +30,7 @@ namespace BSE.Tunes.Maui.Client.Services
         //Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit);
         Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize);
         Task<Playlist> GetPlaylistById(int playlistId);
-        Task<Playlist> GetPlaylistByIdWithNumberOfEntries(int playlistId, string userName);
         Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit);
-        Task<Playlist> InsertPlaylist(Playlist playlist);
         Task<Playlist> UpdatePlaylist(Playlist playlist);
         Task<SystemInfo> GetAvailableTrackCount();
         Task<Track[]> GetTracksByAlbumId(int albumId);
