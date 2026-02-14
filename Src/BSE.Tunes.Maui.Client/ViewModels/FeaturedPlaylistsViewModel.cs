@@ -122,8 +122,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             var imageSource = await _imageService.GetStitchedBitmapSourceAsync(
                 playlist.Id,
-                playlist.CoverAlbumIds,
-                asThumbnail: true);
+                playlist.CoverAlbumIds);
 
             cancellationToken.ThrowIfCancellationRequested();
 

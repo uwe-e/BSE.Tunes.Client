@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services.Mappers;
 using BSEtunes.Contracts.DTOs.Albums;
 using BSEtunes.Contracts.DTOs.Common;
+using BSEtunes.Contracts.DTOs.History;
 using BSEtunes.Contracts.DTOs.Playlists;
 using BSEtunes.Contracts.Enums;
 using System.Collections.ObjectModel;
@@ -269,10 +270,19 @@ namespace BSE.Tunes.Maui.Client.Services
             //return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri, token);
         }
 
-        public Task<bool> UpdateHistory(History history)
+        public async Task<bool> UpdateHistory(History history)
         {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/tunes/UpdateHistory";
-            return _requestService.PostAsync<bool, History>(new UriBuilder(strUrl).Uri, history);
+            var createHistoryDto = new CreateHistoryDto
+            {
+                AppId = history.PlayMode,
+                TitleId = history.AlbumId,
+                TrackId = history.TrackId,
+                PlayedAt = history.PlayedAt
+            };
+
+            var historyResult = await _requestService.PostAsync<HistoryDto, CreateHistoryDto>("api/history", createHistoryDto).ConfigureAwait(false);
+            //TODO: Checking what do to with the result, for now just return if it is not null
+            return historyResult != null;
         }
 
         public async Task AppendToPlaylist(int playlistId, IList<int> trackIds)

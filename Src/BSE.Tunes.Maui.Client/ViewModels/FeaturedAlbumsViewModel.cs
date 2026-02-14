@@ -57,7 +57,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         {
                             Title = album.Title,
                             SubTitle = album.Artist?.Name,
-                            ImageSource = _imageService.GetBitmapSource(album.AlbumId, true),
+                            ImageSource = _imageService.GetBitmapSource(album.AlbumId),
                             Data = album
                         });
                     }

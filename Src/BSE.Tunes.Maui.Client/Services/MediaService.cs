@@ -2,6 +2,7 @@
 using BSE.Tunes.Maui.Client.Utils;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using System.Threading.Tasks;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
@@ -40,9 +41,11 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly ISettingsService _settingsService;
         private readonly IRequestService _requestService;
         private readonly IStorageService _storageService;
-        private CommunityToolkit.Maui.Views.MediaElement _mediaElement;
+        private readonly LocalProxyService _proxyService;
+        private MediaElement _mediaElement;
 
         private PlayerState _currentPlayerState;
+        private CancellationTokenSource _prefetchCancellation;
 
         public double Progress => GetProgress();
 
@@ -58,15 +61,20 @@ namespace BSE.Tunes.Maui.Client.Services
         public MediaService(IDataService dataService,
             ISettingsService settingsService,
             IRequestService requestService,
-            IStorageService storageService)
+            IStorageService storageService,
+            LocalProxyService proxyService)
         {
             _dataService = dataService;
             _settingsService = settingsService;
             _requestService = requestService;
             _storageService = storageService;
+            _proxyService = proxyService;
+
+            // Start proxy when service is created
+            _ = InitializeProxyAsync();
         }
 
-        public void RegisterAsMediaService(CommunityToolkit.Maui.Views.MediaElement mediaElement)
+        public void RegisterAsMediaService(MediaElement mediaElement)
         {
             if (_mediaElement == null && mediaElement != null)
             {
@@ -86,6 +94,19 @@ namespace BSE.Tunes.Maui.Client.Services
              * The attribute android:stopWithTask="true" in AndroidManifest.xml prevents the 
              * exception "Cannot access a disposed object" when trying to restart the closed app  
              */
+            _proxyService?.Dispose();
+        }
+
+        private async Task InitializeProxyAsync()
+        {
+            try
+            {
+                await _proxyService.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to start proxy service: {ex.Message}");
+            }
         }
 
 #nullable enable
@@ -136,50 +157,225 @@ namespace BSE.Tunes.Maui.Client.Services
             if (track == null || track.Guid == Guid.Empty)
                 return;
 
-            HttpClient httpClient = await _requestService.GetHttpClientAsync();
-            var requestUri = GetRequestUri(track.Guid);
-
             var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
+
+            if (File.Exists(filePath))
+            {
+                var requestUri = GetRequestUri(track.Guid);
+                HttpClient httpClient = await _requestService.GetHttpClientAsync();
+
+                if (await IsFileCompleteAsync(httpClient, requestUri, filePath))
+                {
+                    Console.WriteLine("Playing from cache");
+                    await SetMediaElementSourceAsync(track, coverUri, MediaSource.FromFile(filePath));
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("Incomplete cache, deleting");
+                    File.Delete(filePath);
+                }
+            }
+
+            // Stream via local proxy with authentication
+            var proxyUrl = _proxyService.GetProxyUrl(track.Guid);
 
             try
             {
-                /*
-                 * Sometimes we get on an Android device a .NET exception with the message: "Error while copying content to a stream."
-                 * and deeper this message: "Cannot access a disposed object. Object name: 'Java.IO.InputStreamInvoker'"
-                 * 
-                 * As a workaround we retry the HTTP request and the stream copy up to 3 times with a delay of 500 milliseconds between attempts.
-                 */
-                await RetryHelper.RetryAsync(async () =>
-                {
-                    using HttpResponseMessage response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Console.WriteLine($"Failed to fetch track. Status code: {response.StatusCode}");
-                        return;
-                    }
+                Console.WriteLine($"Streaming from proxy: {proxyUrl}");
+                await SetMediaElementSourceAsync(track, coverUri, MediaSource.FromUri(proxyUrl));
 
-                    using var contentStream = await response.Content.ReadAsStreamAsync();
-                    using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
-                    await contentStream.CopyToAsync(fileStream);
-                }, maxAttempts: 3, delayMilliseconds: 500);
-
+                // Cache in background for future playback
+                _ = CacheTrackInBackgroundAsync(track, filePath, CancellationToken.None);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error writing track file: {ex.Message}");
-                return;
+                Console.WriteLine($"Error setting media source: {ex.Message}");
             }
+
+            //if (!File.Exists(filePath))
+            //{
+            //    var requestUri = GetRequestUri(track.Guid);
+            //    HttpClient httpClient = await _requestService.GetHttpClientAsync();
+
+
+            //    try
+            //    {
+            //        /*
+            //         * Sometimes we get on an Android device a .NET exception with the message: "Error while copying content to a stream."
+            //         * and deeper this message: "Cannot access a disposed object. Object name: 'Java.IO.InputStreamInvoker'"
+            //         * 
+            //         * As a workaround we retry the HTTP request and the stream copy up to 3 times with a delay of 500 milliseconds between attempts.
+            //         */
+            //        await RetryHelper.RetryAsync(async () =>
+            //        {
+            //            using HttpResponseMessage response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
+            //            if (!response.IsSuccessStatusCode)
+            //            {
+            //                Console.WriteLine($"Failed to fetch track. Status code: {response.StatusCode}");
+            //                return;
+            //            }
+
+            //            // Get expected file size from response headers
+            //            long? expectedLength = response.Content.Headers.ContentLength;
+
+            //            using var contentStream = await response.Content.ReadAsStreamAsync();
+            //            using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
+            //            await contentStream.CopyToAsync(fileStream);
+            //        }, maxAttempts: 3, delayMilliseconds: 500);
+
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine($"Error writing track file: {ex.Message}");
+            //        return;
+            //    }
+            //}
+
+            //MediaSource mediaSource = MediaSource.FromFile(filePath);
+            //await SetMediaElementSourceAsync(track, coverUri, mediaSource);
+        }
+        
+        public async Task PrefetchNextTrackAsync(Track nextTrack)
+        {
+            if (nextTrack == null || nextTrack.Guid == Guid.Empty)
+                return;
+
+            // Cancel any existing prefetch operation
+            CancelPrefetch();
+
+            var filePath = Path.Combine(FileSystem.CacheDirectory, nextTrack.Guid + nextTrack.Extension);
+
+            // Check if already cached
+            if (File.Exists(filePath))
+            {
+                var requestUri = GetRequestUri(nextTrack.Guid);
+                HttpClient httpClient = await _requestService.GetHttpClientAsync();
+
+                if (await IsFileCompleteAsync(httpClient, requestUri, filePath))
+                {
+                    Console.WriteLine($"Next track already cached: {nextTrack.Name}");
+                    return;
+                }
+                else
+                {
+                    File.Delete(filePath);
+                }
+            }
+
+            // Start new prefetch with cancellation support
+            _prefetchCancellation = new CancellationTokenSource();
+            await CacheTrackInBackgroundAsync(nextTrack, filePath, _prefetchCancellation.Token, isPrefetch: true);
+        }
+
+        private void CancelPrefetch()
+        {
+            if (_prefetchCancellation != null && !_prefetchCancellation.IsCancellationRequested)
+            {
+                _prefetchCancellation.Cancel();
+                _prefetchCancellation.Dispose();
+                _prefetchCancellation = null;
+            }
+        }
+
+        private async Task CacheTrackInBackgroundAsync(
+            Track track, string filePath, CancellationToken cancellationToken, bool isPrefetch = false)
+        {
+            if (File.Exists(filePath))
+                return;
 
             try
             {
-                _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
-                _mediaElement.MetadataTitle = track.Name ?? string.Empty;
-                _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
-                _mediaElement.Source = MediaSource.FromFile(filePath);
+                string operationType = isPrefetch ? "Prefetching" : "Background caching";
+                Console.WriteLine($"{operationType}: {track.Name}");
+
+                HttpClient httpClient = await _requestService.GetHttpClientAsync();
+                var requestUri = GetRequestUri(track.Guid);
+
+                Console.WriteLine($"Background caching: {track.Name}");
+
+                using HttpResponseMessage response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"{operationType} failed: {response.StatusCode}");
+                    return;
+                }
+
+                long? expectedLength = response.Content.Headers.ContentLength;
+
+                using var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+                using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
+
+                // Copy with cancellation support
+                await contentStream.CopyToAsync(fileStream, 81920, cancellationToken);
+
+                // Verify complete download
+                if (expectedLength.HasValue && fileStream.Length != expectedLength.Value)
+                {
+                    Console.WriteLine($"Incomplete {operationType.ToLower()}, deleting");
+                    File.Delete(filePath);
+                }
+                else
+                {
+                    Console.WriteLine($"✓ {operationType} complete: {track.Name}");
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine($"Prefetch canceled: {track.Name}");
+                // Clean up partial file
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Caching failed: {ex.Message}");
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+            }
+        }
+
+        private async Task<bool> IsFileCompleteAsync(HttpClient httpClient, Uri requestUri, string filePath)
+        {
+            try
+            {
+                using var headRequest = new HttpRequestMessage(HttpMethod.Head, requestUri);
+                using var headResponse = await httpClient.SendAsync(headRequest);
+
+                if (!headResponse.IsSuccessStatusCode)
+                    return false;
+
+                long? expectedLength = headResponse.Content.Headers.ContentLength;
+                if (!expectedLength.HasValue)
+                    return true; // Can't verify, assume complete
+
+                var fileInfo = new FileInfo(filePath);
+                return fileInfo.Length == expectedLength.Value;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error verifying file: {ex.Message}");
+                return false;
+            }
+        }
+
+        private async Task SetMediaElementSourceAsync(Track track, Uri coverUri, MediaSource mediaSource)
+        {
+            try
+            {
+                await _mediaElement.Dispatcher.DispatchAsync(() =>
+                {
+                    _mediaElement.MetadataArtist = track.Album?.Artist?.Name ?? string.Empty;
+                    _mediaElement.MetadataTitle = track.Name ?? string.Empty;
+                    _mediaElement.MetadataArtworkUrl = coverUri?.ToString() ?? string.Empty;
+                    _mediaElement.Source = mediaSource;
+                });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error setting media metadata: {ex.Message}");
+                throw;
             }
         }
 
@@ -190,5 +386,6 @@ namespace BSE.Tunes.Maui.Client.Services
             return builder.Uri;
         }
 
+        
     }
 }
