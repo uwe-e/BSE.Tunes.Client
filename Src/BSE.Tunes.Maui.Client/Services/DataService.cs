@@ -137,9 +137,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 HasPreviousPage = dtoResult.HasPreviousPage,
                 HasNextPage = dtoResult.HasNextPage,
             };
-            //query = System.Web.HttpUtility.UrlEncode(query);
-            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/albums/search/?query={query}&skip={skip}&limit={limit}";
-            //return _requestService.GetAsync<Album[]>(new UriBuilder(strUrl).Uri, token);
+
         }
         
         public Uri GetAlbumCoverUriById(Guid albumId, bool asThumbnail = false)
@@ -266,8 +264,6 @@ namespace BSE.Tunes.Maui.Client.Services
                 HasNextPage = dtoResult.HasNextPage,
             };
 
-            //string strUrl = $"{_settingsService.ServiceEndPoint}/api/search/tracks/search/?query={query}&skip={skip}&limit={limit}";
-            //return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri, token);
         }
 
         public async Task<bool> UpdateHistory(History history)
@@ -328,11 +324,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 HasNextPage = dtoResult.HasNextPage,
             };
         }
-        //public Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit)
-        //{
-        //    string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/?skip={skip}&limit={limit}";
-        //    return _requestService.GetAsync<ObservableCollection<Playlist>>(new UriBuilder(strUrl).Uri);
-        //}
+
         public async Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize)
         {
             var parameters = new Dictionary<string, string>(2) {

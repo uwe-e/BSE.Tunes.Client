@@ -217,30 +217,14 @@ namespace BSE.Tunes.Maui.Client.Services
                 using System.IO.Stream outFile = System.IO.File.OpenWrite(fileName);
                 encoded.SaveTo(outFile);
 
-                _eventAggregator.GetEvent<CacheChangedEvent>().Publish(CacheChangeMode.Added);
+                _eventAggregator.GetEvent<CacheChangedEvent>().Publish(CacheChangeMode.ImageCacheAdded);
             }
             finally
             {
                 originalBitmap?.Dispose();
                 resizedBitmap?.Dispose();
             }
-            //SKBitmap bitmap = await CreateBitmapFromStream(imageUri);
-            //if (bitmap != null)
-            //{
-            //    if (!asThumbnail)
-            //    {
-            //        bitmap = bitmap.Resize(
-            //            new SKImageInfo(300, 300),
-            //            new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
-            //    }
-            //    using SKImage image = SKImage.FromBitmap(bitmap);
-            //    using (SKData encoded = image.Encode(SKEncodedImageFormat.Jpeg, 90))
-            //    {
-            //        using System.IO.Stream outFile = System.IO.File.OpenWrite(fileName);
-            //        encoded.SaveTo(outFile);
-            //    }
-            //    _eventAggregator.GetEvent<CacheChangedEvent>().Publish(CacheChangeMode.Added);
-            //}
+
         }
 
         private async Task<SKBitmap> CreateBitmapFromStream(string imageUri)
@@ -269,33 +253,6 @@ namespace BSE.Tunes.Maui.Client.Services
 
             return null;
 
-
-            //SKBitmap bitmap = default;
-
-            //if (imageUri != null)
-            //{
-            //    using var httpClient = await _requestService.GetHttpClientAsync();
-            //    try
-            //    {
-            //        var stream = await httpClient.GetStreamAsync(imageUri);
-            //        if (stream != null)
-            //        {
-            //            //create a bitmap from the file and add it to the list
-            //            //bitmap = SKBitmap.Decode(stream);
-            //            bitmap = await Task.Run(() =>
-            //            {
-            //                return SKBitmap.Decode(stream);
-            //            });
-            //        }
-            //    }
-            //    //if there´s no image
-            //    catch (Exception ex)
-            //    {
-            //        var t = "";
-            //    }
-            //}
-
-            //return bitmap;
         }
 
         private Uri GetImageUrl(bool asThumbnail, Guid id)

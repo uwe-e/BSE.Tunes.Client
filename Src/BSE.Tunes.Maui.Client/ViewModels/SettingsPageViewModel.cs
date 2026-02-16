@@ -25,6 +25,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _toServiceEndpointDetailCommand;
         private ICommand _toAccountDetailCommand;
         private ICommand _toCacheSettingsDetailCommand;
+        private SubscriptionToken _cacheChangeActionToken;
 
         public ICommand ToServiceEndpointDetailCommand
             => _toServiceEndpointDetailCommand ??= new DelegateCommand(async() => await NavigateToServiceEndpointDetailAsync());
@@ -106,18 +107,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _appInfoService = appInfoService;
 
             _versionString = $"{_resourceService.GetString("SettingsPage_SectionInformation_VersionString")} {_appInfoService.VersionString}";
-
-            _eventAggregator.GetEvent<CacheChangedEvent>().Subscribe((args) =>
-            {
-                switch (args)
-                {
-                    case CacheChangeMode.Added:
-                    case CacheChangeMode.Removed:
-
-                        LoadCacheSettings();
-                        break;
-                }
-            });
         }
         public async void HandleShowAlbum(AlbumSelectionContext context)
         {
@@ -135,6 +124,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
             this.SubscribeToAlbumSelection(_eventAggregator);
+
+            _cacheChangeActionToken = _eventAggregator.GetEvent<CacheChangedEvent>()
+                .Subscribe(
+                    _ => LoadCacheSettings(),
+                    filter: (args) => args != CacheChangeMode.None);
+
             base.OnNavigatedTo(parameters);
         }
 
@@ -144,6 +139,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             if (!parameters.IsModalNavigation())
             {
                 this.UnsubscribeFromAlbumSelection();
+                _cacheChangeActionToken?.Dispose();
+                _cacheChangeActionToken = null;
             }
             base.OnNavigatedFrom(parameters);
         }
@@ -173,8 +170,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 _isCacheChanged = true;
 
-                var usedSpace = await _storageService.GetUsedDiskSpaceAsync();
-                UsedDiskSpace = $"{Math.Round(Convert.ToDecimal(usedSpace / 1024f / 1024f), 2)} MB";
+                var usedSpace = await _storageService.GetUsedCacheSizeAsync();
+                var sizeInMB = usedSpace / 1024f / 1024f;
+                var sizeInGB = sizeInMB / 1024f;
+
+                UsedDiskSpace = sizeInGB >= 1
+                    ? $"{Math.Round(Convert.ToDecimal(sizeInGB), 2)} GB"
+                    : $"{Math.Round(Convert.ToDecimal(sizeInMB), 2)} MB";
 
                 _isCacheChanged = false;
             }

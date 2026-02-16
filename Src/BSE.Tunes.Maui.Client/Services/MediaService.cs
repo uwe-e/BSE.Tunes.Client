@@ -1,8 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Models.Contract;
-using BSE.Tunes.Maui.Client.Utils;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
-using System.Threading.Tasks;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
@@ -15,19 +13,19 @@ namespace BSE.Tunes.Maui.Client.Services
                 false,
                 propertyChanged: RegisterAsMediaServicePropertyChanged);
 
-        public static bool GetRegisterAsMediaService(CommunityToolkit.Maui.Views.MediaElement target)
+        public static bool GetRegisterAsMediaService(MediaElement target)
         {
             return (bool)target.GetValue(RegisterAsMediaServiceProperty);
         }
 
-        public static void SetRegisterAsMediaService(CommunityToolkit.Maui.Views.MediaElement target, bool value)
+        public static void SetRegisterAsMediaService(MediaElement target, bool value)
         {
             target.SetValue(RegisterAsMediaServiceProperty, value);
         }
 
         private static void RegisterAsMediaServicePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is CommunityToolkit.Maui.Views.MediaElement mediaElement && newValue is bool toRegister && toRegister)
+            if (bindable is MediaElement mediaElement && newValue is bool toRegister && toRegister)
             {
                 var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
                 playerService?.RegisterAsMediaService(mediaElement);
@@ -36,8 +34,8 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public event Action<PlayerState> PlayerStateChanged;
         public event Action<MediaState> MediaStateChanged;
+        public event Action<CacheChangeMode> AudioCacheChanged;
 
-        private readonly IDataService _dataService;
         private readonly ISettingsService _settingsService;
         private readonly IRequestService _requestService;
         private readonly IStorageService _storageService;
@@ -64,7 +62,6 @@ namespace BSE.Tunes.Maui.Client.Services
             IStorageService storageService,
             LocalProxyService proxyService)
         {
-            _dataService = dataService;
             _settingsService = settingsService;
             _requestService = requestService;
             _storageService = storageService;
@@ -157,7 +154,7 @@ namespace BSE.Tunes.Maui.Client.Services
             if (track == null || track.Guid == Guid.Empty)
                 return;
 
-            var filePath = Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
+            var filePath = GetCachedTracksFilePath(track);//Path.Combine(FileSystem.CacheDirectory, track.Guid + track.Extension);
 
             if (File.Exists(filePath))
             {
@@ -167,6 +164,7 @@ namespace BSE.Tunes.Maui.Client.Services
                 if (await IsFileCompleteAsync(httpClient, requestUri, filePath))
                 {
                     Console.WriteLine("Playing from cache");
+                    await _storageService.UpdateFileAccessTimeAsync(filePath);
                     await SetMediaElementSourceAsync(track, coverUri, MediaSource.FromFile(filePath));
                     return;
                 }
@@ -192,48 +190,6 @@ namespace BSE.Tunes.Maui.Client.Services
             {
                 Console.WriteLine($"Error setting media source: {ex.Message}");
             }
-
-            //if (!File.Exists(filePath))
-            //{
-            //    var requestUri = GetRequestUri(track.Guid);
-            //    HttpClient httpClient = await _requestService.GetHttpClientAsync();
-
-
-            //    try
-            //    {
-            //        /*
-            //         * Sometimes we get on an Android device a .NET exception with the message: "Error while copying content to a stream."
-            //         * and deeper this message: "Cannot access a disposed object. Object name: 'Java.IO.InputStreamInvoker'"
-            //         * 
-            //         * As a workaround we retry the HTTP request and the stream copy up to 3 times with a delay of 500 milliseconds between attempts.
-            //         */
-            //        await RetryHelper.RetryAsync(async () =>
-            //        {
-            //            using HttpResponseMessage response = await httpClient.GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
-            //            if (!response.IsSuccessStatusCode)
-            //            {
-            //                Console.WriteLine($"Failed to fetch track. Status code: {response.StatusCode}");
-            //                return;
-            //            }
-
-            //            // Get expected file size from response headers
-            //            long? expectedLength = response.Content.Headers.ContentLength;
-
-            //            using var contentStream = await response.Content.ReadAsStreamAsync();
-            //            using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
-            //            await contentStream.CopyToAsync(fileStream);
-            //        }, maxAttempts: 3, delayMilliseconds: 500);
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine($"Error writing track file: {ex.Message}");
-            //        return;
-            //    }
-            //}
-
-            //MediaSource mediaSource = MediaSource.FromFile(filePath);
-            //await SetMediaElementSourceAsync(track, coverUri, mediaSource);
         }
         
         public async Task PrefetchNextTrackAsync(Track nextTrack)
@@ -244,7 +200,7 @@ namespace BSE.Tunes.Maui.Client.Services
             // Cancel any existing prefetch operation
             CancelPrefetch();
 
-            var filePath = Path.Combine(FileSystem.CacheDirectory, nextTrack.Guid + nextTrack.Extension);
+            var filePath = GetCachedTracksFilePath(nextTrack); //Path.Combine(FileSystem.CacheDirectory, nextTrack.Guid + nextTrack.Extension);
 
             // Check if already cached
             if (File.Exists(filePath))
@@ -319,7 +275,11 @@ namespace BSE.Tunes.Maui.Client.Services
                 else
                 {
                     Console.WriteLine($"✓ {operationType} complete: {track.Name}");
+                    
+                    // Clean up cache if size exceeds limit
+                    await _storageService.CleanupCacheAsync();
                 }
+                AudioCacheChanged?.Invoke(CacheChangeMode.AudioCacheAdded);
             }
             catch (OperationCanceledException)
             {
@@ -386,6 +346,10 @@ namespace BSE.Tunes.Maui.Client.Services
             return builder.Uri;
         }
 
+        private string GetCachedTracksFilePath(Track track)
+        {
+            return Path.Combine(_storageService.GetAudioDirectory() , track.Guid + track.Extension);
+        }
         
     }
 }

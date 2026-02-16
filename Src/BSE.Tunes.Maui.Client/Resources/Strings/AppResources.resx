@@ -307,11 +307,17 @@ If the address is correct, please try again later.</value>
   <data name="SettingsPage_SectionAccount_Title" xml:space="preserve">
     <value>Account</value>
   </data>
+  <data name="SettingsPage_SectionAudioCacheSize_Text" xml:space="preserve">
+    <value>Cached Audio Files</value>
+  </data>
   <data name="SettingsPage_SectionDiskSpace_Description_Text" xml:space="preserve">
     <value>Used by BSEtunes</value>
   </data>
   <data name="SettingsPage_SectionDiskSpace_Title" xml:space="preserve">
     <value>Disk Space</value>
+  </data>
+  <data name="SettingsPage_SectionImageCacheSize_Text" xml:space="preserve">
+    <value>Cached Images</value>
   </data>
   <data name="SettingsPage_SectionInformation_Text" xml:space="preserve">
     <value>BSEtunes Maui.Client</value>

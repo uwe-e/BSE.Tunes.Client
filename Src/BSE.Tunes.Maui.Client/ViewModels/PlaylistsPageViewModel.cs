@@ -103,7 +103,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 Items.Clear();
                 _isActivated = false;
                 RaiseIsActiveChanged();
-            });
+            }, filter: args => args == CacheChangeMode.ImageCacheCleared);
 
         }
         public async void HandleShowAlbum(AlbumSelectionContext context)

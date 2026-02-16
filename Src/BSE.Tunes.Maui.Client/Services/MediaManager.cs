@@ -73,6 +73,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
             _mediaService.PlayerStateChanged += OnPlayerStateChanged;
             _mediaService.MediaStateChanged += OnMediaStateChanged;
+            _mediaService.AudioCacheChanged += OnAudioCacheChanged;
         }
 
         public void Disconnect()
@@ -265,7 +266,12 @@ namespace BSE.Tunes.Maui.Client.Services
                 _oldProgress = newProgress;
             }
         }
-        
+
+        private void OnAudioCacheChanged(CacheChangeMode mode)
+        {
+            _eventAggregator.GetEvent<CacheChangedEvent>().Publish(mode);
+        }
+
         private async void UpdateHistoryAsync(Track currentTrack)
         {
             var userName = _settingsService.User.UserName;
