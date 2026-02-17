@@ -79,34 +79,6 @@ namespace BSE.Tunes.Maui.Client.Services
             return fullName;
         }
 
-        public async Task<string> GetStitchedBitmapSourceAsync(int playlistId, int width = 300, bool asThumbnail = false)
-        {
-            if (playlistId > 0)
-            {
-                //string fileName = $"{playlistId}_{width}.{ImageExtension}";
-                string fileName = $"{playlistId}_{width}.png";
-                if (!_storageService.TryToGetImagePath(fileName, out string fullName))
-                {
-                    int height = width;
-
-                    ObservableCollection<Guid> albumIds = await GetImageIds(playlistId);
-
-                    SKImage stitchedImage = await Combine(albumIds, width, height, asThumbnail);
-
-                    using SKData encoded = stitchedImage.Encode(SKEncodedImageFormat.Png, 100);
-                    using System.IO.Stream outFile = System.IO.File.OpenWrite(fullName);
-                    encoded.SaveTo(outFile);
-                }
-                return fullName;
-            }
-            return null;
-        }
-
-        private async Task<ObservableCollection<Guid>> GetImageIds(int playlistId)
-        {
-            return await _dataService.GetPlaylistImageIdsById(playlistId, _settingsService.User.UserName, 4);
-        }
-
         private async Task<SKImage> Combine(IEnumerable<Guid> albumIds, int width, int height, bool asThumbnail = false)
         {
             // Pre-calculate dimensions

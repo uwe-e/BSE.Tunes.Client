@@ -4,10 +4,8 @@
     {
         None = 0,
         ImageCacheAdded = 1,
-        Added = 2,
-        AudioCacheAdded = 3,
+        AudioCacheAdded = 2,
         ImageCacheCleared = 3,
-        Removed = 4,
-        AudioCacheCleared = 5,
+        AudioCacheCleared = 4,
     }
 }

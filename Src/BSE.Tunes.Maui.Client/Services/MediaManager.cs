@@ -131,7 +131,6 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             var canMoveNext = Playlist?.CanMoveNext ?? false;
             return canMoveNext;
-            //return Playlist?.CanMoveNext ?? false;
         }
 
         public async Task PlayNextTrackAsync()
@@ -253,13 +252,6 @@ namespace BSE.Tunes.Maui.Client.Services
         private void OnTimerElapsed()
         {
             var newProgress = _mediaService.Progress;
-            // Trigger prefetch at 50% progress
-            //if (!_hasTriggeredPrefetch && newProgress >= 0.5)
-            //{
-            //    _hasTriggeredPrefetch = true;
-            //    _ = PrefetchNextTrackInPlaylistAsync();
-            //}
-
             if (newProgress != _oldProgress && newProgress < 1.0)
             {
                 _eventAggregator.GetEvent<MediaProgressChangedEvent>().Publish(newProgress);

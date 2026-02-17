@@ -27,13 +27,9 @@ namespace BSE.Tunes.Maui.Client.Services
         Task DeletePlaylist(int playlistId);
         Task DeletePlaylistEntryAsync(PlaylistEntry playlistEntry);
         Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize);
-        //Task<ObservableCollection<Playlist>> GetPlaylistsByUserName(string userName, int skip, int limit);
         Task<PagedResult<PlaylistEntry>> GetPagedPlaylistEntriesByIdAsync(int playlistId, int pageNumber, int pageSize);
         Task<Playlist> GetPlaylistById(int playlistId);
-        Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit);
-        Task<Playlist> UpdatePlaylist(Playlist playlist);
         Task<SystemInfo> GetAvailableTrackCount();
-        Task<Track[]> GetTracksByAlbumId(int albumId);
         Task<Track> GetTrackById(int trackId);
         Task<IList<int>> GetTrackIdsByGenre(int? genreId = null);
         Task<IList<int>> GetTrackIdsByPlaylistId(int playlistId, bool randomize = false);

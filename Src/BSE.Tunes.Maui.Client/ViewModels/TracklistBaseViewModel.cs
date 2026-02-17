@@ -46,7 +46,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
             set
             {
-                SetProperty<string>(ref _imageSource, value);
+                SetProperty(ref _imageSource, value);
             }
         }
 
@@ -191,24 +191,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             };
             await NavigationService.NavigateAsync(nameof(PlaylistSelectorDialogPage), navigationParams);
         }
+        
         protected virtual bool CanExecutePlayTrack(GridPanel panel)
         {
             throw new NotImplementedException();
         }
 
-        //protected virtual Task PlayTrackAsync(GridPanel panel)
-        //{
-        //    //return Task.Run(() => PlayTrack(panel));
-        //}
-
         protected virtual Task PlayTrackAsync(GridPanel panel)
         {
             return Task.CompletedTask;
         }
-
-        //protected virtual void PlayTrack(GridPanel panel)
-        //{
-        //}
 
         protected virtual bool CanPlayAll()
         {
@@ -219,10 +211,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             return Task.CompletedTask;
         }
-
-        //protected virtual void PlayAll()
-        //{
-        //}
 
         protected virtual bool CanPlayAllRandomized()
         {
@@ -246,26 +234,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            IEnumerable<Track> tracks = default;
-
-            if (managePlaylistContext.Data is Track track)
+            IEnumerable<Track> tracks = managePlaylistContext.Data switch
             {
-                tracks = Enumerable.Repeat(track, 1);
-            }
-            if (managePlaylistContext.Data is Album album)
-            {
-                tracks = album.Tracks;
-                // if the method is called from a search page, the tracks are null. We need to load them
-                tracks ??= await _dataService.GetTracksByAlbumId(album.Id);
-            }
-            if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
-            {
-                tracks = Enumerable.Repeat(playlistEntry.Track, 1);
-            }
-            if (managePlaylistContext.Data is Playlist playlist)
-            {
-                tracks = playlist.Entries?.Select(t => t.Track);
-            }
+                Track track => [track],
+                Album album => album.Tracks,
+                PlaylistEntry playlistEntry => [playlistEntry.Track],
+                Playlist playlist => playlist.Entries?.Select(t => t.Track),
+                _ => null
+            };
 
             if (tracks != null)
             {
@@ -286,8 +262,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
                 if (trackIds.Count > 0)
                 {
-                    await _dataService.AppendToPlaylist(playlistTo.Id, trackIds);
-                    await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
+                    await Task.WhenAll(
+                        _dataService.AppendToPlaylist(playlistTo.Id, trackIds),
+                        _imageService.RemoveStitchedBitmaps(playlistTo.Id));
 
                     managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
                     _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
@@ -306,7 +283,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
             }
         }
-
         
     }
 }

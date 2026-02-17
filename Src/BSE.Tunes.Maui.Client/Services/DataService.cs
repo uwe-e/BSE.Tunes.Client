@@ -211,11 +211,6 @@ namespace BSE.Tunes.Maui.Client.Services
             };
         }
 
-        public Task<Track[]> GetTracksByAlbumId(int albumId)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/albums/{albumId}/tracks";
-            return _requestService.GetAsync<Track[]>(new UriBuilder(strUrl).Uri);
-        }
         public async Task<Track> GetTrackById(int trackId)
         {
             var dtoResult = await _requestService.GetAsync<TrackDto>($"api/tracks/{trackId}");
@@ -351,17 +346,5 @@ namespace BSE.Tunes.Maui.Client.Services
             return _mapper.Map<Playlist>(dtoResult)!;
         }
 
-        public Task<ObservableCollection<Guid>> GetPlaylistImageIdsById(int playlistId, string userName, int limit)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/{userName}/{playlistId}/imageids/?limit={limit}";
-            return _requestService.GetAsync<ObservableCollection<Guid>>(new UriBuilder(strUrl).Uri);
-        }
-
-        public Task<Playlist> UpdatePlaylist(Playlist playlist)
-        {
-            string strUrl = $"{_settingsService.ServiceEndPoint}/api/v2/playlists/playlist/update";
-            return _requestService.PutAsync<Playlist, Playlist>(new UriBuilder(strUrl).Uri, playlist);
-        }
-       
     }
 }
