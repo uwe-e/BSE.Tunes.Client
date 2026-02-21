@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.IdentityModel;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace BSE.Tunes.Maui.Client.Services
 {
@@ -20,19 +18,19 @@ namespace BSE.Tunes.Maui.Client.Services
             set => AppSettings.User = value;
         }
 
-        public string Token
-        {
-            get => User?.Token;
-            set
-            {
-                var user = User;
-                if (user != null)
-                {
-                    user.Token = value;
-                    User = user;
-                }
-            }
-        }
+        //public string Token
+        //{
+        //    get => User?.Token;
+        //    set
+        //    {
+        //        var user = User;
+        //        if (user != null)
+        //        {
+        //            user.Token = value;
+        //            User = user;
+        //        }
+        //    }
+        //}
 
         public async Task<UserToken> GetUserTokenAsync()
         {

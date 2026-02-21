@@ -1,5 +1,4 @@
 ﻿using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 

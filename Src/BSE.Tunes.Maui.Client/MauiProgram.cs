@@ -1,6 +1,5 @@
 ﻿using BSE.Maui.Controls;
 using BSE.Tunes.Maui.Client.Services;
-using BSE.Tunes.Maui.Client.Services.Mappers;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using BSE.Tunes.MediaExtensions;
@@ -59,7 +58,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<LocalProxyService>();
                         container.RegisterSingleton<IMapper>(containerProvider =>
                         {
-                            return new Services.Mappers.Mapper(
+                            return new Mapper(
                                 new Services.Mappers.Profiles.DtoMappingProfile());
                         });
                         /*

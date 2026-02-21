@@ -1,6 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using SkiaSharp;
-using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.Maui.Client.Services
 {

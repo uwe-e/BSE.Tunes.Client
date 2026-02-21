@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Services;
-using BSE.Tunes.Maui.Client.Views;
+﻿using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {

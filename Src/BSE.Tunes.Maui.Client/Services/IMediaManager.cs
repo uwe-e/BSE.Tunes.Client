@@ -1,5 +1,4 @@
 ﻿using BSE.Tunes.Maui.Client.Collections;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 

@@ -76,11 +76,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task LoadSystemInfo()
         {
-            var sysInfo = await _dataService.GetAvailableTrackCount();
-            if (sysInfo != null)
-            {
-                Text = string.Format(_resourceService.GetString("HomePage_RandomPlayerButton_Button_Text"), sysInfo.NumberTracks);
-            }
+            int countTracks = await _dataService.GetAvailableTrackCount();
+            Text = string.Format(
+                _resourceService.GetString("HomePage_RandomPlayerButton_Button_Text"), countTracks);
         }
 
         private bool CanPlayRandom()

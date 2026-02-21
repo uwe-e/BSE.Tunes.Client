@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Models.Contract;
-
-namespace BSE.Tunes.Maui.Client.Models
+﻿namespace BSE.Tunes.Maui.Client.Models
 {
     public class PlaylistActionContext
     {

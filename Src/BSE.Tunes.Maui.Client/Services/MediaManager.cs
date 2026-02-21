@@ -1,7 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Collections;
 using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
@@ -12,7 +11,6 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly IDataService _dataService;
         private readonly IMediaService _mediaService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly ISettingsService _settingsService;
         private readonly ITimerService _timerService;
         private double _oldProgress;
         private NavigableCollection<int> _playlist;
@@ -55,13 +53,11 @@ namespace BSE.Tunes.Maui.Client.Services
         public MediaManager(IDataService dataService,
             IMediaService mediaService,
             IEventAggregator eventAggregator,
-            ISettingsService settingsService,
             ITimerService timerService)
         {
             _dataService = dataService;
             _mediaService = mediaService;
             _eventAggregator = eventAggregator;
-            _settingsService = settingsService;
             _timerService = timerService;
             _timerService.TimerElapsed += OnTimerElapsed;
             _timerService.Start();
@@ -266,20 +262,13 @@ namespace BSE.Tunes.Maui.Client.Services
 
         private async void UpdateHistoryAsync(Track currentTrack)
         {
-            var userName = _settingsService.User.UserName;
-            if (!string.IsNullOrEmpty(userName))
+            await _dataService.UpdateHistory(new History
             {
-                await _dataService.UpdateHistory(new History
-                {
-                    PlayMode = (int)PlayerMode,
-                    AlbumId = currentTrack.Album.Id,
-                    TrackId = currentTrack.Id,
-                    UserName = userName,
-                    PlayedAt = DateTime.Now
-                });
-            }
+                PlayMode = (int)PlayerMode,
+                AlbumId = currentTrack.Album.Id,
+                TrackId = currentTrack.Id,
+                PlayedAt = DateTime.Now
+            });
         }
-
-        
     }
 }

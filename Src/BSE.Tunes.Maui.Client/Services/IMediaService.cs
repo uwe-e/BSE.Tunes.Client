@@ -1,6 +1,4 @@
-﻿
-using BSE.Tunes.Maui.Client.Models.Contract;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 
 namespace BSE.Tunes.Maui.Client.Services
 {

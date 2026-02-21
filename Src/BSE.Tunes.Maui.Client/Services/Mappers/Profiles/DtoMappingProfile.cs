@@ -1,4 +1,3 @@
-using BSE.Tunes.Maui.Client.Models.Contract;
 using BSEtunes.Contracts.DTOs.Albums;
 using BSEtunes.Contracts.DTOs.Playlists;
 
