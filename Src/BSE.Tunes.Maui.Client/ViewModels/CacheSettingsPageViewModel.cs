@@ -47,10 +47,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _pageDialogService = pageDialogService;
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<CacheChangedEvent>().Subscribe((args) =>
-            {
-                LoadSettings();
-            });
+            //_eventAggregator.GetEvent<CacheChangedEvent>().Subscribe((args) =>
+            //{
+            //    LoadSettings();
+            //});
 
         }
 

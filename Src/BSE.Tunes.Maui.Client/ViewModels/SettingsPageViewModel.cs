@@ -31,10 +31,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             => _toServiceEndpointDetailCommand ??= new DelegateCommand(async() => await NavigateToServiceEndpointDetailAsync());
 
         public ICommand ToAccountDetailCommand
-           => _toAccountDetailCommand ??= new DelegateCommand(async() => await NavigateToAccountDetailAsync());
+           => _toAccountDetailCommand ??= new DelegateCommand(async () => await NavigateToAccountDetailAsync());
 
         public ICommand ToCacheSettingsDetailCommand
-            => _toCacheSettingsDetailCommand ??= new DelegateCommand(async() => await NavigateToCacheSettingsDetailAsync());
+            => _toCacheSettingsDetailCommand ??= new DelegateCommand(async () => await NavigateToCacheSettingsDetailAsync());
 
         public string ServiceEndPoint
         {
