@@ -30,6 +30,8 @@
             <!-- Phone layout: CollectionView is scrollable and contains all visible elements -->
             <CollectionView x:Name="PhoneLayout" IsVisible="False" ItemsSource="{Binding Items}"
                             ItemTemplate="{StaticResource TrackItemTemplate}"
+                            RemainingItemsThreshold="5"
+                            RemainingItemsThresholdReachedCommand="{Binding RemainingPlaylistEntriesThresholdReachedCommand}"
                             Margin="20,0,10,0">
                 <CollectionView.Header>
                     <controls:AlbumPlayerItem Cover="{Binding ImageSource}"
@@ -63,9 +65,11 @@
 
                 <!-- Track list (right column) - constrained by parent Grid so it will scroll itself -->
                 <CollectionView Grid.Column="1"
-                    Margin="10,0"
-                    ItemsSource="{Binding Items}"
-                    ItemTemplate="{StaticResource TrackItemTemplate}">
+                                Margin="10,0"
+                                ItemsSource="{Binding Items}"
+                                ItemTemplate="{StaticResource TrackItemTemplate}"
+                                RemainingItemsThreshold="5"
+                                RemainingItemsThresholdReachedCommand="{Binding RemainingPlaylistEntriesThresholdReachedCommand}">
                 </CollectionView>
             </Grid>
 

@@ -1,7 +1,5 @@
-﻿
-using BSE.Tunes.Maui.Client.Models;
+﻿using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -34,7 +32,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         protected bool HasItems
         {
             get => _hasItems;
-            set => _hasItems = value;
+            set => SetProperty(ref _hasItems, value);
         }
 
         protected string Query => _query;
@@ -48,29 +46,33 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             IEventAggregator eventAggregator)
             : base(navigationService, flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
-            PageSize = 10;
+            PageSize = 20;
+        }
+
+        public override void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            throw new NotImplementedException();
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
+            base.OnNavigatedTo(parameters);
+            
             var query = parameters.GetValue<string>("query");
-            if (!string.IsNullOrEmpty(query))
+            if (!string.IsNullOrEmpty(query) && !string.Equals(query, _query, StringComparison.Ordinal))
             {
-                if (query.CompareTo(_query) != 0)
-                {
-                    IsBusy = false;
-                    _query = query;
-                    _hasItems = true;
-                    PageNumber = 0;
-                    Items.Clear();
-                    LoadMoreItems();
-                }
+                IsBusy = false;
+                _query = query;
+                _hasItems = true;
+                PageNumber = 1;
+                Items.Clear();
+                LoadMoreItems();
             }
         }
 
         private void LoadMoreItems()
         {
-            _ = LoadMoreItemsAsync();
+            Task.Run(LoadMoreItemsAsync);
         }
 
         protected virtual void SelectItem(GridPanel obj)
@@ -98,6 +100,11 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 {
                     await GetSearchResults();
                 }
+                catch (Exception ex)
+                {
+                    // Log error or show user feedback
+                    HasItems = false;
+                }
                 finally
                 {
                     IsBusy = false;
@@ -105,6 +112,23 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
         }
 
-        
+        protected virtual void UpdatePaginationState(bool hasItems, bool hasNextPage)
+        {
+            if (!hasItems)
+            {
+                HasItems = false;
+                return;
+            }
+
+            if (hasNextPage)
+            {
+                PageNumber++;
+                HasItems = true;
+            }
+            else
+            {
+                HasItems = false; // No more pages to load
+            }
+        }
     }
 }

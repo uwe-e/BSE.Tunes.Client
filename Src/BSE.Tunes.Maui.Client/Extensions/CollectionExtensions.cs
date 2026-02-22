@@ -23,14 +23,11 @@ namespace BSE.Tunes.Maui.Client.Extensions
             ObservableCollection<T> randomCollection = null;
             if (collection != null)
             {
-                Random random = new Random(DateTime.Now.Millisecond);
+                Random random = new(DateTime.Now.Millisecond);
                 while (collection.Count > 0)
                 {
                     int iIndex = random.Next(collection.Count);
-                    if (randomCollection == null)
-                    {
-                        randomCollection = new ObservableCollection<T>();
-                    }
+                    randomCollection ??= new ObservableCollection<T>();
                     T obj = collection[iIndex];
                     randomCollection.Add(obj);
                     collection.RemoveAt(iIndex);

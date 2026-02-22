@@ -3,7 +3,9 @@
     public enum CacheChangeMode
     {
         None = 0,
-        Added = 1,
-        Removed = 2
+        ImageCacheAdded = 1,
+        AudioCacheAdded = 2,
+        ImageCacheCleared = 3,
+        AudioCacheCleared = 4,
     }
 }

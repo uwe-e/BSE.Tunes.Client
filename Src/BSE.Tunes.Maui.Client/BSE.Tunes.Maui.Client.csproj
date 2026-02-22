@@ -151,6 +151,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
     <None Remove="Resources\Images\add_circle_outline.svg" />
     <None Remove="Resources\Images\albums.svg" />
     <None Remove="Resources\Images\home.svg" />
@@ -168,6 +169,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\BSE.Maui\src\BSE.Maui.Controls\BSE.Maui.Controls.csproj" />
     <ProjectReference Include="..\BSE.Tunes.MediaExtensions\BSE.Tunes.MediaExtensions.csproj" />
+    <ProjectReference Include="..\..\..\..\ASP.Net\BSEtunes\src\BSEtunes.Contracts\BSEtunes.Contracts.csproj" />
+    <ProjectReference Include="..\BSE.Tunes.Shared.Services\BSE.Tunes.Shared.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

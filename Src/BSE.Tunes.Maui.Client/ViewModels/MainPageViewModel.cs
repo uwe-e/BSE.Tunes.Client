@@ -1,5 +1,4 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
@@ -47,7 +46,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             if (track != null)
             {
-                Uri coverSource = _dataService.GetImage(track.Album.AlbumId, true);
+                Uri coverSource = _dataService.GetAlbumCoverUriById(track.Album.AlbumId, true);
                 if (coverSource != null && !coverSource.Equals(CoverSource))
                 {
                     CoverSource = coverSource;

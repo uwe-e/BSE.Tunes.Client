@@ -1,7 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Collections;
 using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
@@ -12,10 +11,10 @@ namespace BSE.Tunes.Maui.Client.Services
         private readonly IDataService _dataService;
         private readonly IMediaService _mediaService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly ISettingsService _settingsService;
         private readonly ITimerService _timerService;
         private double _oldProgress;
         private NavigableCollection<int> _playlist;
+        private bool _hasTriggeredPrefetch;
 
         public event Action<PlayerState> PlayerStateChanged;
         public event Action<MediaState> MediaStateChanged;
@@ -54,13 +53,11 @@ namespace BSE.Tunes.Maui.Client.Services
         public MediaManager(IDataService dataService,
             IMediaService mediaService,
             IEventAggregator eventAggregator,
-            ISettingsService settingsService,
             ITimerService timerService)
         {
             _dataService = dataService;
             _mediaService = mediaService;
             _eventAggregator = eventAggregator;
-            _settingsService = settingsService;
             _timerService = timerService;
             _timerService.TimerElapsed += OnTimerElapsed;
             _timerService.Start();
@@ -72,6 +69,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
             _mediaService.PlayerStateChanged += OnPlayerStateChanged;
             _mediaService.MediaStateChanged += OnMediaStateChanged;
+            _mediaService.AudioCacheChanged += OnAudioCacheChanged;
         }
 
         public void Disconnect()
@@ -129,7 +127,6 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             var canMoveNext = Playlist?.CanMoveNext ?? false;
             return canMoveNext;
-            //return Playlist?.CanMoveNext ?? false;
         }
 
         public async Task PlayNextTrackAsync()
@@ -169,6 +166,8 @@ namespace BSE.Tunes.Maui.Client.Services
         private async Task PlayTrackAsync(int trackId)
         {
             _mediaService.Stop();
+            _hasTriggeredPrefetch = false; // Reset flag for new track
+
             if (trackId > 0)
             {
                 Track track = await _dataService.GetTrackById(trackId);
@@ -176,6 +175,36 @@ namespace BSE.Tunes.Maui.Client.Services
                 {
                     await _mediaService.SetTrackAsync(track, _dataService.GetImage(track.Album.AlbumId, true));
                 }
+            }
+        }
+
+        private async Task PrefetchNextTrackInPlaylistAsync()
+        {
+            if (Playlist == null || !Playlist.CanMoveNext)
+                return;
+
+            try
+            {
+                // Get the next track ID without moving the playlist position
+                int currentIndex = Playlist.IndexOf(Playlist.Current);
+                if (currentIndex >= 0 && currentIndex + 1 < Playlist.Count)
+                {
+                    int nextTrackId = Playlist[currentIndex + 1];
+
+                    if (nextTrackId > 0)
+                    {
+                        Track nextTrack = await _dataService.GetTrackById(nextTrackId);
+                        if (nextTrack != null)
+                        {
+                            Console.WriteLine($"Triggering prefetch for: {nextTrack.Name}");
+                            await _mediaService.PrefetchNextTrackAsync(nextTrack);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error prefetching next track: {ex.Message}");
             }
         }
 
@@ -198,6 +227,11 @@ namespace BSE.Tunes.Maui.Client.Services
                     {
                         CurrentTrack = await _dataService.GetTrackById(trackId);
                         UpdateHistoryAsync(CurrentTrack);
+                        if (!_hasTriggeredPrefetch)
+                        {
+                            _hasTriggeredPrefetch = true;
+                            _ = PrefetchNextTrackInPlaylistAsync();
+                        }
                     }
                     break;
                 case MediaState.Ended:
@@ -220,23 +254,21 @@ namespace BSE.Tunes.Maui.Client.Services
                 _oldProgress = newProgress;
             }
         }
-        
-        private async void UpdateHistoryAsync(Track currentTrack)
+
+        private void OnAudioCacheChanged(CacheChangeMode mode)
         {
-            var userName = _settingsService.User.UserName;
-            if (!string.IsNullOrEmpty(userName))
-            {
-                await _dataService.UpdateHistory(new History
-                {
-                    PlayMode = (int)PlayerMode,
-                    AlbumId = currentTrack.Album.Id,
-                    TrackId = currentTrack.Id,
-                    UserName = userName,
-                    PlayedAt = DateTime.Now
-                });
-            }
+            _eventAggregator.GetEvent<CacheChangedEvent>().Publish(mode);
         }
 
-        
+        private async void UpdateHistoryAsync(Track currentTrack)
+        {
+            await _dataService.UpdateHistory(new History
+            {
+                PlayMode = (int)PlayerMode,
+                AlbumId = currentTrack.Album.Id,
+                TrackId = currentTrack.Id,
+                PlayedAt = DateTime.Now
+            });
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Services;
-using BSE.Tunes.Maui.Client.Views;
+﻿using BSE.Tunes.Maui.Client.Views;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
@@ -31,7 +29,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     {
                         try
                         {
-                            await _authenticationService.RequestRefreshTokenAsync(user.Token);
+                            //await _authenticationService.RequestRefreshTokenAsync(user.Token);
+                            await _authenticationService.GetAuthTokenAsync();
                             await _navigationService.CreateBuilder()
                                 .UseAbsoluteNavigation()
                                 .AddSegment<MainPage>()

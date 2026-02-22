@@ -8,7 +8,7 @@
              x:Name="page">
     <Grid Margin="10">
         <CollectionView x:Name="resultsView"  ItemsSource="{Binding Items}"
-                    RemainingItemsThreshold="{Binding PageSize}"
+                    RemainingItemsThreshold="5"
                     RemainingItemsThresholdReachedCommand="{Binding LoadMoreItemsCommand}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"/>

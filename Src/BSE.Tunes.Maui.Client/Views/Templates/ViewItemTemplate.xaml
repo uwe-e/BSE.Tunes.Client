@@ -26,7 +26,7 @@
             </Setter>
             <Setter Property="HeightRequest">
                 <Setter.Value>
-                    <OnIdiom x:TypeArguments="x:Double" Phone="188" Tablet="190"/>
+                    <OnIdiom x:TypeArguments="x:Double" Phone="180" Tablet="190"/>
                 </Setter.Value>
             </Setter>
         </Style>

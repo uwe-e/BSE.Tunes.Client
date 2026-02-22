@@ -1,6 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class TracklistBaseViewModel : ViewModelBase
+    public abstract class TracklistBaseViewModel : ViewModelBase, IAlbumInfoSelectionHandler
     {
         private ObservableCollection<GridPanel> _items;
         private string _imageSource;
@@ -21,6 +21,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IMediaManager _mediaManager;
         private readonly IImageService _imageService;
         private readonly IEventAggregator _eventAggregator;
+        private readonly SubscriptionToken _basePlaylistActionToken;
 
         public ICommand OpenFlyoutCommand => _openFlyoutCommand
             ??= new DelegateCommand<object>(async(obj) => await OpenFlyoutAsync(obj));
@@ -44,7 +45,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             }
             set
             {
-                SetProperty<string>(ref _imageSource, value);
+                SetProperty(ref _imageSource, value);
             }
         }
 
@@ -62,40 +63,79 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _eventAggregator = eventAggregator;
 
-            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
+            _basePlaylistActionToken = _eventAggregator
+                .GetEvent<PlaylistActionContextChanged>()
+                .Subscribe(
+                    OnPlaylistActionChanged,
+                    ThreadOption.UIThread);
+        }
+
+        /// <summary>
+        /// Handles the selection of an album, which can be triggered from various contexts
+        /// such as album lists or search results. The method receives an AlbumSelectionContext that provides details
+        /// about the selected album and the context of the selection. Implementing this method allows derived 
+        /// view models to respond appropriately to album selections, such as navigating to an album detail page
+        /// or updating the UI with album information.
+        /// </summary>
+        /// <param name="context"></param>
+        public abstract void HandleShowAlbum(AlbumSelectionContext context);
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            // Only subscribe to album selection events if this page is not being navigated to modally,
+            // to avoid handling events in the background when a dialog is open
+            this.SubscribeToAlbumSelection(_eventAggregator);
+            base.OnNavigatedTo(parameters);
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            // Only unsubscribe from album selection events if this page is not being navigated from modally,
+            if (!parameters.IsModalNavigation())
             {
-                if (args is PlaylistActionContext managePlaylistContext)
-                {
-                    switch (managePlaylistContext.ActionMode)
-                    {
-                        case PlaylistActionMode.AddToPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await AddToPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.SelectPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await SelectPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.CreatePlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await CreateNewPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.RemoveFromPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await RemoveFromPlaylistAsync(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.RemovePlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await RemovePlaylistAsync(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.PlaylistDeleted:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            // closes the open PlaylistDetailPage
-                            await NavigationService.GoBackAsync();
-                            break;
-                    }
-                }
-            }, ThreadOption.UIThread);
+                this.UnsubscribeFromAlbumSelection();
+            }
+            base.OnNavigatedFrom(parameters);
+        }
+
+        private async void OnPlaylistActionChanged(PlaylistActionContext context)
+        {
+            switch (context.ActionMode)
+            {
+                case PlaylistActionMode.AddToPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await AddToPlaylist(context);
+                    break;
+                case PlaylistActionMode.SelectPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await SelectPlaylist(context);
+                    break;
+                case PlaylistActionMode.CreatePlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await CreateNewPlaylist(context);
+                    break;
+                case PlaylistActionMode.RemoveFromPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await RemoveFromPlaylistAsync(context);
+                    break;
+                case PlaylistActionMode.RemovePlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await RemovePlaylistAsync(context);
+                    break;
+                case PlaylistActionMode.PlaylistDeleted:
+                    //managePlaylistContext.ActionMode = PlaylistActionMode.None;
+                    // closes the open PlaylistDetailPage
+                    await NavigationService.GoBackAsync();
+                    break;
+                case PlaylistActionMode.PlaylistUpdated:
+                    await OnPlaylistUpdatedAsync(context);
+                    break;
+            }
+        }
+
+        protected virtual Task OnPlaylistUpdatedAsync(PlaylistActionContext context)
+        {
+            return Task.CompletedTask;
         }
 
         private async Task CreateNewPlaylist(PlaylistActionContext managePlaylistContext)
@@ -150,24 +190,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             };
             await NavigationService.NavigateAsync(nameof(PlaylistSelectorDialogPage), navigationParams);
         }
+        
         protected virtual bool CanExecutePlayTrack(GridPanel panel)
         {
             throw new NotImplementedException();
         }
 
-        //protected virtual Task PlayTrackAsync(GridPanel panel)
-        //{
-        //    //return Task.Run(() => PlayTrack(panel));
-        //}
-
         protected virtual Task PlayTrackAsync(GridPanel panel)
         {
             return Task.CompletedTask;
         }
-
-        //protected virtual void PlayTrack(GridPanel panel)
-        //{
-        //}
 
         protected virtual bool CanPlayAll()
         {
@@ -178,10 +210,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             return Task.CompletedTask;
         }
-
-        //protected virtual void PlayAll()
-        //{
-        //}
 
         protected virtual bool CanPlayAllRandomized()
         {
@@ -205,29 +233,14 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected virtual async Task AddToPlaylist(PlaylistActionContext managePlaylistContext)
         {
-            IEnumerable<Track> tracks = default;
-
-            if (managePlaylistContext.Data is Track track)
+            IEnumerable<Track> tracks = managePlaylistContext.Data switch
             {
-                tracks = Enumerable.Repeat(track, 1);
-            }
-            if (managePlaylistContext.Data is Album album)
-            {
-                tracks = album.Tracks;
-                // if the method is called from a search page, the tracks are null. We need to load them
-                if (tracks == null)
-                {
-                    tracks = await _dataService.GetTracksByAlbumId(album.Id);
-                }
-            }
-            if (managePlaylistContext.Data is PlaylistEntry playlistEntry)
-            {
-                tracks = Enumerable.Repeat(playlistEntry.Track, 1);
-            }
-            if (managePlaylistContext.Data is Playlist playlist)
-            {
-                tracks = playlist.Entries?.Select(t => t.Track);
-            }
+                Track track => [track],
+                Album album => album.Tracks,
+                PlaylistEntry playlistEntry => [playlistEntry.Track],
+                Playlist playlist => playlist.Entries?.Select(t => t.Track),
+                _ => null
+            };
 
             if (tracks != null)
             {
@@ -241,23 +254,20 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             var playlistTo = managePlaylistContext.PlaylistTo;
             if (playlistTo != null && tracks != null)
             {
-                foreach (var track in tracks)
-                {
-                    if (track != null)
-                    {
-                        playlistTo.Entries.Add(new PlaylistEntry
-                        {
-                            PlaylistId = playlistTo.Id,
-                            TrackId = track.Id,
-                            Guid = Guid.NewGuid()
-                        });
-                    }
-                }
-                await _dataService.AppendToPlaylist(playlistTo);
-                await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
+                var trackIds = tracks
+                    .Where(track => track != null)
+                    .Select(track => track.Id)
+                    .ToList();
 
-                managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
-                _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
+                if (trackIds.Count > 0)
+                {
+                    await Task.WhenAll(
+                        _dataService.AppendToPlaylist(playlistTo.Id, trackIds),
+                        _imageService.RemoveStitchedBitmaps(playlistTo.Id));
+
+                    managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
+                    _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
+                }
             }
         }
         
@@ -272,5 +282,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);
             }
         }
+        
     }
 }

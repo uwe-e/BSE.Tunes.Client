@@ -1,7 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Windows.Input;
@@ -18,6 +16,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IMediaManager _mediaManager;
+        private SubscriptionToken _playlistActionToken;
         private SubscriptionToken _albumInfoSelectionToken;
         
         public ICommand CloseDialogCommand => _closeDialogCommand ??= new DelegateCommand(async () =>
@@ -51,42 +50,44 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _imageService = imageService;
             _mediaManager = mediaManager;
 
-            _eventAggregator.GetEvent<PlaylistActionContextChanged>().Subscribe(async args =>
-            {
-                if (args is PlaylistActionContext managePlaylistContext)
-                {
-                    switch (managePlaylistContext.ActionMode)
-                    {
-                        case PlaylistActionMode.AddToPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await AddToPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.SelectPlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await SelectPlaylist(managePlaylistContext);
-                            break;
-                        case PlaylistActionMode.CreatePlaylist:
-                            managePlaylistContext.ActionMode = PlaylistActionMode.None;
-                            await CreateNewPlaylist(managePlaylistContext);
-                            break;
-                    }
-                }
-            }, ThreadOption.UIThread);
+            //_eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+            //{
+            //    // because of preventing the multiple execution of the event, we unsubscribe this event
+            //    _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Unsubscribe(_albumInfoSelectionToken);
 
-            _albumInfoSelectionToken = _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
-            {
-                // because of preventing the multiple execution of the event, we unsubscribe this event
-                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Unsubscribe(_albumInfoSelectionToken);
+            //    await CloseDialog();
 
-                await CloseDialog();
-                
-                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
-            });
-
+            //    _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
+            //});
+            //_albumInfoSelectionToken ??= _eventAggregator
+            //        .GetEvent<AlbumInfoSelectionEvent>()
+            //        .Subscribe(uniqueAlbum => OnAlbumInfoSelected(uniqueAlbum),
+            //            ThreadOption.UIThread,
+            //            keepSubscriberReferenceAlive: true);
         }
-        
+
         public override void OnNavigatedTo(INavigationParameters parameters)
         {
+            _playlistActionToken ??= _eventAggregator
+                    .GetEvent<PlaylistActionContextChanged>()
+                    .Subscribe(
+                        OnPlaylistActionChanged,
+                        ThreadOption.UIThread);
+
+            _albumInfoSelectionToken ??= _eventAggregator
+                   .GetEvent<AlbumInfoSelectionEvent>()
+                   .Subscribe(OnAlbumInfoSelected,
+                       filter: context => context.Mode == AlbumSelectionMode.Preparation);
+
+            //_albumInfoSelectionToken ??= _eventAggregator
+            //       .GetEvent<AlbumInfoSelectionEvent>()
+            //       .Subscribe(uniqueAlbum => OnAlbumInfoSelected(uniqueAlbum),
+            //           ThreadOption.UIThread,
+            //           keepSubscriberReferenceAlive: false);
+            //_albumInfoSelectionToken ??= _eventAggregator
+            //        .GetEvent<AlbumInfoSelectionEvent>()
+            //        .ShowAlbum(uniqueTrack => OnAlbumInfoSelected(uniqueTrack));
+
             if (parameters.GetValue<Track>("source") is Track currentTrack)
             {
                 CurrentTrack = currentTrack;
@@ -97,6 +98,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             base.OnNavigatedTo(parameters);
         }
 
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            _playlistActionToken?.Dispose();
+            _playlistActionToken = null;
+
+            //_albumInfoSelectionToken?.Dispose();
+            //_albumInfoSelectionToken = null;
+
+            base.OnNavigatedFrom(parameters);
+        }
         protected override void OnTrackChanged(Track track)
         {
             if (track != null)
@@ -104,7 +115,37 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 CoverImage = _imageService.GetBitmapSource(track.Album.AlbumId);
             }
         }
+        
+        private async void OnPlaylistActionChanged(PlaylistActionContext context)
+        {
+            switch (context.ActionMode)
+            {
+                case PlaylistActionMode.AddToPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await AddToPlaylist(context);
+                    break;
+                case PlaylistActionMode.SelectPlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await SelectPlaylist(context);
+                    break;
+                case PlaylistActionMode.CreatePlaylist:
+                    context.ActionMode = PlaylistActionMode.None;
+                    await CreateNewPlaylist(context);
+                    break;
+            }
+        }
+        
+        private async void OnAlbumInfoSelected(AlbumSelectionContext context)
+        {
+            await CloseDialog();
 
+            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(new AlbumSelectionContext
+            {
+                UniqueAlbum = context.UniqueAlbum,
+                Mode = AlbumSelectionMode.Direct
+            });
+        }
+        
         private async Task CloseDialog()
         {
             var navigationParams = new NavigationParameters
@@ -119,6 +160,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             var source = new PlaylistActionContext
             {
+                DisplayAlbumInfoFromDialog = true,
                 DisplayAlbumInfo = true,
                 Data = obj,
             };
@@ -156,7 +198,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         Guid = Guid.NewGuid()
                     });
 
-                    await _dataService.AppendToPlaylist(playlistTo);
+                    await _dataService.AppendToPlaylist(playlistTo.Id, [track.Id]);
                     await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
 
                     managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;

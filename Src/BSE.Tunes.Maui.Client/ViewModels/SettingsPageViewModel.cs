@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Windows.Input;
@@ -7,7 +8,7 @@ using IResourceService = BSE.Tunes.Maui.Client.Services.IResourceService;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class SettingsPageViewModel : ViewModelBase, IActiveAware
+    public class SettingsPageViewModel : ViewModelBase, IActiveAware, IAlbumInfoSelectionHandler
     {
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
@@ -24,15 +25,16 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private ICommand _toServiceEndpointDetailCommand;
         private ICommand _toAccountDetailCommand;
         private ICommand _toCacheSettingsDetailCommand;
+        private SubscriptionToken _cacheChangeActionToken;
 
         public ICommand ToServiceEndpointDetailCommand
             => _toServiceEndpointDetailCommand ??= new DelegateCommand(async() => await NavigateToServiceEndpointDetailAsync());
 
         public ICommand ToAccountDetailCommand
-           => _toAccountDetailCommand ??= new DelegateCommand(async() => await NavigateToAccountDetailAsync());
+           => _toAccountDetailCommand ??= new DelegateCommand(async () => await NavigateToAccountDetailAsync());
 
         public ICommand ToCacheSettingsDetailCommand
-            => _toCacheSettingsDetailCommand ??= new DelegateCommand(async() => await NavigateToCacheSettingsDetailAsync());
+            => _toCacheSettingsDetailCommand ??= new DelegateCommand(async () => await NavigateToCacheSettingsDetailAsync());
 
         public string ServiceEndPoint
         {
@@ -105,31 +107,42 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             _appInfoService = appInfoService;
 
             _versionString = $"{_resourceService.GetString("SettingsPage_SectionInformation_VersionString")} {_appInfoService.VersionString}";
-
-            _eventAggregator.GetEvent<CacheChangedEvent>().Subscribe((args) =>
+        }
+        public async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(SettingsPage)))
             {
-                switch (args)
-                {
-                    case CacheChangeMode.Added:
-                    case CacheChangeMode.Removed:
-
-                        LoadCacheSettings();
-                        break;
-                }
-            });
-
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
-            {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(SettingsPage), uniqueTrack.UniqueId))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
 
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
+        }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            this.SubscribeToAlbumSelection(_eventAggregator);
+
+            _cacheChangeActionToken = _eventAggregator.GetEvent<CacheChangedEvent>()
+                .Subscribe(
+                    _ => LoadCacheSettings(),
+                    filter: (args) => args != CacheChangeMode.None);
+
+            base.OnNavigatedTo(parameters);
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            // Only unsubscribe from album selection events if this page is not being navigated from modally,
+            if (!parameters.IsModalNavigation())
+            {
+                this.UnsubscribeFromAlbumSelection();
+                _cacheChangeActionToken?.Dispose();
+                _cacheChangeActionToken = null;
+            }
+            base.OnNavigatedFrom(parameters);
         }
 
         private void RaiseIsActiveChanged()
@@ -157,8 +170,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 _isCacheChanged = true;
 
-                var usedSpace = await _storageService.GetUsedDiskSpaceAsync();
-                UsedDiskSpace = $"{Math.Round(Convert.ToDecimal(usedSpace / 1024f / 1024f), 2)} MB";
+                var usedSpace = await _storageService.GetUsedCacheSizeAsync();
+                var sizeInMB = usedSpace / 1024f / 1024f;
+                var sizeInGB = sizeInMB / 1024f;
+
+                UsedDiskSpace = sizeInGB >= 1
+                    ? $"{Math.Round(Convert.ToDecimal(sizeInGB), 2)} GB"
+                    : $"{Math.Round(Convert.ToDecimal(sizeInMB), 2)} MB";
 
                 _isCacheChanged = false;
             }
@@ -178,5 +196,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             await NavigationService.NavigateAsync(nameof(CacheSettingsPage));
         }
+
+        
     }
 }

@@ -1,5 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
+﻿using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
@@ -11,7 +10,6 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
         private readonly IPageDialogService _pageDialogService;
-        private readonly IEventAggregator _eventAggregator;
 
         public string ServiceEndPoint
         {
@@ -30,25 +28,25 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             ISettingsService settingsService,
             IResourceService resourceService,
             IPageDialogService pageDialogService,
-            IEventAggregator eventAggregator) : base(navigationService)
+            IEventAggregator eventAggregator) : base(navigationService, eventAggregator)
         {
             _settingsService = settingsService;
             _resourceService = resourceService;
             _pageDialogService = pageDialogService;
-            _eventAggregator = eventAggregator;
             
-            _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        }
+        
+        public async override void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(ServiceEndpointSettingsPage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(ServiceEndpointSettingsPage), uniqueTrack.UniqueId))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
 
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
         }
 
         public override void LoadSettings()
@@ -77,5 +75,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 _settingsService.ServiceEndPoint = null;
                 await NavigationService.NavigateAsync($"/{nameof(ServiceEndpointWizzardPage)}");
         }
+
+        
     }
 }

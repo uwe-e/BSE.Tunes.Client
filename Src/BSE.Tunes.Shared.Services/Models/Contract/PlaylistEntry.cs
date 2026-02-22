@@ -1,4 +1,4 @@
-﻿namespace BSE.Tunes.Maui.Client.Models.Contract
+﻿namespace BSE.Tunes.Shared.Services.Models.Contract
 {
     public class PlaylistEntry
     {
@@ -8,18 +8,18 @@
 
         public int TrackId { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public string Artist { get; set; }
+        public string? Artist { get; set; }
 
         public Guid AlbumId { get; set; }
 
         public TimeSpan Duration { get; set; }
 
-        public System.Guid Guid { get; set; }
+        public Guid Guid { get; set; }
 
         public int SortOrder { get; set; }
 
-        public Track Track { get; set; }
+        public Track? Track { get; set; }
     }
 }

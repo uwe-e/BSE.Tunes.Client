@@ -55,6 +55,12 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<ITimerService, TimerService>();
+                        container.RegisterSingleton<LocalProxyService>();
+                        container.RegisterSingleton<IMapper>(containerProvider =>
+                        {
+                            return new Mapper(
+                                new Services.Mappers.Profiles.DtoMappingProfile());
+                        });
                         /*
                          * since we use the ffimageloading features,
                          * it's no longer enough to clear the file cache, 

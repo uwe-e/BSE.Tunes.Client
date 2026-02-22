@@ -1,0 +1,6 @@
+﻿global using BSE.Tunes.Shared.Services;
+global using BSE.Tunes.Shared.Services.Abstractions;
+global using BSE.Tunes.Shared.Services.Mappers;
+global using BSE.Tunes.Shared.Services.Models;
+global using BSE.Tunes.Shared.Services.Models.IdentityModel;
+global using BSE.Tunes.Shared.Services.Models.Contract;

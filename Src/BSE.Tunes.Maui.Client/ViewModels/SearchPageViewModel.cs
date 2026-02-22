@@ -1,8 +1,4 @@
-﻿
-using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
-using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.Contract;
+﻿using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 using System.Collections.ObjectModel;
@@ -23,8 +19,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private bool _hasMoreAlbums;
         private bool _hasMoreTracks;
         private readonly IDataService _dataService;
-        private readonly IEventAggregator _eventAggregator;
-        private CancellationTokenSource _cancellationTokenSource;
+        private readonly IImageService _imageService;
         private string _textValue;
         private bool _canExecutePlayTrack = true;
 
@@ -47,31 +42,31 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         public bool HasAlbums
         {
             get => _hasAlbums;
-            set => SetProperty<bool>(ref _hasAlbums, value);
+            set => SetProperty(ref _hasAlbums, value);
         }
 
         public bool HasMoreAlbums
         {
             get => _hasMoreAlbums;
-            set => SetProperty<bool>(ref _hasMoreAlbums, value);
+            set => SetProperty(ref _hasMoreAlbums, value);
         }
 
         public bool HasTracks
         {
             get => _hasTracks;
-            set => SetProperty<bool>(ref _hasTracks, value);
+            set => SetProperty(ref _hasTracks, value);
         }
 
         public bool HasMoreTracks
         {
             get => _hasMoreTracks;
-            set => SetProperty<bool>(ref _hasMoreTracks, value);
+            set => SetProperty(ref _hasMoreTracks, value);
         }
 
         public string TextValue
         {
             get => _textValue;
-            set => SetProperty<string>(ref _textValue, value);
+            set => SetProperty(ref _textValue, value);
         }
 
         public SearchPageViewModel(
@@ -84,20 +79,20 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 flyoutNavigationService, dataService, mediaManager, imageService, eventAggregator)
         {
             _dataService = dataService;
-            _eventAggregator = eventAggregator;
+            _imageService = imageService;
             IsBusy = false;
-
-             _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().ShowAlbum(async (uniqueTrack) =>
+        }
+        
+        public override async void HandleShowAlbum(AlbumSelectionContext context)
+        {
+            if (PageUtilities.IsCurrentPageTypeOf(typeof(SearchPage)))
             {
-                if (PageUtilities.IsCurrentPageTypeOf(typeof(SearchPage)))
-                {
-                    var navigationParams = new NavigationParameters
+                var navigationParams = new NavigationParameters
                     {
-                        { "album", uniqueTrack.Album }
+                        { "album", context.UniqueAlbum.Album }
                     };
-                    await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
-                }
-            });
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
+            }
         }
 
         protected override bool CanExecutePlayTrack(GridPanel panel)
@@ -107,19 +102,13 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         protected override async Task PlayTrackAsync(GridPanel panel)
         {
-            if (panel?.Data is Track track)
+            if (panel?.Data is Track track && _canExecutePlayTrack)
             {
-                if (CanExecutePlayTrack(panel))
-                {
-                    _canExecutePlayTrack = false;
+                _canExecutePlayTrack = false;
 
-                    await PlayTracksAsync(new List<int>
-                    {
-                        track.Id
-                    }, PlayerMode.Song);
+                await PlayTracksAsync([track.Id], PlayerMode.Song);
 
-                    _canExecutePlayTrack = false;
-                }
+                _canExecutePlayTrack = true;
             }
         }
 
@@ -135,89 +124,92 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 HasAlbums = HasTracks = false;
                 Albums.Clear();
+                Tracks.Clear();
             }
             else
             {
-                _cancellationTokenSource?.Cancel();
-                _cancellationTokenSource = new CancellationTokenSource();
-                CancellationToken token = _cancellationTokenSource.Token;
                 try
                 {
-                    await GetAlbumResultsAsync(textValue, token);
-                    await GetTrackResultsAsync(textValue, token);
+                    await Task.WhenAll(
+                        GetAlbumResultsAsync(textValue),
+                        GetTrackResultsAsync(textValue));
                 }
                 catch (Exception) { }
             }
             IsBusy = false;
         }
 
-        private async Task GetAlbumResultsAsync(string searchPhrase, CancellationToken token)
+        private async Task GetAlbumResultsAsync(string searchPhrase)
         {
-            var albums = await _dataService.GetAlbumSearchResults(searchPhrase, 0, 4, token);
-            if (albums.Length == 0)
-            {
-                HasAlbums = false;
-            }
-            else
-            {
-                HasAlbums = true;
-                HasMoreAlbums = albums.Length > 3;
-                var index = 0;
-                var newResults = albums.Take(4).Reverse();
-
-                foreach (var item in newResults)
+            await GetSearchResultsAsync(
+                () => _dataService.GetAlbumSearchResults(searchPhrase, 1, 4),
+                Albums,
+                item => new GridPanel
                 {
-                    Albums.Insert(index, new GridPanel
-                    {
-                        Title = item.Title,
-                        SubTitle = item.Artist.Name,
-                        ImageSource = _dataService.GetImage(item.AlbumId, true)?.AbsoluteUri,
-                        Data = item
-                    });
-                    index++;
-                }
-                if (Albums.Count > newResults.Count())
-                {
-                    var c = Albums.Count;
-                    for (int i = c - 1; i >= newResults.Count(); i--)
-                    {
-                        Albums.RemoveAt(i);
-                    }
-                }
-            }
+                    Title = item.Title,
+                    SubTitle = item.Artist.Name,
+                    ImageSource = _imageService.GetBitmapSource(item.AlbumId, true),
+                    Data = item
+                },
+                hasMore => HasMoreAlbums = hasMore,
+                hasResults => HasAlbums = hasResults);
         }
 
-        private async Task GetTrackResultsAsync(string searchPhrase, CancellationToken token)
+        private async Task GetTrackResultsAsync(string searchPhrase)
         {
-            var tracks = await _dataService.GetTrackSearchResults(searchPhrase, 0, 4, token);
-            if (tracks.Length == 0)
+            await GetSearchResultsAsync(
+                () => _dataService.GetTrackSearchResults(searchPhrase, 1, 4),
+                Tracks,
+                item => new GridPanel
+                {
+                    Title = item.Name,
+                    SubTitle = item.Album.Artist.Name,
+                    ImageSource = _imageService.GetBitmapSource(item.Album.AlbumId, true),
+                    Data = item
+                },
+                hasMore => HasMoreTracks = hasMore,
+                hasResults => HasTracks = hasResults);
+        }
+
+        private async Task GetSearchResultsAsync<T>(
+            Func<Task<PagedResult<T>>> getResults,
+            ObservableCollection<GridPanel> collection,
+            Func<T, GridPanel> createPanel,
+            Action<bool> setHasMore,
+            Action<bool> setHasResults)
+        {
+            var pagedResult = await getResults();
+            if (pagedResult?.Items.Count == 0)
             {
-                HasTracks = false;
+                setHasResults(false);
+                collection.Clear();
             }
             else
             {
-                HasTracks = true;
-                HasMoreTracks = tracks.Length > 3;
-                var index = 0;
-                var newResults = tracks.Take(4).Reverse();
-
-                foreach (var item in newResults)
+                setHasResults(true);
+                setHasMore(pagedResult.HasNextPage);
+                
+                int newCount = Math.Min(pagedResult.Items.Count, 4);
+                
+                // Remove excess items first
+                while (collection.Count > newCount)
                 {
-                    Tracks.Insert(index, new GridPanel
-                    {
-                        Title = item.Name,
-                        SubTitle = item.Album.Artist.Name,
-                        ImageSource = _dataService.GetImage(item.Album.AlbumId, true)?.AbsoluteUri,
-                        Data = item
-                    });
-                    index++;
+                    collection.RemoveAt(collection.Count - 1);
                 }
-                if (Tracks.Count > newResults.Count())
+                
+                // Update or insert items in reverse order
+                for (int i = 0; i < newCount; i++)
                 {
-                    var c = Tracks.Count;
-                    for (int i = c - 1; i >= newResults.Count(); i--)
+                    var item = pagedResult.Items[newCount - 1 - i];
+                    var panel = createPanel(item);
+                    
+                    if (i < collection.Count)
                     {
-                        Tracks.RemoveAt(i);
+                        collection[i] = panel;
+                    }
+                    else
+                    {
+                        collection.Add(panel);
                     }
                 }
             }
@@ -231,7 +223,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     { "album", album }
                 };
                 
-                await NavigationService.NavigateAsync($"{nameof(AlbumDetailPage)}", navigationParams);
+                await NavigationService.NavigateAsync(nameof(AlbumDetailPage), navigationParams);
             }
         }
         
@@ -241,7 +233,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     {
                         { "query",  TextValue}
                     };
-            await NavigationService.NavigateAsync($"{nameof(SearchAlbumsPage)}", navigationParams);
+            await NavigationService.NavigateAsync(nameof(SearchAlbumsPage), navigationParams);
         }
 
         private async Task ShowAllTrackSearchResults()
@@ -250,7 +242,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     {
                         { "query",  TextValue}
                     };
-            await NavigationService.NavigateAsync($"{nameof(SearchTracksPage)}", navigationParams);
+            await NavigationService.NavigateAsync(nameof(SearchTracksPage), navigationParams);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -24,10 +24,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private bool _canQueueAsNext;
         private bool _canRemoveFromPlaylist;
         private bool _canDisplayAlbumInfo;
+        private bool _canDisplayAlbumInfoFromDialog;
         private PlaylistActionContext _playlistActionContext;
         private string _imageSource;
         private string _subTitle;
         private string _title;
+        
         private readonly IImageService _imageService = imageService;
         private readonly IEventAggregator _eventAggregator = eventAggregator;
         private readonly IMediaManager _mediaManager = mediaManager;
@@ -86,6 +88,12 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             set => SetProperty<bool>(ref _canDisplayAlbumInfo, value);
         }
 
+        public bool CanDisplayAlbumInfoFromDialog
+        {
+            get => _canDisplayAlbumInfoFromDialog;
+            set => SetProperty<bool>(ref _canDisplayAlbumInfoFromDialog, value);
+        }
+
         public bool CanQueueAsNext
         {
             get => _canQueueAsNext;
@@ -99,6 +107,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 //comes from the nowplaying page and is used only there
                 CanDisplayAlbumInfo = (bool)_playlistActionContext?.DisplayAlbumInfo;
+                CanDisplayAlbumInfoFromDialog = (bool)_playlistActionContext?.DisplayAlbumInfoFromDialog;
                 CanQueueAsNext = true;
                 Title = track.Name;
                 SubTitle = track.Album.Artist.Name;
@@ -115,7 +124,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 CanRemovePlaylist = true;
                 Title = playlist.Name;
-                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, 50, true);
+                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, 50, true);
             }
             if (_playlistActionContext?.Data is PlaylistEntry playlistEntry)
             {
@@ -187,25 +196,25 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 /*
                  * This event has a unique identifier that can be used to prevent multiple execution.
                  */
-                var uniqueTrack = new UniqueAlbum
+                var uniqueAlbum = new UniqueAlbum
                 {
                     UniqueId = Guid.NewGuid()
                 };
 
-                if (_playlistActionContext.Data is Track track)
+                uniqueAlbum.Album = _playlistActionContext.Data switch
                 {
-                    uniqueTrack.Album = track.Album;
-                }
-                if (_playlistActionContext.Data is Album album)
-                {
-                    uniqueTrack.Album = album;
-                }
-                if (_playlistActionContext.Data is PlaylistEntry playlistEntry)
-                {
-                    uniqueTrack.Album = playlistEntry.Track.Album;
-                }
+                    Track track => track.Album,
+                    Album album => album,
+                    PlaylistEntry playlistEntry => playlistEntry.Track.Album,
+                    _ => null
+                };
 
-                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(uniqueTrack);
+                _eventAggregator.GetEvent<AlbumInfoSelectionEvent>().Publish(new AlbumSelectionContext
+                {
+                    UniqueAlbum = uniqueAlbum,
+                    Mode = CanDisplayAlbumInfoFromDialog ? AlbumSelectionMode.Preparation
+                        : AlbumSelectionMode.Direct,
+                });
             }
         }
 
@@ -215,6 +224,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             if (_playlistActionContext != null)
             {
+                Debug.WriteLine($"{nameof(PlaylistDetailPageViewModel)}.{nameof(RemovePlaylistAsync)}: Removing playlist...");
                 _playlistActionContext.ActionMode = PlaylistActionMode.RemovePlaylist;
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(_playlistActionContext);
             }
