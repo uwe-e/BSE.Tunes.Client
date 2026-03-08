@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSEtunes.Contracts", "..\..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSE.Tunes.Shared.Services", "Src\BSE.Tunes.Shared.Services\BSE.Tunes.Shared.Services.csproj", "{1D39F94E-60AC-46F8-B5EB-D3763BA94CE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSE.Tunes.WinUI.Client", "Src\BSE.Tunes.WinUI.Client\BSE.Tunes.WinUI.Client.csproj", "{8A9C1F9B-3520-446F-9C96-CE52F2698E79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,12 @@ Global
 		{1D39F94E-60AC-46F8-B5EB-D3763BA94CE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D39F94E-60AC-46F8-B5EB-D3763BA94CE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D39F94E-60AC-46F8-B5EB-D3763BA94CE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A9C1F9B-3520-446F-9C96-CE52F2698E79}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{8A9C1F9B-3520-446F-9C96-CE52F2698E79}.Debug|Any CPU.Build.0 = Debug|x64
+		{8A9C1F9B-3520-446F-9C96-CE52F2698E79}.Debug|Any CPU.Deploy.0 = Debug|x64
+		{8A9C1F9B-3520-446F-9C96-CE52F2698E79}.Release|Any CPU.ActiveCfg = Release|x64
+		{8A9C1F9B-3520-446F-9C96-CE52F2698E79}.Release|Any CPU.Build.0 = Release|x64
+		{8A9C1F9B-3520-446F-9C96-CE52F2698E79}.Release|Any CPU.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

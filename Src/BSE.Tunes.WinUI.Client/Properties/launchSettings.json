@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BSE.Tunes.WinUI.Client (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "BSE.Tunes.WinUI.Client (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
