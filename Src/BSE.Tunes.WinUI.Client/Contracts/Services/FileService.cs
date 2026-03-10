@@ -1,6 +1,5 @@
-﻿using System.Text;
-
-using Newtonsoft.Json;
+﻿using BSE.Tunes.WinUI.Client.Helpers;
+using System.Text;
 
 namespace BSE.Tunes.WinUI.Client.Contracts.Services;
 
@@ -12,7 +11,7 @@ public class FileService : IFileService
         if (File.Exists(path))
         {
             var json = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<T>(json);
+            return Json.ToObject<T>(json);
         }
 
         return default;
@@ -25,7 +24,7 @@ public class FileService : IFileService
             Directory.CreateDirectory(folderPath);
         }
 
-        var fileContent = JsonConvert.SerializeObject(content);
+        var fileContent = Json.Stringify(content);
         File.WriteAllText(Path.Combine(folderPath, fileName), fileContent, Encoding.UTF8);
     }
 
