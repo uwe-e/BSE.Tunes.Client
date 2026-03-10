@@ -35,7 +35,7 @@ public partial class App : Application
         return service;
     }
 
-    public static WindowEx MainWindow { get; } = new MainWindow();
+    public static WindowEx? MainWindow { get; set; }
 
     public static UIElement? AppTitlebar { get; set; }
 
@@ -90,6 +90,9 @@ public partial class App : Application
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
+
+        // Initialize MainWindow here instead of static initialization for .NET 8/9 compatibility
+        MainWindow = new MainWindow();
 
         await App.GetService<IActivationService>().ActivateAsync(args);
     }

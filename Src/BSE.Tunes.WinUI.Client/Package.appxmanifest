@@ -11,11 +11,11 @@
   IgnorableNamespaces="uap rescap genTemplate">
 
   <Identity
-    Name="f98b10c3-7755-46ae-a5f6-bb7e0337b94e"
+    Name="e8340a9c-bf0e-466a-b2cb-051442262d45"
     Publisher="CN=uwe"
     Version="1.0.0.0" />
     
-  <mp:PhoneIdentity PhoneProductId="f98b10c3-7755-46ae-a5f6-bb7e0337b94e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="e8340a9c-bf0e-466a-b2cb-051442262d45" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     
   <Properties>
     <DisplayName>BSE.Tunes.WinUI.Client</DisplayName>
@@ -47,13 +47,13 @@
       </uap:VisualElements>
       <Extensions>
           <desktop:Extension Category="windows.toastNotificationActivation">
-              <desktop:ToastNotificationActivation ToastActivatorCLSID="a6c47874-bcf9-46cc-879b-013c1fc0b710" />
+              <desktop:ToastNotificationActivation ToastActivatorCLSID="31ae4ade-ffff-404e-aaa8-29db87984c77" />
           </desktop:Extension>
 
           <com:Extension Category="windows.comServer">
               <com:ComServer>
                   <com:ExeServer Executable="BSE.Tunes.WinUI.Client.exe" Arguments="----AppNotificationActivated:" DisplayName="Toast activator">
-                      <com:Class Id="a6c47874-bcf9-46cc-879b-013c1fc0b710" DisplayName="Toast activator"/>
+                      <com:Class Id="31ae4ade-ffff-404e-aaa8-29db87984c77" DisplayName="Toast activator"/>
                   </com:ExeServer>
               </com:ComServer>
           </com:Extension>

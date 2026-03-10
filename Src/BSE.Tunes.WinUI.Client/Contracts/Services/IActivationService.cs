@@ -1,4 +1,6 @@
-﻿namespace BSE.Tunes.WinUI.Client.Contracts.Services;
+﻿using System.Threading.Tasks;
+
+namespace BSE.Tunes.WinUI.Client.Contracts.Services;
 
 public interface IActivationService
 {
