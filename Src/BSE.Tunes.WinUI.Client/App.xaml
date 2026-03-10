@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<prism:PrismApplication
+﻿<Application
     x:Class="BSE.Tunes.WinUI.Client.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:prism="using:Prism.DryIoc"
-    xmlns:local="using:BSE.Tunes.WinUI.Client">
-    <prism:PrismApplication.Resources>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <!-- Other merged dictionaries here -->
+                <ResourceDictionary Source="/Styles/FontSizes.xaml" />
+                <ResourceDictionary Source="/Styles/Thickness.xaml" />
+                <ResourceDictionary Source="/Styles/TextBlock.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
         </ResourceDictionary>
-    </prism:PrismApplication.Resources>
-</prism:PrismApplication>
+    </Application.Resources>
+</Application>
