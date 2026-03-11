@@ -1,4 +1,6 @@
-﻿using BSE.Tunes.WinUI.Client.Activation;
+﻿using BSE.Tunes.Shared.Services;
+using BSE.Tunes.Shared.Services.Abstractions;
+using BSE.Tunes.WinUI.Client.Activation;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Services;
@@ -64,6 +66,11 @@ public partial class App : Application
 
             // Core Services
             services.AddSingleton<IFileService, FileService>();
+
+            // Shared Services from BSE.Tunes.Shared.Services
+            services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<IDataService, DataService>();
 
             // Views and ViewModels
             services.AddTransient<SettingsViewModel>();
