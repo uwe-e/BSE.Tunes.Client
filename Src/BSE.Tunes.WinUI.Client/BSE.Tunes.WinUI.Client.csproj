@@ -24,6 +24,10 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.1" />
     <PackageReference Include="WinUIEx" Version="2.9.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\ASP.Net\BSEtunes\src\BSEtunes.Contracts\BSEtunes.Contracts.csproj" />
+    <ProjectReference Include="..\BSE.Tunes.Shared.Services\BSE.Tunes.Shared.Services.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
