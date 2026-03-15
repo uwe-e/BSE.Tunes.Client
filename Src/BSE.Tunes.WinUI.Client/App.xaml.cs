@@ -1,9 +1,12 @@
 ﻿using BSE.Tunes.Shared.Services;
 using BSE.Tunes.Shared.Services.Abstractions;
+using BSE.Tunes.Shared.Services.Mappers;
 using BSE.Tunes.WinUI.Client.Activation;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Extensions;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Services;
+using BSE.Tunes.WinUI.Client.Services.Mappers.Profiles;
 using BSE.Tunes.WinUI.Client.ViewModels;
 using BSE.Tunes.WinUI.Client.Views;
 
@@ -25,6 +28,8 @@ public partial class App : Application
     {
         get;
     }
+
+    public IServiceProvider Services { get; private set; }
 
     public static T GetService<T>()
         where T : class
@@ -68,15 +73,25 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
 
             // Shared Services from BSE.Tunes.Shared.Services
+            services.AddSingleton<IRequestService, RequestService>();
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<IDataService, DataService>();
+            services.AddSingleton<IMapper>(mapper =>
+            {
+                return new Mapper(
+                    new DtoMappingProfile()
+                );
+            });
 
-            // Views and ViewModels
-            services.AddTransient<SettingsViewModel>();
-            services.AddTransient<SettingsPage>();
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<MainPage>();
+            // Views and ViewModels - Single point of configuration! ✨
+            // Auto-generates keys: "Splash", "Main", "Settings", "EndpointConfiguration"
+            services.AddTransientForNavigation<SplashPageViewModel, SplashPage>();
+            services.AddTransientForNavigation<MainViewModel, MainPage>();
+            services.AddTransientForNavigation<SettingsViewModel, SettingsPage>();
+            services.AddTransientForNavigation<EndpointConfigurationViewModel, EndpointConfigurationPage>();
+
+            // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
 
@@ -100,7 +115,7 @@ public partial class App : Application
 
         // Initialize MainWindow here instead of static initialization for .NET 8/9 compatibility
         MainWindow = new MainWindow();
-
+        Services = Host.Services;
         await App.GetService<IActivationService>().ActivateAsync(args);
     }
 }

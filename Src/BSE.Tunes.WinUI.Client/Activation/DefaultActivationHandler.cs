@@ -1,6 +1,5 @@
 ﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
-using BSE.Tunes.WinUI.Client.ViewModels;
-
+using BSE.Tunes.WinUI.Client.Views;
 using Microsoft.UI.Xaml;
 
 namespace BSE.Tunes.WinUI.Client.Activation;
@@ -22,7 +21,7 @@ public class DefaultActivationHandler : ActivationHandler<LaunchActivatedEventAr
 
     protected async override Task HandleInternalAsync(LaunchActivatedEventArgs args)
     {
-        _navigationService.NavigateTo(typeof(MainViewModel).FullName!, args.Arguments);
+        _navigationService.NavigateTo(nameof(MainPage), args.Arguments);
 
         await Task.CompletedTask;
     }

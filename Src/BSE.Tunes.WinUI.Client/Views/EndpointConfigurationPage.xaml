@@ -1,0 +1,47 @@
+<Page
+    x:Class="BSE.Tunes.WinUI.Client.Views.EndpointConfigurationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    MaxWidth="400" Spacing="16" Padding="24">
+
+            <TextBlock Text="Service Configuration" 
+                       FontSize="28" 
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,16"/>
+
+            <TextBlock Text="Enter the address of the BSE Tunes service:" 
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,8"/>
+
+            <TextBox x:Name="ServiceEndPointTextBox"
+                     PlaceholderText="https://example.com/api"
+                     Text="{x:Bind ViewModel.ServiceEndPoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsEnabled="{x:Bind ViewModel.IsValidating, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"/>
+
+            <TextBlock Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                       Foreground="Red"
+                       TextWrapping="Wrap"
+                       Visibility="{x:Bind ViewModel.ErrorMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}"/>
+
+            <Button Command="{x:Bind ViewModel.SaveCommand}"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,8,0,0">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ProgressRing IsActive="{x:Bind ViewModel.IsValidating, Mode=OneWay}"
+                                      Width="16" Height="16"
+                                      Visibility="{x:Bind ViewModel.IsValidating, Mode=OneWay}"/>
+                        <TextBlock Text="Connect"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>
