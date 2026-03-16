@@ -17,8 +17,8 @@ public class NavigationService : INavigationService
     public const string FrameKeyShell = "ShellFrame";
 
     private readonly IPageService _pageService;
-    private readonly Dictionary<string, Frame> _frames = new();
-    private readonly Dictionary<string, object?> _lastParametersUsed = new();
+    private readonly Dictionary<string, Frame> _frames = new(2);
+    private readonly Dictionary<string, object?> _lastParametersUsed = new(2);
     private Frame? _frame;
     private Page? _shell;
     private bool _navigateFullscreen;
@@ -63,14 +63,10 @@ public class NavigationService : INavigationService
 
     public void RegisterFrame(string frameKey, Frame frame)
     {
-        if (_frames.ContainsKey(frameKey))
+        if (!_frames.TryAdd(frameKey, frame))
         {
             UnregisterFrameEvents(_frames[frameKey]);
             _frames[frameKey] = frame;
-        }
-        else
-        {
-            _frames.Add(frameKey, frame);
         }
         
         RegisterFrameEvents(frame);
@@ -78,17 +74,16 @@ public class NavigationService : INavigationService
 
     public void UnregisterFrame(string frameKey)
     {
-        if (_frames.TryGetValue(frameKey, out var frame))
+        if (_frames.Remove(frameKey, out var frame))
         {
             UnregisterFrameEvents(frame);
-            _frames.Remove(frameKey);
             _lastParametersUsed.Remove(frameKey);
         }
     }
 
     public Frame? GetFrame(string frameKey)
     {
-        return _frames.TryGetValue(frameKey, out var frame) ? frame : null;
+        return _frames.GetValueOrDefault(frameKey);
     }
 
     private void RegisterFrameEvents(Frame? frame)
@@ -144,13 +139,13 @@ public class NavigationService : INavigationService
                 ResetNavigation();
                 
                 // Store the shell for later restoration
-                _shell = _shell ?? App.MainWindow.Content as Page;
+                _shell ??= App.MainWindow.Content as Page;
 
                 // Create or get the main frame
-                if (!_frames.ContainsKey(FrameKeyMain))
+                if (!_frames.TryGetValue(FrameKeyMain, out var mainFrame))
                 {
-                    var mainFrame = new Frame();
-                    _frames.Add(FrameKeyMain, mainFrame);
+                    mainFrame = new Frame();
+                    _frames[FrameKeyMain] = mainFrame;
                     RegisterFrameEvents(mainFrame);
                 }
 
@@ -178,17 +173,18 @@ public class NavigationService : INavigationService
                 }
 
                 // Get the shell frame (should be registered by ShellPage constructor)
-                Frame = _frames.GetValueOrDefault(FrameKeyShell);
-                System.Diagnostics.Debug.WriteLine($"Shell frame retrieved: {Frame != null}");
-                System.Diagnostics.Debug.WriteLine($"Registered frames: {string.Join(", ", _frames.Keys)}");
-                
-                if (Frame == null)
+                if (!_frames.TryGetValue(FrameKeyShell, out var shellFrame))
                 {
+                    var registeredFrames = string.Join(", ", _frames.Keys);
                     throw new InvalidOperationException(
                         $"Shell frame '{FrameKeyShell}' is not registered. " +
-                        $"Available frames: {string.Join(", ", _frames.Keys)}. " +
+                        $"Available frames: {registeredFrames}. " +
                         "Ensure the ShellPage constructor calls NavigationService.RegisterFrame().");
                 }
+                
+                Frame = shellFrame;
+                System.Diagnostics.Debug.WriteLine($"Shell frame retrieved: {Frame != null}");
+                System.Diagnostics.Debug.WriteLine($"Registered frames: {string.Join(", ", _frames.Keys)}");
             }
 
             _navigateFullscreen = navigateFullscreen;
@@ -198,7 +194,8 @@ public class NavigationService : INavigationService
                 return false;
             }
 
-            _lastParametersUsed.TryGetValue(_navigateFullscreen ? FrameKeyMain : FrameKeyShell, out var lastParameter);
+            var frameKey = _navigateFullscreen ? FrameKeyMain : FrameKeyShell;
+            _lastParametersUsed.TryGetValue(frameKey, out var lastParameter);
 
             if (Frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(lastParameter)))
             {
@@ -215,7 +212,6 @@ public class NavigationService : INavigationService
                 
                 if (navigated)
                 {
-                    var frameKey = _navigateFullscreen ? FrameKeyMain : FrameKeyShell;
                     _lastParametersUsed[frameKey] = parameter;
                     
                     if (vmBeforeNavigation is INavigationAware navigationAware)
@@ -245,9 +241,9 @@ public class NavigationService : INavigationService
 
     private void ResetNavigation()
     {
-        foreach (var pair in _frames)
+        foreach (var frame in _frames.Values)
         {
-            pair.Value?.BackStack?.Clear();
+            frame?.BackStack?.Clear();
         }
     }
 
