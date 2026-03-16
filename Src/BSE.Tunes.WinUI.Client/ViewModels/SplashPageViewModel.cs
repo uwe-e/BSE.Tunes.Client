@@ -1,7 +1,9 @@
 ﻿using BSE.Tunes.Shared.Services;
 using BSE.Tunes.Shared.Services.Abstractions;
+using BSE.Tunes.Shared.Services.Models;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Contracts.ViewModels;
+using BSE.Tunes.WinUI.Client.Services;
 using BSE.Tunes.WinUI.Client.Views;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
@@ -28,11 +30,40 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             {
                 // Check if service endpoint is accessible
                 var isAccessible = await _dataService.IsEndPointAccessibleAsync(_settingsService.ServiceEndPoint);
+                if (isAccessible)
+                {
+                    if (_settingsService.User is User user)
+                    {
+                        try
+                        {
+                            // Try to get/refresh authentication token
+                            await _authenticationService.GetAuthTokenAsync();
+
+                            // Authentication successful, navigate to main shell
+                            _navigationService.NavigateTo(nameof(MainPage), null, clearNavigation: true, navigateFullscreen: false);
+                            //_navigationService.NavigateTo(nameof(EndpointConfigurationPage),null, clearNavigation: true, navigateFullscreen: true);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Authentication failed, navigate to login page
+                            _navigationService.NavigateTo(nameof(LoginPage), NavigationService.FrameKeyMain, clearNavigation: true);
+                        }
+                    }
+                    else
+                    {
+                        _navigationService.NavigateTo(nameof(LoginPage), NavigationService.FrameKeyMain, clearNavigation: true);
+                    }
+                }
+                else
+                {
+                    // Service endpoint is not accessible, navigate to configuration page
+                    _navigationService.NavigateTo(nameof(EndpointConfigurationPage), NavigationService.FrameKeyMain, clearNavigation: true);
+                }
             }
             catch (Exception)
             {
                 // Service endpoint check failed, navigate to configuration page
-                _navigationService.NavigateTo(nameof(EndpointConfigurationPage), clearNavigation: true);
+                _navigationService.NavigateTo(nameof(EndpointConfigurationPage), NavigationService.FrameKeyMain, clearNavigation: true);
             }
         }
 
@@ -41,9 +72,9 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             
         }
 
-        public void OnNavigatedTo(object parameter)
+        public async void OnNavigatedTo(object parameter)
         {
-            
+            await PerformStartUpChecksasync();
         }
     }
 }

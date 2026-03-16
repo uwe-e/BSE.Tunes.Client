@@ -3,7 +3,7 @@
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Helpers;
 using BSE.Tunes.WinUI.Client.ViewModels;
-
+using BSE.Tunes.WinUI.Client.Views;
 using Microsoft.UI.Xaml.Controls;
 
 namespace BSE.Tunes.WinUI.Client.Services;
@@ -59,7 +59,7 @@ public class NavigationViewService : INavigationViewService
     {
         if (args.IsSettingsInvoked)
         {
-            _navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
+            _navigationService.NavigateTo(nameof(SettingsPage),null, false);
         }
         else
         {
@@ -67,7 +67,7 @@ public class NavigationViewService : INavigationViewService
 
             if (selectedItem?.GetValue(NavigationHelper.NavigateToProperty) is string pageKey)
             {
-                _navigationService.NavigateTo(pageKey);
+                _navigationService.NavigateTo(pageKey, null, false);
             }
         }
     }

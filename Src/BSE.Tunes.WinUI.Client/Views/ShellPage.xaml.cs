@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Helpers;
+using BSE.Tunes.WinUI.Client.Services;
 using BSE.Tunes.WinUI.Client.ViewModels;
 
 using Microsoft.UI.Xaml;
@@ -24,6 +25,7 @@ public sealed partial class ShellPage : Page
         ViewModel = viewModel;
         InitializeComponent();
 
+        ViewModel.NavigationService.RegisterFrame(NavigationService.FrameKeyShell, NavigationFrame);
         ViewModel.NavigationService.Frame = NavigationFrame;
         ViewModel.NavigationViewService.Initialize(NavigationViewControl);
 

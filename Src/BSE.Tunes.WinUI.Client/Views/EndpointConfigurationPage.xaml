@@ -19,16 +19,16 @@
             <TextBlock Text="Enter the address of the BSE Tunes service:" 
                        TextWrapping="Wrap"
                        Margin="0,0,0,8"/>
-
+<!--IsEnabled="{x:Bind ViewModel.IsValidating, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}" -->
             <TextBox x:Name="ServiceEndPointTextBox"
                      PlaceholderText="https://example.com/api"
                      Text="{x:Bind ViewModel.ServiceEndPoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     IsEnabled="{x:Bind ViewModel.IsValidating, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"/>
-
+                     />
+<!-- Visibility="{x:Bind ViewModel.ErrorMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}"-->
             <TextBlock Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                        Foreground="Red"
                        TextWrapping="Wrap"
-                       Visibility="{x:Bind ViewModel.ErrorMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}"/>
+                       />
 
             <Button Command="{x:Bind ViewModel.SaveCommand}"
                     HorizontalAlignment="Stretch"

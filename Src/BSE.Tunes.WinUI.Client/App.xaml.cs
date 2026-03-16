@@ -90,7 +90,8 @@ public partial class App : Application
             services.AddTransientForNavigation<MainViewModel, MainPage>();
             services.AddTransientForNavigation<SettingsViewModel, SettingsPage>();
             services.AddTransientForNavigation<EndpointConfigurationViewModel, EndpointConfigurationPage>();
-
+            services.AddTransientForNavigation<LoginPageViewModel, LoginPage>();
+            //services.AddTransientForNavigation<ShellViewModel, ShellPage>();
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();

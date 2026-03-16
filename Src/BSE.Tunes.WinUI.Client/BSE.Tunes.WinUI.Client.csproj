@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\EndpointConfigurationPage.xaml" />
+    <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\SplashPage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +38,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\LoginPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SplashPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

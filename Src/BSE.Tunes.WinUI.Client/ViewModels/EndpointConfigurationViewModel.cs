@@ -1,6 +1,8 @@
 using BSE.Tunes.Shared.Services;
 using BSE.Tunes.Shared.Services.Abstractions;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Services;
+using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -58,7 +60,7 @@ public partial class EndpointConfigurationViewModel : ViewModelBase
             }
 
             _settingsService.ServiceEndPoint = serviceEndPoint;
-            //_navigationService.NavigateTo(typeof(SplashPage).FullName!);
+            _navigationService.NavigateTo(nameof(SplashPage), NavigationService.FrameKeyMain, clearNavigation: true);
         }
         catch (Exception ex)
         {
