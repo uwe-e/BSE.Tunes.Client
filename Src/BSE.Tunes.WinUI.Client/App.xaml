@@ -15,6 +15,14 @@
             <!-- Value Converters -->
             <helpers:BoolNegationConverter x:Key="BoolNegationConverter"/>
             <helpers:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
+        <!-- Override the system style -->
+            <Style x:Key="AppTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
+            <Setter Property="FontSize" Value="30"/>
+            <!-- Add your custom property overrides -->
+        </Style>
+        
         </ResourceDictionary>
+
+        
     </Application.Resources>
 </Application>

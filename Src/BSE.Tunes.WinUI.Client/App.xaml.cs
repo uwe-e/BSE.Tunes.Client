@@ -83,15 +83,17 @@ public partial class App : Application
                     new DtoMappingProfile()
                 );
             });
+            services.AddSingleton<IResourceService, ResourceService>();
 
             // Views and ViewModels - Single point of configuration! ✨
             // Auto-generates keys: "Splash", "Main", "Settings", "EndpointConfiguration"
             services.AddTransientForNavigation<SplashPageViewModel, SplashPage>();
             services.AddTransientForNavigation<MainViewModel, MainPage>();
             services.AddTransientForNavigation<SettingsViewModel, SettingsPage>();
+            services.AddTransientForNavigation<PersonalizationSettingsViewModel, PersonalizationSettingsPage>();
             services.AddTransientForNavigation<EndpointConfigurationViewModel, EndpointConfigurationPage>();
             services.AddTransientForNavigation<LoginPageViewModel, LoginPage>();
-            //services.AddTransientForNavigation<ShellViewModel, ShellPage>();
+
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
