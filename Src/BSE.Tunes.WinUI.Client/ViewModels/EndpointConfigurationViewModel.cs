@@ -60,7 +60,7 @@ public partial class EndpointConfigurationViewModel : ViewModelBase
             }
 
             _settingsService.ServiceEndPoint = serviceEndPoint;
-            _navigationService.NavigateTo(nameof(SplashPage), NavigationService.FrameKeyMain, clearNavigation: true);
+            _navigationService.NavigateTo(nameof(SplashPage), NavigationService.FrameKeyMain, clearNavigation: true, navigateFullscreen: true);
         }
         catch (Exception ex)
         {

@@ -68,7 +68,7 @@ public partial class App : Application
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
-
+            services.AddSingleton<IDialogService, DialogService>();
             // Core Services
             services.AddSingleton<IFileService, FileService>();
 
@@ -92,6 +92,7 @@ public partial class App : Application
             services.AddTransientForNavigation<SettingsViewModel, SettingsPage>();
             services.AddTransientForNavigation<PersonalizationSettingsViewModel, PersonalizationSettingsPage>();
             services.AddTransientForNavigation<EndpointConfigurationViewModel, EndpointConfigurationPage>();
+            services.AddTransientForNavigation<RemoveEndpointSettingsPageViewModel, RemoveEndpointSettingsPage>();
             services.AddTransientForNavigation<LoginPageViewModel, LoginPage>();
 
             // ShellPage and ViewModel (not used for navigation)

@@ -47,9 +47,12 @@ public class NavigationService : INavigationService
 
         set
         {
-            UnregisterFrameEvents(_frame);
-            _frame = value;
-            RegisterFrameEvents(_frame);
+            if (_frame != value)
+            {
+                UnregisterFrameEvents(_frame);
+                _frame = value;
+                RegisterFrameEvents(_frame);
+            }
         }
     }
 
@@ -63,13 +66,29 @@ public class NavigationService : INavigationService
 
     public void RegisterFrame(string frameKey, Frame frame)
     {
-        if (!_frames.TryAdd(frameKey, frame))
+        if (_frames.TryGetValue(frameKey, out var existingFrame))
         {
-            UnregisterFrameEvents(_frames[frameKey]);
+            if (existingFrame == frame)
+            {
+                // Same frame already registered, nothing to do
+                return;
+            }
+            
+            // Different frame, unregister the old one
+            UnregisterFrameEvents(existingFrame);
             _frames[frameKey] = frame;
         }
+        else
+        {
+            _frames.Add(frameKey, frame);
+        }
         
-        RegisterFrameEvents(frame);
+        // Only register events if this frame is not already the active Frame
+        // (to avoid double registration when Frame property setter is used)
+        if (_frame != frame)
+        {
+            RegisterFrameEvents(frame);
+        }
     }
 
     public void UnregisterFrame(string frameKey)
@@ -90,6 +109,10 @@ public class NavigationService : INavigationService
     {
         if (frame != null)
         {
+            // Unregister first to prevent double subscription
+            frame.Navigated -= OnNavigated;
+            frame.NavigationFailed -= OnNavigationFailed;
+            
             frame.Navigated += OnNavigated;
             frame.NavigationFailed += OnNavigationFailed;
         }
@@ -129,6 +152,11 @@ public class NavigationService : INavigationService
 
     public bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false, bool navigateFullscreen = false)
     {
+        if (App.MainWindow == null)
+        {
+            throw new InvalidOperationException("App.MainWindow is not initialized.");
+        }
+
         try
         {
             var pageType = _pageService.GetPageType(pageKey);
@@ -146,7 +174,7 @@ public class NavigationService : INavigationService
                 {
                     mainFrame = new Frame();
                     _frames[FrameKeyMain] = mainFrame;
-                    RegisterFrameEvents(mainFrame);
+                    //RegisterFrameEvents(mainFrame);
                 }
 
                 Frame = _frames[FrameKeyMain];

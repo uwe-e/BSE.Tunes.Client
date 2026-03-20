@@ -117,10 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="RemoveEndpointSettingsPage_Description.Text" xml:space="preserve">
+    <value>Die Adresse deines aktuellen BSEtunes-Services</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Warning.Text" xml:space="preserve">
+    <value>Wenn Du die Adresse löscht, muss sie neu konfiguriert werden </value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Title.Text" xml:space="preserve">
+    <value>Webserver-Adresse</value>
+  </data>
   <data name="SettingsPage_SectionAccount_Title" xml:space="preserve">
     <value>Konto</value>
   </data>
   <data name="SettingsPage_SectionWebserver_Title" xml:space="preserve">
-    <value>BSEtunes Webserver</value>
+    <value>Webserver-Adresse</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_DeleteButton.Content" xml:space="preserve">
+    <value>Webserver-Adresse löschen</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Dialog_Title" xml:space="preserve">
+    <value>BSEtunes Service-Adresse löschen?</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Dialog_Message" xml:space="preserve">
+    <value>Wenn du die Adresse löscht, muss sie später neu konfiguriert werden. Möchtest du fortfahren?</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Dialog_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Dialog_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
   </data>
 </root>

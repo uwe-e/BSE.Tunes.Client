@@ -4,7 +4,7 @@ using BSE.Tunes.Shared.Services.Abstractions;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Helpers;
 using BSE.Tunes.WinUI.Client.Models;
-
+using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -42,7 +42,7 @@ public partial class SettingsViewModel : ObservableRecipient
             Title = _resourceService.GetString("SettingsPage_SectionWebserver_Title"),
             Description = _settingsService.ServiceEndPoint ?? string.Empty,
             Glyph = "\uE774", // Globe
-            PageKey = "ServiceEndpointSettingsPage"
+            PageKey = nameof(RemoveEndpointSettingsPage)
         });
 
         SettingsItems.Add(new SettingsItem

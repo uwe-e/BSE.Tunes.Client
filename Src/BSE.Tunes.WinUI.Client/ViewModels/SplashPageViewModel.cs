@@ -12,16 +12,21 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         INavigationService navigationService,
         ISettingsService settingsService,
         IDataService dataService,
-        IAuthenticationService authenticationService) : ViewModelBase, INavigationAware, IActivationAware
+        IAuthenticationService authenticationService) : ViewModelBase, IActivationAware
     {
         private readonly INavigationService _navigationService = navigationService;
         private readonly ISettingsService _settingsService = settingsService;
         private readonly IDataService _dataService = dataService;
         private readonly IAuthenticationService _authenticationService = authenticationService;
+        private bool _isPerformed;
 
         public async Task OnActivatedAsync(object? parameter = null)
         {
-            await PerformStartUpChecksasync();
+            if (!_isPerformed)
+            {
+                await PerformStartUpChecksasync();
+                _isPerformed = true;
+            }
         }
 
         private async Task PerformStartUpChecksasync()
@@ -40,7 +45,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                             await _authenticationService.GetAuthTokenAsync();
 
                             // Authentication successful, navigate to main shell
-                            _navigationService.NavigateTo(nameof(MainPage), null, clearNavigation: true, navigateFullscreen: false);
+                            _navigationService.NavigateTo(nameof(MainPage), NavigationService.FrameKeyShell, clearNavigation: true, navigateFullscreen: false);
                             //_navigationService.NavigateTo(nameof(EndpointConfigurationPage),null, clearNavigation: true, navigateFullscreen: true);
                         }
                         catch (Exception ex)
@@ -57,24 +62,25 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 else
                 {
                     // Service endpoint is not accessible, navigate to configuration page
-                    _navigationService.NavigateTo(nameof(EndpointConfigurationPage), NavigationService.FrameKeyMain, clearNavigation: true);
+                    _navigationService.NavigateTo(nameof(EndpointConfigurationPage), NavigationService.FrameKeyMain, clearNavigation: true, navigateFullscreen: true);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Service endpoint check failed, navigate to configuration page
-                _navigationService.NavigateTo(nameof(EndpointConfigurationPage), NavigationService.FrameKeyMain, clearNavigation: true);
+                _navigationService.NavigateTo(nameof(EndpointConfigurationPage), NavigationService.FrameKeyMain, clearNavigation: true, navigateFullscreen: true);
             }
         }
 
-        public void OnNavigatedFrom()
+        public override void OnNavigatedFrom()
         {
             
         }
 
-        public async void OnNavigatedTo(object parameter)
+        public async override void OnNavigatedTo(object parameter)
         {
-            await PerformStartUpChecksasync();
+            if(!_isPerformed)
+                await PerformStartUpChecksasync();
         }
     }
 }
