@@ -44,16 +44,23 @@ public partial class LoginPageViewModel : ViewModelBase
             
             if (success)
             {
-                _navigationService.NavigateTo(nameof(SplashPage), NavigationService.FrameKeyMain, clearNavigation: true);
+                // Login successful - navigate to main app (loads ShellPage)
+                var shell = App.GetService<ShellPage>();
+                App.MainWindow.Content = shell;
+                
+                await _navigationService.NavigateToAsync(
+                    nameof(MainPage),
+                    frameKey: NavigationService.FrameKeyShell,
+                    clearNavigation: true);
             }
             else
             {
-                ErrorMessage = "Login failed. Please check your credentials.";
+                ErrorMessage = "Invalid username or password.";
             }
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"Login error: {ex.Message}";
+            ErrorMessage = $"Login failed: {ex.Message}";
         }
         finally
         {

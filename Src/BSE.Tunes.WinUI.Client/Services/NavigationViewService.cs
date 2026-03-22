@@ -1,17 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using BSE.Tunes.WinUI.Client.Contracts.Services;
+﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Helpers;
-using BSE.Tunes.WinUI.Client.ViewModels;
 using BSE.Tunes.WinUI.Client.Views;
 using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BSE.Tunes.WinUI.Client.Services;
 
 public class NavigationViewService : INavigationViewService
 {
     private readonly INavigationService _navigationService;
-
     private readonly IPageService _pageService;
 
     private NavigationView? _navigationView;
@@ -47,19 +44,22 @@ public class NavigationViewService : INavigationViewService
     {
         if (_navigationView != null)
         {
-            return GetSelectedItem(_navigationView.MenuItems, pageType) ?? GetSelectedItem(_navigationView.FooterMenuItems, pageType);
+            return GetSelectedItem(_navigationView.MenuItems, pageType) ??
+                   GetSelectedItem(_navigationView.FooterMenuItems, pageType);
         }
 
         return null;
     }
 
-    private void OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) => _navigationService.GoBack();
+    private void OnBackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        => _navigationService.GoBack();
 
-    private void OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+    private async void OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
         if (args.IsSettingsInvoked)
         {
-            _navigationService.NavigateTo(nameof(SettingsPage),null, false);
+            // Navigate to settings page within the shell frame
+            await _navigationService.NavigateToAsync(nameof(SettingsPage), clearNavigation: false);
         }
         else
         {
@@ -67,7 +67,8 @@ public class NavigationViewService : INavigationViewService
 
             if (selectedItem?.GetValue(NavigationHelper.NavigateToProperty) is string pageKey)
             {
-                _navigationService.NavigateTo(pageKey, null, false);
+                // Navigate within the shell frame
+                await _navigationService.NavigateToAsync(pageKey, clearNavigation: false);
             }
         }
     }

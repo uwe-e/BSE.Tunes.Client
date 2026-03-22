@@ -12,6 +12,7 @@ public partial class EndpointConfigurationViewModel : ViewModelBase
 {
     private readonly ISettingsService _settingsService;
     private readonly IDataService _dataService;
+    private readonly IAuthenticationService _authenticationService;
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
@@ -26,10 +27,12 @@ public partial class EndpointConfigurationViewModel : ViewModelBase
     public EndpointConfigurationViewModel(
         ISettingsService settingsService,
         IDataService dataService,
+        IAuthenticationService authenticationService,
         INavigationService navigationService)
     {
         _settingsService = settingsService;
         _dataService = dataService;
+        _authenticationService = authenticationService;
         _navigationService = navigationService;
         
         ServiceEndPoint = _settingsService.ServiceEndPoint ?? string.Empty;
@@ -59,8 +62,43 @@ public partial class EndpointConfigurationViewModel : ViewModelBase
                 return;
             }
 
+            // Save the endpoint
             _settingsService.ServiceEndPoint = serviceEndPoint;
-            _navigationService.NavigateTo(nameof(SplashPage), NavigationService.FrameKeyMain, clearNavigation: true, navigateFullscreen: true);
+
+            // Check if user needs to login or can go directly to main
+            if (_settingsService.User == null)
+            {
+                // No user - go to login page
+                await _navigationService.NavigateToAsync(
+                    nameof(LoginPage),
+                    frameKey: NavigationService.FrameKeyMain,
+                    clearNavigation: true);
+            }
+            else
+            {
+                // User exists - try to authenticate
+                try
+                {
+                    await _authenticationService.GetAuthTokenAsync();
+                    
+                    // Success - go to main app (loads ShellPage)
+                    var shell = App.GetService<ShellPage>();
+                    App.MainWindow.Content = shell;
+                    
+                    await _navigationService.NavigateToAsync(
+                        nameof(MainPage),
+                        frameKey: NavigationService.FrameKeyShell,
+                        clearNavigation: true);
+                }
+                catch
+                {
+                    // Token invalid - go to login
+                    await _navigationService.NavigateToAsync(
+                        nameof(LoginPage),
+                        frameKey: NavigationService.FrameKeyMain,
+                        clearNavigation: true);
+                }
+            }
         }
         catch (Exception ex)
         {

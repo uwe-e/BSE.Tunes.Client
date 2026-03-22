@@ -147,4 +147,28 @@
   <data name="RemoveEndpointSettingsPage_Dialog_Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="RemoveLoginSettingsPage_Title.Text" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="RemoveLoginSettingsPage_Description.Text" xml:space="preserve">
+    <value>Das Konto für dein aktuelle BSEtunes</value>
+  </data>
+  <data name="RemoveLoginSettingsPage_Warning.Text" xml:space="preserve">
+    <value>Du wirst abgemeldet, wenn Du Dein Konto löschst und musst Dich anschließend erneut anmelden.</value>
+  </data>
+  <data name="RemoveLoginSettingsPage_DeleteButton.Content" xml:space="preserve">
+    <value>Konto löschen</value>
+  </data>
+  <data name="RemoveLoginSettingsPage_Dialog_Title" xml:space="preserve">
+    <value>BSEtunes-Konto löschen?</value>
+  </data>
+  <data name="RemoveLoginSettingsPage_Dialog_Message" xml:space="preserve">
+    <value>Wenn Du Dein Konto löschst, wirst Du abgemeldet. Deine aktuelle BSEtunes-Adresse bleibt erhalten. Möchtest du fortfahren?</value>
+  </data>
+  <data name="RemoveLoginSettingsPage_Dialog_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="RemoveLoginSettingsPage_Dialog_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
 </root>

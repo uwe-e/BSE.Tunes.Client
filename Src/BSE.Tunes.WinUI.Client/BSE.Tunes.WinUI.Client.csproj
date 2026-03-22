@@ -20,7 +20,7 @@
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\PersonalizationSettingsPage.xaml" />
     <None Remove="Views\RemoveEndpointSettingsPage.xaml" />
-    <None Remove="Views\SplashPage.xaml" />
+    <None Remove="Views\RemoveLoginSettingsPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -42,6 +42,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\RemoveLoginSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\RemoveEndpointSettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -49,9 +52,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\LoginPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\SplashPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\EndpointConfigurationPage.xaml">

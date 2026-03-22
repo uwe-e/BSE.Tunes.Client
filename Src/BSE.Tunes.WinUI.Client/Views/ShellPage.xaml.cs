@@ -2,30 +2,33 @@
 using BSE.Tunes.WinUI.Client.Helpers;
 using BSE.Tunes.WinUI.Client.Services;
 using BSE.Tunes.WinUI.Client.ViewModels;
-
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-
 using Windows.System;
 
 namespace BSE.Tunes.WinUI.Client.Views;
 
-// TODO: Update NavigationViewItem titles and icons in ShellPage.xaml.
 public sealed partial class ShellPage : Page
 {
-    public ShellViewModel ViewModel
-    {
-        get;
-    }
+    private readonly SettingsMonitorService _settingsMonitor;
 
-    public ShellPage(ShellViewModel viewModel)
+    public ShellViewModel ViewModel { get; }
+
+    public ShellPage(ShellViewModel viewModel, SettingsMonitorService settingsMonitor)
     {
         ViewModel = viewModel;
+        _settingsMonitor = settingsMonitor;
+        
         InitializeComponent();
 
+        // Ensure NavigationFrame is available before registering
+        if (NavigationFrame == null)
+        {
+            throw new InvalidOperationException("NavigationFrame was not initialized by InitializeComponent()");
+        }
+
         ViewModel.NavigationService.RegisterFrame(NavigationService.FrameKeyShell, NavigationFrame);
-        //ViewModel.NavigationService.Frame = NavigationFrame;
         ViewModel.NavigationViewService.Initialize(NavigationViewControl);
 
         // TODO: Set the title bar icon by updating /Assets/WindowIcon.ico.
@@ -35,6 +38,9 @@ public sealed partial class ShellPage : Page
         App.MainWindow.SetTitleBar(AppTitleBar);
         App.MainWindow.Activated += MainWindow_Activated;
         AppTitleBarText.Text = "AppDisplayName".GetLocalized();
+        
+        // Start monitoring for settings changes
+        _settingsMonitor.StartMonitoring();
     }
 
     private void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

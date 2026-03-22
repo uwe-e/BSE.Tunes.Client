@@ -20,7 +20,7 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty]
     private string _versionDescription;
 
-    public ObservableCollection<SettingsItem> SettingsItems { get; } = new();
+    public ObservableCollection<SettingsItem> SettingsItems { get; } = [];
 
     public SettingsViewModel(
         INavigationService navigationService,
@@ -50,7 +50,7 @@ public partial class SettingsViewModel : ObservableRecipient
             Title = _resourceService.GetString("SettingsPage_SectionAccount_Title"),
             Description = _settingsService.User?.UserName ?? string.Empty,
             Glyph = "\uE77B", // Contact
-            PageKey = "AccountSettingsPage"
+            PageKey = nameof(RemoveLoginSettingsPage)
         });
 
         SettingsItems.Add(new SettingsItem
@@ -83,7 +83,7 @@ public partial class SettingsViewModel : ObservableRecipient
     {
         if (item?.PageKey != null)
         {
-            _navigationService.NavigateTo(item.PageKey, null, false, false);
+            _navigationService.NavigateToAsync(item.PageKey, null, false, false);
         }
     }
 

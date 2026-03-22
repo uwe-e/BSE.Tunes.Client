@@ -74,7 +74,7 @@ public partial class App : Application
 
             // Shared Services from BSE.Tunes.Shared.Services
             services.AddSingleton<IRequestService, RequestService>();
-            services.AddSingleton<ISettingsService, SettingsService>();
+            //services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<IMapper>(mapper =>
@@ -85,15 +85,20 @@ public partial class App : Application
             });
             services.AddSingleton<IResourceService, ResourceService>();
 
+            // SettingsService registered as a single instance with multiple interface registrations
+            services.AddSingleton<SettingsService>();
+            services.AddSingleton<ISettingsService>(sp => sp.GetRequiredService<SettingsService>());
+            services.AddSingleton<ISettingsServiceExtended>(sp => sp.GetRequiredService<SettingsService>());
+            services.AddSingleton<SettingsMonitorService>();
+
             // Views and ViewModels - Single point of configuration! ✨
-            // Auto-generates keys: "Splash", "Main", "Settings", "EndpointConfiguration"
-            services.AddTransientForNavigation<SplashPageViewModel, SplashPage>();
             services.AddTransientForNavigation<MainViewModel, MainPage>();
             services.AddTransientForNavigation<SettingsViewModel, SettingsPage>();
             services.AddTransientForNavigation<PersonalizationSettingsViewModel, PersonalizationSettingsPage>();
             services.AddTransientForNavigation<EndpointConfigurationViewModel, EndpointConfigurationPage>();
             services.AddTransientForNavigation<RemoveEndpointSettingsPageViewModel, RemoveEndpointSettingsPage>();
             services.AddTransientForNavigation<LoginPageViewModel, LoginPage>();
+            services.AddTransientForNavigation<RemoveLoginSettingsPageViewModel, RemoveLoginSettingsPage>();
 
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();
@@ -101,6 +106,8 @@ public partial class App : Application
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+
+            
         }).
         Build();
 

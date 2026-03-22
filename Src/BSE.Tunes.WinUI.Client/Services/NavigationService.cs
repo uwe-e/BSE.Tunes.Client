@@ -1,8 +1,6 @@
 ﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Contracts.ViewModels;
 using BSE.Tunes.WinUI.Client.Helpers;
-using BSE.Tunes.WinUI.Client.Views;
-
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Diagnostics.CodeAnalysis;
@@ -17,34 +15,15 @@ public class NavigationService : INavigationService
     public const string FrameKeyShell = "ShellFrame";
 
     private readonly IPageService _pageService;
-    private readonly Dictionary<string, Frame> _frames = new(2);
-    private readonly Dictionary<string, object?> _lastParametersUsed = new(2);
+    private readonly Dictionary<string, Frame> _frames = [];
+    private readonly Dictionary<string, object?> _lastParametersUsed = [];
     private Frame? _frame;
-    private Page? _shell;
-    private bool _navigateFullscreen;
 
     public event NavigatedEventHandler? Navigated;
 
     public Frame? Frame
     {
-        get
-        {
-            if (_frame == null)
-            {
-                // Try to get the shell frame first
-                if (_frames.TryGetValue(FrameKeyShell, out var shellFrame))
-                {
-                    _frame = shellFrame;
-                }
-                else if (_frames.TryGetValue(FrameKeyMain, out var mainFrame))
-                {
-                    _frame = mainFrame;
-                }
-            }
-
-            return _frame;
-        }
-
+        get => _frame;
         set
         {
             if (_frame != value)
@@ -70,25 +49,16 @@ public class NavigationService : INavigationService
         {
             if (existingFrame == frame)
             {
-                // Same frame already registered, nothing to do
-                return;
+                return; // Already registered
             }
             
-            // Different frame, unregister the old one
             UnregisterFrameEvents(existingFrame);
-            _frames[frameKey] = frame;
-        }
-        else
-        {
-            _frames.Add(frameKey, frame);
         }
         
-        // Only register events if this frame is not already the active Frame
-        // (to avoid double registration when Frame property setter is used)
-        if (_frame != frame)
-        {
-            RegisterFrameEvents(frame);
-        }
+        _frames[frameKey] = frame;
+        RegisterFrameEvents(frame);
+        
+        System.Diagnostics.Debug.WriteLine($"NavigationService: Registered frame '{frameKey}'");
     }
 
     public void UnregisterFrame(string frameKey)
@@ -97,6 +67,8 @@ public class NavigationService : INavigationService
         {
             UnregisterFrameEvents(frame);
             _lastParametersUsed.Remove(frameKey);
+            
+            System.Diagnostics.Debug.WriteLine($"NavigationService: Unregistered frame '{frameKey}'");
         }
     }
 
@@ -109,7 +81,6 @@ public class NavigationService : INavigationService
     {
         if (frame != null)
         {
-            // Unregister first to prevent double subscription
             frame.Navigated -= OnNavigated;
             frame.NavigationFailed -= OnNavigationFailed;
             
@@ -133,6 +104,7 @@ public class NavigationService : INavigationService
         {
             var vmBeforeNavigation = Frame.GetPageViewModel();
             Frame.GoBack();
+            
             if (vmBeforeNavigation is INavigationAware navigationAware)
             {
                 navigationAware.OnNavigatedFrom();
@@ -144,157 +116,83 @@ public class NavigationService : INavigationService
         return false;
     }
 
-    public bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false)
+    public async Task<bool> NavigateToAsync(string pageKey, object? parameter = null, bool clearNavigation = false)
     {
-        // Default to shell frame navigation (non-fullscreen)
-        return NavigateTo(pageKey, parameter, clearNavigation, navigateFullscreen: false);
+        // Default to shell frame for most navigation
+        return await NavigateToAsync(pageKey, FrameKeyShell, parameter, clearNavigation);
     }
 
-    public bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false, bool navigateFullscreen = false)
+    public async Task<bool> NavigateToAsync(
+        string pageKey, 
+        string? frameKey = null, 
+        object? parameter = null, 
+        bool clearNavigation = false)
     {
-        if (App.MainWindow == null)
-        {
-            throw new InvalidOperationException("App.MainWindow is not initialized.");
-        }
-
         try
         {
             var pageType = _pageService.GetPageType(pageKey);
+            var targetFrameKey = frameKey ?? FrameKeyShell;
 
-            // Handle fullscreen navigation (login, splash, configuration pages)
-            if (navigateFullscreen && _navigateFullscreen != navigateFullscreen)
+            // Get the target frame
+            if (!_frames.TryGetValue(targetFrameKey, out var targetFrame))
             {
-                ResetNavigation();
-                
-                // Store the shell for later restoration
-                _shell ??= App.MainWindow.Content as Page;
-
-                // Create or get the main frame
-                if (!_frames.TryGetValue(FrameKeyMain, out var mainFrame))
-                {
-                    mainFrame = new Frame();
-                    _frames[FrameKeyMain] = mainFrame;
-                    //RegisterFrameEvents(mainFrame);
-                }
-
-                Frame = _frames[FrameKeyMain];
-                App.MainWindow.Content = Frame;
-            }
-            // Handle shell navigation (normal app pages)
-            else if (!navigateFullscreen)
-            {
-                // Coming back from fullscreen to shell OR first navigation to shell
-                if (_navigateFullscreen != navigateFullscreen || _shell == null)
-                {
-                    ResetNavigation();
-                    
-                    // Initialize shell if not already done
-                    if (_shell == null)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Creating ShellPage instance...");
-                        _shell = App.GetService<ShellPage>();
-                        System.Diagnostics.Debug.WriteLine($"ShellPage created: {_shell != null}");
-                    }
-                    
-                    App.MainWindow.Content = _shell;
-                    System.Diagnostics.Debug.WriteLine("ShellPage set as MainWindow.Content");
-                }
-
-                // Get the shell frame (should be registered by ShellPage constructor)
-                if (!_frames.TryGetValue(FrameKeyShell, out var shellFrame))
-                {
-                    var registeredFrames = string.Join(", ", _frames.Keys);
-                    throw new InvalidOperationException(
-                        $"Shell frame '{FrameKeyShell}' is not registered. " +
-                        $"Available frames: {registeredFrames}. " +
-                        "Ensure the ShellPage constructor calls NavigationService.RegisterFrame().");
-                }
-                
-                Frame = shellFrame;
-                System.Diagnostics.Debug.WriteLine($"Shell frame retrieved: {Frame != null}");
-                System.Diagnostics.Debug.WriteLine($"Registered frames: {string.Join(", ", _frames.Keys)}");
+                var registeredFrames = string.Join(", ", _frames.Keys);
+                throw new InvalidOperationException(
+                    $"Frame '{targetFrameKey}' is not registered. " +
+                    $"Available frames: [{registeredFrames}]. " +
+                    $"Ensure the frame is registered before navigation.");
             }
 
-            _navigateFullscreen = navigateFullscreen;
+            // Set as active frame
+            Frame = targetFrame;
 
-            if (Frame == null)
+            // Check if we need to navigate
+            _lastParametersUsed.TryGetValue(targetFrameKey, out var lastParameter);
+            if (Frame.Content?.GetType() == pageType && 
+                (parameter == null || parameter.Equals(lastParameter)))
             {
-                return false;
+                return false; // Already on this page
             }
 
-            var frameKey = _navigateFullscreen ? FrameKeyMain : FrameKeyShell;
-            _lastParametersUsed.TryGetValue(frameKey, out var lastParameter);
+            // Store navigation state
+            Frame.Tag = clearNavigation;
+            var vmBeforeNavigation = Frame.GetPageViewModel();
 
-            if (Frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(lastParameter)))
+            System.Diagnostics.Debug.WriteLine($"NavigationService: Navigating to {pageType.Name} in frame '{targetFrameKey}'");
+
+            // Navigate
+            var navigated = Frame.Navigate(pageType, parameter);
+
+            if (navigated)
             {
-                Frame.Tag = clearNavigation;
-                var vmBeforeNavigation = Frame.GetPageViewModel();
-                
-                System.Diagnostics.Debug.WriteLine($"Navigating to {pageType.Name}...");
-                System.Diagnostics.Debug.WriteLine($"Frame: {Frame.GetType().Name}");
-                System.Diagnostics.Debug.WriteLine($"Parameter: {parameter}");
-                
-                var navigated = Frame.Navigate(pageType, parameter);
-                
-                System.Diagnostics.Debug.WriteLine($"Navigation result: {navigated}");
-                
-                if (navigated)
+                _lastParametersUsed[targetFrameKey] = parameter;
+
+                if (vmBeforeNavigation is INavigationAware navigationAware)
                 {
-                    _lastParametersUsed[frameKey] = parameter;
-                    
-                    if (vmBeforeNavigation is INavigationAware navigationAware)
-                    {
-                        navigationAware.OnNavigatedFrom();
-                    }
+                    navigationAware.OnNavigatedFrom();
                 }
-
-                return navigated;
             }
 
-            return false;
+            return navigated;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Navigation error: {ex.GetType().Name}");
-            System.Diagnostics.Debug.WriteLine($"Message: {ex.Message}");
-            System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
-            if (ex.InnerException != null)
-            {
-                System.Diagnostics.Debug.WriteLine($"Inner exception: {ex.InnerException.GetType().Name}");
-                System.Diagnostics.Debug.WriteLine($"Inner message: {ex.InnerException.Message}");
-            }
+            System.Diagnostics.Debug.WriteLine($"NavigationService: Navigation error - {ex.Message}");
             throw;
-        }
-    }
-
-    private void ResetNavigation()
-    {
-        foreach (var frame in _frames.Values)
-        {
-            frame?.BackStack?.Clear();
         }
     }
 
     private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
     {
-        var errorDetails = $"Navigation failed to '{e.SourcePageType.Name}'.\n";
+        var errorDetails = $"Navigation failed to '{e.SourcePageType.Name}'.";
         
         if (e.Exception != null)
         {
-            errorDetails += $"Exception Type: {e.Exception.GetType().FullName}\n";
-            errorDetails += $"Message: {e.Exception.Message}\n";
-            errorDetails += $"StackTrace: {e.Exception.StackTrace}\n";
-            
-            if (e.Exception.InnerException != null)
-            {
-                errorDetails += $"\nInner Exception: {e.Exception.InnerException.GetType().FullName}\n";
-                errorDetails += $"Inner Message: {e.Exception.InnerException.Message}\n";
-                errorDetails += $"Inner StackTrace: {e.Exception.InnerException.StackTrace}\n";
-            }
+            errorDetails += $"\nException: {e.Exception.GetType().Name}";
+            errorDetails += $"\nMessage: {e.Exception.Message}";
         }
         
-        System.Diagnostics.Debug.WriteLine(errorDetails);
-        
+        System.Diagnostics.Debug.WriteLine($"NavigationService: {errorDetails}");
         throw new InvalidOperationException(errorDetails, e.Exception);
     }
 
@@ -302,14 +200,17 @@ public class NavigationService : INavigationService
     {
         if (sender is Frame frame)
         {
-            System.Diagnostics.Debug.WriteLine($"Navigated to: {e.SourcePageType.Name}");
+            System.Diagnostics.Debug.WriteLine($"NavigationService: Navigated to {e.SourcePageType.Name}");
             
+            // Clear back stack if requested
             var clearNavigation = frame.Tag is bool clear && clear;
             if (clearNavigation)
             {
                 frame.BackStack.Clear();
+                frame.Tag = null; // Reset flag
             }
 
+            // Notify ViewModel
             if (frame.GetPageViewModel() is INavigationAware navigationAware)
             {
                 navigationAware.OnNavigatedTo(e.Parameter);

@@ -1,15 +1,19 @@
-﻿using BSE.Tunes.Shared.Services.Abstractions;
-using BSE.Tunes.Shared.Services.Models;
+﻿using BSE.Tunes.Shared.Services.Models;
 using BSE.Tunes.Shared.Services.Models.IdentityModel;
+using BSE.Tunes.WinUI.Client.Contracts.Services;
 using System.Text.Json;
 using Windows.Security.Credentials;
 
 namespace BSE.Tunes.WinUI.Client.Services
 {
-    public class SettingsService : ISettingsService
+    public class SettingsService : ISettingsServiceExtended
     {
         private const string UserAccessToken = "user_token";
         private const string ResourceName = "BSE.Tunes.WinUI.Client";
+        
+        // Events from ISettingsServiceExtended
+        public event EventHandler? ServiceEndpointRemoved;
+        public event EventHandler? UserAccountDeleted;
         
         public string ServiceEndPoint
         {
@@ -35,7 +39,6 @@ namespace BSE.Tunes.WinUI.Client.Services
             }
             catch (Exception)
             {
-                // Credential not found
                 return Task.FromResult<UserToken?>(null);
             }
         }
@@ -46,7 +49,6 @@ namespace BSE.Tunes.WinUI.Client.Services
             {
                 var vault = new PasswordVault();
                 
-                // Remove existing credential if present
                 try
                 {
                     var existing = vault.Retrieve(ResourceName, UserAccessToken);
@@ -54,7 +56,6 @@ namespace BSE.Tunes.WinUI.Client.Services
                 }
                 catch { /* Not found, that's fine */ }
                 
-                // Add new credential if not null
                 if (userToken is not null)
                 {
                     var credential = new PasswordCredential(
@@ -66,11 +67,44 @@ namespace BSE.Tunes.WinUI.Client.Services
             }
             catch (Exception)
             {
-                // Handle storage failure
                 throw;
             }
             
             return Task.CompletedTask;
+        }
+
+        // ISettingsServiceExtended implementations
+        public async Task ClearServiceEndpointAsync()
+        {
+            // CASCADE: When endpoint is removed, user account is no longer valid
+            // Clear user account FIRST (without raising event - we'll raise endpoint event)
+            await ClearUserDataSilentlyAsync();
+            
+            // Then clear endpoint
+            ServiceEndPoint = string.Empty;
+            
+            // Raise ONLY the endpoint removed event
+            // The event handler will navigate to EndpointConfigurationPage
+            ServiceEndpointRemoved?.Invoke(this, EventArgs.Empty);
+        }
+
+        public async Task ClearUserAccountAsync()
+        {
+            // Clear only user account (endpoint remains)
+            await ClearUserDataSilentlyAsync();
+            
+            // Raise user account deleted event
+            // The event handler will navigate to LoginPage
+            UserAccountDeleted?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Clears user data without raising events (for cascading operations)
+        /// </summary>
+        private async Task ClearUserDataSilentlyAsync()
+        {
+            User = null;
+            await SetUserTokenAsync(null);
         }
     }
 }

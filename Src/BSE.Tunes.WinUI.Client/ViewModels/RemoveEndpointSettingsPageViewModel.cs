@@ -8,7 +8,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels;
 
 public partial class RemoveEndpointSettingsPageViewModel : BaseSettingsViewModel
 {
-    private readonly ISettingsService _settingsService;
+    private readonly ISettingsServiceExtended _settingsService;
 
     [ObservableProperty]
     private string _serviceEndPoint = string.Empty;
@@ -16,7 +16,7 @@ public partial class RemoveEndpointSettingsPageViewModel : BaseSettingsViewModel
     public RemoveEndpointSettingsPageViewModel(
         INavigationService navigationService,
         IResourceService resourceService,
-        ISettingsService settingsService,
+        ISettingsServiceExtended settingsService,
         IDialogService dialogService)
         : base(navigationService, resourceService, dialogService)
     {
@@ -30,32 +30,19 @@ public partial class RemoveEndpointSettingsPageViewModel : BaseSettingsViewModel
 
     protected override async void DeleteSettings()
     {
-            var result = await DialogService.ShowConfirmationDialogAsync(
-                ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Title"),
-                ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Message"),
-                ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Delete"),
-                ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Cancel"));
-        //var dialog = new ContentDialog
-        //{
-        //    Title = ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Title"),
-        //    Content = ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Message"),
-        //    PrimaryButtonText = ResourceService.GetString("Dialog_Delete"),
-        //    CloseButtonText = ResourceService.GetString("Dialog_Cancel"),
-        //    DefaultButton = ContentDialogButton.Close,
-        //    XamlRoot = App.MainWindow?.Content.XamlRoot
-        //};
-
-        //var result = await dialog.ShowAsync();
+        var result = await DialogService.ShowConfirmationDialogAsync(
+            ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Title"),
+            "Removing the endpoint will also clear your account data. Are you sure?",
+            ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Delete"),
+            ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Cancel"));
 
         if (result)
         {
-            DeleteAction();
-        }
-    }
+            System.Diagnostics.Debug.WriteLine("RemoveEndpointSettingsPageViewModel: Removing endpoint and cascading account data");
 
-    private void DeleteAction()
-    {
-        _settingsService.ServiceEndPoint = null;
-        NavigationService.NavigateTo(nameof(SplashPage), Services.NavigationService.FrameKeyMain, clearNavigation: true, navigateFullscreen: true);
+            // Clear the endpoint (this will CASCADE and also clear user account)
+            // Navigation will happen automatically via SettingsMonitorService
+            await _settingsService.ClearServiceEndpointAsync();
+        }
     }
 }

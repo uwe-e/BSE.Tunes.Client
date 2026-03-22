@@ -11,9 +11,15 @@ public interface INavigationService
 
     Frame? Frame { get; set; }
 
-    bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false);
+    /// <summary>
+    /// Navigates to the specified page within the shell frame (default).
+    /// </summary>
+    Task<bool> NavigateToAsync(string pageKey, object? parameter = null, bool clearNavigation = false);
 
-    bool NavigateTo(string pageKey, object? parameter = null, bool clearNavigation = false, bool navigateFullscreen = false);
+    /// <summary>
+    /// Navigates to the specified page within the specified frame.
+    /// </summary>
+    Task<bool> NavigateToAsync(string pageKey, string? frameKey, object? parameter = null, bool clearNavigation = false);
 
     bool GoBack();
 
