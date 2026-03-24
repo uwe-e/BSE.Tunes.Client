@@ -4,9 +4,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:BSE.Tunes.WinUI.Client.Views"
+    xmlns:uc="using:BSE.Tunes.WinUI.Client.Controls"
+xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
+behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
-        
-    </Grid>
+    <RefreshContainer x:Name="ContentArea">
+        <ScrollViewer>
+            <StackPanel>
+                <uc:AlbumsCarouselView Height="300"/>
+            </StackPanel>
+        </ScrollViewer>
+    </RefreshContainer>
 </Page>

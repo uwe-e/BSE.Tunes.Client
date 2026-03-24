@@ -16,11 +16,16 @@
     <DefaultLanguage>en</DefaultLanguage>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\AlbumsCarouselView.xaml" />
+    <None Remove="Controls\ItemsCarousel.xaml" />
     <None Remove="Views\EndpointConfigurationPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\PersonalizationSettingsPage.xaml" />
     <None Remove="Views\RemoveEndpointSettingsPage.xaml" />
     <None Remove="Views\RemoveLoginSettingsPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Controls\Carousel\Carousel.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -42,6 +47,18 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\AlbumsCarouselView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <None Update="Controls\Carousel\Carousel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <Page Update="Controls\ItemsCarousel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Controls\FeaturedItemsCarousel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\RemoveLoginSettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

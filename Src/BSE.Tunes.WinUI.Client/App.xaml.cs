@@ -9,7 +9,7 @@ using BSE.Tunes.WinUI.Client.Services;
 using BSE.Tunes.WinUI.Client.Services.Mappers.Profiles;
 using BSE.Tunes.WinUI.Client.ViewModels;
 using BSE.Tunes.WinUI.Client.Views;
-
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
@@ -61,6 +61,7 @@ public partial class App : Application
             // Other Activation Handlers
 
             // Services
+            services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
             services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddTransient<INavigationViewService, NavigationViewService>();
@@ -103,6 +104,8 @@ public partial class App : Application
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
+
+            services.AddTransient<AlbumsCarouselViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
