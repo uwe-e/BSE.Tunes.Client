@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 
 namespace BSE.Tunes.WinUI.Client.Controls
@@ -9,14 +7,14 @@ namespace BSE.Tunes.WinUI.Client.Controls
     {
         private bool _isArrowVisible = false;
         private bool _isArrowOver = false;
-
         private DispatcherTimer _fadeTimer = null;
 
-        #region Create/Dispose FadeTimer
         private void CreateFadeTimer()
         {
-            _fadeTimer = new DispatcherTimer();
-            _fadeTimer.Interval = TimeSpan.FromMilliseconds(1500);
+            _fadeTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(1500)
+            };
             _fadeTimer.Tick += OnFadeTimerTick;
         }
 
@@ -24,14 +22,9 @@ namespace BSE.Tunes.WinUI.Client.Controls
         {
             var fadeTimer = _fadeTimer;
             _fadeTimer = null;
-            if (fadeTimer != null)
-            {
-                fadeTimer.Stop();
-            }
+            fadeTimer?.Stop();
         }
-        #endregion
 
-        #region ArrowPointerEntered/ArrowPointerExited
         private void OnArrowPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             _isArrowOver = true;
@@ -41,9 +34,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         {
             _isArrowOver = false;
         }
-        #endregion
 
-        #region LeftClick/RightClick
         private void OnLeftClick(object sender, RoutedEventArgs e)
         {
             MoveBack();
@@ -53,8 +44,6 @@ namespace BSE.Tunes.WinUI.Client.Controls
         {
             MoveForward();
         }
-
-        #endregion
 
         private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {

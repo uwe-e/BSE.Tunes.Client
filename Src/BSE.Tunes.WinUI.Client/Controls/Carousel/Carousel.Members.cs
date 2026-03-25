@@ -1,9 +1,6 @@
-﻿using System;
-using System.Windows.Input;
-
+﻿using BSE.Tunes.WinUI.Client.Extensions;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-//using Windows.Foundation.Metadata;
+using System.Windows.Input;
 
 namespace BSE.Tunes.WinUI.Client.Controls
 {
@@ -11,7 +8,6 @@ namespace BSE.Tunes.WinUI.Client.Controls
     {
         private DispatcherTimer _slideTimer = null;
 
-        #region ItemsSource
         public object ItemsSource
         {
             get { return (object)GetValue(ItemsSourceProperty); }
@@ -19,9 +15,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(object), typeof(Carousel), new PropertyMetadata(null));
-        #endregion
 
-        #region SelectedIndex
         public int SelectedIndex
         {
             get { return (int)GetValue(SelectedIndexProperty); }
@@ -54,9 +48,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register("SelectedIndex", typeof(int), typeof(Carousel), new PropertyMetadata(-1, SelectedIndexChanged));
-        #endregion
 
-        #region Index
         public int Index
         {
             get { return (int)GetValue(IndexProperty); }
@@ -76,9 +68,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty IndexProperty = DependencyProperty.Register("Index", typeof(int), typeof(Carousel), new PropertyMetadata(0, IndexChanged));
-        #endregion
 
-        #region ContentTemplate
         public DataTemplate ContentTemplate
         {
             get { return (DataTemplate)GetValue(ContentTemplateProperty); }
@@ -86,9 +76,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty ContentTemplateProperty = DependencyProperty.Register("ContentTemplate", typeof(DataTemplate), typeof(Carousel), new PropertyMetadata(null));
-        #endregion
 
-        #region MaxItems
         public int MaxItems
         {
             get { return (int)GetValue(MaxItemsProperty); }
@@ -102,9 +90,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty MaxItemsProperty = DependencyProperty.Register("MaxItems", typeof(int), typeof(Carousel), new PropertyMetadata(3, MaxItemsChanged));
-        #endregion
 
-        #region AspectRatio
         public double AspectRatio
         {
             get { return (double)GetValue(AspectRatioProperty); }
@@ -118,9 +104,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty AspectRatioProperty = DependencyProperty.Register("AspectRatio", typeof(double), typeof(Carousel), new PropertyMetadata(1.6, AspectRatioChanged));
-        #endregion
 
-        #region GradientOpacity
         public double GradientOpacity
         {
             get { return (double)GetValue(GradientOpacityProperty); }
@@ -128,9 +112,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty GradientOpacityProperty = DependencyProperty.Register("GradientOpacity", typeof(double), typeof(Carousel), new PropertyMetadata(0.0));
-        #endregion
 
-        #region ArrowsVisibility
         public Visibility ArrowsVisibility
         {
             get { return (Visibility)GetValue(ArrowsVisibilityProperty); }
@@ -138,9 +120,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty ArrowsVisibilityProperty = DependencyProperty.Register("ArrowsVisibility", typeof(Visibility), typeof(Carousel), new PropertyMetadata(Visibility.Visible));
-        #endregion
 
-        #region ItemClickCommand
         public ICommand ItemClickCommand
         {
             get { return (ICommand)GetValue(ItemClickCommandProperty); }
@@ -148,9 +128,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty ItemClickCommandProperty = DependencyProperty.Register("ItemClickCommand", typeof(ICommand), typeof(Carousel), new PropertyMetadata(null));
-        #endregion
 
-        #region SlideInterval
         public double SlideInterval
         {
             get { return (double)GetValue(SlideIntervalProperty); }
@@ -164,7 +142,6 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty SlideIntervalProperty = DependencyProperty.Register("SlideInterval", typeof(double), typeof(Carousel), new PropertyMetadata(0.0, SlideIntervalChanged));
-        #endregion
 
         private void SetSlideInterval(double milliseconds)
         {
@@ -180,10 +157,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
             }
             else
             {
-                if (_slideTimer != null)
-                {
-                    _slideTimer.Stop();
-                }
+                _slideTimer?.Stop();
             }
         }
 
@@ -199,17 +173,5 @@ namespace BSE.Tunes.WinUI.Client.Controls
         {
             get { return _panel.ItemWidth; }
         }
-
-        // Obsolete
-        #region AlignmentX
-        //[Deprecated("AligmentX property will be removed in future versions.", DeprecationType.Deprecate, 65536)]
-        //public AlignmentX AlignmentX
-        //{
-        //    get { return (AlignmentX)GetValue(AlignmentXProperty); }
-        //    set { SetValue(AlignmentXProperty, value); }
-        //}
-
-        //public static readonly DependencyProperty AlignmentXProperty = DependencyProperty.Register("AlignmentX", typeof(AlignmentX), typeof(Carousel), new PropertyMetadata(AlignmentX.Left));
-        #endregion
     }
 }

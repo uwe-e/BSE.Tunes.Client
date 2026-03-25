@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.UI.Xaml.Input;
+﻿using Microsoft.UI.Xaml.Input;
 
 namespace BSE.Tunes.WinUI.Client.Controls
 {
@@ -8,7 +6,6 @@ namespace BSE.Tunes.WinUI.Client.Controls
     {
         private bool _isBusy = false;
 
-        #region Position
         public double Position
         {
             get { return _panel.GetTranslateX(); }
@@ -17,9 +14,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
                 _panel.TranslateX(value);
             }
         }
-        #endregion
 
-        #region Offset
         public double Offset
         {
             get
@@ -32,7 +27,6 @@ namespace BSE.Tunes.WinUI.Client.Controls
                 return -position;
             }
         }
-        #endregion
 
         private int _direction = 0;
 

@@ -15,7 +15,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private readonly IMessenger _messenger;
 
         [ObservableProperty]
-        private ObservableCollection<CarouselItem> _items = new();
+        private ObservableCollection<CarouselItem> _items = [];
 
         [ObservableProperty]
         private bool _isBusy;

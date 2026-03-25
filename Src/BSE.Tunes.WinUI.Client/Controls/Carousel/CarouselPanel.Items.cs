@@ -6,9 +6,8 @@ namespace BSE.Tunes.WinUI.Client.Controls
 {
     partial class CarouselPanel
     {
-        private List<object> _items = new List<object>();
+        private List<object> _items = [];
 
-        #region Index
         public int Index
         {
             get { return (int)GetValue(IndexProperty); }
@@ -18,13 +17,11 @@ namespace BSE.Tunes.WinUI.Client.Controls
         private static void IndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as CarouselPanel;
-            control.InvalidateMeasure();
+            control?.InvalidateMeasure();
         }
 
         public static readonly DependencyProperty IndexProperty = DependencyProperty.Register("Index", typeof(int), typeof(CarouselPanel), new PropertyMetadata(0, IndexChanged));
-        #endregion
 
-        #region ItemsSource
         public object ItemsSource
         {
             get { return (object)GetValue(ItemsSourceProperty); }
@@ -33,17 +30,19 @@ namespace BSE.Tunes.WinUI.Client.Controls
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!(e.NewValue is IEnumerable))
+            if (e.NewValue is not IEnumerable)
             {
                 throw new ArgumentException("ItemsSource");
             }
 
             var control = d as CarouselPanel;
+            if (control != null)
+            {
+                control.DetachNotificationEvents(e.OldValue as INotifyCollectionChanged);
+                control.AttachNotificationEvents(e.NewValue as INotifyCollectionChanged);
 
-            control.DetachNotificationEvents(e.OldValue as INotifyCollectionChanged);
-            control.AttachNotificationEvents(e.NewValue as INotifyCollectionChanged);
-
-            control.ItemsSourceChanged(e.NewValue as IEnumerable);
+                control.ItemsSourceChanged(e.NewValue as IEnumerable);
+            }
         }
 
         private void AttachNotificationEvents(INotifyCollectionChanged notifyCollection)
@@ -63,7 +62,6 @@ namespace BSE.Tunes.WinUI.Client.Controls
         }
 
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(object), typeof(CarouselPanel), new PropertyMetadata(null, ItemsSourceChanged));
-        #endregion
 
         internal List<object> Items
         {
