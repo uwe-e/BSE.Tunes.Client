@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using BSE.Tunes.MediaExtensions;
+using BSE.Tunes.Shared.Services.Services;
 using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
 using Microsoft.Extensions.Logging;
@@ -55,6 +56,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<ITimerService, TimerService>();
+                        container.RegisterSingleton<IFileSystemProvider, FileSystemProvider>();
                         container.RegisterSingleton<LocalProxyService>();
                         container.RegisterSingleton<IMapper>(containerProvider =>
                         {

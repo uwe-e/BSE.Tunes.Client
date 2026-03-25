@@ -1,11 +1,19 @@
-﻿namespace BSE.Tunes.Maui.Client.Services
+﻿using BSE.Tunes.Shared.Services.Services;
+
+namespace BSE.Tunes.Shared.Services
 {
     public class StorageService : IStorageService
     {
         private const string ImageFolderName = "img";
         private const string AudioFolderName = "audio";
         private const long MaxCacheSizeBytes = 5L * 1024 * 1024 * 1024; // 5GB
-        
+        private readonly IFileSystemProvider _fileSystemProvider;
+
+        public StorageService(IFileSystemProvider fileSystemProvider)
+        {
+            _fileSystemProvider = fileSystemProvider;
+        }
+
         public async Task<long> GetUsedCacheSizeAsync()
         {
             var audioCacheTask = GetAudioCacheSizeAsync();
@@ -32,7 +40,7 @@
 
         public string GetImageDirectory()
         {
-            var imageFolderPath = Path.Combine(FileSystem.CacheDirectory, ImageFolderName);
+            var imageFolderPath = Path.Combine(_fileSystemProvider.CacheDirectory, ImageFolderName);
             Directory.CreateDirectory(imageFolderPath);
             return imageFolderPath;
         }
@@ -64,7 +72,7 @@
 
         public string GetAudioDirectory()
         {
-            var audioFolderPath = Path.Combine(FileSystem.CacheDirectory, AudioFolderName);
+            var audioFolderPath = Path.Combine(_fileSystemProvider.CacheDirectory, AudioFolderName);
             Directory.CreateDirectory(audioFolderPath);
             return audioFolderPath;
         }

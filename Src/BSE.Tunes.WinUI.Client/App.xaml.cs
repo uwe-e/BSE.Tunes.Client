@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Shared.Services;
 using BSE.Tunes.Shared.Services.Abstractions;
 using BSE.Tunes.Shared.Services.Mappers;
+using BSE.Tunes.Shared.Services.Services;
 using BSE.Tunes.WinUI.Client.Activation;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Extensions;
@@ -72,6 +73,7 @@ public partial class App : Application
             services.AddSingleton<IDialogService, DialogService>();
             // Core Services
             services.AddSingleton<IFileService, FileService>();
+            services.AddSingleton<IFileSystemProvider, FileSystemProvider>();
 
             // Shared Services from BSE.Tunes.Shared.Services
             services.AddSingleton<IRequestService, RequestService>();

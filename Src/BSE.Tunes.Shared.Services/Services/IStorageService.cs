@@ -1,4 +1,4 @@
-﻿namespace BSE.Tunes.Maui.Client.Services
+﻿namespace BSE.Tunes.Shared.Services
 {
     public interface IStorageService
     {
