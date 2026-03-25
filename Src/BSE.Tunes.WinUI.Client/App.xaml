@@ -10,17 +10,27 @@
                 <ResourceDictionary Source="/Styles/FontSizes.xaml" />
                 <ResourceDictionary Source="/Styles/Thickness.xaml" />
                 <ResourceDictionary Source="/Styles/TextBlock.xaml" />
+
+                <ResourceDictionary Source="/Controls/Carousel/Carousel.xaml" />
+
+
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Value Converters -->
             <helpers:BoolNegationConverter x:Key="BoolNegationConverter"/>
             <helpers:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
-        <!-- Override the system style -->
+            <!-- Override the system style -->
             <Style x:Key="AppTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
-            <Setter Property="FontSize" Value="30"/>
-            <!-- Add your custom property overrides -->
-        </Style>
-        
+                <Setter Property="FontSize" Value="30"/>
+                <!-- Add your custom property overrides -->
+
+
+            </Style>
+            
+            <x:Double x:Key="NarrowMinWidth">0</x:Double>
+            <x:Double x:Key="NormalMinWidth">521</x:Double>
+            <x:Double x:Key="WideMinWidth">1200</x:Double>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

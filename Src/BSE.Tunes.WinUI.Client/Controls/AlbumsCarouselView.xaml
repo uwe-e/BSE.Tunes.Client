@@ -7,14 +7,83 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
+    xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <!-- Default Item Template -->
+        <DataTemplate x:Key="DefaultItemTemplate" x:DataType="models:CarouselItem">
+            <Grid >
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
+                        <VisualState x:Name="VisualStateNarrow">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Target="title.FontSize" Value="20"/>
+                                <Setter Target="subTitle.FontSize" Value="16"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="VisualStateNormal">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Target="title.FontSize" Value="24"/>
+                                <Setter Target="subTitle.FontSize" Value="18"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="VisualStateWide">
+                            <VisualState.StateTriggers>
+                                <AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Target="title.FontSize" Value="28"/>
+                                <Setter Target="subTitle.FontSize" Value="20"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <!-- Album Image -->
+                <Image Source="{x:Bind ImageSource, Mode=OneWay}"
+                   Stretch="UniformToFill"/>
+
+                <!-- Overlay with text -->
+                <Grid VerticalAlignment="Bottom"
+                  Background="#CC000000"
+                  Padding="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="title" Text="{x:Bind Title, Mode=OneWay}"
+                               Style="{ThemeResource BodyStrongTextBlockStyle}"
+                               Foreground="White"
+                               TextTrimming="CharacterEllipsis"
+                               TextAlignment="Center"/>
+                        <TextBlock x:Name="subTitle" Text="{x:Bind SubTitle, Mode=OneWay}"
+                               Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="#CCFFFFFF"
+                               TextTrimming="CharacterEllipsis"
+                               TextAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid>
-        <controls:ItemsCarousel ItemsSource="{x:Bind ViewModel.Items}"
+        <controls:Carousel x:Name="CarouselControl"
+                           ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+                           ContentTemplate="{StaticResource DefaultItemTemplate}"
+                           AspectRatio="1.1" MinHeight="160"
+                           MaxHeight="340"  GradientOpacity="0.5"/>
+
+        
+
+    <!--<controls:ItemsCarousel ItemsSource="{x:Bind ViewModel.Items}"
                                 ItemClickCommand="{x:Bind ViewModel.SelectItemCommand}"
                                 CarouselHeight="300" 
                                 AspectRatio="1.0"
-                                ItemSpacing="12"
-                                IsBusy="{x:Bind ViewModel.IsBusy, Mode=OneWay}"/>
+                                ItemSpacing="2"
+                                IsBusy="{x:Bind ViewModel.IsBusy, Mode=OneWay}"/>-->
     </Grid>
 </UserControl>

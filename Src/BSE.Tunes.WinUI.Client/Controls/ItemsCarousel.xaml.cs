@@ -1,8 +1,8 @@
-using BSE.Tunes.WinUI.Client.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System.Windows.Input;
+using BSE.Tunes.WinUI.Client.Models;
 
 namespace BSE.Tunes.WinUI.Client.Controls;
 
@@ -70,6 +70,29 @@ public sealed partial class ItemsCarousel : UserControl
     private void UpdateEffectiveItemTemplate()
     {
         EffectiveItemTemplate = ItemTemplate ?? (DataTemplate)Resources["DefaultItemTemplate"];
+    }
+    #endregion
+
+    #region SelectedItem
+    public object? SelectedItem
+    {
+        get => GetValue(SelectedItemProperty);
+        set => SetValue(SelectedItemProperty, value);
+    }
+
+    public static readonly DependencyProperty SelectedItemProperty =
+        DependencyProperty.Register(
+            nameof(SelectedItem),
+            typeof(object),
+            typeof(ItemsCarousel),
+            new PropertyMetadata(null, OnSelectedItemChanged));
+
+    private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is ItemsCarousel control)
+        {
+            control.ItemSelected?.Invoke(control, new ItemSelectedEventArgs(e.NewValue));
+        }
     }
     #endregion
 
@@ -218,31 +241,74 @@ public sealed partial class ItemsCarousel : UserControl
     {
         ShowLoadingIndicator = IsBusy ? Visibility.Visible : Visibility.Collapsed;
     }
+    #endregion
 
-    private void OnItemClick(object sender, ItemClickEventArgs e)
+    #region Events
+
+    public event EventHandler<ItemSelectedEventArgs>? ItemSelected;
+    public event EventHandler<ItemClickEventArgs>? ItemClick;
+
+    #endregion
+
+    #region Event Handlers
+
+    private void OnItemsRepeaterElementPrepared(ItemsRepeater sender, ItemsRepeaterElementPreparedEventArgs e)
     {
-        if (e.ClickedItem is CarouselItem item)
+        if (e.Element is FrameworkElement element)
         {
-            ItemClickCommand?.Execute(item);
+            element.Tapped -= OnItemTapped;
+            element.Tapped += OnItemTapped;
         }
     }
 
-    //private void OnItemsRepeaterElementPrepared(object sender, ItemsRepeaterElementPreparedEventArgs e)
-    //{
-    //    if (e.Element is FrameworkElement element)
-    //    {
-    //        element.Tapped -= OnItemsRepeaterElementTapped;
-    //        element.Tapped += OnItemsRepeaterElementTapped;
-    //    }
-    //}
+    private void OnItemTapped(object sender, TappedRoutedEventArgs e)
+    {
+        // Check if we're in dragging mode from the ScrollViewer
+        if (Behaviors.ScrollViewerDragBehavior.GetIsDragging(ScrollViewerControl))
+        {
+            return; // Ignore taps during drag
+        }
 
-    //private void OnItemsRepeaterElementTapped(object sender, TappedRoutedEventArgs e)
-    //{
-    //    if (sender is FrameworkElement element && element.DataContext is CarouselItem item)
-    //    {
-    //        ItemClickCommand?.Execute(item);
-    //        //ItemClick?.Invoke(this, new ItemClickEventArgs(item));
-    //    }
-    //}
+        if (sender is FrameworkElement element && element.DataContext is CarouselItem item)
+        {
+            // Update selected item
+            SelectedItem = item;
+
+            // Raise click event
+            var clickArgs = new ItemClickEventArgs(item);
+            ItemClick?.Invoke(this, clickArgs);
+
+            // Execute command
+            if (ItemClickCommand?.CanExecute(item) == true)
+            {
+                ItemClickCommand.Execute(item);
+            }
+        }
+    }
+
     #endregion
 }
+
+#region Event Arguments
+
+public class ItemSelectedEventArgs : EventArgs
+{
+    public object? SelectedItem { get; }
+
+    public ItemSelectedEventArgs(object? selectedItem)
+    {
+        SelectedItem = selectedItem;
+    }
+}
+
+public class ItemClickEventArgs : EventArgs
+{
+    public CarouselItem ClickedItem { get; }
+
+    public ItemClickEventArgs(CarouselItem clickedItem)
+    {
+        ClickedItem = clickedItem ?? throw new ArgumentNullException(nameof(clickedItem));
+    }
+}
+
+#endregion

@@ -4,18 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
     xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
+    xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
     mc:Ignorable="d">
 
     <UserControl.Resources>
         <!-- Default Item Template -->
         <DataTemplate x:Key="DefaultItemTemplate" x:DataType="models:CarouselItem">
-            <!--<ItemContainer IsSelected="False"
-                           ManipulationMode="System">-->
             <Grid CornerRadius="8" 
-Width="{Binding ItemWidth, ElementName=RootControl}"
-                Height="{Binding ItemHeight, ElementName=RootControl}"
+                  Width="{Binding ItemWidth, ElementName=RootControl}"
+                  Height="{Binding ItemHeight, ElementName=RootControl}"
                   Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
 
                 <!-- Item Image -->
@@ -39,91 +37,28 @@ Width="{Binding ItemWidth, ElementName=RootControl}"
                                    TextAlignment="Center"/>
                     </StackPanel>
                 </Grid>
-
-                <!-- Interaction Button -->
-                <!--<Button Background="Transparent"
-                        BorderThickness="0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        CornerRadius="8"
-                        Command="{Binding ItemClickCommand, ElementName=RootControl}"
-                        CommandParameter="{x:Bind}"/>-->
             </Grid>
-            <!--</ItemContainer>-->
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid x:Name="RootControl">
-
-        <ScrollViewer HorizontalScrollBarVisibility="Auto"
-              VerticalScrollBarVisibility="Disabled"
-              HorizontalScrollMode="Enabled"
-              VerticalScrollMode="Disabled"
-              behaviors:ScrollViewerDragBehavior.IsEnabled="True">
-
-            <ItemsRepeater x:Name="ItemsRepeaterControl"
-                  ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-                  ItemTemplate="{x:Bind EffectiveItemTemplate, Mode=OneWay}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Horizontal" 
-                        Spacing="{x:Bind ItemSpacing, Mode=OneWay}"/>
-                </ItemsRepeater.Layout>
-            </ItemsRepeater>
-        </ScrollViewer>
-        <!--<ScrollViewer HorizontalScrollBarVisibility="Auto"
+        <ScrollViewer x:Name="ScrollViewerControl"
+                      HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Disabled"
                       HorizontalScrollMode="Enabled"
-                      VerticalScrollMode="Disabled">-->
+                      VerticalScrollMode="Disabled"
+                      behaviors:ScrollViewerDragBehavior.IsEnabled="True">
 
-        <!--<ListView x:Name="ItemsRepeaterControl"
-              ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-              ItemTemplate="{x:Bind EffectiveItemTemplate, Mode=OneWay}"
-              SelectionMode="None"
-              IsItemClickEnabled="True"
-              ItemClick="OnItemClick"
-              ScrollViewer.HorizontalScrollBarVisibility="Auto"
-              ScrollViewer.VerticalScrollBarVisibility="Disabled"
-              ScrollViewer.HorizontalScrollMode="Enabled"
-              ScrollViewer.VerticalScrollMode="Disabled">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" 
-                           Spacing="{Binding ItemSpacing, ElementName=RootControl}"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Padding" Value="0"/>
-                    <Setter Property="Margin" Value="0"/>
-                    <Setter Property="MinWidth" Value="0"/>
-                    <Setter Property="MinHeight" Value="0"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>-->
-
-        <!--<ItemsView x:Name="ItemsRepeaterControl"
-                       ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-                       ItemTemplate="{x:Bind EffectiveItemTemplate, Mode=OneWay}"
-                       SelectionMode="None"
-                       ItemInvoked="OnItemInvoked"
-                       Loaded="OnItemsViewLoaded">
-                <ItemsView.Layout>
-                    <StackLayout Orientation="Horizontal" 
-                                 Spacing="{x:Bind ItemSpacing, Mode=OneWay}"/>
-                </ItemsView.Layout>
-            </ItemsView>-->
-            <!--IsTapEnabled="True" Tapped="OnItemsRepeaterElementTapped"
-                           ElementPrepared="OnItemsRepeaterElementPrepared" -->
-            <!--<ItemsRepeater x:Name="ItemsRepeaterControl"
+            <ItemsRepeater x:Name="ItemsRepeaterControl"
                           ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                           ItemTemplate="{x:Bind EffectiveItemTemplate, Mode=OneWay}"
-                          >
+                          ElementPrepared="OnItemsRepeaterElementPrepared">
                 <ItemsRepeater.Layout>
                     <StackLayout Orientation="Horizontal" 
                                 Spacing="{x:Bind ItemSpacing, Mode=OneWay}"/>
                 </ItemsRepeater.Layout>
-            </ItemsRepeater>-->
-        <!--</ScrollViewer>-->
+            </ItemsRepeater>
+        </ScrollViewer>
 
         <!-- Loading Indicator -->
         <Grid Visibility="{x:Bind ShowLoadingIndicator, Mode=OneWay}"

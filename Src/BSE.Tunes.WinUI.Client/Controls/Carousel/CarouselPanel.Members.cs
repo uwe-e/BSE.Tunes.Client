@@ -7,7 +7,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
 {
     partial class CarouselPanel
     {
-        public event EventHandler<IntEventArgs> SelectedIndexChanged;
+        public event EventHandler<IntEventArgs>? SelectedIndexChanged;
 
         #region ItemTemplate
         public DataTemplate ItemTemplate

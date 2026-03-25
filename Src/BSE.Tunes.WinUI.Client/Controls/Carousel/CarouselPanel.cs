@@ -30,11 +30,14 @@ namespace BSE.Tunes.WinUI.Client.Controls
                     var pane = base.Children[paneIndex] as ContentControl;
 
                     int itemIndex = (index + n - leftCount).Mod(itemCount);
-                    pane.ContentTemplate = this.ItemTemplate;
-                    pane.Content = _items[itemIndex];
-                    pane.Tag = itemIndex;
+                    if (pane != null && this.ItemTemplate != null)
+                    {
+                        pane.ContentTemplate = this.ItemTemplate;
+                        pane.Content = _items[itemIndex];
+                        pane.Tag = itemIndex;
 
-                    pane.Measure(new Size(this.ItemWidth, this.ItemHeight));
+                        pane.Measure(new Size(this.ItemWidth, this.ItemHeight));
+                    }
                 }
 
                 return availableSize;
@@ -68,12 +71,20 @@ namespace BSE.Tunes.WinUI.Client.Controls
                 return new Size(0, finalSize.Height);
             }
             return base.ArrangeOverride(finalSize);
-        }
+        }   
 
         #region ArrangePanes
         private void ArrangePanes(double availableWidth)
         {
-            double visibleWidth = Math.Min(Window.Current.Bounds.Width, availableWidth);
+            double visibleWidth = availableWidth;
+            
+            // In WinUI 3, use XamlRoot to get the window
+            if (this.XamlRoot != null)
+            {
+                var windowBounds = this.XamlRoot.Size;
+                visibleWidth = Math.Min(windowBounds.Width, availableWidth);
+            }
+            
             double viewportWidth = visibleWidth + 2 * this.ItemWidth;
 
             int visibleItems = (int)Math.Ceiling(viewportWidth / this.ItemWidth);
@@ -112,5 +123,7 @@ namespace BSE.Tunes.WinUI.Client.Controls
             return pane;
         }
         #endregion
+
+        
     }
 }

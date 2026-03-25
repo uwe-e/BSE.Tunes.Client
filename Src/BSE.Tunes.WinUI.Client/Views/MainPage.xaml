@@ -6,15 +6,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:BSE.Tunes.WinUI.Client.Views"
     xmlns:uc="using:BSE.Tunes.WinUI.Client.Controls"
-xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
-behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
+    xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
+    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d">
 
-    <RefreshContainer x:Name="ContentArea">
-        <ScrollViewer>
-            <StackPanel>
-                <uc:AlbumsCarouselView Height="300"/>
-            </StackPanel>
+    <RefreshContainer x:Name="ContentArea" Margin="-56, -24, -56, 0">
+        <ScrollViewer Padding="0">
+            <RelativePanel x:Name="hubContainer" EntranceNavigationTransitionInfo.IsTargetElement="True"
+                           RelativePanel.AlignTopWithPanel="True"
+                           RelativePanel.AlignLeftWithPanel="True"
+                           RelativePanel.AlignRightWithPanel="True">
+                <Grid x:Name="flipView" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" >
+                    <uc:AlbumsCarouselView/>
+                </Grid>
+            </RelativePanel>
         </ScrollViewer>
     </RefreshContainer>
 </Page>

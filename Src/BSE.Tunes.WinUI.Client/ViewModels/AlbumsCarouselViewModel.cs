@@ -51,7 +51,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
             try
             {
-                IList<Album> albums = await _dataService.GetFeaturedAlbums(6);
+                IList<Album> albums = await _dataService.GetFeaturedAlbums(10);
                 if (albums != null)
                 {
                     foreach (var album in albums)
