@@ -199,7 +199,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     });
 
                     await _dataService.AppendToPlaylist(playlistTo.Id, [track.Id]);
-                    await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
+                    await _imageService.RemoveComposedBitmaps(playlistTo.Id);
 
                     managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
                     _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);

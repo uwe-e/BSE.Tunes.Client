@@ -263,7 +263,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 {
                     await Task.WhenAll(
                         _dataService.AppendToPlaylist(playlistTo.Id, trackIds),
-                        _imageService.RemoveStitchedBitmaps(playlistTo.Id));
+                        _imageService.RemoveComposedBitmaps(playlistTo.Id));
 
                     managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
                     _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);

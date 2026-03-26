@@ -117,7 +117,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
             if (shouldUpdateImage || isTargetPlaylist)
             {
-                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(Playlist.Id, playlist.CoverAlbumIds);
+                ImageSource = await _imageService.GetComposedBitmapSourceAsync(Playlist.Id, playlist.CoverAlbumIds);
 
                 if (isTargetPlaylist)
                 {
@@ -148,7 +148,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     IsBusy = false;
                     
                     // Start both tasks concurrently
-                    var imageTask = _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds);
+                    var imageTask = _imageService.GetComposedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds);
                     var entriesTask = FetchPlaylistEntriesAsync(playlist.Id);
                     
                     // Await both tasks
@@ -238,7 +238,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     }
                 }
 
-                await _imageService.RemoveStitchedBitmaps(playlistId);
+                await _imageService.RemoveComposedBitmaps(playlistId);
 
                 context.ActionMode = PlaylistActionMode.PlaylistUpdated;
                 _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(context);

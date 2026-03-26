@@ -47,7 +47,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         }
         
-        public async Task<string> GetStitchedBitmapSourceAsync(int playlistId, IList<string> albumCoverIds, int width = 300, bool asThumbnail = false)
+        public async Task<string> GetComposedBitmapSourceAsync(int playlistId, IList<string> albumCoverIds, int width = 300, bool asThumbnail = false)
         {
             if (playlistId <= 0)
             {
@@ -231,7 +231,7 @@ namespace BSE.Tunes.Maui.Client.Services
             return _dataService.GetAlbumCoverUriById(id, asThumbnail);
         }
 
-        public async Task RemoveStitchedBitmaps(int playlistId)
+        public async Task RemoveComposedBitmaps(int playlistId)
         {
             string searchPattern = $"{playlistId}_*.png";
             // should clear the ffimageloading cache when a playlist changed

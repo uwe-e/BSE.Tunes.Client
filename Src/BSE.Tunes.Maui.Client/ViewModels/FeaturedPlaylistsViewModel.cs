@@ -119,7 +119,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task<GridPanel> CreateGridPanelAsync(Playlist playlist, string resourceString, CancellationToken cancellationToken)
         {
-            var imageSource = await _imageService.GetStitchedBitmapSourceAsync(
+            var imageSource = await _imageService.GetComposedBitmapSourceAsync(
                 playlist.Id,
                 playlist.CoverAlbumIds);
 

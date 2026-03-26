@@ -182,7 +182,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             {
                                 Title = playlist.Name,
                                 SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("PlaylistItem_PartNumberOfEntries")}",
-                                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, asThumbnail: true),
+                                ImageSource = await _imageService.GetComposedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, asThumbnail: true),
                                 Data = playlist
                             });
                         }
