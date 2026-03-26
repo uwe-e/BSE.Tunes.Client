@@ -75,9 +75,12 @@ public partial class App : Application
             services.AddSingleton<IFileService, FileService>();
             services.AddSingleton<IFileSystemProvider, FileSystemProvider>();
 
+
+
             // Shared Services from BSE.Tunes.Shared.Services
             services.AddSingleton<IRequestService, RequestService>();
-            //services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddSingleton<IImageService, ImageService>();
+            services.AddSingleton<IStorageService, StorageService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<IMapper>(mapper =>

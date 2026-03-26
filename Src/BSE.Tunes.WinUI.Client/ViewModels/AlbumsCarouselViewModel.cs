@@ -11,7 +11,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
     public partial class AlbumsCarouselViewModel : ObservableObject
     {
         private readonly IDataService _dataService;
-        //private readonly IImageService _imageService;
+        private readonly IImageService _imageService;
         private readonly IMessenger _messenger;
 
         [ObservableProperty]
@@ -22,11 +22,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         public AlbumsCarouselViewModel(
             IDataService dataService,
-            //IImageService imageService,
+            IImageService imageService,
             IMessenger messenger)
         {
             _dataService = dataService;
-            //_imageService = imageService;
+            _imageService = imageService;
             _messenger = messenger;
 
             LoadData();
@@ -62,7 +62,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                             {
                                 Title = album.Title ?? string.Empty,
                                 SubTitle = album.Artist?.Name ?? string.Empty,
-                                ImageSource = _dataService.GetAlbumCoverUriById(album.AlbumId, false).ToString(),//_imageService.GetBitmapSource(album.AlbumId, false),
+                                ImageSource = _imageService.GetBitmapSource(album.AlbumId, false),
+                                //ImageSource = _dataService.GetAlbumCoverUriById(album.AlbumId, false).ToString(),//_imageService.GetBitmapSource(album.AlbumId, false),
                                 Data = album
                             });
                         }
