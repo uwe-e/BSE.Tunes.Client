@@ -51,7 +51,7 @@
 
                 <!-- Overlay with text -->
                 <Grid VerticalAlignment="Bottom"
-                  Background="#CC000000"
+                  Background="#99000000"
                   Padding="12">
                     <StackPanel Spacing="4">
                         <TextBlock x:Name="title" Text="{x:Bind Title, Mode=OneWay}"

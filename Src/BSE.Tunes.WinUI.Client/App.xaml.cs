@@ -111,6 +111,7 @@ public partial class App : Application
             services.AddTransient<ShellViewModel>();
 
             services.AddTransient<AlbumsCarouselViewModel>();
+            services.AddTransient<FeaturedAlbumsViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

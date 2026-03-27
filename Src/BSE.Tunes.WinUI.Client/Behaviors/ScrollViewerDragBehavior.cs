@@ -6,9 +6,6 @@ namespace BSE.Tunes.WinUI.Client.Behaviors;
 
 public static class ScrollViewerDragBehavior
 {
-    private static bool _isDragging;
-    private static double _startHorizontalOffset;
-    private static double _startX;
     private const double DragThreshold = 5.0; // Minimum pixels to consider it a drag
 
     #region IsEnabled Attached Property
@@ -33,11 +30,14 @@ public static class ScrollViewerDragBehavior
             if ((bool)e.NewValue)
             {
                 scrollViewer.Loaded += OnScrollViewerLoaded;
+                scrollViewer.Unloaded += OnScrollViewerUnloaded;
             }
             else
             {
                 scrollViewer.Loaded -= OnScrollViewerLoaded;
+                scrollViewer.Unloaded -= OnScrollViewerUnloaded;
                 DetachEvents(scrollViewer);
+                ClearDragState(scrollViewer);
             }
         }
     }
@@ -61,6 +61,49 @@ public static class ScrollViewerDragBehavior
 
     #endregion
 
+    #region Private State Attached Properties
+
+    private static bool GetIsPointerPressed(DependencyObject obj)
+        => (bool)obj.GetValue(IsPointerPressedProperty);
+
+    private static void SetIsPointerPressed(DependencyObject obj, bool value)
+        => obj.SetValue(IsPointerPressedProperty, value);
+
+    private static readonly DependencyProperty IsPointerPressedProperty =
+        DependencyProperty.RegisterAttached(
+            "IsPointerPressed",
+            typeof(bool),
+            typeof(ScrollViewerDragBehavior),
+            new PropertyMetadata(false));
+
+    private static double GetStartX(DependencyObject obj)
+        => (double)obj.GetValue(StartXProperty);
+
+    private static void SetStartX(DependencyObject obj, double value)
+        => obj.SetValue(StartXProperty, value);
+
+    private static readonly DependencyProperty StartXProperty =
+        DependencyProperty.RegisterAttached(
+            "StartX",
+            typeof(double),
+            typeof(ScrollViewerDragBehavior),
+            new PropertyMetadata(0.0));
+
+    private static double GetStartHorizontalOffset(DependencyObject obj)
+        => (double)obj.GetValue(StartHorizontalOffsetProperty);
+
+    private static void SetStartHorizontalOffset(DependencyObject obj, double value)
+        => obj.SetValue(StartHorizontalOffsetProperty, value);
+
+    private static readonly DependencyProperty StartHorizontalOffsetProperty =
+        DependencyProperty.RegisterAttached(
+            "StartHorizontalOffset",
+            typeof(double),
+            typeof(ScrollViewerDragBehavior),
+            new PropertyMetadata(0.0));
+
+    #endregion
+
     #region Event Handlers
 
     private static void OnScrollViewerLoaded(object sender, RoutedEventArgs e)
@@ -71,13 +114,23 @@ public static class ScrollViewerDragBehavior
         }
     }
 
+    private static void OnScrollViewerUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+        {
+            DetachEvents(scrollViewer);
+            ClearDragState(scrollViewer);
+        }
+    }
+
     private static void AttachEvents(ScrollViewer scrollViewer)
     {
         scrollViewer.PointerPressed += OnPointerPressed;
         scrollViewer.PointerMoved += OnPointerMoved;
         scrollViewer.PointerReleased += OnPointerReleased;
-        scrollViewer.PointerCanceled += OnPointerReleased;
-        scrollViewer.PointerCaptureLost += OnPointerReleased;
+        scrollViewer.PointerCanceled += OnPointerCanceled;
+        scrollViewer.PointerCaptureLost += OnPointerCaptureLost;
+        scrollViewer.PointerExited += OnPointerExited;
     }
 
     private static void DetachEvents(ScrollViewer scrollViewer)
@@ -85,8 +138,9 @@ public static class ScrollViewerDragBehavior
         scrollViewer.PointerPressed -= OnPointerPressed;
         scrollViewer.PointerMoved -= OnPointerMoved;
         scrollViewer.PointerReleased -= OnPointerReleased;
-        scrollViewer.PointerCanceled -= OnPointerReleased;
-        scrollViewer.PointerCaptureLost -= OnPointerReleased;
+        scrollViewer.PointerCanceled -= OnPointerCanceled;
+        scrollViewer.PointerCaptureLost -= OnPointerCaptureLost;
+        scrollViewer.PointerExited -= OnPointerExited;
     }
 
     private static void OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -97,11 +151,12 @@ public static class ScrollViewerDragBehavior
 
         if (point.Properties.IsLeftButtonPressed)
         {
-            _isDragging = false; // Not dragging yet until threshold is met
-            _startX = point.Position.X;
-            _startHorizontalOffset = scrollViewer.HorizontalOffset;
-            scrollViewer.CapturePointer(e.Pointer);
+            SetIsPointerPressed(scrollViewer, true);
             SetIsDragging(scrollViewer, false);
+            SetStartX(scrollViewer, point.Position.X);
+            SetStartHorizontalOffset(scrollViewer, scrollViewer.HorizontalOffset);
+            
+            scrollViewer.CapturePointer(e.Pointer);
             // Don't mark as handled yet - allow click events to process
         }
     }
@@ -109,38 +164,76 @@ public static class ScrollViewerDragBehavior
     private static void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
         if (sender is not ScrollViewer scrollViewer) return;
+        if (!GetIsPointerPressed(scrollViewer)) return;
 
         var point = e.GetCurrentPoint(scrollViewer);
-        var deltaX = _startX - point.Position.X;
+        var startX = GetStartX(scrollViewer);
+        var deltaX = startX - point.Position.X;
+        var isDragging = GetIsDragging(scrollViewer);
 
         // Only start dragging if we've moved beyond the threshold
-        if (!_isDragging && System.Math.Abs(deltaX) > DragThreshold)
+        if (!isDragging && System.Math.Abs(deltaX) > DragThreshold)
         {
-            _isDragging = true;
             SetIsDragging(scrollViewer, true);
+            isDragging = true;
         }
 
-        if (_isDragging)
+        if (isDragging)
         {
-            scrollViewer.ChangeView(_startHorizontalOffset + deltaX, null, null, true);
+            var startOffset = GetStartHorizontalOffset(scrollViewer);
+            scrollViewer.ChangeView(startOffset + deltaX, null, null, true);
             e.Handled = true;
         }
     }
 
     private static void OnPointerReleased(object sender, PointerRoutedEventArgs e)
     {
+        if (sender is not ScrollViewer scrollViewer) return;
+
+        var wasDragging = GetIsDragging(scrollViewer);
+        ResetDragState(scrollViewer, e);
+
+        if (wasDragging)
+        {
+            e.Handled = true; // Prevent click if we were dragging
+        }
+    }
+
+    private static void OnPointerCanceled(object sender, PointerRoutedEventArgs e)
+    {
         if (sender is ScrollViewer scrollViewer)
         {
-            var wasDragging = _isDragging;
-            _isDragging = false;
-            SetIsDragging(scrollViewer, false);
-            scrollViewer.ReleasePointerCaptures();
-            
-            if (wasDragging)
-            {
-                e.Handled = true; // Prevent click if we were dragging
-            }
+            ResetDragState(scrollViewer, e);
         }
+    }
+
+    private static void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+        {
+            ResetDragState(scrollViewer, e);
+        }
+    }
+
+    private static void OnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        // Don't reset on exit - user might drag back in
+        // Only reset when pointer is actually released or canceled
+    }
+
+    private static void ResetDragState(ScrollViewer scrollViewer, PointerRoutedEventArgs e)
+    {
+        SetIsPointerPressed(scrollViewer, false);
+        SetIsDragging(scrollViewer, false);
+        scrollViewer.ReleasePointerCaptures();
+    }
+
+    private static void ClearDragState(ScrollViewer scrollViewer)
+    {
+        SetIsPointerPressed(scrollViewer, false);
+        SetIsDragging(scrollViewer, false);
+        SetStartX(scrollViewer, 0.0);
+        SetStartHorizontalOffset(scrollViewer, 0.0);
     }
 
     #endregion

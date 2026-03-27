@@ -55,7 +55,7 @@
     <Page Update="Controls\ItemsCarousel.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Controls\FeaturedItemsCarousel.xaml">
+    <Page Update="Controls\FeaturedAlbumsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Update="Views\RemoveLoginSettingsPage.xaml">

@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System.Windows.Input;
+using System.Collections;
 using BSE.Tunes.WinUI.Client.Models;
 
 namespace BSE.Tunes.WinUI.Client.Controls;
@@ -256,9 +257,62 @@ public sealed partial class ItemsCarousel : UserControl
     {
         if (e.Element is FrameworkElement element)
         {
+            // Get the item from ItemsSource using the index
+            var item = GetItemAtIndex(e.Index);
+            
+            if (item != null)
+            {
+                // Set DataContext for the element (works with any template)
+                element.DataContext = item;
+                
+                // Store the item in Tag as backup
+                element.Tag = item;
+            }
+            
+            // Attach tap handler
             element.Tapped -= OnItemTapped;
             element.Tapped += OnItemTapped;
         }
+    }
+
+    private object? GetItemAtIndex(int index)
+    {
+        if (ItemsSource == null || index < 0)
+        {
+            return null;
+        }
+
+        // Handle IList (most common)
+        if (ItemsSource is IList list)
+        {
+            return index < list.Count ? list[index] : null;
+        }
+
+        // Handle IEnumerable
+        if (ItemsSource is IEnumerable enumerable)
+        {
+            var enumerator = enumerable.GetEnumerator();
+            try
+            {
+                for (int i = 0; i <= index; i++)
+                {
+                    if (!enumerator.MoveNext())
+                    {
+                        return null;
+                    }
+                }
+                return enumerator.Current;
+            }
+            finally
+            {
+                if (enumerator is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+        }
+
+        return null;
     }
 
     private void OnItemTapped(object sender, TappedRoutedEventArgs e)
@@ -269,20 +323,33 @@ public sealed partial class ItemsCarousel : UserControl
             return; // Ignore taps during drag
         }
 
-        if (sender is FrameworkElement element && element.DataContext is CarouselItem item)
+        if (sender is not FrameworkElement element)
+        {
+            return;
+        }
+
+        // Try to get item from DataContext first, then fallback to Tag
+        var item = element.DataContext ?? element.Tag;
+
+        if (item != null)
         {
             // Update selected item
             SelectedItem = item;
 
-            // Raise click event
-            var clickArgs = new ItemClickEventArgs(item);
-            ItemClick?.Invoke(this, clickArgs);
+            // Raise click event only if it's a CarouselItem
+            if (item is CarouselItem carouselItem)
+            {
+                var clickArgs = new ItemClickEventArgs(carouselItem);
+                ItemClick?.Invoke(this, clickArgs);
+            }
 
-            // Execute command
+            // Execute command with the actual item
             if (ItemClickCommand?.CanExecute(item) == true)
             {
                 ItemClickCommand.Execute(item);
             }
+
+            e.Handled = true;
         }
     }
 

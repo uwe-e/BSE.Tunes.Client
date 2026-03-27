@@ -6,13 +6,13 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace BSE.Tunes.WinUI.Client.Controls
 {
-    public sealed partial class AlbumsCarouselView : UserControl
+    public sealed partial class FeaturedAlbumsView : UserControl
     {
-        public AlbumsCarouselViewModel ViewModel { get; }
-
-        public AlbumsCarouselView()
+        public FeaturedAlbumsViewModel ViewModel { get; }
+        
+        public FeaturedAlbumsView()
         {
-            ViewModel = App.GetService<AlbumsCarouselViewModel>();
+            ViewModel = App.GetService<FeaturedAlbumsViewModel>();
             InitializeComponent();
         }
     }
