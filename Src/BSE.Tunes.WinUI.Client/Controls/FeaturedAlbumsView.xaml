@@ -29,6 +29,7 @@
     <Grid>
         <controls:ItemsCarousel ItemsSource="{x:Bind ViewModel.Items}"
                                 ItemClickCommand="{x:Bind ViewModel.SelectItemCommand}"
+                                HorizontalScrollBarVisibility="Hidden"
                                 ItemTemplate="{StaticResource SmallImagePanelTemplate}"/>
 
     </Grid>

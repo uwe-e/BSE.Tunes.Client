@@ -43,7 +43,7 @@
 
     <Grid x:Name="RootControl">
         <ScrollViewer x:Name="ScrollViewerControl"
-                      HorizontalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="{x:Bind HorizontalScrollBarVisibility, Mode=OneWay}"
                       VerticalScrollBarVisibility="Disabled"
                       HorizontalScrollMode="Enabled"
                       VerticalScrollMode="Disabled"

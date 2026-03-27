@@ -16,6 +16,19 @@ public sealed partial class ItemsCarousel : UserControl
         UpdateItemDimensions();
     }
 
+    public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty =
+    DependencyProperty.Register(
+        nameof(HorizontalScrollBarVisibility),
+        typeof(ScrollBarVisibility),
+        typeof(ItemsCarousel),
+        new PropertyMetadata(ScrollBarVisibility.Auto));
+
+    public ScrollBarVisibility HorizontalScrollBarVisibility
+    {
+        get => (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty);
+        set => SetValue(HorizontalScrollBarVisibilityProperty, value);
+    }
+
     #region ItemsSource
     public object ItemsSource
     {
