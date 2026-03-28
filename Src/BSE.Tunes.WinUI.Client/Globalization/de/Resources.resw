@@ -171,4 +171,40 @@
   <data name="RemoveLoginSettingsPage_Dialog_Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="ShellPage_Main.Content" xml:space="preserve">
+    <value>Startseite</value>
+  </data>
+  <data name="ShellPage_Header_Title.Text" xml:space="preserve">
+    <value>BSEtunes</value>
+  </data>
+  <data name="EndpointConfigurationPage_Title.Text" xml:space="preserve">
+    <value>Webserver-Adresse</value>
+  </data>
+  <data name="EndpointConfigurationPage_Description.Text" xml:space="preserve">
+    <value>Trage hier die Adresse deines aktuellen BSEtunes-Services ein:</value>
+  </data>
+  <data name="EndpointConfigurationPage_ServiceEndPointTextBox.PlaceholderText" xml:space="preserve">
+    <value>https://example.com</value>
+  </data>
+  <data name="EndpointConfigurationPage_ConnectButton_Text.Text" xml:space="preserve">
+    <value>Verbinden</value>
+  </data>
+  <data name="LoginPage_Title.Text" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="LoginPage_UserNameTextBox.Header" xml:space="preserve">
+    <value>Namen des Benutzers</value>
+  </data>
+  <data name="LoginPage_UserNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Trage deinen Benutzernamen ein</value>
+  </data>
+  <data name="LoginPage_PasswordBox.Header" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="LoginPage_PasswordBox.PlaceholderText" xml:space="preserve">
+    <value>Trage dein Passwort ein</value>
+  </data>
+  <data name="LoginPage_SignInButton_Text.Text" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
 </root>

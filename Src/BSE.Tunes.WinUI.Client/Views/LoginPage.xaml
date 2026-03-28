@@ -8,28 +8,23 @@
 
   <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
-                MaxWidth="400" Spacing="16" Padding="24">
+                Width="440" Spacing="16" Padding="24">
 
-      <TextBlock Text="Login"
+      <TextBlock x:Uid="LoginPage_Title" Text="Login"
                  FontSize="28"
                  FontWeight="SemiBold"
-                 HorizontalAlignment="Center"
                  Margin="0,0,0,16"/>
-      <!--IsEnabled="{x:Bind ViewModel.IsLoggingIn, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}" -->
 
-      <TextBox x:Name="UserNameTextBox"
+      <TextBox x:Uid="LoginPage_UserNameTextBox" x:Name="UserNameTextBox"
                  Header="Username"
-                 Width="300"
                  PlaceholderText="Enter your username"
                  Text="{x:Bind ViewModel.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-      <PasswordBox x:Name="PasswordBox"
+      <PasswordBox x:Uid="LoginPage_PasswordBox"  x:Name="PasswordBox"
                    Header="Password"
                    PlaceholderText="Enter your password"
                    Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-      <!--
 
- -->
       <TextBlock Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
                  Foreground="Red"
                  TextWrapping="Wrap"
@@ -44,7 +39,7 @@
             <ProgressRing IsActive="{x:Bind ViewModel.IsLoggingIn, Mode=OneWay}"
                           Width="16" Height="16"
                           Visibility="{x:Bind ViewModel.IsLoggingIn, Mode=OneWay}"/>
-            <TextBlock Text="Sign In"/>
+            <TextBlock x:Uid="LoginPage_SignInButton_Text" Text="Sign In"/>
           </StackPanel>
         </Button.Content>
       </Button>

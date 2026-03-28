@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="BSE.Tunes.WinUI.Client.Controls.PlayerBarView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BSE.Tunes.WinUI.Client.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="PlayButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Target="NormalBorder.Opacity" Value="1"/>
+                                            <Setter Target="HoverBorder.Opacity" Value="0"/>
+                                            <Setter Target="PressedBorder.Opacity" Value="0"/>
+                                        </VisualState.Setters>
+                                        <!--<Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonBorder"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                           To="1.0" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonBorder"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                           To="1.0" Duration="0:0:0.1"/>
+                                        </Storyboard>-->
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="NormalBorder.Opacity" Value="0"/>
+                                            <Setter Target="HoverBorder.Opacity" Value="1"/>
+                                        </VisualState.Setters>
+                                        <!--<Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonBorder"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                           To="1.00" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonBorder"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                           To="1.00" Duration="0:0:0.1"/>
+                                        </Storyboard>-->
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="NormalBorder.Opacity" Value="0"/>
+                                            <Setter Target="PressedBorder.Opacity" Value="1"/>
+                                        </VisualState.Setters>
+                                        <!--<Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonBorder"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                           To="0.95" Duration="0:0:0.05"/>
+                                            <DoubleAnimation Storyboard.TargetName="ButtonBorder"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                           To="0.95" Duration="0:0:0.05"/>
+                                        </Storyboard>-->
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="ButtonBorder.Opacity" Value="0.5"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Grid x:Name="ButtonBorder" 
+                                  Width="48" 
+                                  Height="48"
+                                  RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <ScaleTransform/>
+                                </Grid.RenderTransform>
+                                
+                                <!-- Normal State Border -->
+                                <Ellipse x:Name="NormalBorder" StrokeThickness="3">
+                                    <Ellipse.Stroke>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{ThemeResource SystemAccentColorLight3}" Offset="0.0"/>
+                                            <GradientStop Color="{ThemeResource SystemAccentColor}" Offset="0.5"/>
+                                            <GradientStop Color="{ThemeResource SystemAccentColorDark2}" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Ellipse.Stroke>
+                                    <Ellipse.Fill>
+                                        <SolidColorBrush Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+
+                                <!-- Hover State Border -->
+                                <Ellipse x:Name="HoverBorder" StrokeThickness="3" Opacity="0">
+                                    <Ellipse.Stroke>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{ThemeResource SystemAccentColorLight2}" Offset="0.0"/>
+                                            <GradientStop Color="{ThemeResource SystemAccentColorLight1}" Offset="0.5"/>
+                                            <GradientStop Color="{ThemeResource SystemAccentColorDark1}" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Ellipse.Stroke>
+                                    <Ellipse.Fill>
+                                        <SolidColorBrush Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+
+                                <!-- Pressed State Border -->
+                                <Ellipse x:Name="PressedBorder" StrokeThickness="3" Opacity="0">
+                                    <Ellipse.Stroke>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="{ThemeResource SystemAccentColor}" Offset="0.0"/>
+                                            <GradientStop Color="{ThemeResource SystemAccentColorDark1}" Offset="0.5"/>
+                                            <GradientStop Color="{ThemeResource SystemAccentColorDark3}" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Ellipse.Stroke>
+                                    <Ellipse.Fill>
+                                        <SolidColorBrush Color="{ThemeResource CardBackgroundFillColorDefault}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+
+                                <!-- Icon Content -->
+                                <ContentPresenter x:Name="ContentPresenter"
+                                                Content="{TemplateBinding Content}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="slider" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" 
+                       Text="00:01:23" 
+                       FontSize="12" 
+                       Opacity="0.89" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Left"/>
+            <Slider Grid.Column="1" 
+                    StepFrequency="20" 
+                    IsEnabled="True"
+                    Maximum="100" 
+                    Value="45" 
+                    VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" 
+               Text="00:10:23" 
+               FontSize="12" 
+               HorizontalAlignment="Right" 
+               VerticalAlignment="Center" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" x:Name="infoCell"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" x:Name="titleInfo" Grid.Column="0" Margin="6" Width="320">
+                <Border Height="48" Width="48">
+                    <!--<Image Source="/SampleImage.png" Stretch="UniformToFill"/>-->
+                    <Image Stretch="Uniform" />
+                </Border>
+                <StackPanel Orientation="Vertical" Margin="6,3,0,0">
+                    <TextBlock Text="All you need is love" Style="{StaticResource BodyLargeStrongTextBlockStyle}" FontWeight="SemiBold" 
+                           TextTrimming="WordEllipsis" TextWrapping="Wrap"/>
+                    <TextBlock Text="Beatles" Style="{StaticResource CaptionTextBlockStyle}"
+                           TextTrimming="WordEllipsis"/>
+                </StackPanel>
+            </StackPanel>
+            <Grid x:Name="PlayerButtons" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE8B1;" />
+                </Button>
+                <Button Grid.Column="2" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xF8AC;" />
+                </Button>
+                <Button x:Name="ButtonPlay" 
+                        Grid.Column="3" 
+                        Style="{StaticResource PlayButtonStyle}">
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
+                              Glyph="&#xF5B0;"
+                              FontSize="22"
+                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                </Button>
+                <Button Grid.Column="4" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xF8AD;" />
+                </Button>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</UserControl>

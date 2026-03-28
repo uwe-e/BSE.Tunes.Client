@@ -12,15 +12,21 @@ namespace BSE.Tunes.WinUI.Client.Views;
 public sealed partial class ShellPage : Page
 {
     private readonly SettingsMonitorService _settingsMonitor;
+    private readonly IThemeSelectorService _themeSelectorService;
 
     public ShellViewModel ViewModel { get; }
 
-    public ShellPage(ShellViewModel viewModel, SettingsMonitorService settingsMonitor)
+    public ShellPage(ShellViewModel viewModel, SettingsMonitorService settingsMonitor, IThemeSelectorService themeSelectorService)
     {
         ViewModel = viewModel;
         _settingsMonitor = settingsMonitor;
+        _themeSelectorService = themeSelectorService;
         
         InitializeComponent();
+
+
+        // Apply theme immediately to this page
+        this.RequestedTheme = _themeSelectorService.Theme;
 
         // Ensure NavigationFrame is available before registering
         if (NavigationFrame == null)
@@ -43,8 +49,9 @@ public sealed partial class ShellPage : Page
         _settingsMonitor.StartMonitoring();
     }
 
-    private void OnLoaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        // Use the theme from ThemeSelectorService instead of the page's RequestedTheme
         TitleBarHelper.UpdateTitleBar(RequestedTheme);
 
         KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu));

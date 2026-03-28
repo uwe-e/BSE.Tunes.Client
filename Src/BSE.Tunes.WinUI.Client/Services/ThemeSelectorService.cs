@@ -9,7 +9,7 @@ public class ThemeSelectorService : IThemeSelectorService
 {
     private const string SettingsKey = "AppBackgroundRequestedTheme";
 
-    public ElementTheme Theme { get; set; } = ElementTheme.Default;
+    public ElementTheme Theme { get; set; } = ElementTheme.Dark;
 
     private readonly ILocalSettingsService _localSettingsService;
 
@@ -53,7 +53,7 @@ public class ThemeSelectorService : IThemeSelectorService
             return cacheTheme;
         }
 
-        return ElementTheme.Default;
+        return ElementTheme.Dark;
     }
 
     private async Task SaveThemeInSettingsAsync(ElementTheme theme)

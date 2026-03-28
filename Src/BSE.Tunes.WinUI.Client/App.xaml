@@ -2,7 +2,7 @@
     x:Class="BSE.Tunes.WinUI.Client.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:helpers="using:BSE.Tunes.WinUI.Client.Helpers">
+    xmlns:helpers="using:BSE.Tunes.WinUI.Client.Helpers" >
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

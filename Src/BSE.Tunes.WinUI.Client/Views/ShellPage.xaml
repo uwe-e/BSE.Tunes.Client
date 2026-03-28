@@ -6,10 +6,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:BSE.Tunes.WinUI.Client.Helpers"
     xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
-    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:i="using:Microsoft.Xaml.Interactivity" xmlns:views="using:BSE.Tunes.WinUI.Client.Controls"
     Loaded="OnLoaded">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Grid x:Name="AppTitleBar"
               Canvas.ZIndex="1"
               Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
@@ -43,7 +47,7 @@
                 TODO: Update item icons by updating FontIcon.Glyph properties.
                 https://docs.microsoft.com/windows/apps/design/style/segoe-fluent-icons-font#icon-list
                 -->
-                <NavigationViewItem x:Uid="Shell_Main" helpers:NavigationHelper.NavigateTo="MainPage">
+                <NavigationViewItem x:Uid="ShellPage_Main" helpers:NavigationHelper.NavigateTo="MainPage">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA8A;"/>
                     </NavigationViewItem.Icon>
@@ -76,5 +80,11 @@
                 <Frame x:Name="NavigationFrame" />
             </Grid>
         </NavigationView>
+        <views:PlayerBarView Grid.Row="1"/>
+        <!--<Grid x:Name="AppTitleBarBackground"
+              Grid.Row="1"
+              Height="100"
+              VerticalAlignment="Bottom"
+              Background="Red"/>-->
     </Grid>
 </Page>
