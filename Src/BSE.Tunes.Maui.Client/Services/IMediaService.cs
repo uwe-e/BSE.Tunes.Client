@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using BSE.Tunes.Shared.Services.Enums;
+using CommunityToolkit.Maui.Views;
 
 namespace BSE.Tunes.Maui.Client.Services
 {

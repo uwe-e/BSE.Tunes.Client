@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Shared.Services.Models;
-using BSE.Tunes.Shared.Services.Models.IdentityModel;
-using BSE.Tunes.WinUI.Client.Contracts.Services;
+﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
 using System.Text.Json;
 using Windows.Security.Credentials;
 

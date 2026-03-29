@@ -1,4 +1,4 @@
-﻿namespace BSE.Tunes.Maui.Client
+﻿namespace BSE.Tunes.Shared.Services.Enums
 {
     public enum MediaState
     {

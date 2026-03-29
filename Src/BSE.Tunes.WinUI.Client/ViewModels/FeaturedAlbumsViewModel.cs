@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Shared.Services;
-using BSE.Tunes.Shared.Services.Models.Contract;
-using BSE.Tunes.WinUI.Client.Models;
+﻿using BSE.Tunes.WinUI.Client.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;

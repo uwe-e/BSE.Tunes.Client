@@ -1,19 +1,19 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace BSE.Tunes.Maui.Client.Collections
+namespace BSE.Tunes.Shared.Services.Collections
 {
     public class NavigableCollection<T> : ObservableCollection<T>
     {
         private int _index;
 
         public int Index => _index;
-        public bool CanMoveNext => _index < (Count - 1);
+        public bool CanMoveNext => _index < Count - 1;
         public bool CanMovePrevious => _index > 0;
 
         public bool MoveNext()
         {
             _index++;
-            return (_index >= 0) && (_index < Count);
+            return _index >= 0 && _index < Count;
         }
         public bool MovePrevious()
         {
@@ -23,14 +23,14 @@ namespace BSE.Tunes.Maui.Client.Collections
                 return flag;
             }
             _index--;
-            return (_index >= 0) && (_index < Count);
+            return _index >= 0 && _index < Count;
         }
 
         public T Current
         {
             get
             {
-                if ((_index < 0) || (_index >= Count))
+                if (_index < 0 || _index >= Count)
                 {
                     throw new IndexOutOfRangeException();
                 }

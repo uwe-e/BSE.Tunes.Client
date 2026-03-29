@@ -1,4 +1,4 @@
-﻿using BSE.Tunes.Maui.Client.Collections;
+﻿using BSE.Tunes.Shared.Services.Collections;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.Maui.Client.Extensions

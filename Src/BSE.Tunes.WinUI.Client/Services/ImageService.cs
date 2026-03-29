@@ -1,4 +1,3 @@
-using BSE.Tunes.Shared.Services;
 using Microsoft.Graphics.Canvas;
 
 namespace BSE.Tunes.WinUI.Client.Services

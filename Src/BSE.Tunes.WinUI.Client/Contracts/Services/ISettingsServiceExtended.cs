@@ -1,5 +1,3 @@
-using BSE.Tunes.Shared.Services.Abstractions;
-
 namespace BSE.Tunes.WinUI.Client.Contracts.Services;
 
 /// <summary>

@@ -1,5 +1,4 @@
-﻿using BSE.Tunes.Shared.Services;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels

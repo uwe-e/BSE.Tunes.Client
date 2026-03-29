@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Shared.Services;
-using BSE.Tunes.Shared.Services.Abstractions;
-using BSE.Tunes.WinUI.Client.Contracts.Services;
+﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Services;
 using BSE.Tunes.WinUI.Client.Views;
 using Microsoft.UI.Xaml;

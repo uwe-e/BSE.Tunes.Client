@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using BSE.Tunes.Shared.Services.Enums;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

@@ -299,5 +299,8 @@
   <ItemGroup>
     <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Collections\" />
+  </ItemGroup>
 
 </Project>

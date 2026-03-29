@@ -1,4 +1,3 @@
-using BSE.Tunes.Shared.Services.Models;
 using System.Text.Json;
 using Windows.Storage;
 

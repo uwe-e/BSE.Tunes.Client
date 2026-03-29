@@ -1,6 +1,4 @@
-﻿using BSE.Tunes.Shared.Services.Services;
-
-namespace BSE.Tunes.WinUI.Client.Contracts.Services
+﻿namespace BSE.Tunes.WinUI.Client.Contracts.Services
 {
     public class FileSystemProvider : IFileSystemProvider
     {

@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
+using BSE.Tunes.Shared.Services.Enums;
 using SkiaSharp;
 
 namespace BSE.Tunes.Maui.Client.Services

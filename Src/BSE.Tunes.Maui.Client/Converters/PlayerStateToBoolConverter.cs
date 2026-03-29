@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using BSE.Tunes.Shared.Services.Enums;
+using System.Globalization;
 
 namespace BSE.Tunes.Maui.Client.Converters
 {

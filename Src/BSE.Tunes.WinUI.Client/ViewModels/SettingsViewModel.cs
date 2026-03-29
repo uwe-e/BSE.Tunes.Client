@@ -1,13 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.Reflection;
-using BSE.Tunes.Shared.Services.Abstractions;
-using BSE.Tunes.WinUI.Client.Contracts.Services;
+﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Helpers;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-
+using System.Collections.ObjectModel;
+using System.Reflection;
 using Windows.ApplicationModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels;

@@ -1,5 +1,3 @@
-using BSE.Tunes.Shared.Services.Mappers;
-using BSE.Tunes.Shared.Services.Models.Contract;
 using BSEtunes.Contracts.DTOs.Albums;
 using BSEtunes.Contracts.DTOs.Playlists;
 

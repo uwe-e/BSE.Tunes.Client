@@ -1,4 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Shared.Services.Enums;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.Controls

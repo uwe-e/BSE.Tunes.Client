@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Shared.Services.Enums;
 using System.Collections.Specialized;
 using System.Windows.Input;
 

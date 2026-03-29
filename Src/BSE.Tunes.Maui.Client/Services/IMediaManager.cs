@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.Maui.Client.Collections;
+﻿using BSE.Tunes.Shared.Services.Collections;
+using BSE.Tunes.Shared.Services.Enums;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 

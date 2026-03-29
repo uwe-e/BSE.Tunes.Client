@@ -1,8 +1,5 @@
-using BSE.Tunes.Shared.Services.Abstractions;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
-using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Controls;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels;
 
