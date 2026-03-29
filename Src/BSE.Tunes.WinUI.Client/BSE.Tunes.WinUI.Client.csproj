@@ -20,6 +20,7 @@
     <None Remove="Controls\Carousel\Carousel.xaml" />
     <None Remove="Controls\ItemsCarousel.xaml" />
     <None Remove="Controls\PlayerBarView.xaml" />
+    <None Remove="Controls\RandomPlayerView.xaml" />
     <None Remove="Views\EndpointConfigurationPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\PersonalizationSettingsPage.xaml" />
@@ -47,6 +48,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\RandomPlayerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\PlayerBarView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

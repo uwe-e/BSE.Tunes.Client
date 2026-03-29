@@ -6,7 +6,7 @@
     xmlns:local="using:BSE.Tunes.WinUI.Client.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Height="100">
 
     <UserControl.Resources>
         <Style x:Key="PlayButtonStyle" TargetType="Button">
@@ -143,8 +143,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="60" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" 
-                       Text="00:01:23" 
+            <TextBlock Grid.Column="0"
+                       Text="00:01:23"
+                       Margin="10,0,0,0"
                        FontSize="12" 
                        Opacity="0.89" 
                        VerticalAlignment="Center" 
@@ -152,11 +153,13 @@
             <Slider Grid.Column="1" 
                     StepFrequency="20" 
                     IsEnabled="True"
+                    IsThumbToolTipEnabled="False"
                     Maximum="100" 
                     Value="45" 
                     VerticalAlignment="Center" />
             <TextBlock Grid.Column="2" 
                Text="00:10:23" 
+                       Margin="0,0,10,0"
                FontSize="12" 
                HorizontalAlignment="Right" 
                VerticalAlignment="Center" />
@@ -187,10 +190,10 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" VerticalAlignment="Center">
+                <Button Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
                     <FontIcon Glyph="&#xE8B1;" />
                 </Button>
-                <Button Grid.Column="2" VerticalAlignment="Center">
+                <Button Grid.Column="2" VerticalAlignment="Center" Margin="0,0,10,0">
                     <FontIcon Glyph="&#xF8AC;" />
                 </Button>
                 <Button x:Name="ButtonPlay" 
@@ -201,7 +204,7 @@
                               FontSize="22"
                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
                 </Button>
-                <Button Grid.Column="4" VerticalAlignment="Center">
+                <Button Grid.Column="4" VerticalAlignment="Center" Margin="10,0,0,0">
                     <FontIcon Glyph="&#xF8AD;" />
                 </Button>
             </Grid>

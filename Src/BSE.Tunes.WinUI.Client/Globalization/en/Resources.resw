@@ -148,7 +148,7 @@
     <value>Cancel</value>
   </data>
   <data name="RemoveLoginSettingsPage_Title.Text" xml:space="preserve">
-    <value>Konto</value>
+    <value>Account</value>
   </data>
   <data name="RemoveLoginSettingsPage_Description.Text" xml:space="preserve">
     <value>The account for your current BSEtunes</value>
@@ -206,5 +206,8 @@
   </data>
   <data name="LoginPage_SignInButton_Text.Text" xml:space="preserve">
     <value>Sign In</value>
+  </data>
+  <data name="MainPage_RandomPlayer_Button_Text" xml:space="preserve">
+    <value>We have {0} songs and if you have enough time we play them all.</value>
   </data>
 </root>

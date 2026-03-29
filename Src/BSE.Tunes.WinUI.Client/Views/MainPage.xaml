@@ -16,16 +16,19 @@
                            RelativePanel.AlignTopWithPanel="True"
                            RelativePanel.AlignLeftWithPanel="True"
                            RelativePanel.AlignRightWithPanel="True">
+                
                 <Grid x:Name="flipView" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignTopWithPanel="True" >
                     <uc:AlbumsCarouselView/>
                 </Grid>
 
-                <Grid x:Name="randomPlayer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="flipView">
-                    <!--<uc:RandomPlayerPanelUserControl  />-->
+                <Grid x:Name="randomPlayer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="flipView"
+                      Margin="20,20,20,0">
+                    <uc:RandomPlayerView  />
                 </Grid>
 
-                <Grid x:Name="featuredAlbums" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="randomPlayer">
-                    <uc:FeaturedAlbumsView Margin="0,24,0,0"/>
+                <Grid x:Name="featuredAlbums" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="randomPlayer"
+                      Margin="20,20,20,0">
+                    <uc:FeaturedAlbumsView/>
                 </Grid>
             </RelativePanel>
         </ScrollViewer>

@@ -148,10 +148,10 @@
     <value>Abbrechen</value>
   </data>
   <data name="RemoveLoginSettingsPage_Title.Text" xml:space="preserve">
-    <value>Account</value>
+    <value>Konto</value>
   </data>
   <data name="RemoveLoginSettingsPage_Description.Text" xml:space="preserve">
-    <value>Das Konto für dein aktuelle BSEtunes</value>
+    <value>Das Konto für dein aktuelles BSEtunes</value>
   </data>
   <data name="RemoveLoginSettingsPage_Warning.Text" xml:space="preserve">
     <value>Du wirst abgemeldet, wenn Du Dein Konto löschst und musst Dich anschließend erneut anmelden.</value>
@@ -206,5 +206,8 @@
   </data>
   <data name="LoginPage_SignInButton_Text.Text" xml:space="preserve">
     <value>Anmelden</value>
+  </data>
+  <data name="MainPage_RandomPlayer_Button_Text" xml:space="preserve">
+    <value>Wir haben {0} Songs und wenn Du genug Zeit hast, dann spielen wir sie alle.</value>
   </data>
 </root>
