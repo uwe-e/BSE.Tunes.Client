@@ -3,6 +3,7 @@ global using BSE.Tunes.Shared.Services.Collections;
 global using BSE.Tunes.Shared.Services.Abstractions;
 global using BSE.Tunes.Shared.Services.Enums;
 global using BSE.Tunes.Shared.Services.Mappers;
+global using BSE.Tunes.Shared.Services.Media;
 global using BSE.Tunes.Shared.Services.Models;
 global using BSE.Tunes.Shared.Services.Models.IdentityModel;
 global using BSE.Tunes.Shared.Services.Models.Contract;

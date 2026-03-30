@@ -1,4 +1,6 @@
-﻿namespace BSE.Tunes.Maui.Client.Services
+﻿using BSE.Tunes.Shared.Services.Services;
+
+namespace BSE.Tunes.Maui.Client.Services
 {
     public class TimerService : ITimerService, IDisposable
     {

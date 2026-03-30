@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Shared.Services.Media;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels

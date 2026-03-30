@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Shared.Services.Media;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;

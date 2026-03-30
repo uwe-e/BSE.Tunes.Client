@@ -1,6 +1,6 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using BSE.Tunes.Shared.Services.Media;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {

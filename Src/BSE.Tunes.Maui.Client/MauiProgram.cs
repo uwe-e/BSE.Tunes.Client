@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.ViewModels;
 using BSE.Tunes.Maui.Client.Views;
 using BSE.Tunes.MediaExtensions;
+using BSE.Tunes.Shared.Services.Media;
 using BSE.Tunes.Shared.Services.Services;
 using CommunityToolkit.Maui;
 using FFImageLoading.Maui;
