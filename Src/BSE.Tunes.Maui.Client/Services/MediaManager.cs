@@ -2,7 +2,6 @@
 using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Shared.Services.Collections;
 using BSE.Tunes.Shared.Services.Enums;
-using BSE.Tunes.Shared.Services.Media;
 using BSE.Tunes.Shared.Services.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;

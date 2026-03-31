@@ -1,5 +1,4 @@
-﻿using BSE.Tunes.Shared.Services.Enums;
-using CommunityToolkit.Maui.Core;
+﻿using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 
 namespace BSE.Tunes.Maui.Client.Services
@@ -27,7 +26,7 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             if (bindable is MediaElement mediaElement && newValue is bool toRegister && toRegister)
             {
-                var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
+                var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>() as MediaService;
                 playerService?.RegisterAsMediaService(mediaElement);
             }
         }
@@ -71,6 +70,10 @@ namespace BSE.Tunes.Maui.Client.Services
             _ = InitializeProxyAsync();
         }
 
+        /// <summary>
+        /// MAUI-specific registration method - not part of IMediaService interface
+        /// </summary>
+        /// <param name="mediaElement">The MediaElement to register with the service.</param>
         public void RegisterAsMediaService(MediaElement mediaElement)
         {
             if (_mediaElement == null && mediaElement != null)

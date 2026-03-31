@@ -1,10 +1,13 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿//using CommunityToolkit.Maui.Views;
 
-namespace BSE.Tunes.Maui.Client.Services
+using BSE.Tunes.Shared.Services.Enums;
+using BSE.Tunes.Shared.Services.Models.Contract;
+
+namespace BSE.Tunes.Shared.Services.Media
 {
     public interface IMediaService
     {
-        void RegisterAsMediaService(MediaElement mediaElement);
+        //void RegisterAsMediaService(MediaElement mediaElement);
         event Action<PlayerState> PlayerStateChanged;
         event Action<MediaState> MediaStateChanged;
         event Action<CacheChangeMode> AudioCacheChanged;
