@@ -4,13 +4,19 @@ namespace BSE.Tunes.WinUI.Client.Services;
 
 public class TimerService : ITimerService
 {
-    private DispatcherQueueTimer _timer;
+    private readonly DispatcherQueueTimer _timer;
     
     public event Action TimerElapsed;
 
     public TimerService()
     {
-        _timer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+        var queue = DispatcherQueue.GetForCurrentThread();
+        if (queue == null)
+        {
+            throw new InvalidOperationException("TimerService must be created on a thread with a DispatcherQueue");
+        }
+
+        _timer = queue.CreateTimer();
         _timer.Interval = TimeSpan.FromMilliseconds(500);
         _timer.Tick += (s, e) => TimerElapsed?.Invoke();
     }

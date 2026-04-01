@@ -71,8 +71,11 @@ public partial class App : Application
             // Core Services
             services.AddSingleton<IFileService, FileService>();
             services.AddSingleton<IFileSystemProvider, FileSystemProvider>();
-            services.AddSingleton<ITimerService, TimerService>();
+            // Media Services
+            services.AddSingleton<LocalProxyService>();
+            services.AddSingleton<IMediaService, MediaService>();
             services.AddSingleton<IMediaManager, MediaManager>();
+            services.AddSingleton<ITimerService, TimerService>();
 
 
             // Shared Services from BSE.Tunes.Shared.Services

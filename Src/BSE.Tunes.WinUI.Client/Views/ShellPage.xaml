@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:helpers="using:BSE.Tunes.WinUI.Client.Helpers"
     xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
+    xmlns:services="using:BSE.Tunes.WinUI.Client.Services"
     xmlns:i="using:Microsoft.Xaml.Interactivity" xmlns:views="using:BSE.Tunes.WinUI.Client.Controls"
     Loaded="OnLoaded">
 
@@ -14,6 +15,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <MediaPlayerElement x:Name="AudioMediaElement"
+                            AreTransportControlsEnabled="False"
+                            services:MediaService.RegisterAsMediaService="True"/>
         <Grid x:Name="AppTitleBar"
               Canvas.ZIndex="1"
               Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
