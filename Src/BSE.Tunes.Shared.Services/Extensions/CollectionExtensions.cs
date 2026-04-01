@@ -1,13 +1,13 @@
 ﻿using BSE.Tunes.Shared.Services.Collections;
 using System.Collections.ObjectModel;
 
-namespace BSE.Tunes.Maui.Client.Extensions
+namespace BSE.Tunes.Shared.Services.Extensions
 {
     public static class CollectionExtensions
     {
         public static NavigableCollection<T> ToNavigableCollection<T>(this ObservableCollection<T> collection)
         {
-            NavigableCollection<T> collectionTo = null;
+            NavigableCollection<T>? collectionTo = null;
             if (collection != null)
             {
                 collectionTo = new NavigableCollection<T>();
@@ -16,11 +16,11 @@ namespace BSE.Tunes.Maui.Client.Extensions
                     collectionTo.Add(rec);
                 }
             }
-            return collectionTo;
+            return collectionTo ?? [];
         }
         public static ObservableCollection<T> ToRandomCollection<T>(this ObservableCollection<T> collection)
         {
-            ObservableCollection<T> randomCollection = null;
+            ObservableCollection<T>? randomCollection = null;
             if (collection != null)
             {
                 Random random = new(DateTime.Now.Millisecond);
@@ -33,7 +33,7 @@ namespace BSE.Tunes.Maui.Client.Extensions
                     collection.RemoveAt(iIndex);
                 }
             }
-            return randomCollection;
+            return randomCollection ?? [];
         }
     }
 }

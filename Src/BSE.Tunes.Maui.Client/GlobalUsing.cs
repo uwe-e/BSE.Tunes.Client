@@ -1,5 +1,5 @@
 ﻿global using BSE.Tunes.Shared.Services;
-global using BSE.Tunes.Shared.Services.Collections;
+global using BSE.Tunes.Shared.Services.Services;
 global using BSE.Tunes.Shared.Services.Abstractions;
 global using BSE.Tunes.Shared.Services.Enums;
 global using BSE.Tunes.Shared.Services.Mappers;
