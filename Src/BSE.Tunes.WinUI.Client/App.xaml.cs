@@ -113,6 +113,7 @@ public partial class App : Application
 
             services.AddTransient<AlbumsCarouselViewModel>();
             services.AddTransient<RandomPlayerViewModel>();
+            services.AddTransient<PlayerBarViewModel>();
             services.AddTransient<FeaturedAlbumsViewModel>();
 
             // Configuration

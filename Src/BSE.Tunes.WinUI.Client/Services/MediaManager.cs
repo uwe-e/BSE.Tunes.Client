@@ -1,3 +1,6 @@
+using BSE.Tunes.WinUI.Client.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+
 namespace BSE.Tunes.WinUI.Client.Services;
 
 /// <summary>
@@ -5,14 +8,17 @@ namespace BSE.Tunes.WinUI.Client.Services;
 /// </summary>
 public class MediaManager : MediaManagerBase
 {
+    private readonly IMessenger _messenger;
     private readonly ITimerService _timerService;
 
     public MediaManager(
         IDataService dataService,
         IMediaService mediaService,
+        IMessenger messenger,
         ITimerService timerService)
         : base(dataService, mediaService)
     {
+        _messenger = messenger;
         _timerService = timerService;
 
         _timerService.TimerElapsed += OnTimerElapsed;
@@ -37,7 +43,7 @@ public class MediaManager : MediaManagerBase
     protected override void OnProgressChanged(double progress)
     {
         // WinUI-specific: Update UI via messenger or events
-        // Could use CommunityToolkit.Mvvm.Messaging here
+        _messenger.Send(new MediaProgressChangedMessage(progress));
     }
 
     private void OnTimerElapsed()

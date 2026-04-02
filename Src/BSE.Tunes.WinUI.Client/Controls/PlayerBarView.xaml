@@ -151,11 +151,11 @@
                        VerticalAlignment="Center" 
                        HorizontalAlignment="Left"/>
             <Slider Grid.Column="1" 
-                    StepFrequency="20" 
+                    StepFrequency="0.01" 
                     IsEnabled="True"
                     IsThumbToolTipEnabled="False"
-                    Maximum="100" 
-                    Value="45" 
+                    Maximum="1" 
+                    Value="{x:Bind ViewModel.Progress, Mode=OneWay}" 
                     VerticalAlignment="Center" />
             <TextBlock Grid.Column="2" 
                Text="00:10:23" 
@@ -172,12 +172,12 @@
             <StackPanel Orientation="Horizontal" x:Name="titleInfo" Grid.Column="0" Margin="6" Width="320">
                 <Border Height="48" Width="48">
                     <!--<Image Source="/SampleImage.png" Stretch="UniformToFill"/>-->
-                    <Image Stretch="Uniform" />
+                    <Image Stretch="Uniform" Source="{x:Bind ViewModel.CoverSource, Mode=OneWay}"/>
                 </Border>
                 <StackPanel Orientation="Vertical" Margin="6,3,0,0">
-                    <TextBlock Text="All you need is love" Style="{StaticResource BodyLargeStrongTextBlockStyle}" FontWeight="SemiBold" 
+                    <TextBlock Text="{x:Bind ViewModel.CurrentTrack.Album.Title, Mode=OneWay}" Style="{StaticResource BodyLargeStrongTextBlockStyle}" FontWeight="SemiBold" 
                            TextTrimming="WordEllipsis" TextWrapping="Wrap"/>
-                    <TextBlock Text="Beatles" Style="{StaticResource CaptionTextBlockStyle}"
+                    <TextBlock Text="{x:Bind ViewModel.CurrentTrack.Album.Artist.Name, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}"
                            TextTrimming="WordEllipsis"/>
                 </StackPanel>
             </StackPanel>
@@ -197,7 +197,8 @@
                     <FontIcon Glyph="&#xF8AC;" />
                 </Button>
                 <Button x:Name="ButtonPlay" 
-                        Grid.Column="3" 
+                        Grid.Column="3"
+                        Command="{x:Bind ViewModel.PlayCommand}"
                         Style="{StaticResource PlayButtonStyle}">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
                               Glyph="&#xF5B0;"
