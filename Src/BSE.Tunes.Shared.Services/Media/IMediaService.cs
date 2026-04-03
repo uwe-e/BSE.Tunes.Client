@@ -10,7 +10,9 @@ namespace BSE.Tunes.Shared.Services.Media
         event Action<CacheChangeMode> AudioCacheChanged;
         
         double Progress { get;}
-        
+        TimeSpan Position { get; }
+        TimeSpan Duration { get; }
+
         void Play();
         void Pause();
         void Stop();

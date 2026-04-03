@@ -46,6 +46,22 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public double Progress => GetProgress();
 
+        public TimeSpan Position
+        {
+            get
+            {
+                return _mediaElement?.Position ?? TimeSpan.Zero;
+            }
+        }
+
+        public TimeSpan Duration
+        {
+            get
+            {
+                return _mediaElement?.Duration ?? TimeSpan.Zero;
+            }
+        }
+
         private double GetProgress()
         {
             if (_mediaElement?.Duration != null && _mediaElement.Duration.TotalSeconds > 0)

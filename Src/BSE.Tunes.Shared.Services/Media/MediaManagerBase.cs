@@ -66,6 +66,9 @@ public abstract class MediaManagerBase : IMediaManager
 
     public void Disconnect()
     {
+        _mediaService.PlayerStateChanged -= OnPlayerStateChanged;
+        _mediaService.MediaStateChanged -= OnMediaStateChanged;
+        _mediaService.AudioCacheChanged -= OnAudioCacheChanged;
         _mediaService?.Disconnect();
     }
 
@@ -265,7 +268,10 @@ public abstract class MediaManagerBase : IMediaManager
     /// Called periodically with playback progress. Override to implement platform-specific
     /// progress tracking or UI updates.
     /// </summary>
-    protected virtual void OnProgressChanged(double progress)
+    /// <param name="progress">Current playback progress (0.0 to 1.0)</param>
+    /// <param name="position">Current playback position</param>
+    /// <param name="duration">Total track duration</param>
+    protected virtual void OnProgressChanged(double progress, TimeSpan position, TimeSpan duration)
     {
         // Platform implementations can override this
     }
@@ -278,7 +284,10 @@ public abstract class MediaManagerBase : IMediaManager
         var newProgress = _mediaService.Progress;
         if (newProgress != _oldProgress && newProgress < 1.0)
         {
-            OnProgressChanged(newProgress);
+            var position = _mediaService.Position;
+            var duration = _mediaService.Duration;
+            
+            OnProgressChanged(newProgress, position, duration);
             _oldProgress = newProgress;
         }
     }

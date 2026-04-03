@@ -42,7 +42,7 @@ public class MediaManager : MediaManagerBase
         _eventAggregator.GetEvent<CacheChangedEvent>().Publish(mode);
     }
 
-    protected override void OnProgressChanged(double progress)
+    protected override void OnProgressChanged(double progress, TimeSpan position, TimeSpan duration)
     {
         // Publish progress to UI
         _eventAggregator.GetEvent<MediaProgressChangedEvent>().Publish(progress);

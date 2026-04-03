@@ -29,6 +29,24 @@ namespace BSE.Tunes.WinUI.Client.Services
         // Properties
         public double Progress => GetProgress();
 
+        public TimeSpan Position
+        {
+            get
+            {
+                var session = _mediaPlayer?.PlaybackSession;
+                return session?.Position ?? TimeSpan.Zero;
+            }
+        }
+
+        public TimeSpan Duration
+        {
+            get
+            {
+                var session = _mediaPlayer?.PlaybackSession;
+                return session?.NaturalDuration ?? TimeSpan.Zero;
+            }
+        }
+
         private double GetProgress()
         {
             var session = _mediaPlayer?.PlaybackSession;
@@ -103,20 +121,52 @@ namespace BSE.Tunes.WinUI.Client.Services
 
         public void Disconnect()
         {
+            // Cancel any prefetch operations
+            try
+            {
+                _prefetchCancellation?.Cancel();
+                _prefetchCancellation?.Dispose();
+                _prefetchCancellation = null;
+            }
+            catch { }
+
             if (_mediaPlayer != null)
             {
+                // Unsubscribe from events first
                 _mediaPlayer.MediaOpened -= OnMediaOpened;
                 _mediaPlayer.MediaEnded -= OnMediaEnded;
                 _mediaPlayer.CurrentStateChanged -= OnMediaStateChanged;
                 _mediaPlayer.MediaFailed -= OnMediaFailed;
 
-                _mediaPlayer.Dispose();
+                try
+                {
+                    // Just stop playback and clear source
+                    _mediaPlayer.Pause();
+                    _mediaPlayer.Source = null;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error stopping media player: {ex.Message}");
+                }
+
+                // Don't dispose - let the OS clean up when process terminates
                 _mediaPlayer = null;
             }
+
             if (_mediaPlayerElement != null)
             {
-                _mediaPlayerElement.SetMediaPlayer(null);
-                _mediaPlayerElement = null;
+                try
+                {
+                    _mediaPlayerElement.SetMediaPlayer(null);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error stopping media player element: {ex.Message}");
+                }
+                finally
+                {
+                    _mediaPlayerElement = null;
+                }
             }
         }
 

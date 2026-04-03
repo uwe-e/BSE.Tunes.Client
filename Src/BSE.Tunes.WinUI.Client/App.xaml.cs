@@ -138,7 +138,34 @@ public partial class App : Application
 
         // Initialize MainWindow here instead of static initialization for .NET 8/9 compatibility
         MainWindow = new MainWindow();
+        MainWindow.Closed += OnMainWindowClosed;
         Services = Host.Services;
         await App.GetService<IActivationService>().ActivateAsync(args);
     }
+
+    private void OnMainWindowClosed(object sender, WindowEventArgs args)
+    {
+        try
+        {
+            System.Diagnostics.Debug.WriteLine("Window closing - cleaning up media resources");
+
+            // Stop media manager
+            var mediaManager = Host?.Services?.GetService(typeof(IMediaManager)) as IMediaManager;
+            mediaManager?.Disconnect();
+
+            // Stop timer service if it's running
+            var timerService = Host?.Services?.GetService(typeof(ITimerService)) as ITimerService;
+            timerService?.Stop();
+
+            System.Diagnostics.Debug.WriteLine("Cleanup complete");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error during cleanup: {ex.Message}");
+        }
+
+        // Don't await - let cleanup happen in background without blocking window closure
+        //_ = Task.Run(() => CleanupResourcesAsync());
+    }
+
 }

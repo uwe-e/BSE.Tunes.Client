@@ -40,10 +40,10 @@ public class MediaManager : MediaManagerBase
         // For now, could use a messenger pattern or leave empty
     }
 
-    protected override void OnProgressChanged(double progress)
+    protected override void OnProgressChanged(double progress, TimeSpan position, TimeSpan duration)
     {
-        // WinUI-specific: Update UI via messenger or events
-        _messenger.Send(new MediaProgressChangedMessage(progress));
+        // WinUI-specific: Update UI via messenger
+        _messenger.Send(new MediaProgressChangedMessage(progress, position, duration));
     }
 
     private void OnTimerElapsed()
