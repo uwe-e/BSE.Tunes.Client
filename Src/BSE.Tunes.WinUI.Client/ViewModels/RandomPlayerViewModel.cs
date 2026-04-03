@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Shared.Services.Extensions;
 using BSE.Tunes.WinUI.Client.Messages;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 
@@ -12,6 +13,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private readonly IMediaManager _mediaManager;
         private readonly IMessenger _messenger;
         private readonly Contracts.Services.IResourceService _resourceService;
+        private ObservableCollection<int> _trackIds;
         
         [ObservableProperty]
         private string _text;
@@ -48,8 +50,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             );
             if (trackIds != null)
             {
-                var randomTrackIds = trackIds.ToRandomCollection();
-                int trackId = randomTrackIds.FirstOrDefault();
+                _trackIds = trackIds.ToRandomCollection();
+                int trackId = _trackIds.FirstOrDefault();
                 if (trackId > 0)
                 {
                     var track = await _dataService.GetTrackById(trackId);
@@ -58,11 +60,13 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                         _messenger.Send(new TrackChangedMessage(track));
                     }
                 }
-                _mediaManager.Playlist = randomTrackIds.ToNavigableCollection();
+                _mediaManager.Playlist = _trackIds.ToNavigableCollection();
             }
 
             await LoadSystemInfo();
-            
+
+            ButtonPlayRandomCommand?.NotifyCanExecuteChanged();
+
             IsBusy = false;
 
         }
@@ -74,5 +78,19 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 _resourceService.GetString("MainPage_RandomPlayer_Button_Text"), countTracks);
         }
 
+        private bool CanPlayRandom()
+        {
+            return _trackIds?.Count > 0;
+        }
+
+        [RelayCommand(CanExecute = nameof(CanPlayRandom))]
+        private async Task ButtonPlayRandomAsync()
+        {
+            _trackIds = _trackIds?.ToRandomCollection();
+            if (_trackIds != null)
+            {
+                await _mediaManager.PlayTracksAsync(new ObservableCollection<int>(_trackIds), PlayerMode.Random);
+            }
+        }
     }
 }

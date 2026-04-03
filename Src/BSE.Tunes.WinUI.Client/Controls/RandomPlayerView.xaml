@@ -9,7 +9,13 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Button HorizontalAlignment="Stretch" Height="60" Background="{ThemeResource SystemAccentColor}" HorizontalContentAlignment="Center" Foreground="{ThemeResource SystemChromeWhiteColor}">
+        <Button x:Name="ButtonPlayRandom"
+                Command="{x:Bind ViewModel.ButtonPlayRandomCommand}"
+                HorizontalAlignment="Stretch"
+                Height="60"
+                Background="{ThemeResource SystemAccentColor}"
+                HorizontalContentAlignment="Center"
+                Foreground="{ThemeResource SystemChromeWhiteColor}">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
