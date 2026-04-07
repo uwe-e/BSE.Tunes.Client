@@ -26,7 +26,15 @@
 
 
             </Style>
-            
+
+            <Style x:Key="HeaderedSectionHeader" TargetType="HyperlinkButton">
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Margin" Value="0,0,0,8"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Foreground" Value="{ThemeResource SystemChromeWhiteColor}"/>
+            </Style>
+
             <x:Double x:Key="NarrowMinWidth">0</x:Double>
             <x:Double x:Key="NormalMinWidth">521</x:Double>
             <x:Double x:Key="WideMinWidth">1200</x:Double>

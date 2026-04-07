@@ -18,6 +18,7 @@
   <ItemGroup>
     <None Remove="Controls\AlbumsCarouselView.xaml" />
     <None Remove="Controls\Carousel\Carousel.xaml" />
+    <None Remove="Controls\FeaturedPlaylistView.xaml" />
     <None Remove="Controls\ItemsCarousel.xaml" />
     <None Remove="Controls\PlayerBarView.xaml" />
     <None Remove="Controls\RandomPlayerView.xaml" />
@@ -48,6 +49,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\FeaturedPlaylistView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\RandomPlayerView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

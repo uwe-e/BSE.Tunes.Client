@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UserControl
-    x:Class="BSE.Tunes.WinUI.Client.Controls.FeaturedAlbumsView"
+    x:Class="BSE.Tunes.WinUI.Client.Controls.FeaturedPlaylistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:BSE.Tunes.WinUI.Client.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
     xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
+    xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -19,7 +19,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Image Source="{x:Bind ImageSource, Mode=OneWay}"
-                       Stretch="UniformToFill" Height="150" Grid.Row="0"/>
+                   Stretch="UniformToFill" Height="150" Grid.Row="0"/>
                 <TextBlock Grid.Row="1" Text="{x:Bind Title, Mode=OneWay}" TextTrimming="WordEllipsis" x:Name="title" FontWeight="SemiBold"/>
                 <TextBlock Grid.Row="2" Text="{x:Bind SubTitle, Mode=OneWay}" FontWeight="SemiLight" x:Name="description" TextTrimming="WordEllipsis" FontSize="12"/>
             </Grid>
@@ -27,19 +27,19 @@
     </UserControl.Resources>
 
     <StackPanel>
-        <HyperlinkButton x:Uid="FeaturedAlbumsView_Title" Content="Albums"
+        <HyperlinkButton x:Uid="FeaturedPlaylistView_Title" Content="Playlists"
                          Style="{StaticResource HeaderedSectionHeader}"/>
         <Grid>
             <controls:ItemsCarousel ItemsSource="{x:Bind ViewModel.Items}"
-                                ItemClickCommand="{x:Bind ViewModel.SelectItemCommand}"
-                                HorizontalScrollBarVisibility="Hidden"
-                                ItemTemplate="{StaticResource SmallImagePanelTemplate}"/>
+                            ItemClickCommand="{x:Bind ViewModel.SelectItemCommand}"
+                            HorizontalScrollBarVisibility="Hidden"
+                            ItemTemplate="{StaticResource SmallImagePanelTemplate}"/>
 
             <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
-                          Width="40"
-                          Height="40"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"/>
+                      Width="40"
+                      Height="40"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"/>
         </Grid>
     </StackPanel>
 </UserControl>

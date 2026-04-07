@@ -38,10 +38,15 @@
                       Margin="20,20,20,0">
                         <uc:FeaturedAlbumsView/>
                     </Grid>
+
+                    <Grid x:Name="featuredPaylists" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.Below="featuredAlbums"
+                          Margin="20,20,20,0">
+                        <uc:FeaturedPlaylistView/>
+                    </Grid>
                 </RelativePanel>
             </ScrollViewer>
         </RefreshContainer>
-        <Button HorizontalAlignment="Right" 
+        <Button x:Uid="MainPage_RefreshButton" HorizontalAlignment="Right" 
                 VerticalAlignment="Top" 
                 Margin="0,-24,-56,0" 
                 Command="{x:Bind ViewModel.RefreshCommand}"

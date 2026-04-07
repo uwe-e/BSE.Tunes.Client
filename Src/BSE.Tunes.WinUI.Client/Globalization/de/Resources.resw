@@ -210,4 +210,13 @@
   <data name="MainPage_RandomPlayer_Button_Text" xml:space="preserve">
     <value>Wir haben {0} Songs und wenn Du genug Zeit hast, dann spielen wir sie alle.</value>
   </data>
+  <data name="FeaturedPlaylistView_Title.Content" xml:space="preserve">
+    <value>Wiedergabelisten</value>
+  </data>
+  <data name="FeaturedAlbumsView_Title.Content" xml:space="preserve">
+    <value>Alben</value>
+  </data>
+  <data name="MainPage_RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
 </root>
