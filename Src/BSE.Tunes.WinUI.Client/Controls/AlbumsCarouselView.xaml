@@ -78,13 +78,11 @@
                            AspectRatio="1.1" MinHeight="160"
                            MaxHeight="340"  GradientOpacity="0.5"/>
 
-        
+        <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+              Width="40"
+              Height="40"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"/>
 
-    <!--<controls:ItemsCarousel ItemsSource="{x:Bind ViewModel.Items}"
-                                ItemClickCommand="{x:Bind ViewModel.SelectItemCommand}"
-                                CarouselHeight="300" 
-                                AspectRatio="1.0"
-                                ItemSpacing="2"
-                                IsBusy="{x:Bind ViewModel.IsBusy, Mode=OneWay}"/>-->
     </Grid>
 </UserControl>

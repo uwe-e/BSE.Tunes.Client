@@ -6,43 +6,26 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class AlbumsCarouselViewModel : ObservableObject
+    public partial class AlbumsCarouselViewModel : RefreshableViewModel
     {
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
-        private readonly IMessenger _messenger;
 
         [ObservableProperty]
         private ObservableCollection<CarouselItem> _items = [];
 
-        [ObservableProperty]
-        private bool _isBusy;
-
         public AlbumsCarouselViewModel(
             IDataService dataService,
             IImageService imageService,
-            IMessenger messenger)
+            IMessenger messenger) : base(messenger)
         {
             _dataService = dataService;
             _imageService = imageService;
-            _messenger = messenger;
 
-            LoadData();
-
-            // Subscribe to refresh events if needed
-            //_messenger.Register<HomePageRefreshMessage>(this, (r, m) =>
-            //{
-            //    IsBusy = true;
-            //    LoadData();
-            //});
+            Initialize(); // Call after dependencies are set
         }
 
-        private void LoadData()
-        {
-            _ = LoadDataAsync();
-        }
-
-        private async Task LoadDataAsync()
+        protected override async Task LoadDataAsync()
         {
             Items.Clear();
             IsBusy = true;
@@ -61,7 +44,6 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                                 Title = album.Title ?? string.Empty,
                                 SubTitle = album.Artist?.Name ?? string.Empty,
                                 ImageSource = _imageService.GetBitmapSource(album.AlbumId, false),
-                                //ImageSource = _dataService.GetAlbumCoverUriById(album.AlbumId, false).ToString(),//_imageService.GetBitmapSource(album.AlbumId, false),
                                 Data = album
                             });
                         }

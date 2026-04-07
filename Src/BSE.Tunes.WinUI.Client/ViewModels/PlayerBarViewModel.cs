@@ -73,8 +73,6 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         private string FormatTime(TimeSpan timeSpan)
         {
-            // You can now easily format the TimeSpan in any way you need
-            // For example: hh:mm:ss, mm:ss, or even include milliseconds
             if (timeSpan == TimeSpan.Zero)
                 return "00:00:00";
 
@@ -87,7 +85,6 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         /// Note: Different from the MVVM Toolkit's OnPlayerStateChanged partial method which is
         /// called when the PlayerState property value changes.
         /// </summary>
-        /// <param name="state"></param>
         private void HandleMediaManagerPlayerStateChanged(BSE.Tunes.Shared.Services.Enums.PlayerState state)
         {
             System.Diagnostics.Debug.WriteLine($"PlayerBarViewModel: PlayerState changed to {state}");
@@ -97,10 +94,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         /// <summary>
         /// Handle changes to the playlist collection from the MediaManager.
-        /// Whenever the playlist changes, we need to update the navigation button states
+        /// Whenever the playlist changes, we need to update the navigation button states.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void HandlePlaylistCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             UpdateNavigationButtonStates();
@@ -109,7 +104,6 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         /// <summary>
         /// Handle the MediaStateChanged event from the media manager. When a new track is opened, update the current track and cover source.
         /// </summary>
-        /// <param name="state"></param>
         private void HandleMediaManagerMediaStateChanged(MediaState state)
         {
             System.Diagnostics.Debug.WriteLine($"PlayerBarViewModel: MediaState changed to {state}");

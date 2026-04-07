@@ -16,19 +16,13 @@
                 Background="{ThemeResource SystemAccentColor}"
                 HorizontalContentAlignment="Center"
                 Foreground="{ThemeResource SystemChromeWhiteColor}">
-            <Grid VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0">
-                    <FontIcon Glyph="&#xE946;" FontSize="28"/>
-                    <!--<FontIcon FontSize="16" Glyph="&#xE8C9;"  />
-                    <FontIcon FontSize="26" Glyph="&#xEA3A;" FontWeight="SemiBold" />-->
-                </Grid>
-                <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.Text, Mode=OneWay}" Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
-                           VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="10,0,0,0"/>
-            </Grid>
+            <TextBlock Text="{x:Bind ViewModel.Text, Mode=OneWay}" Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
+                       VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="10,0,0,0"/>
         </Button>
+        <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+                      Width="30"
+                      Height="30"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

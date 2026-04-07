@@ -1,11 +1,12 @@
 ﻿using BSE.Tunes.WinUI.Client.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class FeaturedAlbumsViewModel : ObservableObject
+    public partial class FeaturedAlbumsViewModel : RefreshableViewModel
     {
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
@@ -18,20 +19,16 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         public FeaturedAlbumsViewModel(
             IDataService dataService,
-            IImageService imageService)
+            IImageService imageService,
+            IMessenger messenger) : base(messenger)
         {
             _dataService = dataService;
             _imageService = imageService;
 
-            LoadData();
+            Initialize();
         }
 
-        private void LoadData()
-        {
-            _ = LoadDataAsync();
-        }
-
-        private async Task LoadDataAsync()
+        protected override async Task LoadDataAsync()
         {
             Items.Clear();
             IsBusy = true;

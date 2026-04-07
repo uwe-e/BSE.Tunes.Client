@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class RandomPlayerViewModel : ObservableObject
+    public partial class RandomPlayerViewModel : RefreshableViewModel
     {
         private readonly IDataService _dataService;
         private readonly IMediaManager _mediaManager;
@@ -25,27 +25,21 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             IDataService dataService,
             IMediaManager mediaManager,
             IMessenger messenger,
-            Contracts.Services.IResourceService resourceService)
+            Contracts.Services.IResourceService resourceService) : base(messenger)
         {
             _dataService = dataService;
             _mediaManager = mediaManager;
-            _messenger = messenger;
             _resourceService = resourceService;
 
-            LoadData();
+            Initialize();
+
         }
 
-        private void LoadData()
-        {
-            _ = LoadDataAsync();
-        }
-
-        private async Task LoadDataAsync()
+        protected override async Task LoadDataAsync()
         {
             IsBusy = true;
 
             ObservableCollection<int> trackIds = new(
-                //When GetTrackIdsByGenre returns null, we fallback to an empty list
                 await _dataService.GetTrackIdsByGenre() ?? []
             );
             if (trackIds != null)
@@ -57,7 +51,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     var track = await _dataService.GetTrackById(trackId);
                     if (track != null)
                     {
-                        _messenger.Send(new TrackChangedMessage(track));
+                        Messenger.Send(new TrackChangedMessage(track));
                     }
                 }
                 _mediaManager.Playlist = _trackIds.ToNavigableCollection();
