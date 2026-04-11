@@ -106,6 +106,7 @@ public partial class App : Application
             services.AddTransientForNavigation<RemoveEndpointSettingsPageViewModel, RemoveEndpointSettingsPage>();
             services.AddTransientForNavigation<LoginPageViewModel, LoginPage>();
             services.AddTransientForNavigation<RemoveLoginSettingsPageViewModel, RemoveLoginSettingsPage>();
+            services.AddTransientForNavigation<AlbumDetailPageViewModel, AlbumDetailPage>();
 
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();

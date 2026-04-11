@@ -1,4 +1,7 @@
-﻿using BSE.Tunes.WinUI.Client.Models;
+﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Models;
+using BSE.Tunes.WinUI.Client.Services;
+using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -10,7 +13,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
-
+        private readonly INavigationService _navigationService;
         [ObservableProperty]
         private ObservableCollection<CarouselItem> _items = [];
 
@@ -20,11 +23,12 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public FeaturedAlbumsViewModel(
             IDataService dataService,
             IImageService imageService,
+            INavigationService navigationService,
             IMessenger messenger) : base(messenger)
         {
             _dataService = dataService;
             _imageService = imageService;
-
+            _navigationService = navigationService;
             Initialize();
         }
 
@@ -60,11 +64,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         }
 
         [RelayCommand]
-        private void SelectItem(CarouselItem? item)
+        private async Task SelectItem(CarouselItem? item)
         {
             if (item?.Data != null)
             {
-                //_messenger.Send(new AlbumSelectedMessage(item.Album));
+                await _navigationService.NavigateToAsync(nameof(AlbumDetailPage), item.Data);
             }
         }
     }

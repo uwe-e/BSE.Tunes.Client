@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="BSE.Tunes.WinUI.Client.Views.AlbumDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BSE.Tunes.WinUI.Client.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
+    xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
+    xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
+    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="TrackItemTemplate" x:DataType="models:TrackItem">
+            <UserControl>
+                <Grid x:Name="listViewItem" Height="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" 
+                               Text="{x:Bind TrackNumber, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="1" 
+                               Text="{x:Bind Title, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Margin="12,0,0,0"/>
+
+                    <TextBlock Grid.Column="2" 
+                               Text="{x:Bind Artist, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               Margin="12,0,0,0"/>
+
+                    <TextBlock Grid.Column="3" 
+                               Text="{x:Bind FormattedDuration, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Margin="12,0,0,0"/>
+                </Grid>
+            </UserControl>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid>
+        <controls:ExtendedListView x:Name="listview"
+                                   ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
+                                   SelectionMode="Multiple"
+                                   ItemTemplate="{StaticResource TrackItemTemplate}"
+                                   AlternatingRow="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                   EnablePreSelection="True">
+            <controls:ExtendedListView.Header>
+                <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                    <Grid x:Name="infoHeader" Margin="20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image x:Name="infoCover" 
+                               Grid.Column="0"
+                               Source="{x:Bind ViewModel.CoverImageSource, Mode=OneWay}"
+                               Width="240" 
+                               Height="240"
+                               Margin="10"
+                               Stretch="UniformToFill"/>
+
+                        <Grid x:Name="infoProperties" 
+                              Grid.Column="1"
+                              Margin="10" 
+                              Height="240"
+                              VerticalAlignment="Top">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock x:Name="infoTitle" 
+                                       Grid.Row="0"
+                                       Text="{x:Bind ViewModel.Album.Title, Mode=OneWay}"
+                                       Style="{StaticResource TitleLargeTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"/>
+
+                            <TextBlock x:Name="infoSubTitle" 
+                                       Grid.Row="1"
+                                       Text="{x:Bind ViewModel.Album.Artist.Name, Mode=OneWay}"
+                                       Style="{StaticResource BodyLargeTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis"/>
+
+                            <TextBlock x:Name="albumGenre" 
+                                       Grid.Row="2"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       TextTrimming="CharacterEllipsis">
+                                <Run Text="{x:Bind ViewModel.Album.Year, Mode=OneWay}"/>
+                                <Run Text="•"/>
+                                <Run Text="{x:Bind ViewModel.Album.Genre.Name, Mode=OneWay}"/>
+                            </TextBlock>
+
+                            <StackPanel x:Name="infoAction" 
+                                        Grid.Row="3"
+                                        Orientation="Horizontal" 
+                                        VerticalAlignment="Bottom">
+
+                                <Button Margin="0,0,8,0" Style="{StaticResource AccentButtonStyle}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                        <TextBlock Text="Play All"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Margin="8,0" >
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon Glyph="&#xE8B1;" FontSize="16"/>
+                                        <TextBlock Text="Shuffle"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button x:Name="buttonAddAllTo" Margin="8,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon Glyph="&#xE710;"/>
+                                        <TextBlock Text="Add To"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+
+                    <CommandBar DefaultLabelPosition="Right" Visibility="Visible">
+                        <AppBarButton Icon="Cancel" Label="Clear Selection" />
+                        <AppBarButton Icon="Play" Label="Play Selection" />
+                        <AppBarButton Icon="Next" Label="Play Next" />
+                        <AppBarButton Icon="Add" Label="Add to Playlist">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="New Playlist" Icon="Add"/>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Text="Favorites" Icon="Favorite"/>
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton Icon="SelectAll" Label="Select All" />
+                        <AppBarButton Icon="ClearSelection" Label="Unselect All" />
+                    </CommandBar>
+                </StackPanel>
+            </controls:ExtendedListView.Header>
+        </controls:ExtendedListView>
+    </Grid>
+</Page>

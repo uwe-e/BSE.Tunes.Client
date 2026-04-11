@@ -22,6 +22,7 @@
     <None Remove="Controls\ItemsCarousel.xaml" />
     <None Remove="Controls\PlayerBarView.xaml" />
     <None Remove="Controls\RandomPlayerView.xaml" />
+    <None Remove="Views\AlbumDetailPage.xaml" />
     <None Remove="Views\EndpointConfigurationPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\PersonalizationSettingsPage.xaml" />
@@ -49,6 +50,12 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Views\AlbumDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Controls\ListView\ExtendedListViewItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\FeaturedPlaylistView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="/Styles/TextBlock.xaml" />
 
                 <ResourceDictionary Source="/Controls/Carousel/Carousel.xaml" />
+                <ResourceDictionary Source="/Controls/ListView/ExtendedListViewItem.xaml" />
 
 
             </ResourceDictionary.MergedDictionaries>
