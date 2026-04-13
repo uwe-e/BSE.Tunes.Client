@@ -58,19 +58,42 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Simple sticky header - no UserControl, no VisualStates -->
-        <Grid x:Name="infoHeader" 
-              Grid.Row="0"
-              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-              Margin="20"
-              Height="280">
+        <!-- Sticky header wrapped in UserControl to enable VisualStateManager support.
+            VisualStates are defined on the inner Grid and controlled by StickyHeaderBehavior.
+            When scrolling down, 'Collapsed' state hides subtitle/genre and shows action buttons
+            When scrolling up, 'Expanded' state shows subtitle/genre and hides action buttons. -->
+        <UserControl x:Name="infoHeader"
+                     Grid.Row="0">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid Padding="5" Background="{ThemeResource LayerFillColorDefaultBrush}">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="ScrollStates">
+                        <VisualState x:Name="Expanded">
+                            <VisualState.Setters>
+                                <Setter Target="infoSubTitle.Visibility" Value="Visible"/>
+                                <Setter Target="infoSubTitle.Opacity" Value="1"/>
+                                <Setter Target="albumGenre.Visibility" Value="Visible"/>
+                                <Setter Target="albumGenre.Opacity" Value="1"/>
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Collapsed">
+                            <VisualState.Setters>
+                                <Setter Target="infoSubTitle.Visibility" Value="Collapsed"/>
+                                <Setter Target="infoSubTitle.Opacity" Value="0"/>
+                                <Setter Target="albumGenre.Visibility" Value="Collapsed"/>
+                                <Setter Target="albumGenre.Opacity" Value="0"/>
+                                <!--<Setter Target="infoAction.VerticalAlignment" Value="Top"/>-->
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
 
-            <Image x:Name="infoCover" 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image x:Name="infoCover" 
                    Grid.Column="0"
                    Source="{x:Bind ViewModel.CoverImageSource, Mode=OneWay}"
                    Width="240"
@@ -78,68 +101,71 @@
                    Margin="10"
                    Stretch="UniformToFill"/>
 
-            <Grid x:Name="infoProperties" 
+                <Grid x:Name="infoProperties" 
                   Grid.Column="1"
                   Margin="10" 
-                  Height="240"
                   VerticalAlignment="Top">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <TextBlock x:Name="infoTitle" 
+                    <TextBlock x:Name="infoTitle" 
                            Grid.Row="0"
                            Text="{x:Bind ViewModel.Album.Title, Mode=OneWay}"
                            Style="{StaticResource TitleLargeTextBlockStyle}"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="NoWrap"/>
 
-                <TextBlock x:Name="infoSubTitle" 
+                    <TextBlock x:Name="infoSubTitle" 
                            Grid.Row="1"
+                               Margin="0,8,0,8"
                            Text="{x:Bind ViewModel.Album.Artist.Name, Mode=OneWay}"
                            Style="{StaticResource BodyLargeTextBlockStyle}"
                            TextTrimming="CharacterEllipsis"/>
 
-                <TextBlock x:Name="albumGenre" 
+                    <TextBlock x:Name="albumGenre" 
                            Grid.Row="2"
+                               Margin="0,8,0,8"
                            Style="{StaticResource BodyTextBlockStyle}"
                            TextTrimming="CharacterEllipsis">
-                    <Run Text="{x:Bind ViewModel.Album.Year, Mode=OneWay}"/>
-                    <Run Text="•"/>
-                    <Run Text="{x:Bind ViewModel.Album.Genre.Name, Mode=OneWay}"/>
-                </TextBlock>
+                        <Run Text="{x:Bind ViewModel.Album.Year, Mode=OneWay}"/>
+                        <Run Text="•"/>
+                        <Run Text="{x:Bind ViewModel.Album.Genre.Name, Mode=OneWay}"/>
+                    </TextBlock>
 
-                <StackPanel x:Name="infoAction" 
+                    <StackPanel x:Name="infoAction" 
                             Grid.Row="3"
-                            Orientation="Horizontal" 
-                            VerticalAlignment="Bottom">
+                                Margin="0,4,0,0"
+                            Orientation="Horizontal">
 
-                    <Button Margin="0,0,8,0" Style="{StaticResource AccentButtonStyle}">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
-                            <FontIcon Glyph="&#xE768;" FontSize="16"/>
-                            <TextBlock Text="Play All"/>
-                        </StackPanel>
-                    </Button>
+                        <Button Margin="0,0,8,0" Style="{StaticResource AccentButtonStyle}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                <TextBlock Text="Play All"/>
+                            </StackPanel>
+                        </Button>
 
-                    <Button Margin="8,0">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
-                            <FontIcon Glyph="&#xE8B1;" FontSize="16"/>
-                            <TextBlock Text="Shuffle"/>
-                        </StackPanel>
-                    </Button>
+                        <Button Margin="8,0">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE8B1;" FontSize="16"/>
+                                <TextBlock Text="Shuffle"/>
+                            </StackPanel>
+                        </Button>
 
-                    <Button x:Name="buttonAddAllTo" Margin="8,0">
-                        <StackPanel Orientation="Horizontal" Spacing="6">
-                            <FontIcon Glyph="&#xE710;"/>
-                            <TextBlock Text="Add To"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                        <Button x:Name="buttonAddAllTo" Margin="8,0">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <FontIcon Glyph="&#xE710;"/>
+                                <TextBlock Text="Add To"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
             </Grid>
-        </Grid>
+        </UserControl>
 
         <!-- CommandBar -->
         <CommandBar x:Name="stickyCommandBar"
@@ -166,9 +192,9 @@
                 <behaviors:StickyHeaderBehavior 
                     HeaderElement="{x:Bind infoHeader}"
                     CoverImage="{x:Bind infoCover}"
-                    MaxHeaderHeight="280"
+                    MaxHeaderHeight="240"
                     MinHeaderHeight="120"
-                    MaxCoverSize="240"
+                    MaxCoverSize="220"
                     MinCoverSize="100"
                     ScrollThreshold="160"/>
             </interactivity:Interaction.Behaviors>

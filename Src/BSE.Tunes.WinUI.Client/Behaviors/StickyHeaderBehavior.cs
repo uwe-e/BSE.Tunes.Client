@@ -7,7 +7,7 @@ namespace BSE.Tunes.WinUI.Client.Behaviors
     public class StickyHeaderBehavior : Behavior<ListView>
     {
         private ScrollViewer _scrollViewer;
-
+        private string _currentState = "Collapsed";
         public static readonly DependencyProperty HeaderElementProperty =
             DependencyProperty.Register(
                 nameof(HeaderElement),
@@ -137,6 +137,36 @@ namespace BSE.Tunes.WinUI.Client.Behaviors
             if (HeaderElement != null)
             {
                 HeaderElement.Height = newHeaderHeight;
+
+                // Trigger Visual State change only when crossing threshold
+                var threshold = 0.5;
+                var stateName = scaleFactor > threshold ? "Expanded" : "Collapsed";
+
+                // Only call GoToState if the state actually changed
+                if (stateName != _currentState)
+                {
+                    _currentState = stateName;
+                    // Get the control that has the VisualStateGroups
+                    Control targetControl = null;
+
+                    if (HeaderElement is UserControl userControl)
+                    {
+                        // When VisualStateGroups are on the UserControl's content (Grid),
+                        // we need to pass the UserControl itself as the control parameter
+                        var result = VisualStateManager.GoToState(userControl, stateName, true);
+                        System.Diagnostics.Debug.WriteLine($"GoToState({stateName}) on UserControl returned: {result}");
+                    }
+                    else if (HeaderElement is Control control)
+                    {
+                        var result = VisualStateManager.GoToState(control, stateName, true);
+                        System.Diagnostics.Debug.WriteLine($"GoToState({stateName}) on {control.GetType().Name} returned: {result}");
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"HeaderElement is not a Control! Type: {HeaderElement.GetType().Name}");
+                    }
+                }
+
             }
 
             if (CoverImage != null)
