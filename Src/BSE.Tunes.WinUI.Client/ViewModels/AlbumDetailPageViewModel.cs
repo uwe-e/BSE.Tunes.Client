@@ -1,9 +1,12 @@
 ﻿using BSE.Tunes.WinUI.Client.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
@@ -23,10 +26,27 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private ObservableCollection<TrackItem> _tracks = [];
 
         [ObservableProperty]
-        private ObservableCollection<Track> _selectedItems = [];
+        private ObservableCollection<TrackItem> _selectedItems = [];
+
+        [ObservableProperty]
+        private TrackItem? _selectedTrack;
+
+        [ObservableProperty]
+        private ListViewSelectionMode _selectionMode = ListViewSelectionMode.Single;
 
         [ObservableProperty]
         private bool _isBusy;
+
+        [ObservableProperty]
+        private bool _isCommandBarVisible;
+
+        [ObservableProperty]
+        private bool _isItemClickEnabled = true;
+
+        [ObservableProperty]
+        private bool _allItemsSelected;
+
+        public bool HasSelectedItems => SelectedItems.Count > 0;
 
         public AlbumDetailPageViewModel(
             IDataService dataService,
@@ -36,7 +56,12 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             _dataService = dataService;
             _imageService = imageService;
             _messenger = messenger;
+
+            // Monitor selected items collection
+            SelectedItems.CollectionChanged += OnSelectedItemsChanged;
         }
+
+        
 
         public override void OnNavigatedTo(object parameter)
         {
@@ -83,18 +108,26 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     {
                         Tracks.Add(TrackItem.FromTrack(track));
                     }
-                        
-                    //Tracks.Add(new TrackItem
-                    //{
-                    //    TrackNumber = track.TrackNumber,
-                    //    Title = track.Name ?? string.Empty,
-                    //    Artist = Album.Artist?.Name ?? string.Empty,
-                    //    Duration = track.Duration,
-                    //    Data = track
-                    //});
                 }
             }
 
+        }
+
+        private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(HasSelectedItems));
+            IsCommandBarVisible = HasSelectedItems;
+            SelectionMode = HasSelectedItems ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Extended;
+            IsItemClickEnabled = !HasSelectedItems;
+        }
+
+        [RelayCommand]
+        private void SelectItems(TrackItem? trackItem)
+        {
+            if (trackItem != null && !SelectedItems.Contains(trackItem))
+            {
+                SelectedItems.Add(trackItem);
+            }
         }
     }
 }

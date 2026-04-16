@@ -135,6 +135,13 @@
 
                         <!-- Pre-Selection Icon -->
                         <Grid x:Name="PlaceholderPreSelection" Visibility="Collapsed">
+                            <!-- The PreSelector should be switchable.
+                                This is the element that makes the visiblity -->
+                            <Button Opacity="0" Width="30" VerticalAlignment="Stretch" BorderBrush="{x:Null}">
+                                <!--The PreSelectionSquare isnt visible when pointerover on rows with an alternating color.
+                                    this fake button as the parent element prevents this-->
+                            </Button>
+
                             <Border x:Name="PreSelectionSquare"
                                     BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                                     BorderThickness="1"
@@ -144,35 +151,42 @@
                                     Margin="12,0,0,0"
                                     VerticalAlignment="Center"
                                     Visibility="Collapsed"
-                                    Width="20"
-                                    Background="Transparent">
+                                    Width="20">
+                                <Border.Clip>
+                                    <RectangleGeometry Rect="0,0,20,20">
+                                    </RectangleGeometry>
+                                </Border.Clip>
                                 <FontIcon x:Name="PreSelectCheck"
+                                          Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                                          FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                          FontSize="16" Glyph="&#xE73E;" Opacity="0" Visibility="Visible"/>
+                                <!--<FontIcon x:Name="PreSelectCheck"
                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                                           FontFamily="{ThemeResource SymbolThemeFontFamily}"
                                           FontSize="16"
-                                          Glyph="&#xE768;"
-                                          Visibility="Visible"/>
+                                          Glyph="&#xE73E;"
+                                          Visibility="Visible"/>-->
                             </Border>
                         </Grid>
 
                         <!-- Multi-Select Checkbox -->
                         <Border x:Name="MultiSelectSquare"
-            BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-            BorderThickness="1"
-            CornerRadius="2"
-            HorizontalAlignment="Left"
-            Height="20"
-            Margin="12,0,0,0"
-            VerticalAlignment="Center"
-            Visibility="Collapsed"
-            Width="20">
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                BorderThickness="1"
+                                CornerRadius="2"
+                                HorizontalAlignment="Left"
+                                Height="20"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed"
+                                Width="20">
                             <FontIcon x:Name="MultiSelectCheck"
-                 Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                 FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                 FontSize="16"
-                 Glyph="&#xE73E;"
-                 Opacity="0"
-                 Visibility="Collapsed"/>
+                                      Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                      FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                      FontSize="16"
+                                      Glyph="&#xE73E;"
+                                      Opacity="0"
+                                      Visibility="Collapsed"/>
                         </Border>
                     </Grid>
                 </ControlTemplate>

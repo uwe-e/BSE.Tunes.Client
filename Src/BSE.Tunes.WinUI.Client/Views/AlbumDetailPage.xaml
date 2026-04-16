@@ -172,21 +172,27 @@
                     Grid.Row="1"
                     VerticalAlignment="Top"
                     DefaultLabelPosition="Right"
-                    Visibility="Visible">
+                    Visibility="{x:Bind ViewModel.IsCommandBarVisible, Mode=OneWay}">
             <AppBarButton Icon="Cancel" Label="Clear Selection" />
             <AppBarButton Icon="Play" Label="Play Selection" />
             <AppBarButton Icon="Next" Label="Play Next" />
             <AppBarButton Icon="Add" Label="Add to Playlist"/>
         </CommandBar>
 
-        <!-- ListView with Behavior -->
+        <!-- ListView with Behavior
+        
+        -->
         <controls:ExtendedListView x:Name="listview"
                                    Grid.Row="1"
-                                   ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
-                                   SelectionMode="Multiple"
                                    ItemTemplate="{StaticResource TrackItemTemplate}"
-                                   AlternatingRow="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                   ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
                                    EnablePreSelection="True"
+                                   SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                                   AlternatingRow="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                   SelectedItem="{x:Bind ViewModel.SelectedTrack, Mode=TwoWay}"
+                                   controls:ListViewExtensions.SelectedItems="{x:Bind ViewModel.SelectedItems, Mode=TwoWay}"
+                                   IsItemClickEnabled="{x:Bind ViewModel.IsItemClickEnabled, Converter={StaticResource BoolNegationConverter}}"
+                                   PreSelectionCommand="{x:Bind ViewModel.SelectItemsCommand}"
                                    Padding="0,48,0,0">
             <interactivity:Interaction.Behaviors>
                 <behaviors:StickyHeaderBehavior 

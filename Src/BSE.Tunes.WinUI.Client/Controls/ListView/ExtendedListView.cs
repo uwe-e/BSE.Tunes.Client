@@ -82,7 +82,6 @@ public class ExtendedListView : ListView
         if (element is ExtendedListViewItem lvi)
         {
             lvi.ParentListView = this;
-            lvi.EnablePreSelection = EnablePreSelection;
         }
     }
 
