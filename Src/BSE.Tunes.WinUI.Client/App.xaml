@@ -15,12 +15,24 @@
                 <ResourceDictionary Source="/Controls/Carousel/Carousel.xaml" />
                 <ResourceDictionary Source="/Controls/ListView/ExtendedListViewItem.xaml" />
 
+                
 
             </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="CardBackgroundSolidColorDefault" Color="#fdfdfd"/>
+                    <!-- This is where the transparency comes from! -->
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="CardBackgroundSolidColorDefault" Color="#323232"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
 
             <!-- Value Converters -->
             <helpers:BoolNegationConverter x:Key="BoolNegationConverter"/>
             <helpers:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <!-- Override the system style -->
             <Style x:Key="AppTitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">

@@ -153,7 +153,7 @@
                     <Image Stretch="Uniform" Source="{x:Bind ViewModel.CoverSource, Mode=OneWay}"/>
                 </Border>
                 <StackPanel Orientation="Vertical" Margin="6,3,0,0">
-                    <TextBlock Text="{x:Bind ViewModel.CurrentTrack.Album.Title, Mode=OneWay}" Style="{StaticResource BodyLargeStrongTextBlockStyle}" FontWeight="SemiBold" 
+                    <TextBlock Text="{x:Bind ViewModel.CurrentTrack.Name, Mode=OneWay}" Style="{StaticResource BodyLargeStrongTextBlockStyle}" FontWeight="SemiBold" 
                            TextTrimming="WordEllipsis" TextWrapping="Wrap"/>
                     <TextBlock Text="{x:Bind ViewModel.CurrentTrack.Album.Artist.Name, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}"
                            TextTrimming="WordEllipsis"/>

@@ -219,4 +219,31 @@
   <data name="MainPage_RefreshButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="AlbumDetailPage_ButtonPlayAll.Text" xml:space="preserve">
+    <value>Play All</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonShuffle.Text" xml:space="preserve">
+    <value>Play Random</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonAddAllTo.Text" xml:space="preserve">
+    <value>Add To</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonClearSelection.Label" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonPlaySelection.Label" xml:space="preserve">
+    <value>Play Next</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonPlay.Label" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonAddTo.Label" xml:space="preserve">
+    <value>Add To</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonSelectAll.Label" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonUnSelectAll.Label" xml:space="preserve">
+    <value>Unselect All</value>
+  </data>
 </root>
