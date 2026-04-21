@@ -1,14 +1,10 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 
-namespace BSE.Tunes.WinUI.Client.Helpers;
+namespace BSE.Tunes.WinUI.Client.Converters;
 
 public class EnumToBooleanConverter : IValueConverter
 {
-    public EnumToBooleanConverter()
-    {
-    }
-
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         if (parameter is string enumString)

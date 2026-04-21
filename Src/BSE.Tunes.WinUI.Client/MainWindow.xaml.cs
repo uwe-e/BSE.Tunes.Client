@@ -1,4 +1,5 @@
-﻿using BSE.Tunes.WinUI.Client.Helpers;
+﻿using BSE.Tunes.WinUI.Client.Extensions;
+using BSE.Tunes.WinUI.Client.Helpers;
 
 using Windows.UI.ViewManagement;
 

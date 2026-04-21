@@ -30,8 +30,9 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <!-- Value Converters -->
-            <helpers:BoolNegationConverter x:Key="BoolNegationConverter"/>
-            <helpers:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
+            <converters:BoolNegationConverter x:Key="BoolNegationConverter"/>
+            <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+            <converters:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <!-- Override the system style -->

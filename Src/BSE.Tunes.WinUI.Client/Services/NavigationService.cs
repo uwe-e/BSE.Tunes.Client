@@ -1,6 +1,6 @@
 ﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Contracts.ViewModels;
-using BSE.Tunes.WinUI.Client.Helpers;
+using BSE.Tunes.WinUI.Client.Extensions;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Diagnostics.CodeAnalysis;

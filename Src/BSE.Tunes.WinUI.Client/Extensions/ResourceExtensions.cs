@@ -1,6 +1,6 @@
 ﻿using Microsoft.Windows.ApplicationModel.Resources;
 
-namespace BSE.Tunes.WinUI.Client.Helpers;
+namespace BSE.Tunes.WinUI.Client.Extensions;
 
 public static class ResourceExtensions
 {

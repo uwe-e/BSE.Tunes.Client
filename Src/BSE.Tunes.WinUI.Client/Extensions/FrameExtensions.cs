@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 
-namespace BSE.Tunes.WinUI.Client.Helpers;
+namespace BSE.Tunes.WinUI.Client.Extensions;
 
 public static class FrameExtensions
 {

@@ -7,9 +7,6 @@
     xmlns:helpers="using:BSE.Tunes.WinUI.Client.Helpers"
     xmlns:xaml="using:Microsoft.UI.Xaml"
     mc:Ignorable="d">
-    <Page.Resources>
-        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
-    </Page.Resources>
 
     <ScrollViewer>
         <StackPanel Spacing="8" Padding="24">

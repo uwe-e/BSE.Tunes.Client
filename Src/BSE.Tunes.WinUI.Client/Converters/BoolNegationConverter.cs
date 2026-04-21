@@ -1,6 +1,6 @@
 using Microsoft.UI.Xaml.Data;
 
-namespace BSE.Tunes.WinUI.Client.Helpers;
+namespace BSE.Tunes.WinUI.Client.Converters;
 
 public class BoolNegationConverter : IValueConverter
 {
