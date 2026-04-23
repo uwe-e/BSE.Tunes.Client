@@ -306,6 +306,12 @@ namespace BSE.Tunes.Shared.Services
             await _requestService.DeleteAsync($"api/playlists/{playlistEntry.PlaylistId}/entries/{playlistEntry.Id}");
         }
 
+        public async Task<IReadOnlyList<PlaylistSummary>> GetAllPlaylists()
+        {
+            var dtoResult = await _requestService.GetAsync<IReadOnlyList<PlaylistSummaryDto>>("api/playlists/all");
+            return _mapper.MapCollection<PlaylistSummary>(dtoResult).ToList();
+        }
+
         public async Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
         {
             var parameters = new Dictionary<string, string>(2) {

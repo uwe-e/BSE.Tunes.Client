@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="/Styles/Thickness.xaml" />
                 <ResourceDictionary Source="/Styles/TextBlock.xaml" />
 
+                <ResourceDictionary Source="/Controls/MenuFlyoutItem/MenuFlyoutItem.xaml" />
                 <ResourceDictionary Source="/Controls/Carousel/Carousel.xaml" />
                 <ResourceDictionary Source="/Controls/ListView/ExtendedListViewItem.xaml" />
 

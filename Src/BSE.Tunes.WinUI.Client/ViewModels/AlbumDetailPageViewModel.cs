@@ -48,6 +48,12 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         [ObservableProperty]
         private bool _allItemsSelected;
 
+        [ObservableProperty]
+        private ObservableCollection<BSE.Tunes.WinUI.Client.Models.FlyoutItem> _playlistMenuItems = [];
+
+        [ObservableProperty]
+        private bool _isAllToPlaylistFlyoutOpen;
+
         public bool HasSelectedItems => SelectedItems.Count > 0;
 
         public AlbumDetailPageViewModel(
@@ -74,6 +80,47 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             if (parameter is Album album)
             {
                 _ = LoadAlbumAsync(album.Id);
+            }
+
+            _ = LoadPlaylistsAsync();
+        }
+
+        private async Task LoadPlaylistsAsync()
+        {
+            var playlists = await _dataService.GetAllPlaylists();
+            PlaylistMenuItems.Clear();
+
+            // Add "New Playlist" item
+
+            try
+            {
+                PlaylistMenuItems.Add(new FlyoutItem
+                {
+                    Text = "New Playlist",
+                    Glyph = "\uE710", // Add icon
+                    Data = null,
+                });
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that may occur during playlist loading
+                System.Diagnostics.Debug.WriteLine($"Error loading playlists: {ex.Message}");
+            }
+
+            // Add separator
+            PlaylistMenuItems.Add(new FlyoutItem
+            {
+                IsSeparator = true
+            });
+
+            // Add playlists
+            foreach (var playlist in playlists)
+            {
+                PlaylistMenuItems.Add(new FlyoutItem
+                {
+                    Text = playlist.Name ?? string.Empty,
+                    Data = playlist
+                });
             }
         }
 
@@ -198,6 +245,15 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 var trackIds = new ObservableCollection<int>(SelectedItems.Select(t => t.Id));
                 await _mediaManager.InsertTracksToPlayQueueAsync(trackIds, PlayerMode.Song);
                 SelectedItems.Clear();
+            }
+        }
+
+        [RelayCommand]
+        private async Task MenuItemClicked(object? parameter)
+        {
+            if (parameter is FlyoutItem flyoutItem)
+            {
+                //await _mediaManager.PlayTrackAsync(trackItem.Id, PlayerMode.Song);
             }
         }
     }

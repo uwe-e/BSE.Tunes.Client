@@ -37,6 +37,6 @@ namespace BSE.Tunes.Shared.Services
         Task<bool> IsEndPointAccessibleAsync();
         Task<bool> IsEndPointAccessibleAsync(string serviceEndPoint);
         Task<bool> UpdateHistory(History history);
-        
+        Task<IReadOnlyList<PlaylistSummary>> GetAllPlaylists();
     }
 }

@@ -120,6 +120,19 @@ namespace BSE.Tunes.WinUI.Client.Services.Mappers.Profiles
                     };
                 });
 
+            CreateMap<PlaylistSummaryDto, PlaylistSummary>()
+                .ConvertUsing((dto, mapper) =>
+                {
+                    if (dto == null) return null;
+                    return new PlaylistSummary
+                    {
+                        Id = dto.Id,
+                        Guid = dto.Guid,
+                        Name = dto.Name ?? string.Empty,
+                        Owner = dto.Owner ?? string.Empty
+                    };
+                });
+
         }
     }
 }   

@@ -9,11 +9,38 @@
     xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
     xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
     xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
+    xmlns:extensions="using:BSE.Tunes.WinUI.Client.Extensions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d">
 
     <Page.Resources>
+
+        <DataTemplate x:Key="PlaylistFlyoutItemTemplate" x:DataType="models:FlyoutItem">
+            <Grid>
+                <controls:MenuFlyoutItem IsIconEnabled="True"
+                                         Text="{Binding Text}"
+                                         Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=true}">
+                    <controls:MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="{Binding Glyph}"/>
+                    </controls:MenuFlyoutItem.Icon>
+                </controls:MenuFlyoutItem>
+                <MenuFlyoutSeparator Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=false}"/>
+            </Grid>
+        </DataTemplate>
+
+        <!--<DataTemplate x:Key="PlaylistFlyoutItemTemplate">
+            <Grid>
+                <controls:MenuFlyoutItem Text="{Binding Text}"
+                       Command="{Binding DataContext.MenuItemClickedCommand, ElementName=listview}"
+                       CommandParameter="{Binding}" Visibility="Visible">
+                    <controls:MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="{Binding Glyph}"/>
+                    </controls:MenuFlyoutItem.Icon>
+                </controls:MenuFlyoutItem>
+                <MenuFlyoutSeparator Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            </Grid>
+        </DataTemplate>-->
 
         <DataTemplate x:Key="TrackItemTemplate" x:DataType="models:TrackItem">
             <UserControl>
@@ -166,6 +193,36 @@
                                 <FontIcon Glyph="&#xE710;"/>
                                 <TextBlock x:Uid="AlbumDetailPage_ButtonAddAllTo" Text="Add To"/>
                             </StackPanel>
+                            <Button.Flyout>
+                                <Flyout extensions:FlyoutExtensions.IsOpen="{x:Bind ViewModel.IsAllToPlaylistFlyoutOpen, Mode=TwoWay}"
+                                        extensions:FlyoutExtensions.Parent="{x:Bind buttonAddAllTo}"
+                                        extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems}"
+                                        extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
+                                        extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}">
+                                    <!--<extensions:FlyoutExtensions.ItemTemplate>
+                                        <DataTemplate x:DataType="models:FlyoutItem">
+                                            <Grid>
+                                                <controls:MenuFlyoutItem 
+                    IsIconEnabled="True"
+                    Command="{Binding MenuItemClickedCommand}"
+                    CommandParameter="{Binding}"
+                    Text="{Binding Text}"
+                    Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=true}">
+                                                    <controls:MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="{Binding Glyph}"/>
+                                                    </controls:MenuFlyoutItem.Icon>
+                                                </controls:MenuFlyoutItem>
+                                                <MenuFlyoutSeparator 
+                    Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=false}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </behaviors:FlyoutExtensions.ItemTemplate>-->
+                                </Flyout>
+                                <!--<MenuFlyout behaviors:MenuFlyoutBehaviour.IsOpen="{x:Bind ViewModel.IsAllToPlaylistFlyoutOpen, Mode=TwoWay}"
+                                            behaviors:MenuFlyoutBehaviour.Parent="{Binding ElementName=buttonAddAllTo}"
+                                            behaviors:MenuFlyoutBehaviour.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems, Mode=OneWay}"
+                                            behaviors:MenuFlyoutBehaviour.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"/>-->
+                            </Button.Flyout>
                         </Button>
                     </StackPanel>
                 </Grid>
@@ -231,7 +288,15 @@
                 </AppBarButton>
                 <AppBarButton x:Uid="AlbumDetailPage_ButtonPlaySelection" Icon="MusicInfo" Label="Play Next"
                               Command="{x:Bind ViewModel.PlayAsNextCommand}"/>
-                <AppBarButton x:Uid="AlbumDetailPage_ButtonAddTo" Icon="Add" Label="Add to Playlist"/>
+                <AppBarButton x:Uid="AlbumDetailPage_ButtonAddTo" x:Name="buttonAddTo" Icon="Add" Label="Add to Playlist">
+                    <AppBarButton.Flyout>
+                        <Flyout extensions:FlyoutExtensions.IsOpen="{x:Bind ViewModel.IsAllToPlaylistFlyoutOpen, Mode=TwoWay}"
+                                extensions:FlyoutExtensions.Parent="{x:Bind buttonAddTo}"
+                                extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems}"
+                                extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
+                                extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}"/>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
                 <AppBarButton x:Uid="AlbumDetailPage_ButtonSelectAll" Icon="SelectAll" Label="Add to Playlist"
                               Command="{x:Bind ViewModel.SelectAllCommand}"
                               Visibility="{x:Bind ViewModel.AllItemsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True, Mode=OneWay}"/>
