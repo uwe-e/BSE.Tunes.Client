@@ -275,10 +275,6 @@ public static class FlyoutExtensions
                     internalItem.CommandParameter = customItem.CommandParameter ?? dataItem;
                 }
 
-                if (Controls.MenuFlyoutItem.GetUpdateTagTarget(customItem))
-                {
-                    internalItem.Tag = customItem.Tag;
-                }
                 return internalItem;
             }
         }
@@ -311,11 +307,6 @@ public static class FlyoutExtensions
                         {
                             internalItem.Command = customChildItem.Command;
                             internalItem.CommandParameter = customChildItem.CommandParameter ?? dataItem;
-                        }
-
-                        if (Controls.MenuFlyoutItem.GetUpdateTagTarget(customChildItem))
-                        {
-                            internalItem.Tag = customChildItem.Tag;
                         }
                         return internalItem;
                     }

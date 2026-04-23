@@ -45,14 +45,6 @@ public sealed class MenuFlyoutItem : Control
             typeof(MenuFlyoutItem),
             new PropertyMetadata(true, OnIsIconEnabledChanged));
 
-    // Attached property for UpdateTagTarget behavior
-    public static readonly DependencyProperty UpdateTagTargetProperty =
-        DependencyProperty.RegisterAttached(
-            "UpdateTagTarget",
-            typeof(bool),
-            typeof(MenuFlyoutItem),
-            new PropertyMetadata(false));
-
     public MenuFlyoutItem()
     {
         DefaultStyleKey = typeof(MenuFlyoutItem);
@@ -87,12 +79,6 @@ public sealed class MenuFlyoutItem : Control
         get => (bool)GetValue(IsIconEnabledProperty);
         set => SetValue(IsIconEnabledProperty, value);
     }
-
-    public static bool GetUpdateTagTarget(DependencyObject obj) =>
-        (bool)obj.GetValue(UpdateTagTargetProperty);
-
-    public static void SetUpdateTagTarget(DependencyObject obj, bool value) =>
-        obj.SetValue(UpdateTagTargetProperty, value);
 
     protected override void OnApplyTemplate()
     {
@@ -159,12 +145,6 @@ public sealed class MenuFlyoutItem : Control
 
         _menuFlyoutItem.Text = Text;
         _menuFlyoutItem.Icon = IsIconEnabled ? Icon : null;
-        
-        // Update Tag if UpdateTagTarget is enabled
-        if (GetUpdateTagTarget(this))
-        {
-            _menuFlyoutItem.Tag = Tag;
-        }
     }
 
     private void OnMenuFlyoutItemClick(object sender, RoutedEventArgs e)

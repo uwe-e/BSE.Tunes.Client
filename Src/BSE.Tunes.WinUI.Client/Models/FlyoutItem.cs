@@ -1,5 +1,3 @@
-using System.Windows.Input;
-
 namespace BSE.Tunes.WinUI.Client.Models;
 
 /// <summary>
@@ -11,5 +9,4 @@ public class FlyoutItem
     public string? Glyph { get; set; }
     public bool IsSeparator { get; set; }
     public object? Data { get; set; }
-    //public ICommand? Command { get; set; }
 }

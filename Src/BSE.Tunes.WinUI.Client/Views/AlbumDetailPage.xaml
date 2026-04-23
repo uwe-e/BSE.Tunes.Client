@@ -29,19 +29,6 @@
             </Grid>
         </DataTemplate>
 
-        <!--<DataTemplate x:Key="PlaylistFlyoutItemTemplate">
-            <Grid>
-                <controls:MenuFlyoutItem Text="{Binding Text}"
-                       Command="{Binding DataContext.MenuItemClickedCommand, ElementName=listview}"
-                       CommandParameter="{Binding}" Visibility="Visible">
-                    <controls:MenuFlyoutItem.Icon>
-                        <FontIcon Glyph="{Binding Glyph}"/>
-                    </controls:MenuFlyoutItem.Icon>
-                </controls:MenuFlyoutItem>
-                <MenuFlyoutSeparator Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            </Grid>
-        </DataTemplate>-->
-
         <DataTemplate x:Key="TrackItemTemplate" x:DataType="models:TrackItem">
             <UserControl>
                 <Grid x:Name="listViewItem" Height="44">
@@ -198,30 +185,7 @@
                                         extensions:FlyoutExtensions.Parent="{x:Bind buttonAddAllTo}"
                                         extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems}"
                                         extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
-                                        extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}">
-                                    <!--<extensions:FlyoutExtensions.ItemTemplate>
-                                        <DataTemplate x:DataType="models:FlyoutItem">
-                                            <Grid>
-                                                <controls:MenuFlyoutItem 
-                    IsIconEnabled="True"
-                    Command="{Binding MenuItemClickedCommand}"
-                    CommandParameter="{Binding}"
-                    Text="{Binding Text}"
-                    Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=true}">
-                                                    <controls:MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="{Binding Glyph}"/>
-                                                    </controls:MenuFlyoutItem.Icon>
-                                                </controls:MenuFlyoutItem>
-                                                <MenuFlyoutSeparator 
-                    Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=false}"/>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </behaviors:FlyoutExtensions.ItemTemplate>-->
-                                </Flyout>
-                                <!--<MenuFlyout behaviors:MenuFlyoutBehaviour.IsOpen="{x:Bind ViewModel.IsAllToPlaylistFlyoutOpen, Mode=TwoWay}"
-                                            behaviors:MenuFlyoutBehaviour.Parent="{Binding ElementName=buttonAddAllTo}"
-                                            behaviors:MenuFlyoutBehaviour.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems, Mode=OneWay}"
-                                            behaviors:MenuFlyoutBehaviour.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"/>-->
+                                        extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}" />
                             </Button.Flyout>
                         </Button>
                     </StackPanel>
