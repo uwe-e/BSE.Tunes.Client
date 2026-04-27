@@ -30,13 +30,6 @@ public static class FlyoutExtensions
             typeof(FlyoutExtensions),
             new PropertyMetadata(null));
 
-    public static readonly DependencyProperty IsOpenProperty =
-        DependencyProperty.RegisterAttached(
-            "IsOpen",
-            typeof(bool),
-            typeof(FlyoutExtensions),
-            new PropertyMetadata(false, OnIsOpenChanged));
-
     public static readonly DependencyProperty ParentProperty =
         DependencyProperty.RegisterAttached(
             "Parent",
@@ -50,6 +43,13 @@ public static class FlyoutExtensions
             typeof(bool),
             typeof(FlyoutExtensions),
             new PropertyMetadata(false));
+
+    private static readonly DependencyProperty CollectionHandlerProperty =
+        DependencyProperty.RegisterAttached(
+            "CollectionHandler",
+            typeof(NotifyCollectionChangedEventHandler),
+            typeof(FlyoutExtensions),
+            new PropertyMetadata(null));
 
     public static IEnumerable GetItemsSource(DependencyObject obj) =>
         (IEnumerable)obj.GetValue(ItemsSourceProperty);
@@ -69,12 +69,6 @@ public static class FlyoutExtensions
     public static void SetItemCommand(DependencyObject obj, ICommand value) =>
         obj.SetValue(ItemCommandProperty, value);
 
-    public static bool GetIsOpen(DependencyObject obj) =>
-        (bool)obj.GetValue(IsOpenProperty);
-
-    public static void SetIsOpen(DependencyObject obj, bool value) =>
-        obj.SetValue(IsOpenProperty, value);
-
     public static FrameworkElement GetParent(DependencyObject obj) =>
         (FrameworkElement)obj.GetValue(ParentProperty);
 
@@ -89,46 +83,22 @@ public static class FlyoutExtensions
         // Unsubscribe from old collection
         if (e.OldValue is INotifyCollectionChanged oldCollection)
         {
-            oldCollection.CollectionChanged -= (s, args) => UpdateFlyoutItems(flyout);
+            var oldHandler = (NotifyCollectionChangedEventHandler)flyout.GetValue(CollectionHandlerProperty);
+            if (oldHandler != null)
+            {
+                oldCollection.CollectionChanged -= oldHandler;
+            }
         }
 
         // Subscribe to new collection
         if (e.NewValue is INotifyCollectionChanged newCollection)
         {
-            newCollection.CollectionChanged += (s, args) => UpdateFlyoutItems(flyout);
+            NotifyCollectionChangedEventHandler handler = (s, args) => UpdateFlyoutItems(flyout);
+            flyout.SetValue(CollectionHandlerProperty, handler);
+            newCollection.CollectionChanged += handler;
         }
 
         UpdateFlyoutItems(flyout);
-    }
-
-    private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not FlyoutBase flyout)
-            return;
-
-        bool isOpen = (bool)e.NewValue;
-        var parent = GetParent(flyout);
-
-        if (isOpen && parent != null)
-        {
-            flyout.ShowAt(parent);
-        }
-        else if (!isOpen)
-        {
-            flyout.Hide();
-        }
-
-        // Subscribe to flyout closing to update binding
-        flyout.Closed -= OnFlyoutClosed;
-        flyout.Closed += OnFlyoutClosed;
-    }
-
-    private static void OnFlyoutClosed(object? sender, object e)
-    {
-        if (sender is FlyoutBase flyout)
-        {
-            SetIsOpen(flyout, false);
-        }
     }
 
     private static void UpdateFlyoutItems(FlyoutBase flyout)
@@ -162,37 +132,7 @@ public static class FlyoutExtensions
             {
                 element.DataContext = dataItem;
 
-                // Apply template to ensure visual tree is created
-                if (element is Control control)
-                {
-                    control.ApplyTemplate();
-                }
-
-                // If the element contains a custom MenuFlyoutItem, extract and configure it
-                if (element is Controls.MenuFlyoutItem customItem)
-                {
-                    // If no command is set on the custom item, use the shared command
-                    if (customItem.Command == null && itemCommand != null)
-                    {
-                        customItem.Command = itemCommand;
-                        customItem.CommandParameter = dataItem;
-                    }
-                }
-                else if (element is Panel panel)
-                {
-                    // Search for MenuFlyoutItem in panel children
-                    foreach (var child in panel.Children)
-                    {
-                        if (child is Controls.MenuFlyoutItem customChildItem)
-                        {
-                            if (customChildItem.Command == null && itemCommand != null)
-                            {
-                                customChildItem.Command = itemCommand;
-                                customChildItem.CommandParameter = dataItem;
-                            }
-                        }
-                    }
-                }
+                ProcessElementForCustomMenuFlyoutItem(element, dataItem, itemCommand, flyout);
 
                 stackPanel.Children.Add(element);
             }
@@ -201,19 +141,60 @@ public static class FlyoutExtensions
         flyout.Content = stackPanel;
     }
 
+    private static void ConfigureCustomMenuFlyoutItem(Controls.MenuFlyoutItem customItem, object dataItem, ICommand? itemCommand, FlyoutBase? flyout = null)
+    {
+        // If no command is set on the custom item, use the shared command
+        if (customItem.Command == null && itemCommand != null)
+        {
+            customItem.Command = itemCommand;
+            customItem.CommandParameter = dataItem;
+        }
+
+        // Apply template to ensure internal item is created
+        customItem.ApplyTemplate();
+
+        var internalChildItem = customItem.GetInternalMenuFlyoutItem();
+        if (internalChildItem != null && flyout != null)
+        {
+            internalChildItem.Click += (s, e) => flyout.Hide();
+        }
+    }
+
+    private static void ProcessElementForCustomMenuFlyoutItem(FrameworkElement element, object dataItem, ICommand? itemCommand, FlyoutBase? flyout = null)
+    {
+        if (element is Controls.MenuFlyoutItem customItem)
+        {
+            ConfigureCustomMenuFlyoutItem(customItem, dataItem, itemCommand, flyout);
+        }
+        else if (element is Panel panel)
+        {
+            var children = panel.Children;
+            var count = children.Count;
+            
+            // Search for MenuFlyoutItem in panel children using index-based access
+            for (int i = 0; i < count; i++)
+            {
+                if (children[i] is Controls.MenuFlyoutItem customChildItem)
+                {
+                    ConfigureCustomMenuFlyoutItem(customChildItem, dataItem, itemCommand, flyout);
+                }
+            }
+        }
+    }
+
     private static void UpdateMenuFlyout(MenuFlyout menuFlyout, IEnumerable? itemsSource, DataTemplate? itemTemplate, ICommand? itemCommand)
     {
         if (itemsSource == null)
             return;
 
-        // Clear existing dynamic items
-        var dynamicItems = menuFlyout.Items
-            .Where(item => item.GetValue(IsDynamicItemProperty) is true)
-            .ToList();
-
-        foreach (var item in dynamicItems)
+        // Clear existing dynamic items in reverse order
+        var items = menuFlyout.Items;
+        for (int i = items.Count - 1; i >= 0; i--)
         {
-            menuFlyout.Items.Remove(item);
+            if (items[i].GetValue(IsDynamicItemProperty) is true)
+            {
+                items.RemoveAt(i);
+            }
         }
 
         if (itemTemplate == null)
@@ -239,7 +220,7 @@ public static class FlyoutExtensions
                 if (menuItem != null)
                 {
                     menuItem.SetValue(IsDynamicItemProperty, true);
-                    menuFlyout.Items.Add(menuItem);
+                    items.Add(menuItem);
                 }
             }
         }
@@ -256,34 +237,19 @@ public static class FlyoutExtensions
         // Custom MenuFlyoutItem control
         if (element is Controls.MenuFlyoutItem customItem)
         {
-            customItem.ApplyTemplate();
-            var internalItem = customItem.GetInternalMenuFlyoutItem();
-            if (internalItem != null)
-            {
-                // Copy DataContext and Tag
-                internalItem.DataContext = customItem.DataContext;
-
-                // If no command is set on the custom item, use the shared command
-                if (customItem.Command == null && sharedCommand != null)
-                {
-                    internalItem.Command = sharedCommand;
-                    internalItem.CommandParameter = dataItem;
-                }
-                else if (customItem.Command != null)
-                {
-                    internalItem.Command = customItem.Command;
-                    internalItem.CommandParameter = customItem.CommandParameter ?? dataItem;
-                }
-
-                return internalItem;
-            }
+            return ExtractFromCustomItem(customItem, dataItem, sharedCommand);
         }
 
         // Search in Panel children (Grid, StackPanel, etc.)
         if (element is Panel panel)
         {
-            foreach (var child in panel.Children)
+            var children = panel.Children;
+            var count = children.Count;
+            
+            for (int i = 0; i < count; i++)
             {
+                var child = children[i];
+                
                 if (child is MenuFlyoutItemBase builtInItem)
                 {
                     return builtInItem;
@@ -291,29 +257,36 @@ public static class FlyoutExtensions
 
                 if (child is Controls.MenuFlyoutItem customChildItem)
                 {
-                    customChildItem.ApplyTemplate();
-                    var internalItem = customChildItem.GetInternalMenuFlyoutItem();
-                    if (internalItem != null)
-                    {
-                        internalItem.DataContext = customChildItem.DataContext;
-
-                        // If no command is set on the custom item, use the shared command
-                        if (customChildItem.Command == null && sharedCommand != null)
-                        {
-                            internalItem.Command = sharedCommand;
-                            internalItem.CommandParameter = dataItem;
-                        }
-                        else if (customChildItem.Command != null)
-                        {
-                            internalItem.Command = customChildItem.Command;
-                            internalItem.CommandParameter = customChildItem.CommandParameter ?? dataItem;
-                        }
-                        return internalItem;
-                    }
+                    return ExtractFromCustomItem(customChildItem, dataItem, sharedCommand);
                 }
             }
         }
 
         return null;
+    }
+
+    private static MenuFlyoutItemBase? ExtractFromCustomItem(Controls.MenuFlyoutItem customItem, object dataItem, ICommand? sharedCommand)
+    {
+        customItem.ApplyTemplate();
+        var internalItem = customItem.GetInternalMenuFlyoutItem();
+        
+        if (internalItem == null)
+            return null;
+
+        internalItem.DataContext = customItem.DataContext;
+
+        // If no command is set on the custom item, use the shared command
+        if (customItem.Command == null && sharedCommand != null)
+        {
+            internalItem.Command = sharedCommand;
+            internalItem.CommandParameter = dataItem;
+        }
+        else if (customItem.Command != null)
+        {
+            internalItem.Command = customItem.Command;
+            internalItem.CommandParameter = customItem.CommandParameter ?? dataItem;
+        }
+        
+        return internalItem;
     }
 }

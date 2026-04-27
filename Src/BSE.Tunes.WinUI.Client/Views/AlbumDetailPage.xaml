@@ -181,8 +181,7 @@
                                 <TextBlock x:Uid="AlbumDetailPage_ButtonAddAllTo" Text="Add To"/>
                             </StackPanel>
                             <Button.Flyout>
-                                <Flyout extensions:FlyoutExtensions.IsOpen="{x:Bind ViewModel.IsAllToPlaylistFlyoutOpen, Mode=TwoWay}"
-                                        extensions:FlyoutExtensions.Parent="{x:Bind buttonAddAllTo}"
+                                <Flyout extensions:FlyoutExtensions.Parent="{x:Bind buttonAddAllTo}"
                                         extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems}"
                                         extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
                                         extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}" />
@@ -254,8 +253,7 @@
                               Command="{x:Bind ViewModel.PlayAsNextCommand}"/>
                 <AppBarButton x:Uid="AlbumDetailPage_ButtonAddTo" x:Name="buttonAddTo" Icon="Add" Label="Add to Playlist">
                     <AppBarButton.Flyout>
-                        <Flyout extensions:FlyoutExtensions.IsOpen="{x:Bind ViewModel.IsAllToPlaylistFlyoutOpen, Mode=TwoWay}"
-                                extensions:FlyoutExtensions.Parent="{x:Bind buttonAddTo}"
+                        <Flyout extensions:FlyoutExtensions.Parent="{x:Bind buttonAddTo}"
                                 extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems}"
                                 extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
                                 extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}"/>

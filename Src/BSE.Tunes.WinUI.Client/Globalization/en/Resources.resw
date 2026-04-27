@@ -246,4 +246,25 @@
   <data name="AlbumDetailPage_ButtonUnSelectAll.Label" xml:space="preserve">
     <value>Unselect All</value>
   </data>
+  <data name="CreatePlaylistDialogViewModel_Required_Message" xml:space="preserve">
+    <value>Please enter a playlist name</value>
+  </data>
+  <data name="CreatePlaylistDialogViewModel_MaxLength_Message" xml:space="preserve">
+    <value>Playlist name cannot exceed 100 characters</value>
+  </data>
+  <data name="CreatePlaylistDialog_TextBlock_EnterPlaylistName.Text" xml:space="preserve">
+    <value>Enter a name for your new playlist:</value>
+  </data>
+  <data name="CreatePlaylistDialog_TextBox_PlaylistName.PlaceholderText" xml:space="preserve">
+    <value>Playlist name</value>
+  </data>
+  <data name="CreatePlaylistDialog.Title" xml:space="preserve">
+    <value>Add to new playlist</value>
+  </data>
+  <data name="CreatePlaylistDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="CreatePlaylistDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

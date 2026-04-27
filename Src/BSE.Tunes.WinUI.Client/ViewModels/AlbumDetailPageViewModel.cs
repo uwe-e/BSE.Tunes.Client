@@ -1,5 +1,7 @@
 ﻿using BSE.Tunes.Shared.Services.Extensions;
+using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Models;
+using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,6 +18,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IMediaManager _mediaManager;
+        private readonly IDialogService _dialogService;
         private readonly IMessenger _messenger;
 
         [ObservableProperty]
@@ -60,11 +63,13 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             IDataService dataService,
             IImageService imageService,
             IMediaManager mediaManager,
+            IDialogService dialogService,
             IMessenger messenger)
         {
             _dataService = dataService;
             _imageService = imageService;
             _mediaManager = mediaManager;
+            _dialogService = dialogService;
             _messenger = messenger;
 
             // Monitor selected items collection
@@ -98,7 +103,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 {
                     Text = "New Playlist",
                     Glyph = "\uE710", // Add icon
-                    Data = null,
+                    Data = ActionMode.AddNewPlaylist,
                 });
             }
             catch (Exception ex)
@@ -253,8 +258,38 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         {
             if (parameter is FlyoutItem flyoutItem)
             {
-                //await _mediaManager.PlayTrackAsync(trackItem.Id, PlayerMode.Song);
+                if(flyoutItem.Data is ActionMode actionMode)
+                {
+                    switch (actionMode)
+                    {
+                        case ActionMode.AddNewPlaylist:
+                            IsAllToPlaylistFlyoutOpen = false;
+                            
+                            var (result, dialog) = await _dialogService.ShowDialogAsync<CreatePlaylistDialog>();
+                            if (result == ContentDialogResult.Primary)
+                            {
+                                var createdPlaylist = dialog.ViewModel.CreatedPlaylist;
+                                if (createdPlaylist != null)
+                                {
+                                    await AppendSelectedTracksToPlaylistAsync(createdPlaylist.Id);
+                                }
+                            }
+                            break;
+                    }
+                }
+                else if (flyoutItem.Data is PlaylistSummary playlist)
+                {
+                    await AppendSelectedTracksToPlaylistAsync(playlist.Id);
+                    
+                }
             }
+        }
+
+        private async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
+        {
+            var trackIds = new ObservableCollection<int>(SelectedItems.Select(t => t.Id));
+            await _dataService.AppendToPlaylist(playlistId, trackIds);
+            SelectedItems.Clear();
         }
     }
 }

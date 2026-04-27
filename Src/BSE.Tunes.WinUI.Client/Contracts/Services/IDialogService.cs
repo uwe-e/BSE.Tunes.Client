@@ -1,3 +1,5 @@
+using Microsoft.UI.Xaml.Controls;
+
 namespace BSE.Tunes.WinUI.Client.Contracts.Services;
 
 public interface IDialogService
@@ -20,4 +22,6 @@ public interface IDialogService
     /// Displays an alert dialog with a message and OK button
     /// </summary>
     Task ShowAlertAsync(string title, string message);
+
+    Task<(ContentDialogResult Result, TDialog Dialog)> ShowDialogAsync<TDialog>() where TDialog : ContentDialog, new();
 }

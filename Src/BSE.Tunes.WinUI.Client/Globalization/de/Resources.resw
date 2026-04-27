@@ -246,4 +246,25 @@
   <data name="AlbumDetailPage_ButtonUnSelectAll.Label" xml:space="preserve">
     <value>Auswahl aufheben</value>
   </data>
+  <data name="CreatePlaylistDialogViewModel_Required_Message" xml:space="preserve">
+    <value>Bitte gib der Wiedergabeliste einen Namen</value>
+  </data>
+  <data name="CreatePlaylistDialogViewModel_MaxLength_Message" xml:space="preserve">
+    <value>Der Name der Wiedergabeliste darf nicht länger als 100 Zeichen sein </value>
+  </data>
+  <data name="CreatePlaylistDialog_TextBlock_EnterPlaylistName.Text" xml:space="preserve">
+    <value>Gib einen Namen für deine neue Wiedergabeliste ein:</value>
+  </data>
+  <data name="CreatePlaylistDialog_TextBox_PlaylistName.PlaceholderText" xml:space="preserve">
+    <value>Namen der Wiedergabeliste</value>
+  </data>
+  <data name="CreatePlaylistDialog.Title" xml:space="preserve">
+    <value>Zu neuer Wiedergabeliste hinzufügen</value>
+  </data>
+  <data name="CreatePlaylistDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="CreatePlaylistDialog.CloseButtonText" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
 </root>

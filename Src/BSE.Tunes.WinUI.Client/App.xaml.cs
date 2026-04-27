@@ -117,6 +117,7 @@ public partial class App : Application
             services.AddTransient<PlayerBarViewModel>();
             services.AddTransient<FeaturedAlbumsViewModel>();
             services.AddTransient<FeaturedPlaylistViewModel>();
+            services.AddTransient<CreatePlaylistDialogViewModel>();
 
             // Configuration
             services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));

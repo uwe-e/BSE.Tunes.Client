@@ -24,6 +24,7 @@
     <None Remove="Controls\PlayerBarView.xaml" />
     <None Remove="Controls\RandomPlayerView.xaml" />
     <None Remove="Views\AlbumDetailPage.xaml" />
+    <None Remove="Views\CreatePlaylistDialog.xaml" />
     <None Remove="Views\EndpointConfigurationPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\PersonalizationSettingsPage.xaml" />
@@ -57,6 +58,9 @@
     <None Update="Controls\MenuFlyoutItem\MenuFlyoutItem.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\CreatePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\AlbumDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
