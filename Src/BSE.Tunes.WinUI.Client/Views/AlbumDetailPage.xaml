@@ -68,6 +68,7 @@
     </Page.Resources>
 
     <Grid>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -267,5 +268,11 @@
                               Visibility="{x:Bind ViewModel.AllItemsSelected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"/>
             </CommandBar>
         </Border>
+        </Grid>
+        <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+       Width="40"
+       Height="40"
+       HorizontalAlignment="Center"
+       VerticalAlignment="Center"/>
     </Grid>
 </Page>

@@ -31,7 +31,7 @@ namespace BSE.Tunes.WinUI.Client.Services.Mappers.Profiles
                 .ConvertUsing((dto, mapper) =>
                 {
                     if (dto == null) return null;
-                    
+
                     if (dto.Artist == null)
                         throw new InvalidOperationException($"Album {dto.Id} has null Artist");
 
@@ -102,12 +102,12 @@ namespace BSE.Tunes.WinUI.Client.Services.Mappers.Profiles
                         Track = track!
                     };
                 });
-            
+
             CreateMap<PlaylistDto, Playlist>()
                 .ConvertUsing((dto, mapper) =>
                 {
                     if (dto == null) return null;
-                    
+
                     return new Playlist
                     {
                         Id = dto.Id,
@@ -133,6 +133,16 @@ namespace BSE.Tunes.WinUI.Client.Services.Mappers.Profiles
                     };
                 });
 
+            CreateMap<GenreDto, Genre>()
+                .ConvertUsing((dto, mapper) =>
+                {
+                    if (dto == null) return null;
+                    return new Genre
+                    {
+                        Id = dto.Id,
+                        Name = dto.Name ?? string.Empty
+                    };
+                });
         }
     }
 }   

@@ -358,5 +358,10 @@ namespace BSE.Tunes.Shared.Services
             return _mapper.Map<Playlist>(dtoResult)!;
         }
 
+        public async Task<IReadOnlyList<Genre>> GetAvailableGenresAsync()
+        {
+            var dtoResult = await _requestService.GetAsync<IReadOnlyList<GenreDto>>($"api/genres");
+            return _mapper.MapCollection<Genre>(dtoResult).ToList();
+        }
     }
 }

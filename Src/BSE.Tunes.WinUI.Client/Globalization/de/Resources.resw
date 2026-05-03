@@ -267,4 +267,7 @@
   <data name="CreatePlaylistDialog.CloseButtonText" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="ShellPage_AlbumsPage.Content" xml:space="preserve">
+    <value>Alben</value>
+  </data>
 </root>

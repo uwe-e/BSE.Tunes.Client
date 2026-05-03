@@ -2,6 +2,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Windows.Input;
+using Windows.System;
+using Windows.UI.Core;
 
 namespace BSE.Tunes.WinUI.Client.Controls;
 
@@ -107,6 +110,82 @@ public static class ListViewExtensions
     {
         d.SetValue(SelectedItemsHandlerProperty, value);
     }
+    #endregion
+
+    #region Command
+    /// <summary>
+    /// Identifies the Command attached dependency property, which enables binding an ICommand to a ListView item for
+    /// handling item interactions.
+    /// </summary>
+    /// <remarks>This attached property allows developers to associate a command with ListView items,
+    /// typically to handle item click or selection events using the command pattern. The property is intended for use
+    /// in XAML or code to facilitate MVVM scenarios where command binding is preferred over event handlers.</remarks>
+    public static readonly DependencyProperty CommandProperty =
+        DependencyProperty.RegisterAttached(
+            "Command",
+            typeof(ICommand),
+            typeof(ListViewExtensions),
+            new PropertyMetadata(null, OnCommandChanged));
+
+    /// <summary>
+    /// gets the Command property. This dependency property
+    /// </summary>
+    /// <param name="d">The dependency object on which the property is set.</param>
+    /// <returns>The ICommand associated with the dependency object.</returns>
+    public static ICommand? GetCommand(DependencyObject d)
+    {
+        return (ICommand?)d.GetValue(CommandProperty);
+    }
+
+    /// <summary>
+    /// Sets the SelectedItems property. This dependency property 
+    /// indicates the list of selected items that is synchronized
+    /// with the items selected in the ListView.
+    /// </summary>
+    public static void SetCommand(DependencyObject d, ICommand? value)
+    {
+        d.SetValue(CommandProperty, value);
+    }
+
+    private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not ListViewBase control)
+            return;
+
+        // Remove previous handler if any
+        control.ItemClick -= OnItemClick;
+
+        if (e.NewValue is ICommand)
+        {
+            control.ItemClick += OnItemClick;
+        }
+    }
+
+    private static void OnItemClick(object sender, Microsoft.UI.Xaml.Controls.ItemClickEventArgs e)
+    {
+        if (sender is not ListViewBase control)
+            return;
+
+        if (!IsCtrlKeyPressed())
+        {
+            var command = GetCommand(control);
+            if (command?.CanExecute(e.ClickedItem) == true)
+            {
+                command.Execute(e.ClickedItem);
+            }
+        }
+    }
+
+    private static bool IsCtrlKeyPressed()
+    {
+        var coreWindow = CoreWindow.GetForCurrentThread();
+        if (coreWindow is null)
+            return false;
+
+        var ctrlState = coreWindow.GetKeyState(VirtualKey.Control);
+        return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+    }
+
     #endregion
 }
 

@@ -24,6 +24,7 @@
     <None Remove="Controls\PlayerBarView.xaml" />
     <None Remove="Controls\RandomPlayerView.xaml" />
     <None Remove="Views\AlbumDetailPage.xaml" />
+    <None Remove="Views\AlbumsPage.xaml" />
     <None Remove="Views\CreatePlaylistDialog.xaml" />
     <None Remove="Views\EndpointConfigurationPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
@@ -58,6 +59,9 @@
     <None Update="Controls\MenuFlyoutItem\MenuFlyoutItem.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\AlbumsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\CreatePlaylistDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,6 +110,9 @@
   </ItemGroup>
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Collections\" />
   </ItemGroup>
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
