@@ -1,5 +1,4 @@
 using BSE.Tunes.Shared.Services.Extensions;
-using BSE.Tunes.Shared.Services.Services;
 using BSE.Tunes.WinUI.Client.Collections;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Models;

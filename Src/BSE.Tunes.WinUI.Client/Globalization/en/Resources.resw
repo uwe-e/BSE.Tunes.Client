@@ -279,4 +279,7 @@
   <data name="PlaylistsPage_PlaylistItem_PartNumberOfEntries" xml:space="preserve">
     <value>elements</value>
   </data>
+  <data name="FeaturedPlaylist_PlaylistItem_PartNumberOfEntries" xml:space="preserve">
+    <value>elements</value>
+  </data>
 </root>

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Design;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
@@ -10,6 +11,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
+        private readonly Contracts.Services.IResourceService _resourceService;
         [ObservableProperty]
         private ObservableCollection<CarouselItem> _items = [];
 
@@ -19,11 +21,12 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public FeaturedPlaylistViewModel(
             IDataService dataService,
             IImageService imageService,
+            Contracts.Services.IResourceService resourceService,
             IMessenger messenger) : base(messenger)
         {
             _dataService = dataService;
             _imageService = imageService;
-
+            _resourceService = resourceService;
             Initialize();
         }
 
@@ -50,7 +53,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                             carouselItems.Add(new CarouselItem
                             {
                                 Title = playlist.Name ?? string.Empty,
-                                SubTitle = playlist.NumberEntries.ToString(),
+                                SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("FeaturedPlaylist_PlaylistItem_PartNumberOfEntries")}",
                                 ImageSource = imageSource,
                                 Data = playlist
                             });
