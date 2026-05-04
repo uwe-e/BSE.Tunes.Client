@@ -29,6 +29,7 @@
     <None Remove="Views\EndpointConfigurationPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\PersonalizationSettingsPage.xaml" />
+    <None Remove="Views\PlaylistsPage.xaml" />
     <None Remove="Views\RemoveEndpointSettingsPage.xaml" />
     <None Remove="Views\RemoveLoginSettingsPage.xaml" />
   </ItemGroup>
@@ -59,6 +60,9 @@
     <None Update="Controls\MenuFlyoutItem\MenuFlyoutItem.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\PlaylistsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\AlbumsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

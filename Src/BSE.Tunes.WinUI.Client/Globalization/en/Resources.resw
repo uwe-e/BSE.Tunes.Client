@@ -273,4 +273,10 @@
   <data name="AlbumsPage_FilterPanel_AllGenres-Value" xml:space="preserve">
     <value>All Genres</value>
   </data>
+  <data name="ShellPage_PlaylistssPage.Content" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="PlaylistsPage_PlaylistItem_PartNumberOfEntries" xml:space="preserve">
+    <value>elements</value>
+  </data>
 </root>

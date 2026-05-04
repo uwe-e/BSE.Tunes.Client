@@ -108,6 +108,7 @@ public partial class App : Application
             services.AddTransientForNavigation<RemoveLoginSettingsPageViewModel, RemoveLoginSettingsPage>();
             services.AddTransientForNavigation<AlbumDetailPageViewModel, AlbumDetailPage>();
             services.AddTransientForNavigation<AlbumsPageViewModel, AlbumsPage>();
+            services.AddTransientForNavigation<PlaylistsPageViewModel, PlaylistsPage>();
 
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();

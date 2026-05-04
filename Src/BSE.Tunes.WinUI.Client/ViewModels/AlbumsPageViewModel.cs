@@ -19,6 +19,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IResourceService _resourceService;
         private readonly IMediaManager _mediaManager;
+        
         [ObservableProperty]
         private IncrementalObservableCollection<CarouselItem> _items = default!;
 
@@ -26,10 +27,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private ObservableCollection<CarouselItem> _selectedItems = [];
 
         [ObservableProperty]
-        private ObservableCollection<FlyoutItem> _genreItems = new ObservableCollection<FlyoutItem>();
+        private ObservableCollection<FlyoutItem> _genreItems = [];
 
         [ObservableProperty]
-        private Genre _selectedGenre;
+        private Genre _selectedGenre = default!;
 
         public AlbumsPageViewModel(
             IDataService dataService,
@@ -66,9 +67,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 });
 
                 var genres = await _dataService.GetAvailableGenresAsync();
-                if (genres != null)
+                if (genres is { Count: > 0 })
                 {
-                    var genreCount = genres.Count;
+                    int genreCount = genres.Count;
+                    
                     for (int i = 0; i < genreCount; i++)
                     {
                         var genre = genres[i];
@@ -95,7 +97,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             const int pageSize = 30;
             int pageNumber = 1;
 
-            PagedResult<Album> pagedAlbums = await _dataService.GetPagedAlbums(
+            var result = await _dataService.GetPagedAlbums(
                 genreName,
                 null,
                 null,
@@ -105,7 +107,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 pageSize,
                 AlbumSortOption.Artist);
 
-            uint totalCount = (uint)(pagedAlbums?.TotalCount ?? 0);
+            uint totalCount = (uint)(result?.TotalCount ?? 0);
 
             Items = new IncrementalObservableCollection<CarouselItem>(
                 totalCount,
@@ -113,15 +115,14 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 {
                     async Task<Microsoft.UI.Xaml.Data.LoadMoreItemsResult> loadFunc()
                     {
-                        var pagedAlbums = await _dataService.GetPagedAlbums(
+                        var result = await _dataService.GetPagedAlbums(
                             genreName, null, null, null, null,
                             pageNumber, pageSize, AlbumSortOption.Artist);
 
                         uint itemCount = 0;
-                        if (pagedAlbums?.Items != null)
+                        if (result?.Items is { Count: > 0 } items)
                         {
-                            var items = pagedAlbums.Items;
-                            var albumCount = items.Count;
+                            int albumCount = items.Count;
                             itemCount = (uint)albumCount;
 
                             for (int i = 0; i < albumCount; i++)
@@ -129,13 +130,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                                 var album = items[i];
                                 if (album != null)
                                 {
-                                    Items.Add(new CarouselItem
-                                    {
-                                        Title = album.Title ?? string.Empty,
-                                        SubTitle = album.Artist?.Name ?? string.Empty,
-                                        ImageSource = _imageService.GetBitmapSource(album.AlbumId, false),
-                                        Data = album
-                                    });
+                                    Items.Add(CreateCarouselItem(album));
                                 }
                             }
                         }
@@ -151,27 +146,31 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 });
 
             // Add the first page results
-            if (pagedAlbums?.Items != null)
+            if (result?.Items is { Count: > 0 } items)
             {
-                var items = pagedAlbums.Items;
-                var albumCount = items.Count;
+                int albumCount = items.Count;
                 
                 for (int i = 0; i < albumCount; i++)
                 {
                     var album = items[i];
                     if (album != null)
                     {
-                        Items.Add(new CarouselItem
-                        {
-                            Title = album.Title ?? string.Empty,
-                            SubTitle = album.Artist?.Name ?? string.Empty,
-                            ImageSource = _imageService.GetBitmapSource(album.AlbumId, false),
-                            Data = album
-                        });
+                        Items.Add(CreateCarouselItem(album));
                     }
                 }
                 pageNumber++;
             }
+        }
+
+        private CarouselItem CreateCarouselItem(Album album)
+        {
+            return new CarouselItem
+            {
+                Title = album.Title ?? string.Empty,
+                SubTitle = album.Artist?.Name ?? string.Empty,
+                ImageSource = _imageService.GetBitmapSource(album.AlbumId, false),
+                Data = album
+            };
         }
 
         [RelayCommand]

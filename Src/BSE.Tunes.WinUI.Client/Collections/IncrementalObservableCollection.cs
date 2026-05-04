@@ -1,8 +1,7 @@
 using Microsoft.UI.Xaml.Data;
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Windows.Foundation;
+using System.Threading;
 
 namespace BSE.Tunes.WinUI.Client.Collections
 {
@@ -11,6 +10,9 @@ namespace BSE.Tunes.WinUI.Client.Collections
         private readonly uint _totalCount;
         private readonly Func<uint, IAsyncOperation<LoadMoreItemsResult>> _loadMoreItemsFunc;
         private uint _loadedCount;
+
+        private Task<LoadMoreItemsResult>? _currentLoadOperation;
+        private CancellationTokenSource? _cts;
 
         public IncrementalObservableCollection(uint totalCount, Func<uint, IAsyncOperation<LoadMoreItemsResult>> loadMoreItemsFunc)
         {
@@ -23,19 +25,31 @@ namespace BSE.Tunes.WinUI.Client.Collections
 
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
-            return InternalLoadMoreItemsAsync(count).AsAsyncOperation();
+            _currentLoadOperation = InternalLoadMoreItemsAsync(count);
+            return _currentLoadOperation.AsAsyncOperation();
         }
 
         private async Task<LoadMoreItemsResult> InternalLoadMoreItemsAsync(uint count)
         {
             if (!HasMoreItems)
+                return new LoadMoreItemsResult { Count = 0 };
+            
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            
+            try
+            {
+                var result = await _loadMoreItemsFunc(count);
+                if (!_cts.Token.IsCancellationRequested)
+                {
+                    _loadedCount += result.Count;
+                }
+                return result;
+            }
+            catch (OperationCanceledException)
             {
                 return new LoadMoreItemsResult { Count = 0 };
             }
-
-            var result = await _loadMoreItemsFunc(count);
-            _loadedCount += result.Count;
-            return result;
         }
     }
 }
