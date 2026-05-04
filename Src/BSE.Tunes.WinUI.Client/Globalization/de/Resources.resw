@@ -270,4 +270,7 @@
   <data name="ShellPage_AlbumsPage.Content" xml:space="preserve">
     <value>Alben</value>
   </data>
+  <data name="AlbumsPage_FilterPanel_AllGenres-Value" xml:space="preserve">
+    <value>Alle Genres</value>
+  </data>
 </root>
