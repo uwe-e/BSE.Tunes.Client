@@ -306,6 +306,16 @@ namespace BSE.Tunes.Shared.Services
             await _requestService.DeleteAsync($"api/playlists/{playlistEntry.PlaylistId}/entries/{playlistEntry.Id}");
         }
 
+        public async Task DeletePlaylistEntriesAsync(int playlistId, List<int> entryIds)
+        {
+            if (entryIds == null || entryIds.Count == 0)
+            {
+                throw new ArgumentException("Entry IDs list cannot be null or empty.", nameof(entryIds));
+            }
+            var deleteDto = new DeletePlaylistEntriesDto { EntryIds = entryIds };
+            await _requestService.DeleteAsync($"api/playlists/{playlistId}/entries", deleteDto);
+        }
+
         public async Task<IReadOnlyList<PlaylistSummary>> GetAllPlaylists()
         {
             var dtoResult = await _requestService.GetAsync<IReadOnlyList<PlaylistSummaryDto>>("api/playlists/all");

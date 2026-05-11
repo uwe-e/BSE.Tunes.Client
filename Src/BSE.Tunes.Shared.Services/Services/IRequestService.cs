@@ -3,6 +3,9 @@
     public interface IRequestService
     {
         Task DeleteAsync(string path);
+        Task DeleteAsync<T>(string path, T content);
+        Task<U?> DeleteAsync<U, T>(string path, T content);
+        Task<U?> DeleteAsync<U, T>(Uri uri, T content);
         Task<T?> GetAsync<T>(string path);
         Task<T?> GetAsync<T>(string path, CancellationToken token);
         Task<T?> GetAsync<T>(string path, Dictionary<string, string> parameters);

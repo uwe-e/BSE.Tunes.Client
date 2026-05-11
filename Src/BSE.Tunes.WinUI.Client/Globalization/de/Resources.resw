@@ -282,4 +282,25 @@
   <data name="FeaturedPlaylist_PlaylistItem_PartNumberOfEntries" xml:space="preserve">
     <value>Elemente</value>
   </data>
+  <data name="PlaylistDetailPage_NumberEntries.Text" xml:space="preserve">
+    <value>Elemente</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonRemovePlaylist.Text" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonRemoveSelection.Label" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="DeletePlaylistDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="DeletePlaylistDialog.CloseButtonText" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="DeletePlaylistDialog.Title" xml:space="preserve">
+    <value>Wiedergabeliste endgültig löschen?</value>
+  </data>
+  <data name="DeletePlaylistDialog_TextBlock_Information.Text" xml:space="preserve">
+    <value>Möchtest du diese Wiedergabeliste wirklich löschen?</value>
+  </data>
 </root>

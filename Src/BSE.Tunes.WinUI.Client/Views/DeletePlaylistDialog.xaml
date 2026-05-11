@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="BSE.Tunes.WinUI.Client.Views.DeletePlaylistDialog"
+    x:Uid="DeletePlaylistDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewmodels="using:BSE.Tunes.WinUI.Client.ViewModels"
+    xmlns:extensions="using:BSE.Tunes.WinUI.Client.Controls.Extensions"
+    Title="Delete Playlist"
+    PrimaryButtonText="Löschen"
+    CloseButtonText="Abbrechen"
+    DefaultButton="Close">
+
+    <Grid>
+        <TextBlock x:Uid="DeletePlaylistDialog_TextBlock_Information" 
+                   Text="Do you realy want to delete this playlist?" 
+                   TextWrapping="Wrap"/>
+    </Grid>
+</ContentDialog>

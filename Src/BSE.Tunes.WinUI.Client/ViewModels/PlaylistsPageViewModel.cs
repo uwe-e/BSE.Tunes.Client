@@ -1,6 +1,8 @@
 ﻿using BSE.Tunes.WinUI.Client.Collections;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Messages;
 using BSE.Tunes.WinUI.Client.Models;
+using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -35,6 +37,16 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             _resourceService = resourceService;
             
             Initialize();
+
+            Messenger.Register<PlaylistsPageViewModel, PlaylistDeletedMessage>(this, async (r, m) =>
+            {
+                // Remove the deleted playlist from the collection
+                var itemToRemove = r.Items.FirstOrDefault(i => i.Data is Playlist p && p.Id == m.PlaylistId);
+                if (itemToRemove != null)
+                {
+                    r.Items.Remove(itemToRemove);
+                }
+            });
         }
 
         protected override async Task LoadDataAsync()
@@ -121,7 +133,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         {
             if (item?.Data != null)
             {
-                //await _navigationService.NavigateToAsync(nameof(AlbumDetailPage), item.Data);
+                await _navigationService.NavigateToAsync(nameof(PlaylistDetailPage), item.Data);
             }
         }
     }

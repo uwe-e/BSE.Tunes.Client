@@ -282,4 +282,25 @@
   <data name="FeaturedPlaylist_PlaylistItem_PartNumberOfEntries" xml:space="preserve">
     <value>elements</value>
   </data>
+  <data name="PlaylistDetailPage_NumberEntries.Text" xml:space="preserve">
+    <value>elements</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonRemovePlaylist.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="AlbumDetailPage_ButtonRemoveSelection.Label" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="DeletePlaylistDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeletePlaylistDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DeletePlaylistDialog.Title" xml:space="preserve">
+    <value>Delete playlist permanently? </value>
+  </data>
+  <data name="DeletePlaylistDialog_TextBlock_Information.Text" xml:space="preserve">
+    <value>Are you sure you want to delete this playlist?</value>
+  </data>
 </root>

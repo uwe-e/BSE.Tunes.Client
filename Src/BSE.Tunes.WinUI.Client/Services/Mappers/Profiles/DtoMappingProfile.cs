@@ -96,6 +96,7 @@ namespace BSE.Tunes.WinUI.Client.Services.Mappers.Profiles
                         TrackId = dto.TrackId,
                         Name = track?.Name ?? string.Empty,
                         Artist = track?.Album?.Artist?.Name ?? string.Empty,
+                        Year = track?.Album?.Year,
                         AlbumId = track?.Album?.AlbumId ?? Guid.Empty,
                         Duration = track?.Duration ?? TimeSpan.Zero,
                         Guid = dto.Guid,

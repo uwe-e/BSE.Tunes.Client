@@ -26,9 +26,11 @@
     <None Remove="Views\AlbumDetailPage.xaml" />
     <None Remove="Views\AlbumsPage.xaml" />
     <None Remove="Views\CreatePlaylistDialog.xaml" />
+    <None Remove="Views\DeletePlaylistDialog.xaml" />
     <None Remove="Views\EndpointConfigurationPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\PersonalizationSettingsPage.xaml" />
+    <None Remove="Views\PlaylistDetailPage.xaml" />
     <None Remove="Views\PlaylistsPage.xaml" />
     <None Remove="Views\RemoveEndpointSettingsPage.xaml" />
     <None Remove="Views\RemoveLoginSettingsPage.xaml" />
@@ -60,6 +62,12 @@
     <None Update="Controls\MenuFlyoutItem\MenuFlyoutItem.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\DeletePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\PlaylistDetailPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\PlaylistsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

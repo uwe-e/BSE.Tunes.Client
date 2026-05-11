@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Shared.Services.Extensions;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Messages;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -288,8 +289,14 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
         {
             var trackIds = new ObservableCollection<int>(SelectedItems.Select(t => t.Id));
-            await _dataService.AppendToPlaylist(playlistId, trackIds);
+
+            await Task.WhenAll(
+                        _dataService.AppendToPlaylist(playlistId, trackIds),
+                        _imageService.RemoveComposedBitmaps(playlistId));
+
             SelectedItems.Clear();
+
+            _messenger.Send(new PlaylistChangedMessage(playlistId));
         }
     }
 }
