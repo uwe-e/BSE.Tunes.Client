@@ -5,6 +5,7 @@ using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
@@ -49,34 +50,30 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         }
 
-        public async Task Receive(PlaylistChangedMessage message)
+        public async Task UpdatePlaylistItem(PlaylistChangedMessage message)
         {
-            CarouselItem? itemToUpdate = Items.FirstOrDefault(i => i.Data is Playlist p && p.Id == message.PlaylistId);
-            if (itemToUpdate != null)
+            CarouselItem? item = Items.FirstOrDefault(i => i.Data is Playlist p && p.Id == message.PlaylistId);
+            if (item != null)
             {
                 // Update the existing item
-                var updatedPlaylist = await _dataService.GetPlaylistById(message.PlaylistId);
-                if (updatedPlaylist != null)
+                var playlist = await _dataService.GetPlaylistById(message.PlaylistId);
+                if (playlist != null)
                 {
-                    itemToUpdate.Title = updatedPlaylist.Name ?? string.Empty;
-                    itemToUpdate.SubTitle = $"{updatedPlaylist.NumberEntries} {_resourceService.GetString("FeaturedPlaylist_PlaylistItem_PartNumberOfEntries")}";
-                    
-                    var imageSource = await _imageService.GetComposedBitmapSourceAsync(
-                        updatedPlaylist.Id,
-                        updatedPlaylist.CoverAlbumIds);
-                    
-                    itemToUpdate.ImageSource = imageSource;
+                    item.Title = playlist.Name ?? string.Empty;
+                    item.SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("FeaturedPlaylist_PlaylistItem_PartNumberOfEntries")}";
+                    item.ImagePath = await _imageService.GetComposedBitmapSourceAsync(
+                                playlist.Id,
+                                playlist.CoverAlbumIds);
+                    item.IgnoreImageCache = true;
 
                     // Notify the UI about the changes 
-                    var index = Items.IndexOf(itemToUpdate);
+                    var index = Items.IndexOf(item);
                     if (index >= 0)
                     {
-                        Items[index] = itemToUpdate; // This will trigger the UI to refresh the item
+                        Items[index] = item; // This will trigger the UI to refresh the item
                     }
                 }
             }
-
-            //await LoadDataAsync();
         }
 
         protected override async Task LoadDataAsync()
@@ -95,15 +92,14 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     {
                         if (playlist != null)
                         {
-                            var imageSource = await _imageService.GetComposedBitmapSourceAsync(
-                                playlist.Id,
-                                playlist.CoverAlbumIds);
-
                             carouselItems.Add(new CarouselItem
                             {
                                 Title = playlist.Name ?? string.Empty,
                                 SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("FeaturedPlaylist_PlaylistItem_PartNumberOfEntries")}",
-                                ImageSource = imageSource,
+                                ImagePath = await _imageService.GetComposedBitmapSourceAsync(
+                                    playlist.Id,
+                                    playlist.CoverAlbumIds),
+                                IgnoreImageCache = true,
                                 Data = playlist
                             });
                         }
@@ -123,7 +119,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         void IRecipient<PlaylistChangedMessage>.Receive(PlaylistChangedMessage message)
         {
-            _ = Receive(message);
+            _ = UpdatePlaylistItem(message);
         }
 
         [RelayCommand]

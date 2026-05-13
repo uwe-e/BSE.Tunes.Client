@@ -26,7 +26,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private Album? _album;
 
         [ObservableProperty]
-        private ImageSource? _coverImageSource;
+        private ImageSource? _imageSource;
 
         [ObservableProperty]
         private ObservableCollection<TrackItem> _tracks = [];
@@ -143,7 +143,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     var imagePath = _imageService.GetBitmapSource(Album.AlbumId, false);
                     if (!string.IsNullOrEmpty(imagePath))
                     {
-                        CoverImageSource = new BitmapImage(new Uri(imagePath));
+                        ImageSource = new BitmapImage(new Uri(imagePath));
                     }
                     LoadTracks(Album);
                 }

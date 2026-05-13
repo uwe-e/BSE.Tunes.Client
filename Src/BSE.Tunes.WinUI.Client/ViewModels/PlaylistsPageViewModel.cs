@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class PlaylistsPageViewModel : RefreshableViewModel
+    public partial class PlaylistsPageViewModel : RefreshableViewModel, IRecipient<PlaylistChangedMessage>
     {
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
@@ -48,6 +48,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 }
             });
         }
+
+        
 
         protected override async Task LoadDataAsync()
         {
@@ -123,9 +125,36 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             {
                 Title = playlist.Name ?? string.Empty,
                 SubTitle = $"{playlist.NumberEntries} {_cachedResourceString}",
-                ImageSource = await _imageService.GetComposedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, asThumbnail: true),
+                ImagePath = await _imageService.GetComposedBitmapSourceAsync(
+                    playlist.Id,
+                    playlist.CoverAlbumIds,
+                    asThumbnail: true),
+                IgnoreImageCache = true,
                 Data = playlist
             };
+        }
+
+        void IRecipient<PlaylistChangedMessage>.Receive(PlaylistChangedMessage message)
+        {
+            _ = UpdatePlaylistItem(message.PlaylistId);
+        }
+
+        private async Task UpdatePlaylistItem(int playlistId)
+        {
+            CarouselItem? item = Items.FirstOrDefault(i => i.Data is Playlist p && p.Id == playlistId);
+            if(item != null)
+            {
+                // Update the existing item
+                var playlist = await _dataService.GetPlaylistById(playlistId);
+                if (playlist != null)
+                {
+                    int index = Items.IndexOf(item);
+                    if (index >= 0)
+                    {
+                        Items[index] = await CreateCarouselItemAsync(playlist);
+                    }
+                }
+            }
         }
 
         [RelayCommand]

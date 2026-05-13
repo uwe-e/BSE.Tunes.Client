@@ -9,6 +9,7 @@ namespace BSE.Tunes.WinUI.Client.Models
     public class PlaylistEntryItem
     {
         public int Id { get; set; }
+        public int TrackId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Artist { get; set; } = string.Empty;
         public string Album { get; set; } = string.Empty;
@@ -23,6 +24,7 @@ namespace BSE.Tunes.WinUI.Client.Models
             return new PlaylistEntryItem
             {
                 Id = entry.Id,
+                TrackId = entry.TrackId,
                 Name = entry.Name ?? "Unknown Entry",
                 Artist = entry.Track?.Album?.Artist?.Name ?? "Unknown Artist",
                 Album = entry.Track?.Album?.Title ?? string.Empty,

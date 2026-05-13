@@ -41,7 +41,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private ListViewSelectionMode _selectionMode = ListViewSelectionMode.Single;
 
         [ObservableProperty]
-        private ImageSource? _coverImageSource;
+        private ImageSource? _imageSource;
 
         [ObservableProperty]
         private bool _isBusy;
@@ -71,7 +71,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
             SelectedItems.CollectionChanged += OnSelectedItemsChanged;
 
-            Messenger.Register<PlaylistChangedMessage>(this);
+            
 
             Messenger.Register<PlaylistDeletedMessage>(this, (r, m) =>
             {
@@ -87,6 +87,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public override void OnNavigatedTo(object parameter)
         {
             base.OnNavigatedTo(parameter);
+
+            Messenger.Register<PlaylistChangedMessage>(this);
 
             if (parameter is Playlist playlist)
             {
@@ -152,21 +154,6 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 {
                     await LoadEntriesAsync(Playlist);
                 }
-                //Playlist = await _dataService.GetPlaylistById(playlistId);
-                //if (Playlist != null)
-                //{
-                //    var imagePath = await _imageService.GetComposedBitmapSourceAsync(playlistId, Playlist.CoverAlbumIds);
-                //    if (!string.IsNullOrEmpty(imagePath))
-                //    {
-                //        var bitmapImage = new BitmapImage
-                //        {
-                //            CreateOptions = BitmapCreateOptions.IgnoreImageCache
-                //        };
-                //        bitmapImage.UriSource = new Uri(imagePath);
-                //        CoverImageSource = bitmapImage;
-                //    }
-                //    await LoadEntriesAsync(Playlist);
-                //}
             }
             finally
             {
@@ -182,7 +169,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 var imagePath = await _imageService.GetComposedBitmapSourceAsync(playlistId, playlist.CoverAlbumIds);
                 if (!string.IsNullOrEmpty(imagePath))
                 {
-                    CoverImageSource = new BitmapImage
+                    ImageSource = new BitmapImage
                     {
                         CreateOptions = BitmapCreateOptions.IgnoreImageCache,
                         UriSource = new Uri(imagePath)
@@ -232,18 +219,9 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                         entryIds.Add(SelectedItems[i].Id);
                     }
 
-                    await _dataService.DeletePlaylistEntriesAsync(Playlist.Id, entryIds);
-
-                    // Remove items in a single batch operation
-                    var itemsToRemove = SelectedItems.ToArray();
-                    foreach (var item in itemsToRemove)
-                    {
-                        Items.Remove(item);
-                    }
-
-                    await _imageService.RemoveComposedBitmaps(Playlist.Id);
-
-                    SelectedItems.Clear();
+                    await Task.WhenAll(
+                        _dataService.DeletePlaylistEntriesAsync(Playlist.Id, entryIds),
+                        _imageService.RemoveComposedBitmaps(Playlist.Id));
 
                     _messenger.Send(new PlaylistChangedMessage(Playlist.Id));
                 }
@@ -333,69 +311,64 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         [RelayCommand]
         private async Task MenuItemClicked(object? parameter)
         {
-            //if (parameter is FlyoutItem flyoutItem)
-            //{
-            //    if (flyoutItem.Data is ActionMode actionMode)
-            //    {
-            //        switch (actionMode)
-            //        {
-            //            case ActionMode.AddNewPlaylist:
-            //                IsAllToPlaylistFlyoutOpen = false;
+            if (parameter is FlyoutItem flyoutItem)
+            {
+                if (flyoutItem.Data is ActionMode actionMode)
+                {
+                    switch (actionMode)
+                    {
+                        case ActionMode.AddNewPlaylist:
+                            //IsAllToPlaylistFlyoutOpen = false;
 
-            //                var (result, dialog) = await _dialogService.ShowDialogAsync<CreatePlaylistDialog>();
-            //                if (result == ContentDialogResult.Primary)
-            //                {
-            //                    var createdPlaylist = dialog.ViewModel.CreatedPlaylist;
-            //                    if (createdPlaylist != null)
-            //                    {
-            //                        await AppendSelectedTracksToPlaylistAsync(createdPlaylist.Id);
-            //                    }
-            //                }
-            //                break;
-            //        }
-            //    }
-            //    else if (flyoutItem.Data is PlaylistSummary playlist)
-            //    {
-            //        await AppendSelectedTracksToPlaylistAsync(playlist.Id);
-
-            //    }
-            //}
+                            var (result, dialog) = await _dialogService.ShowDialogAsync<CreatePlaylistDialog>();
+                            if (result == ContentDialogResult.Primary)
+                            {
+                                var createdPlaylist = dialog.ViewModel.CreatedPlaylist;
+                                if (createdPlaylist != null)
+                                {
+                                    await AppendSelectedTracksToPlaylistAsync(createdPlaylist.Id);
+                                }
+                            }
+                            break;
+                    }
+                }
+                else if (flyoutItem.Data is PlaylistSummary playlist)
+                {
+                    await AppendSelectedTracksToPlaylistAsync(playlist.Id);
+                }
+            }
         }
 
         private async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
         {
-            //var trackIds = new ObservableCollection<int>(SelectedItems.Select(t => t.Id));
-            //await _dataService.AppendToPlaylist(playlistId, trackIds);
-            //SelectedItems.Clear();
+            var count = SelectedItems.Count;
+            if (count > 0)
+            {
+                var entryIds = new List<int>(count);
+                for (int i = 0; i < count; i++)
+                {
+                    entryIds.Add(SelectedItems[i].TrackId);
+                }
+
+                await Task.WhenAll(
+                    _dataService.AppendToPlaylist(playlistId, entryIds),
+                    _imageService.RemoveComposedBitmaps(playlistId));
+
+                _messenger.Send(new PlaylistChangedMessage(playlistId));
+            }
         }
 
-        public async Task Receive(int playlistId)
+        public async Task UpdatePlaylist(int playlistId)
         {
             if (Playlist != null && Playlist.Id == playlistId)
             {
                 await LoadPlaylistAsync(playlistId);
-                //CoverImageSource = null;
-                //var playlist = await _dataService.GetPlaylistById(playlistId);
-                //if (playlist != null)
-                //{
-                //    var imagePath = await _imageService.GetComposedBitmapSourceAsync(playlistId, playlist.CoverAlbumIds);
-                //    if (!string.IsNullOrEmpty(imagePath))
-                //    {
-                //        var bitmapImage = new BitmapImage
-                //        {
-                //            CreateOptions = BitmapCreateOptions.IgnoreImageCache
-                //        };
-                //        bitmapImage.UriSource = new Uri(imagePath);
-                //        CoverImageSource = bitmapImage;
-                //    }
-                //    //await LoadEntriesAsync(Playlist);
-                //}
             }
         }
 
         void IRecipient<PlaylistChangedMessage>.Receive(PlaylistChangedMessage message)
         {
-            _ = Receive(message.PlaylistId);
+            _ = UpdatePlaylist(message.PlaylistId);
         }
     }
 }

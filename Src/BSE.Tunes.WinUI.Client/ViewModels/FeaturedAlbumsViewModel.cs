@@ -50,7 +50,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                             {
                                 Title = album.Title ?? string.Empty,
                                 SubTitle = album.Artist?.Name ?? string.Empty,
-                                ImageSource = _imageService.GetBitmapSource(album.AlbumId, false),
+                                ImagePath = _imageService.GetBitmapSource(album.AlbumId, false),
                                 Data = album
                             });
                         }

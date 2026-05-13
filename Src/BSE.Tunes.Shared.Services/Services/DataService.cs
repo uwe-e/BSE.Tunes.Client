@@ -350,6 +350,18 @@ namespace BSE.Tunes.Shared.Services
             };
 
             var dtoResult = await _requestService.GetAsync<PagedResultDto<PlaylistEntryDto>>($"api/playlists/{playlistId}/entries", parameters);
+
+            //var res = new PagedResult<PlaylistEntry>
+            //{
+            //    Items = _mapper.MapCollection<PlaylistEntry>(dtoResult.Items).ToList() ?? new List<PlaylistEntry>(),
+            //    TotalCount = dtoResult.TotalCount,
+            //    PageNumber = dtoResult.PageNumber,
+            //    PageSize = dtoResult.PageSize,
+            //    TotalPages = dtoResult.TotalPages,
+            //    HasPreviousPage = dtoResult.HasPreviousPage,
+            //    HasNextPage = dtoResult.HasNextPage,
+            //};
+            //return res;
             return new PagedResult<PlaylistEntry>
             {
                 Items = _mapper.MapCollection<PlaylistEntry>(dtoResult.Items).ToList() ?? new List<PlaylistEntry>(),
