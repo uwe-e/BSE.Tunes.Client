@@ -385,5 +385,15 @@ namespace BSE.Tunes.Shared.Services
             var dtoResult = await _requestService.GetAsync<IReadOnlyList<GenreDto>>($"api/genres");
             return _mapper.MapCollection<Genre>(dtoResult).ToList();
         }
+
+        public async Task UpdatePlaylistEntriesSortOrderAsync(int playlistId, List<int> entryIds)
+        {
+            if (entryIds == null || entryIds.Count == 0)
+            {
+                throw new ArgumentException("Entry IDs list cannot be null or empty.", nameof(entryIds));
+            }
+            var updateDto = new UpdatePlaylistEntriesDto { EntryIds = entryIds };
+            await _requestService.PutAsync($"api/playlists/{playlistId}/entries/reorder", updateDto);
+        }
     }
 }

@@ -258,6 +258,9 @@
                         MaxCoverSize="220"
                         MinCoverSize="100"
                         ScrollThreshold="160"/>
+                    <interactivity:EventTriggerBehavior EventName="DragItemsCompleted">
+                        <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.DragItemsCompletedCommand}"/>
+                    </interactivity:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </controls:ExtendedListView>
 

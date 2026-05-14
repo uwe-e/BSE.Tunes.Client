@@ -143,6 +143,37 @@ namespace BSE.Tunes.Shared.Services
             return result;
         }
 
+        public async Task PutAsync<T>(string path, T content)
+        {
+            Uri uri = BuildUri(path);
+            await PutAsync<T, T>(uri, content);
+        }
+
+        public async Task<U?> PutAsync<U, T>(string path, T content)
+        {
+            Uri uri = BuildUri(path);
+            return await PostAsync<U, T>(uri, content);
+        }
+
+        public async Task<U?> PutAsync<U, T>(Uri uri, T content)
+        {
+            U? result;
+            using (var client = await GetHttpClientAsync())
+            {
+                var serialized = JsonSerializer.Serialize(content, _defaultJsonOptions);
+                using var responseMessage = await client.PutAsync(uri, new StringContent(serialized, Encoding.UTF8, "application/json"));
+
+                if (responseMessage.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return default;
+                }
+
+                using var stream = await responseMessage.Content.ReadAsStreamAsync();
+                result = await JsonSerializer.DeserializeAsync<U>(stream, _defaultJsonOptions);
+            }
+            return result;
+        }
+
         public async Task<HttpClient> GetHttpClientAsync(bool withRefreshToken = true)
         {
             var httpClient = new HttpClient();

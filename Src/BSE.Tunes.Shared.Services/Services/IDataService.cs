@@ -40,5 +40,6 @@ namespace BSE.Tunes.Shared.Services
         Task<bool> UpdateHistory(History history);
         Task<IReadOnlyList<PlaylistSummary>> GetAllPlaylists();
         Task DeletePlaylistEntriesAsync(int playlistId, List<int> entryIds);
+        Task UpdatePlaylistEntriesSortOrderAsync(int playlistId, List<int> entryIds);
     }
 }

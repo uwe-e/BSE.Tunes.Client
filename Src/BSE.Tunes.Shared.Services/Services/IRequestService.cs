@@ -16,5 +16,8 @@
         Task PostAsync<T>(string path, T content);
         Task<U?> PostAsync<U, T>(string path, T content);
         Task<U?> PostAsync<U, T>(Uri uri, T content);
+        Task PutAsync<T>(string path, T content);
+        Task<U?> PutAsync<U, T>(string path, T content);
+        Task<U?> PutAsync<U, T>(Uri uri, T content);
     }
 }

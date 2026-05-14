@@ -370,5 +370,48 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         {
             _ = UpdatePlaylist(message.PlaylistId);
         }
+
+        [RelayCommand]
+        private void DragItemsCompleted(DragItemsCompletedEventArgs e)
+        {
+            if (e.Items is { Count: 1 } && e.Items[0] is PlaylistEntryItem entry)
+            {
+                _ = UpdateReorderedPlaylist(entry);
+            }
+        }
+
+        private async Task UpdateReorderedPlaylist(PlaylistEntryItem entry)
+        {
+            IsBusy = true;
+
+            try
+            {
+                var newIndex = Items.IndexOf(entry);
+                if (newIndex >= 0)
+                {
+                    var count = Items.Count;
+                    var entriesIds = new List<int>(count);
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (Items[i].Data is PlaylistEntry playlistEntry)
+                        {
+                            entriesIds.Add(playlistEntry.Id);
+                        }
+                    }
+
+                    await _dataService.UpdatePlaylistEntriesSortOrderAsync(Playlist.Id, entriesIds);
+
+                    if (newIndex <= 4)
+                    {
+                        await LoadPlaylistAsync(Playlist.Id);
+                    }
+                }
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
     }
 }

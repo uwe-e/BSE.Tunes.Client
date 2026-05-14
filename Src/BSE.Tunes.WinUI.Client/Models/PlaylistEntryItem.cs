@@ -17,6 +17,7 @@ namespace BSE.Tunes.WinUI.Client.Models
         public string Genre { get; set; } = string.Empty;
         public TimeSpan Duration { get; set; }
         public string FormattedDuration => Duration.ToString(@"mm\:ss");
+        public int SortOrder { get; set; }
         public object? Data { get; set; }
 
         public static PlaylistEntryItem FromPlaylistEntry(PlaylistEntry entry)
@@ -31,6 +32,7 @@ namespace BSE.Tunes.WinUI.Client.Models
                 Year = entry.Track?.Album?.Year ?? 0,
                 Genre = entry.Track?.Album?.Genre?.Name ?? string.Empty,
                 Duration = entry.Duration,
+                SortOrder = entry.SortOrder,
                 Data = entry
             };
         }
