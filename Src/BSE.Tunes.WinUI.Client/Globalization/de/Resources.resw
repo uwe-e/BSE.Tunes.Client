@@ -303,4 +303,7 @@
   <data name="DeletePlaylistDialog_TextBlock_Information.Text" xml:space="preserve">
     <value>Möchtest du diese Wiedergabeliste wirklich löschen?</value>
   </data>
+  <data name="PlaylistBaseViewModel_MenuPlaylists_NewPlaylistText" xml:space="preserve">
+    <value>Neue Wiedergabeliste</value>
+  </data>
 </root>

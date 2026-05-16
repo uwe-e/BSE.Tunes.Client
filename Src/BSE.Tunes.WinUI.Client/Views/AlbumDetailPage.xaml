@@ -200,13 +200,14 @@
                                    Margin="0,5"
                                    Padding="0,54,0,0"
                                    ItemTemplate="{StaticResource TrackItemTemplate}"
-                                   ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
+                                   ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
                                    EnablePreSelection="True"
                                    SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                                    AlternatingRow="{ThemeResource SubtleFillColorSecondaryBrush}"
                                    SelectedItem="{x:Bind ViewModel.SelectedTrack, Mode=TwoWay}"
+                                   controls:ListViewExtensions.Command="{x:Bind ViewModel.PlayTrackCommand}"
                                    controls:ListViewExtensions.SelectedItems="{x:Bind ViewModel.SelectedItems, Mode=TwoWay}"
-                                   IsItemClickEnabled="{x:Bind ViewModel.IsItemClickEnabled, Converter={StaticResource BoolNegationConverter}}"
+                                   IsItemClickEnabled="{x:Bind ViewModel.IsItemClickEnabled}"
                                    PreSelectionCommand="{x:Bind ViewModel.SelectItemsCommand}">
             <interactivity:Interaction.Behaviors>
                 <behaviors:StickyHeaderBehavior 

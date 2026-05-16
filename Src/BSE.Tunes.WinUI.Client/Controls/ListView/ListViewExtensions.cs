@@ -166,7 +166,9 @@ public static class ListViewExtensions
         if (sender is not ListViewBase control)
             return;
 
-        if (!IsCtrlKeyPressed())
+        if (!IsCtrlKeyPressed() &&
+            (control.SelectionMode == ListViewSelectionMode.Single ||
+            control.SelectionMode == ListViewSelectionMode.Extended))
         {
             var command = GetCommand(control);
             if (command?.CanExecute(e.ClickedItem) == true)

@@ -303,4 +303,7 @@
   <data name="DeletePlaylistDialog_TextBlock_Information.Text" xml:space="preserve">
     <value>Are you sure you want to delete this playlist?</value>
   </data>
+  <data name="PlaylistBaseViewModel_MenuPlaylists_NewPlaylistText" xml:space="preserve">
+    <value>New playlist</value>
+  </data>
 </root>

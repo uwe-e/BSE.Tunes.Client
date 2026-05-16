@@ -243,8 +243,9 @@
                                        SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
                                        AlternatingRow="{ThemeResource SubtleFillColorSecondaryBrush}"
                                        SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+                                       controls:ListViewExtensions.Command="{x:Bind ViewModel.PlayTrackCommand}"
                                        controls:ListViewExtensions.SelectedItems="{x:Bind ViewModel.SelectedItems, Mode=TwoWay}"
-                                       IsItemClickEnabled="{x:Bind ViewModel.IsItemClickEnabled, Converter={StaticResource BoolNegationConverter}}"
+                                       IsItemClickEnabled="{x:Bind ViewModel.IsItemClickEnabled}"
                                        PreSelectionCommand="{x:Bind ViewModel.SelectItemsCommand}">
                 <controls:ExtendedListView.Header>
                     <Border Height="54"/>
@@ -309,6 +310,12 @@
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE894;"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonSelectAll" Icon="SelectAll" Label="Add to Playlist"
+                                  Command="{x:Bind ViewModel.SelectAllCommand}"
+                                  Visibility="{x:Bind ViewModel.AllItemsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True, Mode=OneWay}"/>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonUnSelectAll" Icon="ClearSelection" Label="Add to Playlist"
+                                  Command="{x:Bind ViewModel.UnSelectAllCommand}"
+                                  Visibility="{x:Bind ViewModel.AllItemsSelected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"/>
                 </CommandBar>
             </Border>
         </Grid>

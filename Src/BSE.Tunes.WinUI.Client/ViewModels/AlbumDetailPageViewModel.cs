@@ -14,67 +14,55 @@ using System.Collections.Specialized;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class AlbumDetailPageViewModel : ViewModelBase
+    public partial class AlbumDetailPageViewModel : PlaylistBaseViewModel<TrackItem>
     {
-        private readonly IDataService _dataService;
-        private readonly IImageService _imageService;
-        private readonly IMediaManager _mediaManager;
-        private readonly IDialogService _dialogService;
-        private readonly IMessenger _messenger;
-
         [ObservableProperty]
         private Album? _album;
 
-        [ObservableProperty]
-        private ImageSource? _imageSource;
+        //[ObservableProperty]
+        //private ImageSource? _imageSource;
 
-        [ObservableProperty]
-        private ObservableCollection<TrackItem> _tracks = [];
+        //[ObservableProperty]
+        //private ObservableCollection<TrackItem> _items = [];
 
-        [ObservableProperty]
-        private ObservableCollection<TrackItem> _selectedItems = [];
+        //[ObservableProperty]
+        //private ObservableCollection<TrackItem> _selectedItems = [];
 
         [ObservableProperty]
         private TrackItem? _selectedTrack;
 
-        [ObservableProperty]
-        private ListViewSelectionMode _selectionMode = ListViewSelectionMode.Single;
+        //[ObservableProperty]
+        //private ListViewSelectionMode _selectionMode = ListViewSelectionMode.Single;
 
-        [ObservableProperty]
-        private bool _isBusy;
+        //[ObservableProperty]
+        //private bool _isBusy;
 
-        [ObservableProperty]
-        private bool _isCommandBarVisible;
+        //[ObservableProperty]
+        //private bool _isCommandBarVisible;
 
-        [ObservableProperty]
-        private bool _isItemClickEnabled = true;
+        //[ObservableProperty]
+        //private bool _isItemClickEnabled = true;
 
-        [ObservableProperty]
-        private bool _allItemsSelected;
+        //[ObservableProperty]
+        //private bool _allItemsSelected;
 
-        [ObservableProperty]
-        private ObservableCollection<BSE.Tunes.WinUI.Client.Models.FlyoutItem> _playlistMenuItems = [];
+        //[ObservableProperty]
+        //private ObservableCollection<BSE.Tunes.WinUI.Client.Models.FlyoutItem> _playlistMenuItems = [];
 
-        [ObservableProperty]
-        private bool _isAllToPlaylistFlyoutOpen;
+        //[ObservableProperty]
+        //private bool _isAllToPlaylistFlyoutOpen;
 
-        public bool HasSelectedItems => SelectedItems.Count > 0;
+        //public bool HasSelectedItems => SelectedItems.Count > 0;
 
         public AlbumDetailPageViewModel(
             IDataService dataService,
             IImageService imageService,
             IMediaManager mediaManager,
             IDialogService dialogService,
-            IMessenger messenger)
+            IResourceService resourceService) : base(dataService, imageService, mediaManager, dialogService, resourceService)
         {
-            _dataService = dataService;
-            _imageService = imageService;
-            _mediaManager = mediaManager;
-            _dialogService = dialogService;
-            _messenger = messenger;
-
             // Monitor selected items collection
-            SelectedItems.CollectionChanged += OnSelectedItemsChanged;
+            //SelectedItems.CollectionChanged += OnSelectedItemsChanged;
         }
 
 
@@ -88,47 +76,47 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 _ = LoadAlbumAsync(album.Id);
             }
 
-            _ = LoadPlaylistsAsync();
+            //_ = LoadPlaylistsAsync();
         }
 
-        private async Task LoadPlaylistsAsync()
-        {
-            var playlists = await _dataService.GetAllPlaylists();
-            PlaylistMenuItems.Clear();
+        //private async Task LoadPlaylistsAsync()
+        //{
+        //    var playlists = await DataService.GetAllPlaylists();
+        //    PlaylistMenuItems.Clear();
 
-            // Add "New Playlist" item
+        //    // Add "New Playlist" item
 
-            try
-            {
-                PlaylistMenuItems.Add(new FlyoutItem
-                {
-                    Text = "New Playlist",
-                    Glyph = "\uE710", // Add icon
-                    Data = ActionMode.AddNewPlaylist,
-                });
-            }
-            catch (Exception ex)
-            {
-                // Handle any exceptions that may occur during playlist loading
-                System.Diagnostics.Debug.WriteLine($"Error loading playlists: {ex.Message}");
-            }
+        //    try
+        //    {
+        //        PlaylistMenuItems.Add(new FlyoutItem
+        //        {
+        //            Text = "New Playlist",
+        //            Glyph = "\uE710", // Add icon
+        //            Data = ActionMode.AddNewPlaylist,
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle any exceptions that may occur during playlist loading
+        //        System.Diagnostics.Debug.WriteLine($"Error loading playlists: {ex.Message}");
+        //    }
 
-            // Add separator
-            PlaylistMenuItems.Add(new FlyoutItem
-            {
-                IsSeparator = true
-            });
+        //    // Add separator
+        //    PlaylistMenuItems.Add(new FlyoutItem
+        //    {
+        //        IsSeparator = true
+        //    });
 
-            // Add playlists
-            foreach (var playlist in playlists)
-            {
-                PlaylistMenuItems.Add(new FlyoutItem
-                {
-                    Text = playlist.Name ?? string.Empty,
-                    Data = playlist
-                });
-            }
-        }
+        //    // Add playlists
+        //    foreach (var playlist in playlists)
+        //    {
+        //        PlaylistMenuItems.Add(new FlyoutItem
+        //        {
+        //            Text = playlist.Name ?? string.Empty,
+        //            Data = playlist
+        //        });
+        //    }
+        //}
 
         public async Task LoadAlbumAsync(int albumId)
         {
@@ -136,11 +124,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
             try
             {
-                Album = await _dataService.GetAlbumById(albumId);
+                Album = await DataService.GetAlbumById(albumId);
 
                 if (Album != null)
                 {
-                    var imagePath = _imageService.GetBitmapSource(Album.AlbumId, false);
+                    var imagePath = ImageService.GetBitmapSource(Album.AlbumId, false);
                     if (!string.IsNullOrEmpty(imagePath))
                     {
                         ImageSource = new BitmapImage(new Uri(imagePath));
@@ -156,7 +144,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         private void LoadTracks(Album album)
         {
-            Tracks.Clear();
+            Items.Clear();
             if (Album?.Tracks != null)
             {
                 foreach (var track in Album.Tracks)
@@ -164,139 +152,151 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     if (track != null)
                     {
                         track.Album = album;
-                        Tracks.Add(TrackItem.FromTrack(track));
+                        Items.Add(TrackItem.FromTrack(track));
                     }
                 }
             }
         }
 
-        private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(HasSelectedItems));
-            IsCommandBarVisible = HasSelectedItems;
-            SelectionMode = HasSelectedItems ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Extended;
-            AllItemsSelected = HasSelectedItems && SelectedItems.Count == Tracks.Count;
-            IsItemClickEnabled = !HasSelectedItems;
-        }
+        //protected override void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        //{
+        //    base.OnSelectedItemsChanged(sender, e);
+        //    //OnPropertyChanged(nameof(HasSelectedItems));
+        //    //IsCommandBarVisible = HasSelectedItems;
+        //    //SelectionMode = HasSelectedItems ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Extended;
+        //    //AllItemsSelected = HasSelectedItems && SelectedItems.Count == Items.Count;
+        //    //IsItemClickEnabled = !HasSelectedItems;
+        //}
 
-        [RelayCommand]
-        private void SelectItems(TrackItem? trackItem)
+        //[RelayCommand]
+        //private void SelectItems(TrackItem? trackItem)
+        //{
+        //    if (trackItem != null && !SelectedItems.Contains(trackItem))
+        //    {
+        //        SelectedItems.Add(trackItem);
+        //    }
+        //}
+
+        //[RelayCommand]
+        //private void ClearSelection()
+        //{
+        //    SelectedItems.Clear();
+        //}
+
+        //[RelayCommand]
+        //private void SelectAll()
+        //{
+        //    foreach (var track in Tracks)
+        //    {
+        //        if (!SelectedItems.Contains(track))
+        //        {
+        //            SelectedItems.Add(track);
+        //        }
+        //    }
+        //}
+        //public override void SelectAll()
+        //{
+        //    foreach (var item in Items)
+        //    {
+        //        if (!SelectedItems.Contains(item))
+        //        {
+        //            SelectedItems.Add(item);
+        //        }
+        //    }
+        //}
+
+        //[RelayCommand]
+        //private void UnSelectAll()
+        //{
+        //    SelectedItems.Clear();
+        //}
+
+        public override void PlayTrack(object? listItemData)
         {
-            if (trackItem != null && !SelectedItems.Contains(trackItem))
+            if (listItemData is TrackItem trackItem)
             {
-                SelectedItems.Add(trackItem);
+                var trackIds = new ObservableCollection<int> { trackItem.Id };
+                _ = MediaManager.PlayTracksAsync(trackIds, PlayerMode.Song);
             }
         }
 
-        [RelayCommand]
-        private void ClearSelection()
+        public override void PlayAll()
         {
-            SelectedItems.Clear();
+            var trackIds = new ObservableCollection<int>(Items.OfType<TrackItem>().Select(t => t.Id));
+            _ = MediaManager.PlayTracksAsync(trackIds, PlayerMode.CD);
         }
 
-        [RelayCommand]
-        private void SelectAll()
+        public override void PlayAllShuffle()
         {
-            foreach (var track in Tracks)
-            {
-                if (!SelectedItems.Contains(track))
-                {
-                    SelectedItems.Add(track);
-                }
-            }
+            var trackIds = new ObservableCollection<int>(Items.OfType<TrackItem>().Select(t => t.Id));
+            _ = MediaManager.PlayTracksAsync(trackIds.ToRandomCollection(), PlayerMode.CD);
         }
 
-        [RelayCommand]
-        private void UnSelectAll()
-        {
-            SelectedItems.Clear();
-        }
-
-        [RelayCommand]
-        private async Task PlayAllAsync()
-        {
-            if (Album?.Tracks != null && Album.Tracks.Length > 0)
-            {
-                var trackIds = new ObservableCollection<int>(Album.Tracks.Select(t => t.Id));
-                await _mediaManager.PlayTracksAsync(trackIds, PlayerMode.CD);
-            }
-        }
-
-        [RelayCommand]
-        private async Task PlayAllShuffleAsync()
-        {
-            if (Album?.Tracks != null && Album.Tracks.Length > 0)
-            {
-                var trackIds = new ObservableCollection<int>(Album.Tracks.Select(t => t.Id));
-                await _mediaManager.PlayTracksAsync(trackIds.ToRandomCollection(), PlayerMode.CD);
-            }
-        }
-
-        [RelayCommand]
-        private async Task PlaySelectedAsync()
+        public override void PlaySelected()
         {
             if (SelectedItems != null)
             {
-                var trackIds = new ObservableCollection<int>(SelectedItems.Select(t => t.Id));
-                await _mediaManager.PlayTracksAsync(trackIds, PlayerMode.Song);
+                var trackItems = SelectedItems.OfType<TrackItem>().ToList();
+                var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
+                _ = MediaManager.PlayTracksAsync(trackIds, PlayerMode.Song);
                 SelectedItems.Clear();
             }
         }
 
-        [RelayCommand]
-        private async Task PlayAsNext()
+        public override void PlayAsNext()
         {
             if (SelectedItems != null)
             {
-                var trackIds = new ObservableCollection<int>(SelectedItems.Select(t => t.Id));
-                await _mediaManager.InsertTracksToPlayQueueAsync(trackIds, PlayerMode.Song);
+                var trackItems = SelectedItems.OfType<TrackItem>().ToList();
+                var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
+                _ = MediaManager.InsertTracksToPlayQueueAsync(trackIds, PlayerMode.Song);
                 SelectedItems.Clear();
             }
         }
 
-        [RelayCommand]
-        private async Task MenuItemClicked(object? parameter)
-        {
-            if (parameter is FlyoutItem flyoutItem)
-            {
-                if(flyoutItem.Data is ActionMode actionMode)
-                {
-                    switch (actionMode)
-                    {
-                        case ActionMode.AddNewPlaylist:
-                            IsAllToPlaylistFlyoutOpen = false;
+        //[RelayCommand]
+        //private async Task MenuItemClicked(object? parameter)
+        //{
+        //    if (parameter is FlyoutItem flyoutItem)
+        //    {
+        //        if(flyoutItem.Data is ActionMode actionMode)
+        //        {
+        //            switch (actionMode)
+        //            {
+        //                case ActionMode.AddNewPlaylist:
                             
-                            var (result, dialog) = await _dialogService.ShowDialogAsync<CreatePlaylistDialog>();
-                            if (result == ContentDialogResult.Primary)
-                            {
-                                var createdPlaylist = dialog.ViewModel.CreatedPlaylist;
-                                if (createdPlaylist != null)
-                                {
-                                    await AppendSelectedTracksToPlaylistAsync(createdPlaylist.Id);
-                                }
-                            }
-                            break;
-                    }
-                }
-                else if (flyoutItem.Data is PlaylistSummary playlist)
-                {
-                    await AppendSelectedTracksToPlaylistAsync(playlist.Id);
+        //                    var (result, dialog) = await DialogService.ShowDialogAsync<CreatePlaylistDialog>();
+        //                    if (result == ContentDialogResult.Primary)
+        //                    {
+        //                        var createdPlaylist = dialog.ViewModel.CreatedPlaylist;
+        //                        if (createdPlaylist != null)
+        //                        {
+        //                            await AppendSelectedTracksToPlaylistAsync(createdPlaylist.Id);
+        //                        }
+        //                    }
+        //                    break;
+        //            }
+        //        }
+        //        else if (flyoutItem.Data is PlaylistSummary playlist)
+        //        {
+        //            await AppendSelectedTracksToPlaylistAsync(playlist.Id);
                     
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
-        private async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
+        public override async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
         {
-            var trackIds = new ObservableCollection<int>(SelectedItems.Select(t => t.Id));
+            var trackItems = SelectedItems.OfType<TrackItem>().ToList();
+            var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
 
             await Task.WhenAll(
-                        _dataService.AppendToPlaylist(playlistId, trackIds),
-                        _imageService.RemoveComposedBitmaps(playlistId));
+                        DataService.AppendToPlaylist(playlistId, trackIds),
+                        ImageService.RemoveComposedBitmaps(playlistId));
 
             SelectedItems.Clear();
 
-            _messenger.Send(new PlaylistChangedMessage(playlistId));
+            Messenger.Send(new PlaylistChangedMessage(playlistId));
         }
     }
 }
