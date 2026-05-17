@@ -259,6 +259,9 @@
                         MaxCoverSize="220"
                         MinCoverSize="100"
                         ScrollThreshold="160"/>
+                    <interactivity:EventTriggerBehavior EventName="DragItemsStarting">
+                        <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.DragItemsStartingCommand}"/>
+                    </interactivity:EventTriggerBehavior>
                     <interactivity:EventTriggerBehavior EventName="DragItemsCompleted">
                         <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.DragItemsCompletedCommand}"/>
                     </interactivity:EventTriggerBehavior>
