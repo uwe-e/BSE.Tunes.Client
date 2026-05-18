@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class PlaylistsPageViewModel : RefreshableViewModel, IRecipient<PlaylistChangedMessage>
+    public partial class PlaylistsPageViewModel : RefreshableViewModel, IRecipient<PlaylistChangedMessage>, IRecipient<PlaylistCreatedMessage>
     {
         private readonly IDataService _dataService;
         private readonly IImageService _imageService;
@@ -137,6 +137,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         void IRecipient<PlaylistChangedMessage>.Receive(PlaylistChangedMessage message)
         {
             _ = UpdatePlaylistItem(message.PlaylistId);
+        }
+
+        void IRecipient<PlaylistCreatedMessage>.Receive(PlaylistCreatedMessage message)
+        {
+            _ = LoadDataAsync();
         }
 
         private async Task UpdatePlaylistItem(int playlistId)

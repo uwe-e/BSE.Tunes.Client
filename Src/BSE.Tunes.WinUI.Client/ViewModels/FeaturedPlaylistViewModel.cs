@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class FeaturedPlaylistViewModel : RefreshableViewModel, IRecipient<PlaylistChangedMessage>
+    public partial class FeaturedPlaylistViewModel : RefreshableViewModel, IRecipient<PlaylistChangedMessage>, IRecipient<PlaylistCreatedMessage>
     {
         private readonly IDataService _dataService;
         private readonly INavigationService _navigationService;
@@ -120,6 +120,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         void IRecipient<PlaylistChangedMessage>.Receive(PlaylistChangedMessage message)
         {
             _ = UpdatePlaylistItem(message);
+        }
+
+        void IRecipient<PlaylistCreatedMessage>.Receive(PlaylistCreatedMessage message)
+        {
+            _ = LoadDataAsync();
         }
 
         [RelayCommand]

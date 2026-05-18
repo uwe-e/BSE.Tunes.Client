@@ -49,7 +49,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     var imagePath = ImageService.GetBitmapSource(Album.AlbumId, false);
                     if (!string.IsNullOrEmpty(imagePath))
                     {
-                        ImageSource = new BitmapImage(new Uri(imagePath));
+                        LoadImageSource(imagePath);
                     }
                     LoadTracks(Album);
                 }
@@ -62,18 +62,15 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         private void LoadTracks(Album album)
         {
-            Items.Clear();
-            if (Album?.Tracks != null)
+            var trackItems = album.Tracks?
+            .Where(t => t != null)
+            .Select(t =>
             {
-                foreach (var track in Album.Tracks)
-                {
-                    if (track != null)
-                    {
-                        track.Album = album;
-                        Items.Add(TrackItem.FromTrack(track));
-                    }
-                }
-            }
+                t.Album = album;
+                return TrackItem.FromTrack(t);
+            }) ?? Enumerable.Empty<TrackItem>();
+
+            LoadItemsIntoCollection(trackItems);
         }
 
         public override void PlayTrack(object? listItemData)
@@ -97,40 +94,42 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             _ = MediaManager.PlayTracksAsync(trackIds.ToRandomCollection(), PlayerMode.CD);
         }
 
-        public override void PlaySelected()
-        {
-            if (SelectedItems != null)
-            {
-                var trackItems = SelectedItems.OfType<TrackItem>().ToList();
-                var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
-                _ = MediaManager.PlayTracksAsync(trackIds, PlayerMode.Song);
-                SelectedItems.Clear();
-            }
-        }
+        //public override void PlaySelected()
+        //{
+        //    if (SelectedItems != null)
+        //    {
+        //        var trackItems = SelectedItems.OfType<TrackItem>().ToList();
+        //        var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
+        //        _ = MediaManager.PlayTracksAsync(trackIds, PlayerMode.Song);
+        //        SelectedItems.Clear();
+        //    }
+        //}
 
-        public override void PlayAsNext()
-        {
-            if (SelectedItems != null)
-            {
-                var trackItems = SelectedItems.OfType<TrackItem>().ToList();
-                var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
-                _ = MediaManager.InsertTracksToPlayQueueAsync(trackIds, PlayerMode.Song);
-                SelectedItems.Clear();
-            }
-        }
+        //public override void PlayAsNext()
+        //{
+        //    if (SelectedItems != null)
+        //    {
+        //        var trackItems = SelectedItems.OfType<TrackItem>().ToList();
+        //        var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
+        //        _ = MediaManager.InsertTracksToPlayQueueAsync(trackIds, PlayerMode.Song);
+        //        SelectedItems.Clear();
+        //    }
+        //}
 
-        public override async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
-        {
-            var trackItems = SelectedItems.OfType<TrackItem>().ToList();
-            var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
+        //public override async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
+        //{
+        //    var trackItems = SelectedItems.OfType<TrackItem>().ToList();
+        //    var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
 
-            await Task.WhenAll(
-                        DataService.AppendToPlaylist(playlistId, trackIds),
-                        ImageService.RemoveComposedBitmaps(playlistId));
+        //    await Task.WhenAll(
+        //                DataService.AppendToPlaylist(playlistId, trackIds),
+        //                ImageService.RemoveComposedBitmaps(playlistId));
 
-            SelectedItems.Clear();
+        //    SelectedItems.Clear();
 
-            Messenger.Send(new PlaylistChangedMessage(playlistId));
-        }
+        //    Messenger.Send(new PlaylistChangedMessage(playlistId));
+        //}
+
+        protected override int GetTrackId(TrackItem item) => item.Id;
     }
 }

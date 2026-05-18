@@ -1,18 +1,19 @@
 using Microsoft.UI.Xaml.Data;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using System.Threading;
 
 namespace BSE.Tunes.WinUI.Client.Collections
 {
-    public class IncrementalObservableCollection<T> : ObservableCollection<T>, ISupportIncrementalLoading
+    public class IncrementalObservableCollection<T> : ObservableCollection<T>, ISupportIncrementalLoading, IDisposable
     {
         private readonly uint _totalCount;
         private readonly Func<uint, IAsyncOperation<LoadMoreItemsResult>> _loadMoreItemsFunc;
         private uint _loadedCount;
 
-        private Task<LoadMoreItemsResult>? _currentLoadOperation;
+        private readonly SemaphoreSlim _loadSemaphore = new(1, 1);
         private CancellationTokenSource? _cts;
+        private bool _isDisposed;
 
         public IncrementalObservableCollection(uint totalCount, Func<uint, IAsyncOperation<LoadMoreItemsResult>> loadMoreItemsFunc)
         {
@@ -21,35 +22,66 @@ namespace BSE.Tunes.WinUI.Client.Collections
             _loadedCount = 0;
         }
 
-        public bool HasMoreItems => _loadedCount < _totalCount;
+        public bool HasMoreItems => !_isDisposed && _loadedCount < _totalCount;
 
         public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count)
         {
-            _currentLoadOperation = InternalLoadMoreItemsAsync(count);
-            return _currentLoadOperation.AsAsyncOperation();
+            if (_isDisposed)
+            {
+                return Task.FromResult(new LoadMoreItemsResult { Count = 0 }).AsAsyncOperation();
+            }
+
+            return AsyncInfo.Run(async cancellationToken =>
+            {
+                if (!HasMoreItems || _isDisposed)
+                    return new LoadMoreItemsResult { Count = 0 };
+
+                // Prevent concurrent load operations
+                await _loadSemaphore.WaitAsync(cancellationToken);
+                try
+                {
+                    if (_isDisposed)
+                        return new LoadMoreItemsResult { Count = 0 };
+
+                    // Cancel any previous operation
+                    _cts?.Cancel();
+                    _cts?.Dispose();
+                    _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+                    var result = await _loadMoreItemsFunc(count).AsTask(_cts.Token);
+                    
+                    if (!_cts.Token.IsCancellationRequested && !_isDisposed)
+                    {
+                        _loadedCount += result.Count;
+                    }
+                    
+                    return result;
+                }
+                catch (OperationCanceledException)
+                {
+                    return new LoadMoreItemsResult { Count = 0 };
+                }
+                catch (AccessViolationException)
+                {
+                    // Suppress during app shutdown - WinRT interop cleanup timing issue
+                    return new LoadMoreItemsResult { Count = 0 };
+                }       
+                finally
+                {
+                    _loadSemaphore.Release();
+                }
+            });
         }
 
-        private async Task<LoadMoreItemsResult> InternalLoadMoreItemsAsync(uint count)
+        public void Dispose()
         {
-            if (!HasMoreItems)
-                return new LoadMoreItemsResult { Count = 0 };
-            
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
             _cts?.Cancel();
-            _cts = new CancellationTokenSource();
-            
-            try
-            {
-                var result = await _loadMoreItemsFunc(count);
-                if (!_cts.Token.IsCancellationRequested)
-                {
-                    _loadedCount += result.Count;
-                }
-                return result;
-            }
-            catch (OperationCanceledException)
-            {
-                return new LoadMoreItemsResult { Count = 0 };
-            }
+            _cts?.Dispose();
+            _loadSemaphore.Dispose();
         }
     }
 }

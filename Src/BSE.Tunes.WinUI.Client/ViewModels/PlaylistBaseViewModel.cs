@@ -1,16 +1,19 @@
 ﻿using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Messages;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class PlaylistBaseViewModel<TItem> : ViewModelBase
+    public abstract partial class PlaylistBaseViewModel<TItem> : ViewModelBase
     {
         public IDataService DataService { get; }
         public IImageService ImageService { get; }
@@ -19,22 +22,22 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public IResourceService ResourceService { get; }
 
         [ObservableProperty]
-        public ImageSource? _imageSource;
+        private ImageSource? _imageSource;
 
         [ObservableProperty]
-        public bool _isBusy;
+        private bool _isBusy;
 
         [ObservableProperty]
-        public ListViewSelectionMode _selectionMode = ListViewSelectionMode.Extended;
+        private ListViewSelectionMode _selectionMode = ListViewSelectionMode.Extended;
 
         [ObservableProperty]
-        public bool _isCommandBarVisible;
+        private bool _isCommandBarVisible;
 
         [ObservableProperty]
-        public bool _isItemClickEnabled = true;
+        private bool _isItemClickEnabled = true;
 
         [ObservableProperty]
-        public ObservableCollection<FlyoutItem> _playlistMenuItems = [];
+        private ObservableCollection<FlyoutItem> _playlistMenuItems = [];
 
         [ObservableProperty]
         private ObservableCollection<TItem> _items = [];
@@ -43,7 +46,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private ObservableCollection<object> _selectedItems = [];
 
         [ObservableProperty]
-        public bool _allItemsSelected;
+        private bool _allItemsSelected;
+
         public bool HasSelectedItems => SelectedItems.Count > 0;
 
         public PlaylistBaseViewModel(
@@ -58,7 +62,6 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             MediaManager = mediaManager;
             DialogService = dialogService;
             ResourceService = resourceService;
-            
         }
 
         public override void OnNavigatedTo(object parameter)
@@ -121,6 +124,45 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             }
         }
 
+        protected abstract int GetTrackId(TItem item);
+
+        private ObservableCollection<int> GetTrackIdsFromSelectedItems()
+        {
+            var trackIds = new List<int>();
+            foreach (var selectedItem in SelectedItems)
+            {
+                if (selectedItem is TItem item)
+                {
+                    trackIds.Add(GetTrackId(item));
+                }
+            }
+            return new ObservableCollection<int>(trackIds);
+        }
+
+        protected void LoadImageSource(string imagePath, BitmapCreateOptions options = BitmapCreateOptions.None)
+        {
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                ImageSource = new BitmapImage
+                {
+                    CreateOptions = options,
+                    UriSource = new Uri(imagePath)
+                };
+            }
+        }
+
+        protected void LoadItemsIntoCollection(IEnumerable<TItem> items)
+        {
+            Items.Clear();
+            foreach (var item in items)
+            {
+                if (item != null)
+                {
+                    Items.Add(item);
+                }
+            }
+        }
+
         [RelayCommand]
         public virtual void PlayTrack(object? listItemData) { }
 
@@ -131,10 +173,26 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public virtual void PlayAllShuffle() { }
 
         [RelayCommand]
-        public virtual void PlaySelected() { }
+        public virtual void PlaySelected() 
+        {
+            if (SelectedItems != null && SelectedItems.Count > 0)
+            {
+                var trackIds = GetTrackIdsFromSelectedItems();
+                _ = MediaManager.PlayTracksAsync(trackIds, PlayerMode.Song);
+                SelectedItems.Clear();
+            }
+        }
 
         [RelayCommand]
-        public virtual void PlayAsNext() { }
+        public virtual void PlayAsNext()
+        {
+            if (SelectedItems != null && SelectedItems.Count > 0)
+            {
+                var trackIds = GetTrackIdsFromSelectedItems();
+                _ = MediaManager.InsertTracksToPlayQueueAsync(trackIds, PlayerMode.Song);
+                SelectedItems.Clear();
+            }
+        }
 
         [RelayCommand]
         public virtual void SelectAll()
@@ -187,6 +245,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                                 if (createdPlaylist != null)
                                 {
                                     await AppendSelectedTracksToPlaylistAsync(createdPlaylist.Id);
+
+                                    WeakReferenceMessenger.Default.Send(new PlaylistCreatedMessage(createdPlaylist.Id));
                                 }
                             }
                             break;
@@ -199,9 +259,25 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             }
         }
 
-        public virtual Task AppendSelectedTracksToPlaylistAsync(int id)
+        public virtual async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
         {
-            throw new NotImplementedException();
+            if (SelectedItems.Count == 0)
+                return;
+
+            var trackIds = GetTrackIdsFromSelectedItems();
+
+            await Task.WhenAll(
+                DataService.AppendToPlaylist(playlistId, trackIds),
+                ImageService.RemoveComposedBitmaps(playlistId));
+
+            SelectedItems.Clear();
+
+            /*
+             * Use the WeakReferenceMessenger from CommunityToolkit.Mvvm.Messaging
+             * to send the PlaylistChangedMessage. This ensures that the message
+             * is sent without creating strong references that could lead to memory leaks.
+             */
+            WeakReferenceMessenger.Default.Send(new PlaylistChangedMessage(playlistId));
         }
     }
 }
