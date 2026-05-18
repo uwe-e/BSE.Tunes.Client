@@ -194,7 +194,6 @@
             </Grid>
         </UserControl>
 
-        <!-- ListView with Behavior -->
         <controls:ExtendedListView x:Name="listview"
                                    Grid.Row="1"
                                    Margin="0,5"
@@ -219,6 +218,40 @@
                     MinCoverSize="100"
                     ScrollThreshold="160"/>
             </interactivity:Interaction.Behaviors>
+            <controls:ExtendedListView.Footer>
+                <StackPanel Margin="0,10"
+                            Visibility="{x:Bind ViewModel.HasFurtherAlbums, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=False, Mode=OneWay}">
+                    <HyperlinkButton Style="{StaticResource HeaderedSectionHeader}">
+                        <TextBlock TextTrimming="CharacterEllipsis">
+                            <Run x:Uid="AlbumDetailPage_SectionHeader_Albums" Text="Further Albums:"/>
+                            <Run Text="{x:Bind ViewModel.Album.Artist.Name, Mode=OneWay}"/>
+                        </TextBlock>
+                    </HyperlinkButton>
+                    <Grid>
+                        <GridView ItemsSource="{x:Bind ViewModel.FurtherAlbums, Mode=OneWay}"
+                                  ItemTemplate="{StaticResource SmallImagePanelTemplate}"
+                                  SelectionMode="Single"
+                                  IsItemClickEnabled="True">
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="Margin" Value="0, 5, 15, 5"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
+                            <interactivity:Interaction.Behaviors>
+                                <interactivity:EventTriggerBehavior EventName="ItemClick">
+                                    <interactivity:InvokeCommandAction Command="{x:Bind ViewModel.SelectItemCommand}"
+                                                                       InputConverter="{StaticResource ItemClickEventArgsConverter}"/>
+                                </interactivity:EventTriggerBehavior>
+                            </interactivity:Interaction.Behaviors>
+                        </GridView>
+                        <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+                                      Width="40"
+                                      Height="40"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </controls:ExtendedListView.Footer>
         </controls:ExtendedListView>
 
        <!-- CommandBar Overlay - Does not take up layout space -->

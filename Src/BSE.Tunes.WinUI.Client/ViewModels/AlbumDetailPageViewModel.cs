@@ -1,10 +1,11 @@
 ﻿using BSE.Tunes.Shared.Services.Extensions;
+using BSE.Tunes.WinUI.Client.Collections;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
-using BSE.Tunes.WinUI.Client.Messages;
 using BSE.Tunes.WinUI.Client.Models;
+using BSE.Tunes.WinUI.Client.Views;
+using BSEtunes.Contracts.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Media.Imaging;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
@@ -17,13 +18,22 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         [ObservableProperty]
         private TrackItem? _selectedTrack;
 
+        [ObservableProperty]
+        private bool _hasFurtherAlbums;
+
+        [ObservableProperty]
+        private ObservableCollection<CarouselItem> _furtherAlbums = [];
+        private readonly INavigationService _navigationService;
+
         public AlbumDetailPageViewModel(
             IDataService dataService,
             IImageService imageService,
             IMediaManager mediaManager,
             IDialogService dialogService,
-            IResourceService resourceService) : base(dataService, imageService, mediaManager, dialogService, resourceService)
+            IResourceService resourceService,
+            INavigationService navigationService) : base(dataService, imageService, mediaManager, dialogService, resourceService)
         {
+            _navigationService = navigationService;
         }
 
         public override void OnNavigatedTo(object parameter)
@@ -52,6 +62,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                         LoadImageSource(imagePath);
                     }
                     LoadTracks(Album);
+                    _ = LoadFurtherAlbumsAsync();
                 }
             }
             finally
@@ -71,6 +82,78 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             }) ?? Enumerable.Empty<TrackItem>();
 
             LoadItemsIntoCollection(trackItems);
+        }
+        private async Task LoadFurtherAlbumsAsync()
+        {
+            FurtherAlbums.Clear();
+
+            const int pageSize = 3;
+            int pageNumber = 1;
+
+            var result = await DataService.GetPagedAlbums(
+                null,
+                Album.Artist.Id,
+                null,
+                null,
+                null,
+                pageNumber,
+                pageSize,
+                AlbumSortOption.Title);
+
+            uint totalCount = (uint)(result?.TotalCount ?? 0);
+            HasFurtherAlbums = totalCount > 1;
+
+            FurtherAlbums = new IncrementalObservableCollection<CarouselItem>(
+                totalCount,
+                (uint count) =>
+                {
+                    async Task<Microsoft.UI.Xaml.Data.LoadMoreItemsResult> loadFunc()
+                    {
+                        var result = await DataService.GetPagedAlbums(
+                            null, Album.Artist.Id, null, null, null,
+                            pageNumber, pageSize, AlbumSortOption.Title);
+
+                        uint itemCount = 0;
+                        if (result?.Items is { Count: > 0 } items)
+                        {
+                            int albumCount = items.Count;
+                            itemCount = (uint)albumCount;
+
+                            for (int i = 0; i < albumCount; i++)
+                            {
+                                var album = items[i];
+                                if (album != null)
+                                {
+                                    FurtherAlbums.Add(CreateCarouselItem(album));
+                                }
+                            }
+                        }
+
+                        pageNumber++;
+
+                        return new Microsoft.UI.Xaml.Data.LoadMoreItemsResult
+                        {
+                            Count = itemCount
+                        };
+                    }
+                    return loadFunc().AsAsyncOperation();
+                });
+
+            // Add the first page results
+            if (result?.Items is { Count: > 0 } items)
+            {
+                int albumCount = items.Count;
+
+                for (int i = 0; i < albumCount; i++)
+                {
+                    var album = items[i];
+                    if (album != null)
+                    {
+                        FurtherAlbums.Add(CreateCarouselItem(album));
+                    }
+                }
+                pageNumber++;
+            }
         }
 
         public override void PlayTrack(object? listItemData)
@@ -94,42 +177,26 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             _ = MediaManager.PlayTracksAsync(trackIds.ToRandomCollection(), PlayerMode.CD);
         }
 
-        //public override void PlaySelected()
-        //{
-        //    if (SelectedItems != null)
-        //    {
-        //        var trackItems = SelectedItems.OfType<TrackItem>().ToList();
-        //        var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
-        //        _ = MediaManager.PlayTracksAsync(trackIds, PlayerMode.Song);
-        //        SelectedItems.Clear();
-        //    }
-        //}
-
-        //public override void PlayAsNext()
-        //{
-        //    if (SelectedItems != null)
-        //    {
-        //        var trackItems = SelectedItems.OfType<TrackItem>().ToList();
-        //        var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
-        //        _ = MediaManager.InsertTracksToPlayQueueAsync(trackIds, PlayerMode.Song);
-        //        SelectedItems.Clear();
-        //    }
-        //}
-
-        //public override async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
-        //{
-        //    var trackItems = SelectedItems.OfType<TrackItem>().ToList();
-        //    var trackIds = new ObservableCollection<int>(trackItems.Select(t => t.Id));
-
-        //    await Task.WhenAll(
-        //                DataService.AppendToPlaylist(playlistId, trackIds),
-        //                ImageService.RemoveComposedBitmaps(playlistId));
-
-        //    SelectedItems.Clear();
-
-        //    Messenger.Send(new PlaylistChangedMessage(playlistId));
-        //}
-
         protected override int GetTrackId(TrackItem item) => item.Id;
+
+        [RelayCommand]
+        private async Task SelectItem(CarouselItem? item)
+        {
+            if (item?.Data != null)
+            {
+                await _navigationService.NavigateToAsync(nameof(AlbumDetailPage), item.Data);
+            }
+        }
+        
+        private CarouselItem CreateCarouselItem(Album album)
+        {
+            return new CarouselItem
+            {
+                Title = album.Title ?? string.Empty,
+                SubTitle = album.Artist?.Name ?? string.Empty,
+                ImagePath = ImageService.GetBitmapSource(album.AlbumId, false),
+                Data = album
+            };
+        }
     }
 }

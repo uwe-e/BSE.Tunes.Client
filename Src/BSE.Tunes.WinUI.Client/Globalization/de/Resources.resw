@@ -306,4 +306,7 @@
   <data name="PlaylistBaseViewModel_MenuPlaylists_NewPlaylistText" xml:space="preserve">
     <value>Neue Wiedergabeliste</value>
   </data>
+  <data name="AlbumDetailPage_SectionHeader_Albums.Text" xml:space="preserve">
+    <value>Alben von</value>
+  </data>
 </root>

@@ -10,22 +10,6 @@
     xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <DataTemplate x:Name="SmallImagePanelTemplate" x:DataType="models:CarouselItem">
-            <Grid x:Name="gridViewItem" Width="150">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Image Source="{x:Bind ImageSource, Mode=OneWay}"
-                       Stretch="UniformToFill" Height="150" Grid.Row="0"/>
-                <TextBlock Grid.Row="1" Text="{x:Bind Title, Mode=OneWay}" TextTrimming="WordEllipsis" x:Name="title" FontWeight="SemiBold"/>
-                <TextBlock Grid.Row="2" Text="{x:Bind SubTitle, Mode=OneWay}" FontWeight="SemiLight" x:Name="description" TextTrimming="WordEllipsis" FontSize="12"/>
-            </Grid>
-        </DataTemplate>
-    </UserControl.Resources>
-
     <StackPanel>
         <HyperlinkButton x:Uid="FeaturedAlbumsView_Title" Content="Albums"
                          Style="{StaticResource HeaderedSectionHeader}"/>
