@@ -183,7 +183,7 @@
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout extensions:FlyoutExtensions.Parent="{x:Bind buttonAddAllTo}"
-                                        extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems}"
+                                        extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItemsForAll}"
                                         extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
                                         extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}" />
                             </Button.Flyout>
@@ -256,7 +256,7 @@
                 <AppBarButton x:Uid="AlbumDetailPage_ButtonAddTo" x:Name="buttonAddTo" Icon="Add" Label="Add to Playlist">
                     <AppBarButton.Flyout>
                         <Flyout extensions:FlyoutExtensions.Parent="{x:Bind buttonAddTo}"
-                                extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItems}"
+                                extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItemsForSelected}"
                                 extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
                                 extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}"/>
                     </AppBarButton.Flyout>

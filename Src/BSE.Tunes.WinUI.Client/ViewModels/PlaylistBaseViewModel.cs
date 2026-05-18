@@ -37,7 +37,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private bool _isItemClickEnabled = true;
 
         [ObservableProperty]
-        private ObservableCollection<FlyoutItem> _playlistMenuItems = [];
+        private ObservableCollection<FlyoutItem> _playlistMenuItemsForAll = [];
+
+        [ObservableProperty]
+        private ObservableCollection<FlyoutItem> _playlistMenuItemsForSelected = [];
 
         [ObservableProperty]
         private ObservableCollection<TItem> _items = [];
@@ -69,7 +72,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             base.OnNavigatedTo(parameter);
             SelectedItems.CollectionChanged += OnSelectedItemsChanged;
 
-            _ = LoadPlaylistMenuAsync();
+            _ = InitializePlaylistMenusAsync();
         }
 
         public override void OnNavigatedFrom()
@@ -87,18 +90,36 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             AllItemsSelected = HasSelectedItems && SelectedItems.Count == Items.Count;
         }
 
-        protected virtual async Task LoadPlaylistMenuAsync()
+        protected virtual async Task InitializePlaylistMenusAsync()
         {
             var playlists = await DataService.GetAllPlaylists();
-            PlaylistMenuItems.Clear();
+            var menuItemsForAll = await LoadPlaylistMenuAsync(playlists, InsertMode.AddAll);
+            PlaylistMenuItemsForAll.Clear();
+            foreach (var item in menuItemsForAll)
+            {
+                PlaylistMenuItemsForAll.Add(item);
+            }
+
+            var menuItemsForSelected = await LoadPlaylistMenuAsync(playlists, InsertMode.AddSelected);
+            PlaylistMenuItemsForSelected.Clear();
+            foreach (var item in menuItemsForSelected)
+            {
+                PlaylistMenuItemsForSelected.Add(item);
+            }
+        }
+
+        protected virtual Task<IList<FlyoutItem>> LoadPlaylistMenuAsync(IEnumerable<PlaylistSummary> playlists, InsertMode insertMode)
+        {
+            var flyoutItems = new List<FlyoutItem>();
 
             try
             {
-                PlaylistMenuItems.Add(new FlyoutItem
+                flyoutItems.Add(new FlyoutItem
                 {
                     Text = ResourceService.GetString("PlaylistBaseViewModel_MenuPlaylists_NewPlaylistText"),
                     Glyph = "\uE710", // Add icon
                     Data = ActionMode.AddNewPlaylist,
+                    InsertMode = insertMode
                 });
             }
             catch (Exception ex)
@@ -108,7 +129,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             }
 
             // Add separator
-            PlaylistMenuItems.Add(new FlyoutItem
+            flyoutItems.Add(new FlyoutItem
             {
                 IsSeparator = true
             });
@@ -116,12 +137,15 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             // Add playlists
             foreach (var playlist in playlists)
             {
-                PlaylistMenuItems.Add(new FlyoutItem
+                flyoutItems.Add(new FlyoutItem
                 {
                     Text = playlist.Name ?? string.Empty,
-                    Data = playlist
+                    Data = playlist,
+                    InsertMode = insertMode
                 });
             }
+
+            return Task.FromResult<IList<FlyoutItem>>(flyoutItems);
         }
 
         protected abstract int GetTrackId(TItem item);
@@ -132,6 +156,19 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             foreach (var selectedItem in SelectedItems)
             {
                 if (selectedItem is TItem item)
+                {
+                    trackIds.Add(GetTrackId(item));
+                }
+            }
+            return new ObservableCollection<int>(trackIds);
+        }
+
+        private ObservableCollection<int> GetAllTrackIds()
+        {
+            var trackIds = new List<int>();
+            foreach (var item in Items)
+            {
+                if (item != null)
                 {
                     trackIds.Add(GetTrackId(item));
                 }
@@ -237,15 +274,13 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     switch (actionMode)
                     {
                         case ActionMode.AddNewPlaylist:
-
                             var (result, dialog) = await DialogService.ShowDialogAsync<CreatePlaylistDialog>();
                             if (result == ContentDialogResult.Primary)
                             {
                                 var createdPlaylist = dialog.ViewModel.CreatedPlaylist;
                                 if (createdPlaylist != null)
                                 {
-                                    await AppendSelectedTracksToPlaylistAsync(createdPlaylist.Id);
-
+                                    await AppendTracksToPlaylistAsync(createdPlaylist.Id, flyoutItem.InsertMode);
                                     WeakReferenceMessenger.Default.Send(new PlaylistCreatedMessage(createdPlaylist.Id));
                                 }
                             }
@@ -254,23 +289,28 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 }
                 else if (flyoutItem.Data is PlaylistSummary playlist)
                 {
-                    await AppendSelectedTracksToPlaylistAsync(playlist.Id);
+                    await AppendTracksToPlaylistAsync(playlist.Id, flyoutItem.InsertMode);
                 }
             }
         }
 
-        public virtual async Task AppendSelectedTracksToPlaylistAsync(int playlistId)
+        public virtual async Task AppendTracksToPlaylistAsync(int playlistId, InsertMode insertMode)
         {
-            if (SelectedItems.Count == 0)
-                return;
+            var trackIds = insertMode == InsertMode.AddAll 
+                ? GetAllTrackIds() 
+                : GetTrackIdsFromSelectedItems();
 
-            var trackIds = GetTrackIdsFromSelectedItems();
+            if (trackIds.Count == 0)
+                return;
 
             await Task.WhenAll(
                 DataService.AppendToPlaylist(playlistId, trackIds),
                 ImageService.RemoveComposedBitmaps(playlistId));
 
-            SelectedItems.Clear();
+            if (insertMode == InsertMode.AddSelected)
+            {
+                SelectedItems.Clear();
+            }
 
             /*
              * Use the WeakReferenceMessenger from CommunityToolkit.Mvvm.Messaging
@@ -279,5 +319,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
              */
             WeakReferenceMessenger.Default.Send(new PlaylistChangedMessage(playlistId));
         }
+
+        public virtual Task AppendSelectedTracksToPlaylistAsync(int playlistId) 
+            => AppendTracksToPlaylistAsync(playlistId, InsertMode.AddSelected);
+
+        public virtual Task AppendAllTracksToPlaylistAsync(int playlistId) 
+            => AppendTracksToPlaylistAsync(playlistId, InsertMode.AddAll);
     }
 }

@@ -49,8 +49,6 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             });
         }
 
-        
-
         protected override async Task LoadDataAsync()
         {
             IsBusy = true;
