@@ -309,4 +309,16 @@
   <data name="AlbumDetailPage_SectionHeader_Albums.Text" xml:space="preserve">
     <value>Alben von</value>
   </data>
+  <data name="PlaylistDetailPage_MenuFlyoutItem_Play.Text" xml:space="preserve">
+    <value>Wiedergeben</value>
+  </data>
+  <data name="PlaylistDetailPage_MenuFlyoutItem_PlayasNext.Text" xml:space="preserve">
+    <value>Als Nächstes wiedergeben</value>
+  </data>
+  <data name="PlaylistDetailPage_MenuFlyoutItem_ShowAlbum.Text" xml:space="preserve">
+    <value>Album anzeigen</value>
+  </data>
+  <data name="PlaylistDetailPage_MenuFlyoutItem_SelectItem.Text" xml:space="preserve">
+    <value>Auswählen</value>
+  </data>
 </root>

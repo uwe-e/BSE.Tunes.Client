@@ -41,7 +41,42 @@
                         <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
-
+                    <Grid.ContextFlyout>
+                        <controls:ConditionalMenuFlyout IsVisible="{Binding ViewModel.IsCommandBarVisible, Converter={StaticResource BoolNegationConverter}, ElementName=page, Mode=OneWay}">
+                            <MenuFlyoutItem x:Uid="PlaylistDetailPage_MenuFlyoutItem_Play"
+                                            Text="Play"
+                                            Command="{Binding ViewModel.PlayTrackCommand, ElementName=page}"
+                                            CommandParameter="{Binding}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Uid="PlaylistDetailPage_MenuFlyoutItem_PlayAsNext"
+                                            Text="Play Next"
+                                            Command="{Binding ViewModel.SelectAndPlayAsNextCommand, ElementName=page}"
+                                            CommandParameter="{Binding}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE90B;" FontSize="16"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Uid="PlaylistDetailPage_MenuFlyoutItem_ShowAlbum"
+                                            Text="Show Album"
+                                            Command="{Binding ViewModel.ShowAlbumCommand, ElementName=page}"
+                                            CommandParameter="{Binding}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE93C;" FontSize="16"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Uid="PlaylistDetailPage_MenuFlyoutItem_SelectItem"
+                                            Text="Select"
+                                            Command="{Binding ViewModel.SelectItemsCommand, ElementName=page}"
+                                            CommandParameter="{Binding}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE73E;" FontSize="16"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </controls:ConditionalMenuFlyout>
+                    </Grid.ContextFlyout>
                     <TextBlock Grid.Column="0" 
                                Text="{x:Bind Name, Mode=OneWay}"
                                VerticalAlignment="Center"/>
@@ -236,7 +271,6 @@
                                        Margin="0,5"
                                        AllowDrop="{x:Bind ViewModel.HasSelectedItems, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                                        CanDragItems="True" CanReorderItems="True"
-                                       
                                        ItemTemplate="{StaticResource EntryItemTemplate}"
                                        ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
                                        EnablePreSelection="True"

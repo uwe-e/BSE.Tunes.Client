@@ -162,6 +162,27 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             _ = MediaManager.PlayTracksAsync(entryIds, PlayerMode.Playlist);
         }
 
+        [RelayCommand]
+        private void SelectAndPlayAsNext(object? listItemData)
+        {
+            if (listItemData is PlaylistEntryItem entryItem)
+            {
+                SelectedItems.Add(entryItem);
+                PlayAsNext();
+            }
+        }
+
+        [RelayCommand]
+        private async Task ShowAlbumAsync(object? listItemData)
+        {
+            if (listItemData is PlaylistEntryItem entryItem)
+            {
+                if (entryItem.Data is PlaylistEntry entry){
+                    await _navigationService.NavigateToAsync(nameof(AlbumDetailPage), entry.Track.Album);
+                }
+            }
+        }
+
         public override void PlayAllShuffle()
         {
             var entryIds = new ObservableCollection<int>(Items.OfType<PlaylistEntryItem>().Select(item => item.TrackId));
