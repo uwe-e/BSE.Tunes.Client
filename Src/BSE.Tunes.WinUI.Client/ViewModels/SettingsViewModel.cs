@@ -54,24 +54,24 @@ public partial class SettingsViewModel : ObservableRecipient
 
         SettingsItems.Add(new SettingsItem
         {
-            Title = "Settings_Cache",
-            Description = "Storage and offline data",
+            Title = _resourceService.GetString("SettingsPage_SectionCache_Title"),
+            Description = _resourceService.GetString("SettingsPage_SectionCache_Description"),
             Glyph = "\uE895", // HDD
-            PageKey = "CacheSettingsPage"
+            PageKey = nameof(CacheSettingsPage)
         });
 
         SettingsItems.Add(new SettingsItem
         {
-            Title = "Settings_Personalization",
-            Description = "Theme, appearance",
+            Title = _resourceService.GetString("SettingsPage_SectionPersonalization_Title"),
+            Description = _resourceService.GetString("SettingsPage_SectionPersonalization_Description"),
             Glyph = "\uE771", // Personalize
             PageKey = "PersonalizationSettingsPage"
         });
 
         SettingsItems.Add(new SettingsItem
         {
-            Title = "Settings_About",
-            Description = "Version, privacy, terms",
+            Title = _resourceService.GetString("SettingsPage_About_Title"),
+            Description = _resourceService.GetString("SettingsPage_About_Description"),
             Glyph = "\uE946", // Info
             PageKey = "AboutSettingsPage"
         });

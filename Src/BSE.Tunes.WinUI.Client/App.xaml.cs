@@ -110,6 +110,7 @@ public partial class App : Application
             services.AddTransientForNavigation<AlbumsPageViewModel, AlbumsPage>();
             services.AddTransientForNavigation<PlaylistsPageViewModel, PlaylistsPage>();
             services.AddTransientForNavigation<PlaylistDetailPageViewModel, PlaylistDetailPage>();
+            services.AddTransientForNavigation<CacheSettingsPageViewModel, CacheSettingsPage>();
 
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();

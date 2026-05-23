@@ -321,4 +321,43 @@
   <data name="PlaylistDetailPage_MenuFlyoutItem_SelectItem.Text" xml:space="preserve">
     <value>Select</value>
   </data>
+  <data name="CacheSettingsPage_Title.Text" xml:space="preserve">
+    <value>Disk Space</value>
+  </data>
+  <data name="CacheSettingsPage_ImageCache_Title.Text" xml:space="preserve">
+    <value>Cached Images</value>
+  </data>
+  <data name="CacheSettingsPage_AudioCache_Title.Text" xml:space="preserve">
+    <value>Cached Audio Files</value>
+  </data>
+  <data name="SettingsPage_SectionCache_Title" xml:space="preserve">
+    <value>Disk Space</value>
+  </data>
+  <data name="SettingsPage_SectionCache_Description" xml:space="preserve">
+    <value>Storage and offline data</value>
+  </data>
+  <data name="SettingsPage_SectionPersonalization_Title" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="SettingsPage_SectionPersonalization_Description" xml:space="preserve">
+    <value>App-Design, Erscheinungsbild</value>
+  </data>
+  <data name="SettingsPage_About_Title" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="SettingsPage_About_Description" xml:space="preserve">
+    <value>Version Info, Privacy</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Title" xml:space="preserve">
+    <value>Delete stored data?</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Message" xml:space="preserve">
+    <value>Clearing cache will remove all downloaded images and audio files. Are you sure you want to delete the cached files?</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

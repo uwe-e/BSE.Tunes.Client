@@ -25,6 +25,7 @@
     <None Remove="Controls\RandomPlayerView.xaml" />
     <None Remove="Views\AlbumDetailPage.xaml" />
     <None Remove="Views\AlbumsPage.xaml" />
+    <None Remove="Views\CacheSettingsPage.xaml" />
     <None Remove="Views\CreatePlaylistDialog.xaml" />
     <None Remove="Views\DeletePlaylistDialog.xaml" />
     <None Remove="Views\EndpointConfigurationPage.xaml" />
@@ -62,6 +63,9 @@
     <None Update="Controls\MenuFlyoutItem\MenuFlyoutItem.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\CacheSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\DeletePlaylistDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

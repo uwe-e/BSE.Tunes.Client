@@ -9,13 +9,6 @@
     <TableView Intent="Form" HasUnevenRows="True"  x:Name="settingsPage">
         <TableRoot>
             <TableSection>
-                <!--<controls:HeaderedTextCell Title="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Title}"
-                                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
-                                           Text="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Text}"
-                                           TextColor="{StaticResource PrimaryDarkLabelColor}"
-                                           Detail="{Binding BindingContext.ImageCacheSize, Source={x:Reference settingsPage}}"
-                                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
-                                           IsEnabled="False"/>-->
                 
                 <TextCell Text="{x:Static strings:AppResources.SettingsPage_SectionImageCacheSize_Text}"
                           TextColor="{StaticResource PrimaryDarkLabelColor}"
@@ -33,34 +26,6 @@
                             Margin="20,10"/>
                 </ViewCell>
             </TableSection>
-
-            <!--<TableSection>
-                <controls:HeaderedTextCell Title="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Title}"
-                           TitleColor="{StaticResource PrimaryDarkLabelColor}"
-                           Text="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Text}"
-                           TextColor="{StaticResource PrimaryDarkLabelColor}"
-                           Detail="{Binding BindingContext.AudioCacheSize, Source={x:Reference settingsPage}}"
-                           DetailColor="{StaticResource SecondaryDarkLabelColor}"
-                           IsEnabled="False"/>
-
-                <TextCell
-                    Text="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Text}"
-                    TextColor="{StaticResource PrimaryDarkLabelColor}"
-                    Detail="{Binding BindingContext.AudioCacheSize, Source={x:Reference settingsPage}}"
-                    DetailColor="{StaticResource SecondaryDarkLabelColor}"/>
-
-                <controls:HeaderedTextCell 
-           Text="{x:Static strings:AppResources.CacheSettingsPage_SectionDiskSpace_Description_Text}"
-           TextColor="{StaticResource PrimaryDarkLabelColor}"
-           Detail="{Binding BindingContext.AudioCacheSize, Source={x:Reference settingsPage}}"
-           DetailColor="{StaticResource SecondaryDarkLabelColor}"
-           IsEnabled="False"/>
-                <ViewCell>
-                    <Button Text="{x:Static strings:AppResources.CacheSettingsPage_ButtonDelete_Text}"
-                            Command="{Binding DeleteCommand}"
-                            Margin="20,10"/>
-                </ViewCell>
-            </TableSection>-->
 
         </TableRoot>
     </TableView>

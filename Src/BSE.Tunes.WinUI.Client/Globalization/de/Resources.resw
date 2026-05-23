@@ -321,4 +321,43 @@
   <data name="PlaylistDetailPage_MenuFlyoutItem_SelectItem.Text" xml:space="preserve">
     <value>Auswählen</value>
   </data>
+  <data name="CacheSettingsPage_Title.Text" xml:space="preserve">
+    <value>Speicherplatz</value>
+  </data>
+  <data name="CacheSettingsPage_ImageCache_Title.Text" xml:space="preserve">
+    <value>gespeicherte Bilder</value>
+  </data>
+  <data name="CacheSettingsPage_AudioCache_Title.Text" xml:space="preserve">
+    <value>gespeicherte Audiodateien</value>
+  </data>
+  <data name="SettingsPage_SectionCache_Title" xml:space="preserve">
+    <value>Speicherplatz</value>
+  </data>
+  <data name="SettingsPage_SectionCache_Description" xml:space="preserve">
+    <value>Speicher und Offline-Dateien</value>
+  </data>
+  <data name="SettingsPage_SectionPersonalization_Title" xml:space="preserve">
+    <value>Personalisierung</value>
+  </data>
+  <data name="SettingsPage_SectionPersonalization_Description" xml:space="preserve">
+    <value>Theme, Apperarance</value>
+  </data>
+  <data name="SettingsPage_About_Title" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="SettingsPage_About_Description" xml:space="preserve">
+    <value>Version-Info, Datenschutz</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Title" xml:space="preserve">
+    <value>Speicherdaten löschen?</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Message" xml:space="preserve">
+    <value>Durch das Leeren des Speichers werden alle heruntergeladenen Bilder und Audiodateien gelöscht. Möchtest du die zwischengespeicherten Dateien wirklich löschen?</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="CacheSettingsPage_Dialog_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
 </root>
