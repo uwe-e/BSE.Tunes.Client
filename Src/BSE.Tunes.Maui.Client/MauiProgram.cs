@@ -55,6 +55,7 @@ namespace BSE.Tunes.Maui.Client
                         container.RegisterSingleton<IStorageService, StorageService>();
                         container.RegisterSingleton<IImageService, ImageService>();
                         container.RegisterSingleton<ITimerService, TimerService>();
+                        container.RegisterSingleton<IFileSystemProvider, FileSystemProvider>();
                         container.RegisterSingleton<LocalProxyService>();
                         container.RegisterSingleton<IMapper>(containerProvider =>
                         {

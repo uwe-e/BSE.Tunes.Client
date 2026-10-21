@@ -306,6 +306,22 @@ namespace BSE.Tunes.Shared.Services
             await _requestService.DeleteAsync($"api/playlists/{playlistEntry.PlaylistId}/entries/{playlistEntry.Id}");
         }
 
+        public async Task DeletePlaylistEntriesAsync(int playlistId, List<int> entryIds)
+        {
+            if (entryIds == null || entryIds.Count == 0)
+            {
+                throw new ArgumentException("Entry IDs list cannot be null or empty.", nameof(entryIds));
+            }
+            var deleteDto = new DeletePlaylistEntriesDto { EntryIds = entryIds };
+            await _requestService.DeleteAsync($"api/playlists/{playlistId}/entries", deleteDto);
+        }
+
+        public async Task<IReadOnlyList<PlaylistSummary>> GetAllPlaylists()
+        {
+            var dtoResult = await _requestService.GetAsync<IReadOnlyList<PlaylistSummaryDto>>("api/playlists/all");
+            return _mapper.MapCollection<PlaylistSummary>(dtoResult).ToList();
+        }
+
         public async Task<PagedResult<Playlist>> GetPagedPlaylistsByOwnerAsync(int pageNumber, int pageSize)
         {
             var parameters = new Dictionary<string, string>(2) {
@@ -334,6 +350,18 @@ namespace BSE.Tunes.Shared.Services
             };
 
             var dtoResult = await _requestService.GetAsync<PagedResultDto<PlaylistEntryDto>>($"api/playlists/{playlistId}/entries", parameters);
+
+            //var res = new PagedResult<PlaylistEntry>
+            //{
+            //    Items = _mapper.MapCollection<PlaylistEntry>(dtoResult.Items).ToList() ?? new List<PlaylistEntry>(),
+            //    TotalCount = dtoResult.TotalCount,
+            //    PageNumber = dtoResult.PageNumber,
+            //    PageSize = dtoResult.PageSize,
+            //    TotalPages = dtoResult.TotalPages,
+            //    HasPreviousPage = dtoResult.HasPreviousPage,
+            //    HasNextPage = dtoResult.HasNextPage,
+            //};
+            //return res;
             return new PagedResult<PlaylistEntry>
             {
                 Items = _mapper.MapCollection<PlaylistEntry>(dtoResult.Items).ToList() ?? new List<PlaylistEntry>(),
@@ -352,5 +380,20 @@ namespace BSE.Tunes.Shared.Services
             return _mapper.Map<Playlist>(dtoResult)!;
         }
 
+        public async Task<IReadOnlyList<Genre>> GetAvailableGenresAsync()
+        {
+            var dtoResult = await _requestService.GetAsync<IReadOnlyList<GenreDto>>($"api/genres");
+            return _mapper.MapCollection<Genre>(dtoResult).ToList();
+        }
+
+        public async Task UpdatePlaylistEntriesSortOrderAsync(int playlistId, List<int> entryIds)
+        {
+            if (entryIds == null || entryIds.Count == 0)
+            {
+                throw new ArgumentException("Entry IDs list cannot be null or empty.", nameof(entryIds));
+            }
+            var updateDto = new UpdatePlaylistEntriesDto { EntryIds = entryIds };
+            await _requestService.PutAsync($"api/playlists/{playlistId}/entries/reorder", updateDto);
+        }
     }
 }

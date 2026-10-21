@@ -12,6 +12,8 @@
 
         public string? Artist { get; set; }
 
+        public int? Year { get; set; }
+
         public Guid AlbumId { get; set; }
 
         public TimeSpan Duration { get; set; }

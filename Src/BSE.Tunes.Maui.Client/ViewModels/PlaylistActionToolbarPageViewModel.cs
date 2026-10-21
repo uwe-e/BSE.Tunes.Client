@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Shared.Services.Media;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -124,7 +125,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
             {
                 CanRemovePlaylist = true;
                 Title = playlist.Name;
-                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, 50, true);
+                ImageSource = await _imageService.GetComposedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, 50, true);
             }
             if (_playlistActionContext?.Data is PlaylistEntry playlistEntry)
             {

@@ -1,274 +1,67 @@
-﻿using BSE.Tunes.Maui.Client.Collections;
-using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+﻿using BSE.Tunes.Maui.Client.Events;
 
-namespace BSE.Tunes.Maui.Client.Services
+namespace BSE.Tunes.Maui.Client.Services;
+
+/// <summary>
+/// MAUI-specific implementation of MediaManager with EventAggregator integration
+/// </summary>
+public class MediaManager : MediaManagerBase
 {
-    public class MediaManager : IMediaManager
+    private readonly IEventAggregator _eventAggregator;
+    private readonly ITimerService _timerService;
+
+    public MediaManager(
+        IDataService dataService,
+        IMediaService mediaService,
+        IEventAggregator eventAggregator,
+        ITimerService timerService)
+        : base(dataService, mediaService)
     {
-        private readonly IDataService _dataService;
-        private readonly IMediaService _mediaService;
-        private readonly IEventAggregator _eventAggregator;
-        private readonly ITimerService _timerService;
-        private double _oldProgress;
-        private NavigableCollection<int> _playlist;
-        private bool _hasTriggeredPrefetch;
+        _eventAggregator = eventAggregator;
+        _timerService = timerService;
+        
+        _timerService.TimerElapsed += OnTimerElapsed;
+        _timerService.Start();
 
-        public event Action<PlayerState> PlayerStateChanged;
-        public event Action<MediaState> MediaStateChanged;
-        public event NotifyCollectionChangedEventHandler PlaylistCollectionChanged;
-
-        public NavigableCollection<int> Playlist
+        // Subscribe to cleanup event
+        _eventAggregator.GetEvent<CleanUpResourcesEvent>().Subscribe(() =>
         {
-            get
-            {
-                return _playlist;
-            }
-            set
-            {
-                if (_playlist != null)
-                {
-                    _playlist.CollectionChanged -= OnPlaylistCollectionChanged;
-                }
+            Disconnect();
+        }, ThreadOption.UIThread);
+    }
 
-                _playlist = value;
-                _playlist.CollectionChanged += OnPlaylistCollectionChanged;
-            }
-        }
+    protected override async Task OnTrackOpenedAsync(Track track)
+    {
+        // Update playback history
+        await UpdateHistoryAsync(track);
+    }
 
-        private void OnPlaylistCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    protected override void OnAudioCacheChangedCore(CacheChangeMode mode)
+    {
+        // Publish cache change to UI
+        _eventAggregator.GetEvent<CacheChangedEvent>().Publish(mode);
+    }
+
+    protected override void OnProgressChanged(double progress, TimeSpan position, TimeSpan duration)
+    {
+        // Publish progress to UI
+        _eventAggregator.GetEvent<MediaProgressChangedEvent>().Publish(progress);
+    }
+
+    private void OnTimerElapsed()
+    {
+        // Call base class progress update
+        UpdateProgress();
+    }
+
+    private async Task UpdateHistoryAsync(Track currentTrack)
+    {
+        await _dataService.UpdateHistory(new History
         {
-            NotifyCollectionChangedEventHandler handler = PlaylistCollectionChanged;
-            handler?.Invoke(this, e);
-        }
-
-        public PlayerMode PlayerMode { get; private set; }
-
-        public PlayerState PlayerState { get; private set; } = PlayerState.Closed;
-
-        public Track CurrentTrack { get; private set; }
-
-        public MediaManager(IDataService dataService,
-            IMediaService mediaService,
-            IEventAggregator eventAggregator,
-            ITimerService timerService)
-        {
-            _dataService = dataService;
-            _mediaService = mediaService;
-            _eventAggregator = eventAggregator;
-            _timerService = timerService;
-            _timerService.TimerElapsed += OnTimerElapsed;
-            _timerService.Start();
-            
-            _eventAggregator.GetEvent<CleanUpResourcesEvent>().Subscribe(() =>
-            {
-                Disconnect();
-            }, ThreadOption.UIThread);
-
-            _mediaService.PlayerStateChanged += OnPlayerStateChanged;
-            _mediaService.MediaStateChanged += OnMediaStateChanged;
-            _mediaService.AudioCacheChanged += OnAudioCacheChanged;
-        }
-
-        public void Disconnect()
-        {
-            // Stop and cleanup MediaElement when we navigate away
-            _mediaService?.Disconnect();
-        }
-
-        public void Pause()
-        {
-            _mediaService.Pause();
-        }
-
-        public bool CanPlay()
-        {
-            return Playlist?.Count > 0;
-        }
-
-        public void Play()
-        {
-            _mediaService.Play();
-        }
-
-        public async Task PlayTracksAsync(PlayerMode playerMode)
-        {
-            PlayerMode = playerMode;
-            int trackId = Playlist?.FirstOrDefault() ?? 0;
-            await PlayTrackAsync(trackId);
-        }
-
-        public async Task PlayTracksAsync(ObservableCollection<int> trackIds, PlayerMode playerMode)
-        {
-            _mediaService.Stop();
-            Playlist = trackIds.ToNavigableCollection();
-            await PlayTracksAsync(playerMode);
-        }
-
-        public bool CanPlayPreviousTrack()
-        {
-            return Playlist?.CanMovePrevious ?? false;
-        }
-
-        public async Task PlayPreviousTrackAsync()
-        {
-            if (CanPlayPreviousTrack())
-            {
-                if (Playlist.MovePrevious())
-                {
-                    await PlayTrackAsync(Playlist.Current);
-                }
-            }
-        }
-
-        public bool CanPlayNextTrack()
-        {
-            var canMoveNext = Playlist?.CanMoveNext ?? false;
-            return canMoveNext;
-        }
-
-        public async Task PlayNextTrackAsync()
-        {
-            if (CanPlayNextTrack())
-            {
-                if (Playlist.MoveNext())
-                {
-                    await PlayTrackAsync(Playlist.Current);
-                }
-            }
-        }
-
-        public async Task InsertTracksToPlayQueueAsync(ObservableCollection<int> trackIds, PlayerMode playerMode)
-        {
-            if (trackIds == null || trackIds.Count == 0)
-                return;
-
-            if ((PlayerState == PlayerState.Playing || PlayerState == PlayerState.Paused)
-                && Playlist != null && Playlist.Count > 0)
-            {
-                int index = Playlist.IndexOf(Playlist.Current);
-                // Pre-calculate insert positions to avoid shifting on each insert
-                int insertIndex = index + 1;
-                // Use a for loop for better performance with index math
-                for (int i = 0; i < trackIds.Count; i++)
-                {
-                    Playlist.Insert(insertIndex + i, trackIds[i]);
-                }
-            }
-            else
-            {
-                await PlayTracksAsync(trackIds, playerMode);
-            }
-        }
-
-        private async Task PlayTrackAsync(int trackId)
-        {
-            _mediaService.Stop();
-            _hasTriggeredPrefetch = false; // Reset flag for new track
-
-            if (trackId > 0)
-            {
-                Track track = await _dataService.GetTrackById(trackId);
-                if (track != null)
-                {
-                    await _mediaService.SetTrackAsync(track, _dataService.GetImage(track.Album.AlbumId, true));
-                }
-            }
-        }
-
-        private async Task PrefetchNextTrackInPlaylistAsync()
-        {
-            if (Playlist == null || !Playlist.CanMoveNext)
-                return;
-
-            try
-            {
-                // Get the next track ID without moving the playlist position
-                int currentIndex = Playlist.IndexOf(Playlist.Current);
-                if (currentIndex >= 0 && currentIndex + 1 < Playlist.Count)
-                {
-                    int nextTrackId = Playlist[currentIndex + 1];
-
-                    if (nextTrackId > 0)
-                    {
-                        Track nextTrack = await _dataService.GetTrackById(nextTrackId);
-                        if (nextTrack != null)
-                        {
-                            Console.WriteLine($"Triggering prefetch for: {nextTrack.Name}");
-                            await _mediaService.PrefetchNextTrackAsync(nextTrack);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error prefetching next track: {ex.Message}");
-            }
-        }
-
-        private void OnPlayerStateChanged(PlayerState state)
-        {
-            if (PlayerState != state)
-            {
-                PlayerState = state;
-                PlayerStateChanged?.Invoke(state);
-            }
-        }
-
-        private async void OnMediaStateChanged(MediaState state)
-        {
-            switch (state)
-            {
-                case MediaState.Opened:
-                    var trackId = Playlist.Current;
-                    if (trackId > 0)
-                    {
-                        CurrentTrack = await _dataService.GetTrackById(trackId);
-                        UpdateHistoryAsync(CurrentTrack);
-                        if (!_hasTriggeredPrefetch)
-                        {
-                            _hasTriggeredPrefetch = true;
-                            _ = PrefetchNextTrackInPlaylistAsync();
-                        }
-                    }
-                    break;
-                case MediaState.Ended:
-                    //if (PlayerMode != PlayerMode.None && PlayerMode != PlayerMode.Song && CanPlayNextTrack())
-                    if (PlayerMode != PlayerMode.None && CanPlayNextTrack())
-                    {
-                        await PlayNextTrackAsync();
-                    }
-                    break;
-            }
-            MediaStateChanged?.Invoke(state);
-        }
-
-        private void OnTimerElapsed()
-        {
-            var newProgress = _mediaService.Progress;
-            if (newProgress != _oldProgress && newProgress < 1.0)
-            {
-                _eventAggregator.GetEvent<MediaProgressChangedEvent>().Publish(newProgress);
-                _oldProgress = newProgress;
-            }
-        }
-
-        private void OnAudioCacheChanged(CacheChangeMode mode)
-        {
-            _eventAggregator.GetEvent<CacheChangedEvent>().Publish(mode);
-        }
-
-        private async void UpdateHistoryAsync(Track currentTrack)
-        {
-            await _dataService.UpdateHistory(new History
-            {
-                PlayMode = (int)PlayerMode,
-                AlbumId = currentTrack.Album.Id,
-                TrackId = currentTrack.Id,
-                PlayedAt = DateTime.Now
-            });
-        }
+            PlayMode = (int)PlayerMode,
+            AlbumId = currentTrack.Album.Id,
+            TrackId = currentTrack.Id,
+            PlayedAt = DateTime.Now
+        });
     }
 }

@@ -2,6 +2,7 @@
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using BSE.Tunes.Shared.Services.Media;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -199,7 +200,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                     });
 
                     await _dataService.AppendToPlaylist(playlistTo.Id, [track.Id]);
-                    await _imageService.RemoveStitchedBitmaps(playlistTo.Id);
+                    await _imageService.RemoveComposedBitmaps(playlistTo.Id);
 
                     managePlaylistContext.ActionMode = PlaylistActionMode.PlaylistUpdated;
                     _eventAggregator.GetEvent<PlaylistActionContextChanged>().Publish(managePlaylistContext);

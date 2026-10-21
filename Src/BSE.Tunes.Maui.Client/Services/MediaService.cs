@@ -26,7 +26,7 @@ namespace BSE.Tunes.Maui.Client.Services
         {
             if (bindable is MediaElement mediaElement && newValue is bool toRegister && toRegister)
             {
-                var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>();
+                var playerService = Application.Current?.Handler.MauiContext?.Services.GetService<IMediaService>() as MediaService;
                 playerService?.RegisterAsMediaService(mediaElement);
             }
         }
@@ -45,6 +45,22 @@ namespace BSE.Tunes.Maui.Client.Services
         private CancellationTokenSource _prefetchCancellation;
 
         public double Progress => GetProgress();
+
+        public TimeSpan Position
+        {
+            get
+            {
+                return _mediaElement?.Position ?? TimeSpan.Zero;
+            }
+        }
+
+        public TimeSpan Duration
+        {
+            get
+            {
+                return _mediaElement?.Duration ?? TimeSpan.Zero;
+            }
+        }
 
         private double GetProgress()
         {
@@ -70,6 +86,10 @@ namespace BSE.Tunes.Maui.Client.Services
             _ = InitializeProxyAsync();
         }
 
+        /// <summary>
+        /// MAUI-specific registration method - not part of IMediaService interface
+        /// </summary>
+        /// <param name="mediaElement">The MediaElement to register with the service.</param>
         public void RegisterAsMediaService(MediaElement mediaElement)
         {
             if (_mediaElement == null && mediaElement != null)

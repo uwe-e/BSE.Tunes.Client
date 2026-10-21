@@ -3,6 +3,7 @@ using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
+using BSE.Tunes.Shared.Services.Enums;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -182,7 +183,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                             {
                                 Title = playlist.Name,
                                 SubTitle = $"{playlist.NumberEntries} {_resourceService.GetString("PlaylistItem_PartNumberOfEntries")}",
-                                ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, asThumbnail: true),
+                                ImageSource = await _imageService.GetComposedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, asThumbnail: true),
                                 Data = playlist
                             });
                         }

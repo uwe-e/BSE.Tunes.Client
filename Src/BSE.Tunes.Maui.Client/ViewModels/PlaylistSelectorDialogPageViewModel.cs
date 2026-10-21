@@ -89,7 +89,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                                 var flyoutItem = new FlyoutItemViewModel
                                 {
                                     Text = playlist.Name,
-                                    ImageSource = await _imageService.GetStitchedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, 50, true),
+                                    ImageSource = await _imageService.GetComposedBitmapSourceAsync(playlist.Id, playlist.CoverAlbumIds, 50, true),
                                     Data = playlist
                                 };
                                 flyoutItem.ItemClicked += OnFlyoutItemClicked;

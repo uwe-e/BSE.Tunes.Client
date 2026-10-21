@@ -1,0 +1,52 @@
+<Page
+    x:Class="BSE.Tunes.WinUI.Client.Views.RemoveLoginSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Spacing="24" Padding="0,0,0,24">
+            <!-- Header -->
+            <TextBlock x:Uid="RemoveLoginSettingsPage_Title"
+                Style="{ThemeResource TitleLargeTextBlockStyle}"/>
+
+            <!-- Current User Account Card -->
+            <Grid
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                CornerRadius="8"
+                Padding="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Spacing="4">
+                    <TextBlock x:Uid="RemoveLoginSettingsPage_Description"
+                        Text="Current User Account"
+                        Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                    <TextBlock 
+                        Text="{x:Bind ViewModel.UserName, Mode=OneWay}"
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Spacing="8" Margin="0,16,0,0">
+                    <TextBlock x:Uid="RemoveLoginSettingsPage_Warning"
+                        Text="Removing your account will log you out. You will need to log in again."
+                        Style="{ThemeResource CaptionTextBlockStyle}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap"/>
+
+                    <Button x:Uid="RemoveLoginSettingsPage_DeleteButton"
+                        Content="Delete Account"
+                        Command="{x:Bind ViewModel.DeleteSettingsCommand}"
+                        Style="{ThemeResource AccentButtonStyle}"
+                        HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

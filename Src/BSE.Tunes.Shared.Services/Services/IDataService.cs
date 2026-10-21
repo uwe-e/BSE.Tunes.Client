@@ -21,6 +21,7 @@ namespace BSE.Tunes.Shared.Services
             int pageSize,
             AlbumSortOption albumSortOption = AlbumSortOption.Title);
         Uri GetAlbumCoverUriById(Guid albumId, bool asThumbnail = false);
+        Task<IReadOnlyList<Genre>> GetAvailableGenresAsync();
         Uri GetImage(Guid imageId, bool asThumbnail = false);
         Task AppendToPlaylist(int playlistId, IList<int> trackIds);
         Task DeletePlaylist(int playlistId);
@@ -37,6 +38,8 @@ namespace BSE.Tunes.Shared.Services
         Task<bool> IsEndPointAccessibleAsync();
         Task<bool> IsEndPointAccessibleAsync(string serviceEndPoint);
         Task<bool> UpdateHistory(History history);
-        
+        Task<IReadOnlyList<PlaylistSummary>> GetAllPlaylists();
+        Task DeletePlaylistEntriesAsync(int playlistId, List<int> entryIds);
+        Task UpdatePlaylistEntriesSortOrderAsync(int playlistId, List<int> entryIds);
     }
 }

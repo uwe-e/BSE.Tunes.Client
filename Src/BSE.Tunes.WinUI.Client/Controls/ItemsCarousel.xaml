@@ -1,0 +1,73 @@
+<UserControl
+    x:Class="BSE.Tunes.WinUI.Client.Controls.ItemsCarousel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
+    xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <!-- Default Item Template -->
+        <DataTemplate x:Key="DefaultItemTemplate" x:DataType="models:CarouselItem">
+            <Grid CornerRadius="8" 
+                  Width="{Binding ItemWidth, ElementName=RootControl}"
+                  Height="{Binding ItemHeight, ElementName=RootControl}"
+                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+
+                <!-- Item Image -->
+                <Image Source="{x:Bind ImageSource, Mode=OneWay}"
+                       Stretch="UniformToFill"/>
+
+                <!-- Overlay with text -->
+                <Grid VerticalAlignment="Bottom"
+                      Background="#CC000000"
+                      Padding="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{x:Bind Title, Mode=OneWay}"
+                                   Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                   Foreground="White"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextAlignment="Center"/>
+                        <TextBlock Text="{x:Bind SubTitle, Mode=OneWay}"
+                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                   Foreground="#CCFFFFFF"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootControl">
+        <ScrollViewer x:Name="ScrollViewerControl"
+                      HorizontalScrollBarVisibility="{x:Bind HorizontalScrollBarVisibility, Mode=OneWay}"
+                      VerticalScrollBarVisibility="Disabled"
+                      HorizontalScrollMode="Enabled"
+                      VerticalScrollMode="Disabled"
+                      behaviors:ScrollViewerDragBehavior.IsEnabled="True">
+
+            <ItemsRepeater x:Name="ItemsRepeaterControl"
+                          ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                          ItemTemplate="{x:Bind EffectiveItemTemplate, Mode=OneWay}"
+                          ElementPrepared="OnItemsRepeaterElementPrepared">
+                <ItemsRepeater.Layout>
+                    <StackLayout Orientation="Horizontal" 
+                                Spacing="{x:Bind ItemSpacing, Mode=OneWay}"/>
+                </ItemsRepeater.Layout>
+            </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Loading Indicator -->
+        <Grid Visibility="{x:Bind ShowLoadingIndicator, Mode=OneWay}"
+              Background="{ThemeResource LayerFillColorDefaultBrush}">
+            <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}"
+                         Width="40"
+                         Height="40"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</UserControl>
