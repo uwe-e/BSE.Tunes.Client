@@ -43,7 +43,16 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
   </PropertyGroup>
 
-  <PropertyGroup>
+  
+  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+    <!-- these adaptions prevent exceptions caused by an unsupported Xcode 26.5 version-->
+    <MtouchLink>SdkOnly</MtouchLink>
+    <ValidateXcodeVersion>false</ValidateXcodeVersion>
+    <!-- Behebt den .NET 9 XAML-Compiler-Bug (z.B. bei Syncfusion "No parameterless constructor found") -->
+    <_MauiForceXamlCForDebug>true</_MauiForceXamlCForDebug>
+  </PropertyGroup>            
+  
+    <PropertyGroup>
     <PackageVersion>1.0.5</PackageVersion>
   </PropertyGroup>
 
@@ -57,6 +66,11 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignProvision></CodesignProvision>
     <ProvisioningType>manual</ProvisioningType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
+    <ProvisioningType>manual</ProvisioningType>
+    <CodesignKey>Apple Distribution: Uwe Eichkorn (98LH7BG9F6)</CodesignKey>
+    <CodesignProvision></CodesignProvision>
   </PropertyGroup>
   
   <ItemGroup>

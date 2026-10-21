@@ -12,7 +12,7 @@
 
   <Identity
     Name="e8340a9c-bf0e-466a-b2cb-051442262d45"
-    Publisher="CN=uwe"
+    Publisher="CN=BSE.Tunes.WinUI.Client"
     Version="1.0.0.0" />
     
   <mp:PhoneIdentity PhoneProductId="e8340a9c-bf0e-466a-b2cb-051442262d45" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>

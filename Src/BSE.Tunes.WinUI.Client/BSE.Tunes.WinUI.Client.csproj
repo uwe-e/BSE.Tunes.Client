@@ -15,6 +15,14 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <DefaultLanguage>en</DefaultLanguage>
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateThumbprint>27C348467E10209B014611C37BBA02B62B2D42D8</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>False</GenerateTestArtifacts>
+    <AppxBundle>Never</AppxBundle>
+    <AppInstallerUri>\\BSE10\Data\BSE\BSE.Tunes.WinUI.Client</AppInstallerUri>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\AlbumsCarouselView.xaml" />
