@@ -1,7 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.Contract;
-using BSE.Tunes.Maui.Client.Services;
 using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -61,12 +59,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             try
             {
-                var playlist = await _dataService.InsertPlaylist(new Playlist
-                {
-                    Name = PlaylistName,
-                    UserName = _settingsService.User.UserName,
-                    Guid = Guid.NewGuid()
-                });
+                var playlist = await _dataService.CreatePlaylistAsync(PlaylistName);
 
                 await CloseDialogAsync();
                 

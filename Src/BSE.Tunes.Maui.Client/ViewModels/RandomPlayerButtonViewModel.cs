@@ -1,6 +1,7 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
-using BSE.Tunes.Maui.Client.Extensions;
 using BSE.Tunes.Maui.Client.Services;
+using BSE.Tunes.Shared.Services.Extensions;
+using BSE.Tunes.Shared.Services.Media;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
@@ -50,7 +51,10 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task LoadDataAsync()
         {
-            ObservableCollection<int> trackIds = await _dataService.GetTrackIdsByGenre();
+            ObservableCollection<int> trackIds = new(
+                //When GetTrackIdsByGenre returns null, we fallback to an empty list
+                await _dataService.GetTrackIdsByGenre() ?? []
+            );
             if (trackIds != null)
             {
                 _trackIds = trackIds.ToRandomCollection();
@@ -73,11 +77,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         private async Task LoadSystemInfo()
         {
-            var sysInfo = await _dataService.GetSystemInfo();
-            if (sysInfo != null)
-            {
-                Text = string.Format(_resourceService.GetString("HomePage_RandomPlayerButton_Button_Text"), sysInfo.NumberTracks);
-            }
+            int countTracks = await _dataService.GetAvailableTrackCount();
+            Text = string.Format(
+                _resourceService.GetString("HomePage_RandomPlayerButton_Button_Text"), countTracks);
         }
 
         private bool CanPlayRandom()

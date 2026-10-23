@@ -11,15 +11,16 @@
         <CollectionView x:Name="albumsView"  ItemsSource="{Binding Items}"
                         ItemSizingStrategy="MeasureFirstItem"
                         RemainingItemsThreshold="10"
-                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreItemsCommand}"
-                        behaviours:GridItemsLayoutBehavior.EnableResponsiveSpan="True">
+                        RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}"
+                        behaviours:GridItemsLayoutBehavior.EnableResponsiveSpan="True"
+                        >
             <CollectionView.ItemsLayout>
                 <!-- The number of spans is calculated within the GridItemsLayoutBehavior -->
                 <GridItemsLayout Orientation="Vertical"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <templates:ViewItemTemplate Margin="0,15" HeightRequest="{OnIdiom Phone=180, Tablet=230}">
+                    <templates:ViewItemTemplate Margin="0,10" HeightRequest="{OnIdiom Phone=200, Tablet=230}">
                         <templates:ViewItemTemplate.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding BindingContext.SelectItemCommand, Source={x:Reference Name=albumsView}}" CommandParameter="{Binding}"/>
                         </templates:ViewItemTemplate.GestureRecognizers>

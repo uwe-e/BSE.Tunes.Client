@@ -1,12 +1,18 @@
-﻿using System.Windows.Input;
+﻿using BSE.Tunes.Maui.Client.Extensions;
+using BSE.Tunes.Maui.Client.Models;
+using System.Windows.Input;
 
 namespace BSE.Tunes.Maui.Client.ViewModels
 {
-    public class BaseSettingsPageViewModel(INavigationService navigationService) : ViewModelBase(navigationService), IActiveAware
+    public abstract class BaseSettingsPageViewModel(
+        INavigationService navigationService,
+        IEventAggregator eventAggregator)
+        : ViewModelBase(navigationService), IActiveAware, IAlbumInfoSelectionHandler
     {
         private bool _isActive;
         private bool _isActivated;
         private ICommand _deleteCommand;
+        private readonly IEventAggregator _eventAggregator = eventAggregator;
 
         public ICommand DeleteCommand => _deleteCommand ??= new DelegateCommand(Delete);
 
@@ -18,6 +24,8 @@ namespace BSE.Tunes.Maui.Client.ViewModels
 
         public event EventHandler IsActiveChanged;
 
+        public abstract void HandleShowAlbum(AlbumSelectionContext context);
+
         public virtual void DeleteSettings()
         {
         }
@@ -26,6 +34,20 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
         }
 
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            this.SubscribeToAlbumSelection(_eventAggregator);
+            base.OnNavigatedTo(parameters);
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            if (parameters.IsModalNavigation())
+            {
+                this.UnsubscribeFromAlbumSelection();
+            }
+            base.OnNavigatedFrom(parameters);
+        }
         private void RaiseIsActiveChanged()
         {
             if (IsActive && !_isActivated)
@@ -41,5 +63,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         {
             DeleteSettings();
         }
+
+        
     }
 }

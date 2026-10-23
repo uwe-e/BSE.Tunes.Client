@@ -629,6 +629,15 @@ namespace BSE.Tunes.Maui.Client.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cached Audio Files.
+        /// </summary>
+        internal static string SettingsPage_SectionAudioCacheSize_Text {
+            get {
+                return ResourceManager.GetString("SettingsPage_SectionAudioCacheSize_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Used by BSEtunes.
         /// </summary>
         internal static string SettingsPage_SectionDiskSpace_Description_Text {
@@ -643,6 +652,15 @@ namespace BSE.Tunes.Maui.Client.Resources.Strings {
         internal static string SettingsPage_SectionDiskSpace_Title {
             get {
                 return ResourceManager.GetString("SettingsPage_SectionDiskSpace_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cached Images.
+        /// </summary>
+        internal static string SettingsPage_SectionImageCacheSize_Text {
+            get {
+                return ResourceManager.GetString("SettingsPage_SectionImageCacheSize_Text", resourceCulture);
             }
         }
         

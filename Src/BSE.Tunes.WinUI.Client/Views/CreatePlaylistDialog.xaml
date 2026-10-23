@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="BSE.Tunes.WinUI.Client.Views.CreatePlaylistDialog"
+    x:Uid="CreatePlaylistDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewmodels="using:BSE.Tunes.WinUI.Client.ViewModels"
+    xmlns:extensions="using:BSE.Tunes.WinUI.Client.Controls.Extensions"
+    Title="Create Playlist"
+    PrimaryButtonText="Create"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.IsValid, Mode=OneWay}"
+    extensions:ContentDialogExtensions.DialogCancel="{x:Bind ViewModel.Cancel}"
+    extensions:ContentDialogExtensions.CancelableCommand="{x:Bind ViewModel.SavePlaylistCommand}"
+    extensions:ContentDialogExtensions.CancelableCommandParameter="{x:Bind ViewModel}">
+
+    <StackPanel Spacing="16" MinWidth="400">
+        <TextBlock x:Uid="CreatePlaylistDialog_TextBlock_EnterPlaylistName" Text="Enter a name for your new playlist:" 
+               TextWrapping="Wrap"/>
+
+        <TextBox x:Uid="CreatePlaylistDialog_TextBox_PlaylistName" x:Name="PlaylistNameTextBox"
+             PlaceholderText="Playlist name"
+             MaxLength="100"
+             Text="{x:Bind ViewModel.PlaylistName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock x:Uid="CreatePlaylistDialog_TextBlock_Error" Text="Please enter a playlist name"
+               Foreground="{ThemeResource SystemErrorTextColor}"
+               Visibility="{x:Bind ViewModel.IsValid, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+               TextWrapping="Wrap"/>
+    </StackPanel>
+</ContentDialog>

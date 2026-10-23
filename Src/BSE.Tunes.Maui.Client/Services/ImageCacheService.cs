@@ -15,7 +15,7 @@ namespace BSE.Tunes.Maui.Client.Services
 
         public async Task InvalidateCacheEntryAsync(string searchPattern)
         {
-            string imageFolder = _storageService.GetImageFolder();
+            string imageFolder = _storageService.GetImageDirectory();
             DirectoryInfo directoryInfo = new DirectoryInfo(imageFolder);
             if (directoryInfo.Exists)
             {

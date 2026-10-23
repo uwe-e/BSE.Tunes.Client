@@ -33,7 +33,9 @@
             </Grid>
             <Button Grid.Row="1" Text="{x:Static strings:AppResources.PlaylistSelectorDialogPage_Button_NewPlaylist_Text}"
                     Command="{Binding OpenNewPlaylistDialogCommand}"/>
-            <CollectionView Grid.Row="2" ItemsSource="{Binding PlaylistFlyoutItems}" >
+            <CollectionView Grid.Row="2" ItemsSource="{Binding PlaylistFlyoutItems}"
+                            RemainingItemsThreshold="5"
+                            RemainingItemsThresholdReachedCommand="{Binding RemainingItemsThresholdReachedCommand}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="0,5,0,10" ColumnDefinitions="Auto,*">

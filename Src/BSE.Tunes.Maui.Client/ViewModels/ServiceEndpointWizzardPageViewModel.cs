@@ -1,5 +1,4 @@
 ﻿using BSE.Tunes.Maui.Client.Extensions;
-using BSE.Tunes.Maui.Client.Models;
 using BSE.Tunes.Maui.Client.Services;
 using BSE.Tunes.Maui.Client.Views;
 
@@ -85,8 +84,9 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                 {
                     try
                     {
-                        await _authenticationService.RequestRefreshTokenAsync(user.Token);
-
+                        //await _authenticationService.RequestRefreshTokenAsync(user.Token);
+                        await _authenticationService.GetAuthTokenAsync();
+                        
                         var result = await NavigationService.RestartAndNavigateAsync("/" + nameof(SplashPage));
                         if (!result.Success)
                         {

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\ASP.Net\BSEtunes\src\BSEtunes.Contracts\BSEtunes.Contracts.csproj" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
+  </ItemGroup>
+
+</Project>

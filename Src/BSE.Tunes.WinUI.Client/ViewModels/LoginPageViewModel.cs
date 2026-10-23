@@ -1,0 +1,86 @@
+using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Services;
+using BSE.Tunes.WinUI.Client.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
+namespace BSE.Tunes.WinUI.Client.ViewModels;
+
+public partial class LoginPageViewModel : ViewModelBase
+{
+    private readonly IAuthenticationService _authenticationService;
+    private readonly INavigationService _navigationService;
+
+    [ObservableProperty]
+    private string _userName = string.Empty;
+
+    [ObservableProperty]
+    private string _password = string.Empty;
+
+    [ObservableProperty]
+    private string _errorMessage = string.Empty;
+
+    [ObservableProperty]
+    private bool _isLoggingIn;
+
+    public LoginPageViewModel(
+        IAuthenticationService authenticationService,
+        INavigationService navigationService)
+    {
+        _authenticationService = authenticationService;
+        _navigationService = navigationService;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanLogin))]
+    private async Task LoginAsync()
+    {
+        IsLoggingIn = true;
+        ErrorMessage = string.Empty;
+
+        try
+        {
+            var success = await _authenticationService.SignInAsync(UserName, Password);
+            
+            if (success)
+            {
+                // Login successful - navigate to main app (loads ShellPage)
+                var shell = App.GetService<ShellPage>();
+                App.MainWindow.Content = shell;
+                
+                await _navigationService.NavigateToAsync(
+                    nameof(MainPage),
+                    frameKey: NavigationService.FrameKeyShell,
+                    clearNavigation: true);
+            }
+            else
+            {
+                ErrorMessage = "Invalid username or password.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Login failed: {ex.Message}";
+        }
+        finally
+        {
+            IsLoggingIn = false;
+        }
+    }
+
+    private bool CanLogin() => 
+        !string.IsNullOrWhiteSpace(UserName) && 
+        !string.IsNullOrWhiteSpace(Password) && 
+        !IsLoggingIn;
+
+    partial void OnUserNameChanged(string value)
+    {
+        LoginCommand.NotifyCanExecuteChanged();
+        ErrorMessage = string.Empty;
+    }
+
+    partial void OnPasswordChanged(string value)
+    {
+        LoginCommand.NotifyCanExecuteChanged();
+        ErrorMessage = string.Empty;
+    }
+}

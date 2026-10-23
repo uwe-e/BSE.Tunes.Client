@@ -1,6 +1,5 @@
 ﻿using BSE.Tunes.Maui.Client.Events;
 using BSE.Tunes.Maui.Client.Models;
-using BSE.Tunes.Maui.Client.Models.Contract;
 using BSE.Tunes.Maui.Client.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -46,7 +45,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
         private async Task LoadDataAsync()
         {
             Items.Clear();
-            var albums = await _dataService.GetNewestAlbums(10);
+            IList<Album> albums = await _dataService.GetNewestAlbums(10);
             if (albums != null)
             {
                 foreach (var album in albums)
@@ -57,7 +56,7 @@ namespace BSE.Tunes.Maui.Client.ViewModels
                         {
                             Title = album.Title,
                             SubTitle = album.Artist?.Name,
-                            ImageSource = _imageService.GetBitmapSource(album.AlbumId, true),
+                            ImageSource = _imageService.GetBitmapSource(album.AlbumId),
                             Data = album
                         });
                     }
