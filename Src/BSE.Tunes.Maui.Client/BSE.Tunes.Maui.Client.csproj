@@ -67,11 +67,6 @@
     <CodesignProvision></CodesignProvision>
     <ProvisioningType>manual</ProvisioningType>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net9.0-ios'">
-    <ProvisioningType>manual</ProvisioningType>
-    <CodesignKey>Apple Distribution: Uwe Eichkorn (98LH7BG9F6)</CodesignKey>
-    <CodesignProvision></CodesignProvision>
-  </PropertyGroup>
   
   <ItemGroup>
     <!-- App Icon -->
@@ -143,6 +138,15 @@
 
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AndroidResource Remove="Collections\**" />
+    <Compile Remove="Collections\**" />
+    <EmbeddedResource Remove="Collections\**" />
+    <MauiCss Remove="Collections\**" />
+    <MauiXaml Remove="Collections\**" />
+    <None Remove="Collections\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -312,9 +316,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Collections\" />
   </ItemGroup>
 
 </Project>
