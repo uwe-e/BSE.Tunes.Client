@@ -62,7 +62,7 @@
   </PropertyGroup>
   
   <!-- Release build for ios distribution -->
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)'=='Release|net9.0-ios'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' and '$(TargetFramework)' == 'net9.0-ios'">
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignProvision></CodesignProvision>
     <ProvisioningType>manual</ProvisioningType>
