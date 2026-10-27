@@ -7,41 +7,89 @@
     xmlns:helpers="using:BSE.Tunes.WinUI.Client.Helpers"
     xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
     xmlns:services="using:BSE.Tunes.WinUI.Client.Services"
-    xmlns:i="using:Microsoft.Xaml.Interactivity" xmlns:views="using:BSE.Tunes.WinUI.Client.Controls"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:views="using:BSE.Tunes.WinUI.Client.Controls"
+    MinWidth="640"
     Loaded="OnLoaded">
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <MediaPlayerElement x:Name="AudioMediaElement"
                             AreTransportControlsEnabled="False"
                             services:MediaService.RegisterAsMediaService="True"/>
-        <Grid x:Name="AppTitleBar"
-              Canvas.ZIndex="1"
-              Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
-              IsHitTestVisible="True"
-              VerticalAlignment="Top">
-            <Image Source="/Assets/logo.svg"
-                   HorizontalAlignment="Left"
-                   Width="48"
-                   Height="48" />
-            <TextBlock x:Name="AppTitleBarText"
-                       VerticalAlignment="Center"
-                       TextWrapping="NoWrap"
-                       Style="{StaticResource AppTitleTextBlockStyle}"
-                       Margin="58,0,0,0"/>
-        </Grid>
+        <TitleBar x:Name="AppTitleBar"
+                  Canvas.ZIndex="1"
+                  Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
+                  IsPaneToggleButtonVisible="True"
+                  IsBackButtonVisible="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
+                  IsHitTestVisible="True"
+                  VerticalAlignment="Top">
+            <TitleBar.Resources>
+                <!--
+                TitleBar.Content uses Center alignment by default, which
+                sizes content to its DesiredSize. Override to Stretch so
+                the search box fills the available area up to MaxWidth.
+                -->
+                <HorizontalAlignment x:Key="TitleBarContentHorizontalAlignment">Stretch</HorizontalAlignment>
+            </TitleBar.Resources>
+            <i:Interaction.Behaviors>
+                <i:EventTriggerBehavior EventName="PaneToggleRequested">
+                    <i:InvokeCommandAction Command="{x:Bind ViewModel.TogglePaneCommand}" CommandParameter="{Binding ElementName=NavigationViewControl, Path=IsPaneOpen}"/>
+                </i:EventTriggerBehavior>
+                <i:EventTriggerBehavior EventName="BackRequested">
+                    <i:InvokeCommandAction Command="{x:Bind ViewModel.GoBackCommand}"/>
+                </i:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <TitleBar.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                        <Image Source="/Assets/logo.svg"
+                               Grid.Column="0"
+                           HorizontalAlignment="Left"
+                           Width="48"
+                           Height="48" />
+                    <TextBlock x:Name="AppTitleBarText"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               TextWrapping="NoWrap"
+                               Style="{StaticResource AppTitleTextBlockStyle}"
+                               Margin="10,0,0,0"/>
+                    <AutoSuggestBox x:Name="controlsSearchBox"
+                                    Grid.Column="2"
+                                    MaxWidth="580"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="30,0,0,0"
+                                    VerticalAlignment="Center"
+                                    x:FieldModifier="public"
+                                    KeyboardAcceleratorPlacementMode="Hidden"
+                                    PlaceholderText="Search controls and samples..."
+                                    QueryIcon="Find">
+                        <AutoSuggestBox.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="F" Modifiers="Control" />
+                        </AutoSuggestBox.KeyboardAccelerators>
+                    </AutoSuggestBox>
+                </Grid>
+                
+            </TitleBar.Content>
+            
+        </TitleBar>
         <NavigationView
             x:Name="NavigationViewControl"
             Canvas.ZIndex="0"
-            IsBackButtonVisible="Visible"
-            IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
+            Grid.Row="1"
+            IsBackButtonVisible="Collapsed"
+            IsPaneToggleButtonVisible="False"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
             IsSettingsVisible="True"
-            ExpandedModeThresholdWidth="1280"
-            DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
+            IsPaneOpen="{x:Bind ViewModel.IsPaneOpen, Mode=TwoWay}"
             Header="{x:Bind ((ContentControl)ViewModel.Selected).Content, Mode=OneWay}">
             <NavigationView.MenuItems>
                 <!--
@@ -94,11 +142,6 @@
                 <Frame x:Name="NavigationFrame" />
             </Grid>
         </NavigationView>
-        <views:PlayerBarView Grid.Row="1"/>
-        <!--<Grid x:Name="AppTitleBarBackground"
-              Grid.Row="1"
-              Height="100"
-              VerticalAlignment="Bottom"
-              Background="Red"/>-->
+        <views:PlayerBarView Grid.Row="2"/>
     </Grid>
 </Page>
