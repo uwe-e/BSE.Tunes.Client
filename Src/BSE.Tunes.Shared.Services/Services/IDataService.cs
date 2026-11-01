@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.Shared.Services.Models.Contract;
 using BSEtunes.Contracts.Enums;
+using System.Text;
 
 namespace BSE.Tunes.Shared.Services
 {
@@ -33,6 +34,7 @@ namespace BSE.Tunes.Shared.Services
         Task<Track> GetTrackById(int trackId);
         Task<IList<int>> GetTrackIdsByGenre(int? genreId = null);
         Task<IList<int>> GetTrackIdsByPlaylistId(int playlistId, bool randomize = false);
+        Task<IList<string>> GetSearchSuggestions(string query, int limit);
         Task<PagedResult<Track>> GetTrackSearchResults(string query, int skip, int limit);
         Task<PagedResult<Track>> GetTrackSearchResults(string query, int skip, int limit, CancellationToken token);
         Task<bool> IsEndPointAccessibleAsync();

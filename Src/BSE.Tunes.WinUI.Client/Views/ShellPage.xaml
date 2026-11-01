@@ -9,9 +9,16 @@
     xmlns:services="using:BSE.Tunes.WinUI.Client.Services"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:views="using:BSE.Tunes.WinUI.Client.Controls"
+    xmlns:converters="using:BSE.Tunes.WinUI.Client.Converters"
     MinWidth="640"
     Loaded="OnLoaded">
 
+    <Page.Resources>
+        <converters:AutoSuggestBoxTextChangedEventArgsConverter x:Key="AutoSuggestBoxTextChangedEventArgsConverter"/>
+        <converters:AutoSuggestBoxQuerySubmittedEventArgsConverter x:Key="AutoSuggestBoxQuerySubmittedEventArgsConverter"/>
+        <converters:AutoSuggestBoxSuggestionChosenEventArgsConverter x:Key="SuggestionChosenEventArgsConverter"/>
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -71,10 +78,23 @@
                                     x:FieldModifier="public"
                                     KeyboardAcceleratorPlacementMode="Hidden"
                                     PlaceholderText="Search controls and samples..."
+                                    ItemsSource="{x:Bind ViewModel.SearchSuggestions}"
+                                    Text="{x:Bind ViewModel.QueryText, Mode=TwoWay}"
                                     QueryIcon="Find">
                         <AutoSuggestBox.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F" Modifiers="Control" />
                         </AutoSuggestBox.KeyboardAccelerators>
+                        <i:Interaction.Behaviors>
+                            <i:EventTriggerBehavior EventName="TextChanged">
+                                <i:InvokeCommandAction Command="{x:Bind ViewModel.QueryTextChangedCommand}" InputConverter="{StaticResource AutoSuggestBoxTextChangedEventArgsConverter}"/>
+                            </i:EventTriggerBehavior>
+                            <i:EventTriggerBehavior EventName="QuerySubmitted">
+                                <i:InvokeCommandAction Command="{x:Bind ViewModel.QuerySubmittedCommand}" InputConverter="{StaticResource AutoSuggestBoxQuerySubmittedEventArgsConverter}"/>
+                            </i:EventTriggerBehavior>
+                            <i:EventTriggerBehavior EventName="SuggestionChosen">
+                                <i:InvokeCommandAction Command="{x:Bind ViewModel.SuggestionChosenCommand}" InputConverter="{StaticResource SuggestionChosenEventArgsConverter}"/>
+                            </i:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
                     </AutoSuggestBox>
                 </Grid>
                 

@@ -237,7 +237,18 @@ namespace BSE.Tunes.Shared.Services
 
             return _requestService.GetAsync<IList<int>>($"api/playlists/{playlistId}/trackids", parameters);
         }
+        
+        public Task<IList<string>> GetSearchSuggestions(string query, int limit)
+        {
+            var parameters = new Dictionary<string, string>(2)
+            {
+                ["query"] = query.ToString(),
+                ["limit"] = limit.ToString()
+            };
 
+            return _requestService.GetAsync<IList<string>>($"api/search/suggestions", parameters);
+        }
+        
         public async Task<PagedResult<Track>> GetTrackSearchResults(string query, int skip, int limit)
         {
             return await GetTrackSearchResults(query, skip, limit, CancellationToken.None);
@@ -395,5 +406,7 @@ namespace BSE.Tunes.Shared.Services
             var updateDto = new UpdatePlaylistEntriesDto { EntryIds = entryIds };
             await _requestService.PutAsync($"api/playlists/{playlistId}/entries/reorder", updateDto);
         }
+
+        
     }
 }

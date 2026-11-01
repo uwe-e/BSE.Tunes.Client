@@ -360,4 +360,7 @@
   <data name="CacheSettingsPage_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="SearchPage_Title_Text" xml:space="preserve">
+    <value>Search results for "{0}"</value>
+  </data>
 </root>
