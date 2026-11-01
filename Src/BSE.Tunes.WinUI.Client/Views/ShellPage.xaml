@@ -78,7 +78,7 @@
                                     x:FieldModifier="public"
                                     KeyboardAcceleratorPlacementMode="Hidden"
                                     PlaceholderText="Search controls and samples..."
-                                    ItemsSource="{x:Bind ViewModel.SearchSuggestions}"
+                                    ItemsSource="{x:Bind ViewModel.SearchSuggestions, Mode=TwoWay}"
                                     Text="{x:Bind ViewModel.QueryText, Mode=TwoWay}"
                                     QueryIcon="Find">
                         <AutoSuggestBox.KeyboardAccelerators>
@@ -90,9 +90,6 @@
                             </i:EventTriggerBehavior>
                             <i:EventTriggerBehavior EventName="QuerySubmitted">
                                 <i:InvokeCommandAction Command="{x:Bind ViewModel.QuerySubmittedCommand}" InputConverter="{StaticResource AutoSuggestBoxQuerySubmittedEventArgsConverter}"/>
-                            </i:EventTriggerBehavior>
-                            <i:EventTriggerBehavior EventName="SuggestionChosen">
-                                <i:InvokeCommandAction Command="{x:Bind ViewModel.SuggestionChosenCommand}" InputConverter="{StaticResource SuggestionChosenEventArgsConverter}"/>
                             </i:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </AutoSuggestBox>

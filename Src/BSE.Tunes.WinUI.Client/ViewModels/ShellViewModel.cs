@@ -5,12 +5,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels;
 
 public partial class ShellViewModel : ObservableRecipient
 {
+    private readonly IDataService _dataService;
+    
     [ObservableProperty]
     private bool isBackEnabled;
 
@@ -21,16 +22,13 @@ public partial class ShellViewModel : ObservableRecipient
     private object? selected;
 
     [ObservableProperty]
-    private string queryText;
+    private string? queryText;
 
-    //[ObservableProperty]
-    private IList<string> searchSuggestions;
-    public IList<string> SearchSuggestions
+    public IList<string>? SearchSuggestions
     {
-        get => searchSuggestions;
-        set => SetProperty(ref searchSuggestions, value);
+        get;
+        set => SetProperty(ref field, value);
     }
-    private readonly IDataService _dataService;
 
     public INavigationService NavigationService
     {
@@ -88,18 +86,13 @@ public partial class ShellViewModel : ObservableRecipient
     [RelayCommand]
     private async Task QueryTextChanged(AutoSuggestionBoxTextChangeReason? reason)
     {
-        
-        //
-
-        if (reason == AutoSuggestionBoxTextChangeReason.UserInput
-            && (!string.IsNullOrEmpty(QueryText) && QueryText.Length >= 3))
+        if (reason == AutoSuggestionBoxTextChangeReason.UserInput)
         {
-            ////SearchSuggestions.Clear();
-            var suggestions = await _dataService.GetSearchSuggestions(QueryText, 10);
-            //foreach (var suggestion in suggestions)
-            //{
-            //    SearchSuggestions.Add(suggestion);
-            //}
+            IList<string>? suggestions = null;
+            if (!string.IsNullOrEmpty(QueryText) && QueryText.Length >= 3)
+            {
+                suggestions = await _dataService.GetSearchSuggestions(QueryText, 10);
+            }
             SearchSuggestions = suggestions;
         }
     }
@@ -111,15 +104,6 @@ public partial class ShellViewModel : ObservableRecipient
         if (!string.IsNullOrEmpty(queryText))
         {
             await NavigationService.NavigateToAsync(nameof(SearchPage), queryText, false);
-        }
-    }
-
-    [RelayCommand]
-    private async Task SuggestionChosen(AutoSuggestBoxSuggestionChosenEventArgs args)
-    {
-        if (args?.SelectedItem is string selectedText)
-        {
-            //QueryText = selectedText;
         }
     }
 }
