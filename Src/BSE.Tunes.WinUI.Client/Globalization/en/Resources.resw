@@ -360,6 +360,15 @@
   <data name="CacheSettingsPage_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="SearchPage_Albums_Header.Text" xml:space="preserve">
+    <value>Albums</value>
+  </data>
+  <data name="SearchPage_Tracks_Header.Text" xml:space="preserve">
+    <value>Songs</value>
+  </data>
+  <data name="SearchPage_NoResults_Text.Text" xml:space="preserve">
+    <value>No results found.</value>
+  </data>
   <data name="SearchPage_Title_Text" xml:space="preserve">
     <value>Search results for "{0}"</value>
   </data>
