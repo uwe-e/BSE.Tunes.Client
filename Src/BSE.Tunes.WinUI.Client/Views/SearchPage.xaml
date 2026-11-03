@@ -31,12 +31,15 @@
 
                     <TextBlock x:Uid="SearchPage_Albums_Header" Text="Albums" FontSize="20" FontWeight="SemiBold"/>
 
-                    <ListView Grid.Row="1"
+                    <ListView x:Name="AlbumsListView"
+                              Grid.Row="1"
                               Margin="0,12,0,0"
                               ItemsSource="{x:Bind ViewModel.Albums, Mode=OneWay}"
                               IsItemClickEnabled="True"
                               SelectionMode="Single"
                               HorizontalAlignment="Stretch"
+                              Loaded="AlbumsListView_Loaded"
+                              SizeChanged="AlbumsListView_SizeChanged"
                               ScrollViewer.HorizontalScrollMode="Disabled"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                               controls:ListViewExtensions.Command="{x:Bind ViewModel.SelectAlbumCommand}">
@@ -49,7 +52,7 @@
                         </ListView.ItemsPanel>
 
                         <ListView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
+                            <Style TargetType="ListViewItem">
                                 <Setter Property="Margin" Value="0,5,15,5" />
                             </Style>
                         </ListView.ItemContainerStyle>
