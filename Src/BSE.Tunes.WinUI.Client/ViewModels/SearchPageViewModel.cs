@@ -5,13 +5,15 @@ using BSE.Tunes.WinUI.Client.Views;
 using BSEtunes.Contracts.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.WinUI.Collections;
+using Microsoft.UI.Xaml.Data;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
     public partial class SearchPageViewModel : ViewModelBase
     {
-        private const int AlbumResultsLimit = 4;
+        private const int AlbumResultsLimit = 1;
         private const int TrackResultsLimit = 5;
 
         private readonly IDataService _dataService;
@@ -20,6 +22,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private readonly IMediaManager _mediaManager;
         private readonly IResourceService _resourceService;
         private CancellationTokenSource? _searchCancellationTokenSource;
+        private bool _isLoadingVisibleAlbums;
 
         [ObservableProperty]
         public partial string? TitleText { get; set; }
@@ -43,7 +46,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public partial bool HasNoResults { get; set; }
 
         [ObservableProperty]
-        public partial IncrementalObservableCollection<CarouselItem> Albums { get; set; } = default!;
+        public partial IncrementalLoadingCollection<AlbumSearchIncrementalSource, CarouselItem> Albums { get; set; } = default!;
 
         [ObservableProperty]
         public partial ObservableCollection<TrackItem> Tracks { get; set; } = [];
@@ -60,9 +63,69 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             _imageService = imageService;
             _navigationService = navigationService;
             _mediaManager = mediaManager;
+
+            Albums = new IncrementalLoadingCollection<AlbumSearchIncrementalSource, CarouselItem>(
+                new AlbumSearchIncrementalSource(_dataService, _imageService, string.Empty, CancellationToken.None),
+                AlbumResultsLimit);
         }
 
-        public override void OnNavigatedTo(object parameter)
+//        private async Task FetchAlbumsPageInternalAsync(int pageIndex, int limit, CancellationToken cancellationToken)
+//        {
+//            //if (string.IsNullOrWhiteSpace(_currentQuery))
+//            //{
+//            //    return Array.Empty<CarouselItem>();
+//            //}
+
+//            try
+//            {
+//                pageIndex++; // Increment pageIndex to match the API's 1-based indexing
+
+//                // Hier wird dein originaler Datenservice aufgerufen
+//                var result = await _dataService.GetAlbumSearchResults(
+//                    _currentQuery,
+//                    pageIndex,
+//                    limit,
+//                    cancellationToken
+//                );
+
+//List<CarouselItem> results = new List<CarouselItem>();
+
+//                if (result?.Items is { Count: > 0 } items)
+//                {
+//                    int albumCount = items.Count;
+
+                    
+
+//                    for (int i = 0; i < albumCount; i++)
+//                    {
+//                        var album = items[i];
+//                        if (album != null)
+//                        {
+//                            Albums.Add(new CarouselItem
+//                            {
+//                                Title = album.Title ?? string.Empty,
+//                                SubTitle = album.Artist?.Name ?? string.Empty,
+//                                ImagePath = _imageService.GetBitmapSource(album.AlbumId, true),
+//                                Data = album
+//                            });
+//                        }
+//                    }
+
+
+//                }
+////return results;
+
+                    
+//            }
+//            catch (Exception ex)
+//            {
+//                // Fehlerbehandlung (z.B. Logging). 
+//                // Die Collection fängt dies ab und setzt HasMoreItems auf false.
+//                throw;
+//            }
+//        }
+
+        public async override void OnNavigatedTo(object parameter)
         {
             if (parameter is string queryText)
             {
@@ -96,6 +159,31 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             }
         }
 
+        [RelayCommand]
+        private async Task EnsureVisibleAlbumCapacityAsync(int visibleCount)
+        {
+            if (_isLoadingVisibleAlbums
+                || visibleCount <= 0
+                || Albums is not ISupportIncrementalLoading incrementalAlbums)
+            {
+                return;
+            }
+
+            _isLoadingVisibleAlbums = true;
+
+            try
+            {
+                while (Albums.Count < visibleCount && incrementalAlbums.HasMoreItems)
+                {
+                    await incrementalAlbums.LoadMoreItemsAsync(AlbumResultsLimit);
+                }
+            }
+            finally
+            {
+                _isLoadingVisibleAlbums = false;
+            }
+        }
+
         private async Task LoadSearchResultsAsync(string queryText, CancellationToken cancellationToken)
         {
             IsBusy = true;
@@ -103,100 +191,26 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
             try
             {
-                var pageNumber = 1;
-
-                var albumTask = _dataService.GetAlbumSearchResults(queryText, pageNumber, AlbumResultsLimit, cancellationToken);
                 var trackTask = _dataService.GetTrackSearchResults(queryText, 1, TrackResultsLimit, cancellationToken);
 
-                await Task.WhenAll(albumTask, trackTask);
+                /*
+                 * The list view displays only as many items as will fit in the window. For this reason, the "itemsperPage" parameter always has the value 1.
+                 * If the size of the window changes, the listview will request only the items that are required to fill the visible area.
+                 * The EnsureVisibleAlbumCapacityAsync method is called to load more items if necessary.
+                 * 
+                 * For this to work, the Listview must have the IncrementalLoadingTrigger property set to "None" (see SearchPage.xaml).
+                 */
+                Albums = new IncrementalLoadingCollection<AlbumSearchIncrementalSource, CarouselItem>(
+                    new AlbumSearchIncrementalSource(
+                        _dataService,
+                        _imageService,
+                        queryText,
+                        cancellationToken,
+                        hasMoreItems => HasMoreAlbums = hasMoreItems),
+                    AlbumResultsLimit);
 
-                var albumsResult = await albumTask;
+                var loadResult = await Albums.LoadMoreItemsAsync(AlbumResultsLimit);
                 var tracksResult = await trackTask;
-
-                Albums?.Clear();
-
-                uint totalCount = (uint)(albumsResult?.TotalCount ?? 0);
-
-                Albums = new IncrementalObservableCollection<CarouselItem>(
-                totalCount,
-                (uint count) =>
-                {
-                    async Task<Microsoft.UI.Xaml.Data.LoadMoreItemsResult> loadFunc()
-                    {
-                        var result = await _dataService.GetAlbumSearchResults(
-                            queryText, pageNumber, 1, cancellationToken);
-
-                        uint itemCount = 0;
-                        if (result?.Items is { Count: > 0 } items)
-                        {
-                            int albumCount = items.Count;
-                            itemCount = (uint)albumCount;
-
-                            for (int i = 0; i < albumCount; i++)
-                            {
-                                var album = items[i];
-                                if (album != null)
-                                {
-                                    Albums?.Add(new CarouselItem
-                                    {
-                                        Title = album.Title ?? string.Empty,
-                                        SubTitle = album.Artist?.Name ?? string.Empty,
-                                        ImagePath = _imageService.GetBitmapSource(album.AlbumId, true),
-                                        Data = album
-                                    });
-                                }
-                            }
-                        }
-
-                        pageNumber++;
-
-                        return new Microsoft.UI.Xaml.Data.LoadMoreItemsResult
-                        {
-                            Count = itemCount
-                        };
-                    }
-                    return loadFunc().AsAsyncOperation();
-                });
-
-                if (albumsResult?.Items is { Count: > 0 } items)
-                {
-                    int albumCount = items.Count;
-
-                    for (int i = 0; i < albumCount; i++)
-                    {
-                        var album = items[i];
-                        if (album != null)
-                        {
-                            Albums.Add(new CarouselItem
-                            {
-                                Title = album.Title ?? string.Empty,
-                                SubTitle = album.Artist?.Name ?? string.Empty,
-                                ImagePath = _imageService.GetBitmapSource(album.AlbumId, true),
-                                Data = album
-                            });
-                        }
-                    }
-                    pageNumber++;
-                }
-
-                //if (albumsResult?.Items is { Count: > 0 } albumItems)
-                //{
-                //    int albumCount = albumItems.Count;
-                //    for (int i = 0; i < albumCount; i++)
-                //    {
-                //        var item = albumItems[i];
-                //        if (item != null)
-                //        {
-                //            Albums.Add(new CarouselItem
-                //            {
-                //                Title = item.Title ?? string.Empty,
-                //                SubTitle = item.Artist?.Name ?? string.Empty,
-                //                ImagePath = _imageService.GetBitmapSource(item.AlbumId, true),
-                //                Data = item
-                //            });
-                //        }
-                //    }
-                //}
 
                 Tracks.Clear();
                 if (tracksResult?.Items is { Count: > 0 } trackItems)
@@ -213,7 +227,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 }
 
                 HasAlbums = Albums.Count > 0;
-                HasMoreAlbums = albumsResult?.HasNextPage ?? false;
+                if (loadResult.Count == 0)
+                {
+                    HasMoreAlbums = false;
+                }
                 HasTracks = Tracks.Count > 0;
                 HasMoreTracks = tracksResult?.HasNextPage ?? false;
 
@@ -224,10 +241,12 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             }
             catch (Exception)
             {
-                Albums.Clear();
+                Albums?.Clear();
                 Tracks.Clear();
                 HasAlbums = false;
                 HasTracks = false;
+                HasMoreAlbums = false;
+                HasMoreTracks = false;
                 HasNoResults = true;
             }
             finally

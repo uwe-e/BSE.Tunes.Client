@@ -6,6 +6,7 @@
     xmlns:local="using:BSE.Tunes.WinUI.Client.Views"
     xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
     xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
@@ -31,29 +32,32 @@
 
                     <TextBlock x:Uid="SearchPage_Albums_Header" Text="Albums" FontSize="20" FontWeight="SemiBold"/>
 
-                    <ListView x:Name="AlbumsListView"
-                              Grid.Row="1"
+                    <ListView Grid.Row="1"
                               Margin="0,12,0,0"
                               ItemsSource="{x:Bind ViewModel.Albums, Mode=OneWay}"
                               IsItemClickEnabled="True"
                               SelectionMode="Single"
+                              IncrementalLoadingTrigger="None"
                               HorizontalAlignment="Stretch"
-                              Loaded="AlbumsListView_Loaded"
-                              SizeChanged="AlbumsListView_SizeChanged"
                               ScrollViewer.HorizontalScrollMode="Disabled"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                               controls:ListViewExtensions.Command="{x:Bind ViewModel.SelectAlbumCommand}">
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:CompleteRowIncrementalLoadingBehavior
+                                Command="{x:Bind ViewModel.EnsureVisibleAlbumCapacityCommand}"
+                                ItemWidth="150"
+                                ItemRightMargin="15" />
+                        </interactivity:Interaction.Behaviors>
+
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <!--<ItemsStackPanel  Orientation="Horizontal" />-->
-                                <!-- this prevents the placement of half displayed items -->
-                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="1" />
+                                <ItemsStackPanel Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
 
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
-                                <Setter Property="Margin" Value="0,5,15,5" />
+                                <Setter Property="Margin" Value="0,5,0,5" />
                             </Style>
                         </ListView.ItemContainerStyle>
 
