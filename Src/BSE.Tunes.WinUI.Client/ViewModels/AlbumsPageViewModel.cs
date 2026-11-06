@@ -1,5 +1,4 @@
 using BSE.Tunes.Shared.Services.Extensions;
-using BSE.Tunes.WinUI.Client.Collections;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Views;
@@ -7,6 +6,7 @@ using BSEtunes.Contracts.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Collections;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
@@ -18,9 +18,9 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IResourceService _resourceService;
         private readonly IMediaManager _mediaManager;
-        
+
         [ObservableProperty]
-        private IncrementalObservableCollection<CarouselItem> _items = default!;
+        internal partial IncrementalLoadingCollection<DelegateIncrementalSource, CarouselItem> IncrementalItems { get; set; } = default!;
 
         [ObservableProperty]
         private ObservableCollection<CarouselItem> _selectedItems = [];
@@ -91,85 +91,62 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         private async Task LoadAlbumsAsync(string? genreName)
         {
-            Items?.Clear();
+            const int itemsPerPage = 30;
 
-            const int pageSize = 30;
-            int pageNumber = 1;
-
-            var result = await _dataService.GetPagedAlbums(
-                genreName,
-                null,
-                null,
-                null,
-                null,
-                pageNumber,
-                pageSize,
-                AlbumSortOption.Artist);
-
-            uint totalCount = (uint)(result?.TotalCount ?? 0);
-
-            Items = new IncrementalObservableCollection<CarouselItem>(
-                totalCount,
-                (uint count) =>
+            IncrementalItems = new IncrementalLoadingCollection<DelegateIncrementalSource, CarouselItem>(
+                new DelegateIncrementalSource(async (pageIndex, pageSize, cancellationToken) =>
                 {
-                    async Task<Microsoft.UI.Xaml.Data.LoadMoreItemsResult> loadFunc()
+                    var result = await _dataService.GetPagedAlbums(
+                        genreName,
+                        null,
+                        null,
+                        null,
+                        null,
+                        pageIndex + 1,
+                        pageSize,
+                        AlbumSortOption.Artist);
+
+                    if (result?.Items is not { Count: > 0 } items)
                     {
-                        var result = await _dataService.GetPagedAlbums(
-                            genreName, null, null, null, null,
-                            pageNumber, pageSize, AlbumSortOption.Artist);
+                        return [];
+                    }
 
-                        uint itemCount = 0;
-                        if (result?.Items is { Count: > 0 } items)
+                    var carouselItems = new List<CarouselItem>(items.Count);
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        var album = items[i];
+                        if (album != null)
                         {
-                            int albumCount = items.Count;
-                            itemCount = (uint)albumCount;
-
-                            for (int i = 0; i < albumCount; i++)
+                            carouselItems.Add(new CarouselItem
                             {
-                                var album = items[i];
-                                if (album != null)
-                                {
-                                    Items.Add(CreateCarouselItem(album));
-                                }
-                            }
+                                Title = album.Title ?? string.Empty,
+                                SubTitle = album.Artist?.Name ?? string.Empty,
+                                ImagePath = _imageService.GetBitmapSource(album.AlbumId, false),
+                                Data = album
+                            });
                         }
-
-                        pageNumber++;
-
-                        return new Microsoft.UI.Xaml.Data.LoadMoreItemsResult
-                        {
-                            Count = itemCount
-                        };
                     }
-                    return loadFunc().AsAsyncOperation();
-                });
 
-            // Add the first page results
-            if (result?.Items is { Count: > 0 } items)
-            {
-                int albumCount = items.Count;
-                
-                for (int i = 0; i < albumCount; i++)
-                {
-                    var album = items[i];
-                    if (album != null)
-                    {
-                        Items.Add(CreateCarouselItem(album));
-                    }
-                }
-                pageNumber++;
-            }
+                    return carouselItems;
+                }),
+                itemsPerPage);
+
+            await IncrementalItems.LoadMoreItemsAsync((uint)itemsPerPage);
         }
 
-        private CarouselItem CreateCarouselItem(Album album)
+        internal sealed class DelegateIncrementalSource : IIncrementalSource<CarouselItem>
         {
-            return new CarouselItem
+            private readonly Func<int, int, CancellationToken, Task<IEnumerable<CarouselItem>>> _getPagedItemsAsync;
+
+            public DelegateIncrementalSource(Func<int, int, CancellationToken, Task<IEnumerable<CarouselItem>>> getPagedItemsAsync)
             {
-                Title = album.Title ?? string.Empty,
-                SubTitle = album.Artist?.Name ?? string.Empty,
-                ImagePath = _imageService.GetBitmapSource(album.AlbumId, false),
-                Data = album
-            };
+                _getPagedItemsAsync = getPagedItemsAsync;
+            }
+
+            public Task<IEnumerable<CarouselItem>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default)
+            {
+                return _getPagedItemsAsync(pageIndex, pageSize, cancellationToken);
+            }
         }
 
         [RelayCommand]

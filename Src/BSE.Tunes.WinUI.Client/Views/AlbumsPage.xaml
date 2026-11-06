@@ -51,7 +51,7 @@
                     </Button>
                 </StackPanel>
             </Grid>
-            <GridView Grid.Row="1" ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+            <GridView Grid.Row="1" ItemsSource="{x:Bind ViewModel.IncrementalItems, Mode=OneWay}"
                   IsItemClickEnabled="True"
                   controls:ListViewExtensions.Command="{x:Bind ViewModel.SelectItemCommand}">
             <GridView.ItemContainerStyle>
