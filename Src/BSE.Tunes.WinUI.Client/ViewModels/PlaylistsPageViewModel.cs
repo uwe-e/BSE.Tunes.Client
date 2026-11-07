@@ -6,7 +6,6 @@ using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
@@ -19,10 +18,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private string _cachedResourceString = string.Empty;
         
         [ObservableProperty]
-        private IncrementalObservableCollection<CarouselItem> _items = default!;
-
-        [ObservableProperty]
-        private ObservableCollection<CarouselItem> _selectedItems = [];
+        internal partial FuncIncrementalLoadingCollection<CarouselItem> Items { get; set; } = default!;
+        
+        //[ObservableProperty]
+        //private ObservableCollection<CarouselItem> _selectedItems = [];
 
         public PlaylistsPageViewModel(
             IDataService dataService,
@@ -54,62 +53,43 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             IsBusy = true;
             try
             {
+                
+                const int pageSize = 10;                
+                
                 Items?.Clear();
-
-                const int pageSize = 10;
-                int pageNumber = 1;
 
                 // Cache resource string once
                 _cachedResourceString = _resourceService.GetString("PlaylistsPage_PlaylistItem_PartNumberOfEntries");
 
-                PagedResult<Playlist> result = await _dataService.GetPagedPlaylistsByOwnerAsync(pageNumber, pageSize);
-
-                uint totalCount = (uint)(result?.TotalCount ?? 0);
-
-                Items = new IncrementalObservableCollection<CarouselItem>(
-                    totalCount,
-                    (uint count) =>
-                    {
-                        async Task<Microsoft.UI.Xaml.Data.LoadMoreItemsResult> loadFunc()
-                        {
-                            var result = await _dataService.GetPagedPlaylistsByOwnerAsync(pageNumber, pageSize);
-
-                            uint itemCount = 0;
-                            if (result?.Items != null)
-                            {
-                                var items = result.Items;
-                                itemCount = (uint)items.Count;
-
-                                foreach (var playlist in items)
-                                {
-                                    if (playlist != null)
-                                    {
-                                        Items.Add(await CreateCarouselItemAsync(playlist));
-                                    }
-                                }
-                            }
-                            pageNumber++;
-
-                            return new Microsoft.UI.Xaml.Data.LoadMoreItemsResult
-                            {
-                                Count = itemCount
-                            };
-                        }
-                        return loadFunc().AsAsyncOperation();
-                    });
-
-                // Add the first page results
-                if (result?.Items != null)
+                Items = new FuncIncrementalLoadingCollection<CarouselItem>(
+                async (pageIndex, pageSize, cancellationToken) =>
                 {
-                    foreach (var playlist in result.Items)
+                    var result = await _dataService.GetPagedPlaylistsByOwnerAsync(
+                        pageIndex + 1,
+                        pageSize);
+
+                    if (result?.Items is not { Count: > 0 } items)
                     {
+                        return [];
+                    }
+
+                    var carouselItems = new List<CarouselItem>(items.Count);
+
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        var playlist = items[i];
                         if (playlist != null)
                         {
-                            Items.Add(await CreateCarouselItemAsync(playlist));
+                            carouselItems.Add(await CreateCarouselItemAsync(playlist));
                         }
                     }
-                    pageNumber++;
-                }
+
+                    return carouselItems;
+                },
+                pageSize);
+
+                await Items.LoadMoreItemsAsync((uint)pageSize);
+
             }
             finally
             {

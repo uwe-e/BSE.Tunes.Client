@@ -1,4 +1,5 @@
 using BSE.Tunes.Shared.Services.Extensions;
+using BSE.Tunes.WinUI.Client.Collections;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Views;
@@ -6,7 +7,6 @@ using BSEtunes.Contracts.Enums;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.Collections;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
@@ -20,7 +20,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private readonly IMediaManager _mediaManager;
 
         [ObservableProperty]
-        internal partial IncrementalLoadingCollection<DelegateIncrementalSource, CarouselItem> IncrementalItems { get; set; } = default!;
+        internal partial FuncIncrementalLoadingCollection<CarouselItem> Items { get; set; } = default!;
 
         [ObservableProperty]
         private ObservableCollection<CarouselItem> _selectedItems = [];
@@ -91,10 +91,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         private async Task LoadAlbumsAsync(string? genreName)
         {
-            const int itemsPerPage = 30;
+            const int pageSize = 30;
 
-            IncrementalItems = new IncrementalLoadingCollection<DelegateIncrementalSource, CarouselItem>(
-                new DelegateIncrementalSource(async (pageIndex, pageSize, cancellationToken) =>
+            Items = new FuncIncrementalLoadingCollection<CarouselItem>(
+                async (pageIndex, pageSize, cancellationToken) =>
                 {
                     var result = await _dataService.GetPagedAlbums(
                         genreName,
@@ -128,25 +128,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                     }
 
                     return carouselItems;
-                }),
-                itemsPerPage);
+                },
+                pageSize);
 
-            await IncrementalItems.LoadMoreItemsAsync((uint)itemsPerPage);
-        }
-
-        internal sealed class DelegateIncrementalSource : IIncrementalSource<CarouselItem>
-        {
-            private readonly Func<int, int, CancellationToken, Task<IEnumerable<CarouselItem>>> _getPagedItemsAsync;
-
-            public DelegateIncrementalSource(Func<int, int, CancellationToken, Task<IEnumerable<CarouselItem>>> getPagedItemsAsync)
-            {
-                _getPagedItemsAsync = getPagedItemsAsync;
-            }
-
-            public Task<IEnumerable<CarouselItem>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default)
-            {
-                return _getPagedItemsAsync(pageIndex, pageSize, cancellationToken);
-            }
+            await Items.LoadMoreItemsAsync((uint)pageSize);
         }
 
         [RelayCommand]

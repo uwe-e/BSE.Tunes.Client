@@ -46,7 +46,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public partial bool HasNoResults { get; set; }
 
         [ObservableProperty]
-        public partial IncrementalLoadingCollection<AlbumSearchIncrementalSource, CarouselItem> Albums { get; set; } = default!;
+        public partial IncrementalLoadingCollection<DelegateIncrementalSource<CarouselItem>, CarouselItem> Albums { get; set; } = default!;
 
         [ObservableProperty]
         public partial ObservableCollection<TrackItem> Tracks { get; set; } = [];
@@ -64,8 +64,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             _navigationService = navigationService;
             _mediaManager = mediaManager;
 
-            Albums = new IncrementalLoadingCollection<AlbumSearchIncrementalSource, CarouselItem>(
-                new AlbumSearchIncrementalSource(_dataService, _imageService, string.Empty, CancellationToken.None),
+            Albums = new IncrementalLoadingCollection<DelegateIncrementalSource<CarouselItem>, CarouselItem>(
+                new DelegateIncrementalSource<CarouselItem>((_, _, _) => Task.FromResult<IEnumerable<CarouselItem>>([])),
                 AlbumResultsLimit);
         }
 
@@ -200,13 +200,37 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                  * 
                  * For this to work, the Listview must have the IncrementalLoadingTrigger property set to "None" (see SearchPage.xaml).
                  */
-                Albums = new IncrementalLoadingCollection<AlbumSearchIncrementalSource, CarouselItem>(
-                    new AlbumSearchIncrementalSource(
-                        _dataService,
-                        _imageService,
-                        queryText,
-                        cancellationToken,
-                        hasMoreItems => HasMoreAlbums = hasMoreItems),
+                Albums = new IncrementalLoadingCollection<DelegateIncrementalSource<CarouselItem>, CarouselItem>(
+                    new DelegateIncrementalSource<CarouselItem>(async (pageIndex, pageSize, loadCancellationToken) =>
+                    {
+                        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(loadCancellationToken, cancellationToken);
+                        var result = await _dataService.GetAlbumSearchResults(queryText, pageIndex + 1, pageSize, linkedCts.Token);
+
+                        HasMoreAlbums = result?.HasNextPage ?? false;
+
+                        if (result?.Items is not { Count: > 0 } items)
+                        {
+                            return [];
+                        }
+
+                        var carouselItems = new List<CarouselItem>(items.Count);
+                        for (int i = 0; i < items.Count; i++)
+                        {
+                            var album = items[i];
+                            if (album != null)
+                            {
+                                carouselItems.Add(new CarouselItem
+                                {
+                                    Title = album.Title ?? string.Empty,
+                                    SubTitle = album.Artist?.Name ?? string.Empty,
+                                    ImagePath = _imageService.GetBitmapSource(album.AlbumId, true),
+                                    Data = album
+                                });
+                            }
+                        }
+
+                        return carouselItems;
+                    }),
                     AlbumResultsLimit);
 
                 var loadResult = await Albums.LoadMoreItemsAsync(AlbumResultsLimit);
