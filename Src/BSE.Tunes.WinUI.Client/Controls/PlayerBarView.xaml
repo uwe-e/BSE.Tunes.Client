@@ -154,7 +154,7 @@
                 </Border>
                 <StackPanel Orientation="Vertical" Margin="6,3,0,0">
                     <TextBlock Text="{x:Bind ViewModel.CurrentTrack.Name, Mode=OneWay}" Style="{StaticResource BodyLargeStrongTextBlockStyle}" FontWeight="SemiBold" 
-                           TextTrimming="WordEllipsis" TextWrapping="Wrap"/>
+                           TextTrimming="WordEllipsis"/>
                     <TextBlock Text="{x:Bind ViewModel.CurrentTrack.Album.Artist.Name, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}"
                            TextTrimming="WordEllipsis"/>
                 </StackPanel>
