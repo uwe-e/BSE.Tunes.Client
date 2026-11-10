@@ -53,7 +53,15 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock x:Uid="SearchPage_Albums_Header" Text="Albums" FontSize="20" FontWeight="SemiBold"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Uid="SearchPage_Albums_Header" Text="Albums" FontSize="20" FontWeight="SemiBold"/>
+                        <HyperlinkButton Grid.Column="1" x:Uid="SearchPage_Albums_ViewAll_Button"
+                                         Visibility="{x:Bind ViewModel.HasMoreAlbums, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" Content="View All"/>
+                    </Grid>
 
                     <ListView Grid.Row="1"
                               Margin="0,12,0,0"
@@ -117,14 +125,21 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock x:Uid="SearchPage_Tracks_Header" Text="Songs" FontSize="20" FontWeight="SemiBold"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Uid="SearchPage_Tracks_Header" Text="Songs" FontSize="20" FontWeight="SemiBold"/>
+                        <HyperlinkButton Grid.Column="1" x:Uid="SearchPage_Tracks_ViewAll_Button"
+                                         Visibility="{x:Bind ViewModel.HasMoreTracks, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" Content="View All"/>
+                    </Grid>
 
                     <controls:ExtendedListView Grid.Row="1"
                                                Margin="0,12,0,0"
                                                ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
                                                IsItemClickEnabled="True"
                                                AlternatingRow="{ThemeResource SubtleFillColorSecondaryBrush}"
-                                               SelectionMode="None"
                                                controls:ListViewExtensions.Command="{x:Bind ViewModel.PlayTrackCommand}">
                         <controls:ExtendedListView.ItemTemplate>
                             <DataTemplate x:DataType="models:TrackItem">
@@ -156,24 +171,34 @@
                                                HorizontalAlignment="Right"/>
                                     <Grid.ContextFlyout>
                                         <MenuFlyout>
-                                            <MenuFlyoutItem Text="Play">
+                                            <MenuFlyoutItem x:Uid="SearchPage_MenuItem_Play" Text="Play"
+                                                            Command="{Binding ViewModel.PlayTrackCommand, ElementName=page, Mode=OneWay}"
+                                                            CommandParameter="{Binding}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE768;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem Text="Add to Queue">
+                                            <MenuFlyoutItem x:Uid="SearchPage_MenuItem_PlayAsNext" Text="Add to Queue"
+                                                            Command="{Binding ViewModel.PlayAsNextCommand, ElementName=page, Mode=OneWay}"
+                                                            CommandParameter="{Binding}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE90B;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutSubItem Text="Add to Playlist"
+                                            <MenuFlyoutSubItem x:Uid="SearchPage_MenuItem_AddToPlaylist" Text="Add to Playlist"
                                                                extensions:MenuFlyoutSubItemExtensions.ItemsSource="{Binding ViewModel.PlaylistMenuItems, ElementName=page, Mode=OneWay}"
                                                                extensions:MenuFlyoutSubItemExtensions.ItemTemplate="{StaticResource MenuFlyoutItemTemplate}"
+                                                               extensions:MenuFlyoutSubItemExtensions.CommandContext="{Binding}"
                                                                extensions:MenuFlyoutSubItemExtensions.ItemCommand="{Binding ViewModel.AddToPlaylistCommand, ElementName=page, Mode=OneWay}">
                                                 <MenuFlyoutSubItem.Icon>
                                                     <FontIcon Glyph="&#xE710;"/>
                                                 </MenuFlyoutSubItem.Icon>
                                             </MenuFlyoutSubItem>
+                                            <MenuFlyoutItem x:Uid="SearchPage_MenuItem_ShowAlbum" Text="Show Album">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE93C;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
                                         </MenuFlyout>
                                     </Grid.ContextFlyout>
                                 </Grid>

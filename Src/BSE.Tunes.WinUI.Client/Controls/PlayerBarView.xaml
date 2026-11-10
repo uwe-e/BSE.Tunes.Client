@@ -149,7 +149,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" x:Name="titleInfo" Grid.Column="0" Margin="6" Width="320">
-                <Border Height="48" Width="48">
+                <Border Height="55" Width="55">
                     <Image Stretch="Uniform" Source="{x:Bind ViewModel.CoverSource, Mode=OneWay}"/>
                 </Border>
                 <StackPanel Orientation="Vertical" Margin="6,3,0,0">

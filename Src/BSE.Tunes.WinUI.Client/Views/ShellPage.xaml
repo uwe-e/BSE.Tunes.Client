@@ -69,7 +69,7 @@
                                TextWrapping="NoWrap"
                                Style="{StaticResource AppTitleTextBlockStyle}"
                                Margin="10,0,0,0"/>
-                    <AutoSuggestBox x:Name="controlsSearchBox"
+                    <AutoSuggestBox x:Uid="ShellPage_AutoSuggestBox"
                                     Grid.Column="2"
                                     MaxWidth="580"
                                     HorizontalAlignment="Stretch"

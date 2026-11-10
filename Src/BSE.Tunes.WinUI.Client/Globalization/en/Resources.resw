@@ -360,6 +360,9 @@
   <data name="CacheSettingsPage_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="SearchPage_Title_Text" xml:space="preserve">
+    <value>Search results for "{0}"</value>
+  </data>
   <data name="SearchPage_Albums_Header.Text" xml:space="preserve">
     <value>Albums</value>
   </data>
@@ -369,7 +372,25 @@
   <data name="SearchPage_NoResults_Text.Text" xml:space="preserve">
     <value>No results found.</value>
   </data>
-  <data name="SearchPage_Title_Text" xml:space="preserve">
-    <value>Search results for "{0}"</value>
+  <data name="ShellPage_AutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="SearchPage_MenuItem_Play.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="SearchPage_MenuItem_PlayAsNext.Text" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="SearchPage_MenuItem_AddToPlaylist.Text" xml:space="preserve">
+    <value>Add to</value>
+  </data>
+  <data name="SearchPage_MenuItem_ShowAlbum.Text" xml:space="preserve">
+    <value>Show album</value>
+  </data>
+  <data name="SearchPage_Albums_ViewAll_Button.Content" xml:space="preserve">
+    <value>View all</value>
+  </data>
+  <data name="SearchPage_Tracks_ViewAll_Button.Content" xml:space="preserve">
+    <value>View all</value>
   </data>
 </root>

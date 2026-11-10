@@ -1,5 +1,6 @@
 ﻿using BSE.Tunes.WinUI.Client.Collections;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
+using BSE.Tunes.WinUI.Client.Extensions;
 using BSE.Tunes.WinUI.Client.Models;
 using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -43,6 +44,9 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         [ObservableProperty]
         public partial bool HasNoResults { get; set; }
+
+        [ObservableProperty]
+        public partial TrackItem? SelectedTrack { get; set; }
 
         [ObservableProperty]
         public partial IncrementalLoadingCollection<DelegateIncrementalSource<CarouselItem>, CarouselItem> Albums { get; set; } = default!;
@@ -222,9 +226,12 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         }
         
         [RelayCommand]
-        private async Task AddToPlaylistAsync(object? parameter)
+        private async Task AddToPlaylistAsync(object parameter)
         {
-            //if (item?.Data is Play
+            if (parameter is MenuFlyoutCommandParameter menuCommandParam)
+            {
+
+            }
         }
 
         [RelayCommand]
@@ -242,6 +249,15 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             if (item != null)
             {
                 _ = _mediaManager.PlayTracksAsync([item.Id], PlayerMode.Song);
+            }
+        }
+
+        [RelayCommand]
+        private void PlayAsNext(TrackItem? item)
+        {
+            if (item != null)
+            {
+                _ = _mediaManager.InsertTracksToPlayQueueAsync( [item.Id], PlayerMode.Song);
             }
         }
 

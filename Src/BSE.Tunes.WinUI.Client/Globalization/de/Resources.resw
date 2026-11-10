@@ -363,4 +363,34 @@
   <data name="SearchPage_Title_Text" xml:space="preserve">
     <value>Suchergebnisse für "{0}"</value>
   </data>
+  <data name="SearchPage_Albums_Header.Text" xml:space="preserve">
+    <value>Alben</value>
+  </data>
+  <data name="SearchPage_Tracks_Header.Text" xml:space="preserve">
+    <value>Songs</value>
+  </data>
+  <data name="SearchPage_NoResults_Text.Text" xml:space="preserve">
+    <value>Keine Ergebnisse</value>
+  </data>
+  <data name="ShellPage_AutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="SearchPage_MenuItem_Play.Text" xml:space="preserve">
+    <value>Wiedergeben</value>
+  </data>
+  <data name="SearchPage_MenuItem_PlayAsNext.Text" xml:space="preserve">
+    <value>Als Nächstes wiedergeben</value>
+  </data>
+  <data name="SearchPage_MenuItem_AddToPlaylist.Text" xml:space="preserve">
+    <value>Hinzufügen zu</value>
+  </data>
+  <data name="SearchPage_MenuItem_ShowAlbum.Text" xml:space="preserve">
+    <value>Album anzeigen</value>
+  </data>
+  <data name="SearchPage_Albums_ViewAll_Button.Content" xml:space="preserve">
+    <value>Alle anzeigen</value>
+  </data>
+  <data name="SearchPage_Tracks_ViewAll_Button.Content" xml:space="preserve">
+    <value>Alle anzeigen</value>
+  </data>
 </root>
