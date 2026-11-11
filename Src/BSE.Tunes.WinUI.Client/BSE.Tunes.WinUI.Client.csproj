@@ -43,7 +43,9 @@
     <None Remove="Views\PlaylistsPage.xaml" />
     <None Remove="Views\RemoveEndpointSettingsPage.xaml" />
     <None Remove="Views\RemoveLoginSettingsPage.xaml" />
+    <None Remove="Views\SearchAlbumsPage.xaml" />
     <None Remove="Views\SearchPage.xaml" />
+    <None Remove="Views\SearchTracksPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="Controls\MenuFlyoutItem.xaml" />
@@ -73,6 +75,12 @@
     <None Update="Controls\MenuFlyoutItem\MenuFlyoutItem.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="Views\SearchTracksPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\SearchAlbumsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\SearchPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

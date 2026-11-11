@@ -393,4 +393,13 @@
   <data name="SearchPage_Tracks_ViewAll_Button.Content" xml:space="preserve">
     <value>Alle anzeigen</value>
   </data>
+  <data name="SearchAlbumsPage_Title_Text" xml:space="preserve">
+    <value>Suchergebnisse für "{0}"</value>
+  </data>
+  <data name="SearchTracksPage_Title_Text" xml:space="preserve">
+    <value>Suchergebnisse für "{0}"</value>
+  </data>
+  <data name="CreatePlaylistDialog_TextBlock_Error.Text" xml:space="preserve">
+    <value>Bitte gib der Wiedergabeliste einen Namen</value>
+  </data>
 </root>

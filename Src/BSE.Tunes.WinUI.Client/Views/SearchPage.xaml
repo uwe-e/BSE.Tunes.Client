@@ -60,6 +60,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="SearchPage_Albums_Header" Text="Albums" FontSize="20" FontWeight="SemiBold"/>
                         <HyperlinkButton Grid.Column="1" x:Uid="SearchPage_Albums_ViewAll_Button"
+                                         Command="{x:Bind ViewModel.ViewAllAlbumsCommand}"
                                          Visibility="{x:Bind ViewModel.HasMoreAlbums, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" Content="View All"/>
                     </Grid>
 
@@ -132,6 +133,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Uid="SearchPage_Tracks_Header" Text="Songs" FontSize="20" FontWeight="SemiBold"/>
                         <HyperlinkButton Grid.Column="1" x:Uid="SearchPage_Tracks_ViewAll_Button"
+                                         Command="{x:Bind ViewModel.ViewAllTracksCommand}"
                                          Visibility="{x:Bind ViewModel.HasMoreTracks, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" Content="View All"/>
                     </Grid>
 
@@ -194,7 +196,9 @@
                                                     <FontIcon Glyph="&#xE710;"/>
                                                 </MenuFlyoutSubItem.Icon>
                                             </MenuFlyoutSubItem>
-                                            <MenuFlyoutItem x:Uid="SearchPage_MenuItem_ShowAlbum" Text="Show Album">
+                                            <MenuFlyoutItem x:Uid="SearchPage_MenuItem_ShowAlbum" Text="Show Album"
+                                                            Command="{Binding ViewModel.ShowAlbumCommand, ElementName=page, Mode=OneWay}"
+                                                            CommandParameter="{Binding}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE93C;"/>
                                                 </MenuFlyoutItem.Icon>

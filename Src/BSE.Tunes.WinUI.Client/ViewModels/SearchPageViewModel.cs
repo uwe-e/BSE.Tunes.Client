@@ -1,11 +1,15 @@
 ﻿using BSE.Tunes.WinUI.Client.Collections;
 using BSE.Tunes.WinUI.Client.Contracts.Services;
 using BSE.Tunes.WinUI.Client.Extensions;
+using BSE.Tunes.WinUI.Client.Messages;
 using BSE.Tunes.WinUI.Client.Models;
+using BSE.Tunes.WinUI.Client.Services;
 using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Collections;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using System.Collections.ObjectModel;
 
@@ -17,12 +21,16 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         private const int TrackResultsLimit = 5;
 
         private readonly IDataService _dataService;
+        private readonly IDialogService _dialogService;
         private readonly IImageService _imageService;
         private readonly INavigationService _navigationService;
         private readonly IMediaManager _mediaManager;
         private readonly IResourceService _resourceService;
         private CancellationTokenSource? _searchCancellationTokenSource;
         private bool _isLoadingVisibleAlbums;
+
+        [ObservableProperty]
+        public partial string? QueryText { get; set; }
 
         [ObservableProperty]
         public partial string? TitleText { get; set; }
@@ -60,12 +68,14 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public SearchPageViewModel(
             IResourceService resourceService,
             IDataService dataService,
+            IDialogService dialogService,
             IImageService imageService,
             INavigationService navigationService,
             IMediaManager mediaManager)
         {
             _resourceService = resourceService;
             _dataService = dataService;
+            _dialogService = dialogService;
             _imageService = imageService;
             _navigationService = navigationService;
             _mediaManager = mediaManager;
@@ -75,6 +85,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         {
             if (parameter is string queryText)
             {
+                QueryText = queryText;
                 TitleText = string.Format(
                     _resourceService.GetString("SearchPage_Title_Text"), queryText);
 
@@ -82,17 +93,17 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 _searchCancellationTokenSource = new CancellationTokenSource();
 
                 _ = LoadSearchResultsAsync(queryText, _searchCancellationTokenSource.Token);
+                _ = ManagePlaylistMenuItemsAsync();
 
-                //PlaylistMenuItems?.Clear();
-                PlaylistMenuItems = await LoadPlaylistMenusAsync();
-                //var menuitems = await LoadPlaylistMenusAsync();
-                //for (int i = 0; i < menuitems.Count; i++)
-                //{
-                //    PlaylistMenuItems?.Add(menuitems[i]);
-                //}
             }
             
             base.OnNavigatedTo(parameter);
+        }
+        
+        private async Task ManagePlaylistMenuItemsAsync()
+        {
+            PlaylistMenuItems?.Clear();
+            PlaylistMenuItems = await LoadPlaylistMenusAsync();
         }
 
         private async Task<IList<FlyoutItem>> LoadPlaylistMenusAsync()
@@ -230,7 +241,50 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         {
             if (parameter is MenuFlyoutCommandParameter menuCommandParam)
             {
+                if (menuCommandParam.MenuItem is FlyoutItem flyout && menuCommandParam.ItemDataContext is TrackItem trackItem)
+                {
+                    if (flyout.Data is ActionMode actionMode && actionMode == ActionMode.AddNewPlaylist)
+                    {
+                        var (result, dialog) = await _dialogService.ShowDialogAsync<CreatePlaylistDialog>();
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            var createdPlaylist = dialog.ViewModel.CreatedPlaylist;
+                            if (createdPlaylist != null)
+                            {
+                                await AppendTracksToPlaylistAsync(createdPlaylist.Id, trackItem.Id);
+                                await ManagePlaylistMenuItemsAsync();
+                                WeakReferenceMessenger.Default.Send(new PlaylistCreatedMessage(createdPlaylist.Id));
+                            }
+                        }
+                    }
+                    else if (flyout.Data is PlaylistSummary playlist)
+                    {
+                        await AppendTracksToPlaylistAsync(playlist.Id, trackItem.Id);
+                    }
+                }
+            }
+        }
 
+        private async Task AppendTracksToPlaylistAsync(int playlistId, int trackId)
+        {
+            await Task.WhenAll(
+                _dataService.AppendToPlaylist(playlistId, new[] { trackId }),
+                _imageService.RemoveComposedBitmaps(playlistId));
+
+            /*
+             * Use the WeakReferenceMessenger from CommunityToolkit.Mvvm.Messaging
+             * to send the PlaylistChangedMessage. This ensures that the message
+             * is sent without creating strong references that could lead to memory leaks.
+             */
+            WeakReferenceMessenger.Default.Send(new PlaylistChangedMessage(playlistId));
+        }
+
+        [RelayCommand]
+        private async Task ShowAlbumAsync(TrackItem? item)
+        {
+            if (item?.Data is Track track)
+            {
+                await _navigationService.NavigateToAsync(nameof(AlbumDetailPage), track.Album, false);
             }
         }
 
@@ -259,6 +313,20 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             {
                 _ = _mediaManager.InsertTracksToPlayQueueAsync( [item.Id], PlayerMode.Song);
             }
+        }
+
+        [RelayCommand]
+        private async Task ViewAllAlbumsAsync()
+        {
+            if (!string.IsNullOrEmpty(QueryText))
+                await _navigationService.NavigateToAsync(nameof(SearchAlbumsPage), QueryText, false);
+        }
+
+        [RelayCommand]
+        private async Task ViewAllTracksAsync()
+        {
+            if (!string.IsNullOrEmpty(QueryText))
+                await _navigationService.NavigateToAsync(nameof(SearchTracksPage),QueryText, false);
         }
 
         [RelayCommand]
