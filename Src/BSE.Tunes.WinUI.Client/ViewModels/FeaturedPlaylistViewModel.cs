@@ -5,7 +5,6 @@ using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels

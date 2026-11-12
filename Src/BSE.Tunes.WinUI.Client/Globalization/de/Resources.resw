@@ -397,9 +397,12 @@
     <value>Suchergebnisse für "{0}"</value>
   </data>
   <data name="SearchTracksPage_Title_Text" xml:space="preserve">
-    <value>Suchergebnisse für "{0}"</value>
+    <value>Songergebnisse für "{0}"</value>
   </data>
   <data name="CreatePlaylistDialog_TextBlock_Error.Text" xml:space="preserve">
     <value>Bitte gib der Wiedergabeliste einen Namen</value>
+  </data>
+  <data name="SearchTracksPage_Header.Text" xml:space="preserve">
+    <value>Songs</value>
   </data>
 </root>

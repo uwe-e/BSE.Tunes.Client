@@ -6,10 +6,52 @@
     xmlns:local="using:BSE.Tunes.WinUI.Client.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
+    xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
+    xmlns:extensions="using:BSE.Tunes.WinUI.Client.Extensions"
     xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
     behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     x:Name="page"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="TrackItemTemplate" x:DataType="models:TrackItem">
+            <UserControl>
+                <Grid x:Name="listViewItem" Height="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" 
+                           Text="{x:Bind TrackNumber, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="1" 
+                           Text="{x:Bind Title, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="12,0,0,0"/>
+
+                    <TextBlock Grid.Column="2" 
+                           Text="{x:Bind Artist, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="12,0,0,0"/>
+
+                    <TextBlock Grid.Column="3" 
+                           Text="{x:Bind FormattedDuration, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right"
+                           Margin="12,0,0,0"/>
+                </Grid>
+            </UserControl>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -19,5 +61,105 @@
 
         <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.TitleText}" Style="{ThemeResource TitleTextBlockStyle}"
                    FontWeight="SemiBold"/>
+
+        <Grid Grid.Row="1">
+            <controls:ExtendedListView x:Name="listview"
+                                       Margin="0,5"
+                                       Padding="0,54,0,0"
+                                       ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
+                                       EnablePreSelection="True"
+                                       SelectionMode="{x:Bind ViewModel.SelectionMode, Mode=OneWay}"
+                                       AlternatingRow="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                       SelectedItem="{x:Bind ViewModel.SelectedTrack, Mode=TwoWay}"
+                                       controls:ListViewExtensions.Command="{x:Bind ViewModel.PlayTrackCommand}"
+                                       controls:ListViewExtensions.SelectedItems="{x:Bind ViewModel.SelectedItems, Mode=TwoWay}"
+                                       IsItemClickEnabled="{x:Bind ViewModel.IsItemClickEnabled}"
+                                       PreSelectionCommand="{x:Bind ViewModel.SelectItemsCommand}">
+                <controls:ExtendedListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:TrackItem">
+                        <Grid Height="44">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="300"/>
+                                <ColumnDefinition Width="80"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="{x:Bind Title, Mode=OneWay}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       Margin="12,0,0,0"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{x:Bind Artist, Mode=OneWay}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       Margin="12,0,0,0"/>
+                            <TextBlock Grid.Column="2"
+                                       Text="{x:Bind Album, Mode=OneWay}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       Margin="12,0,0,0"/>
+                            <TextBlock Grid.Column="4"
+                                       Text="{x:Bind FormattedDuration, Mode=OneWay}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"/>
+                        </Grid>
+                    </DataTemplate>
+                </controls:ExtendedListView.ItemTemplate>
+            </controls:ExtendedListView>
+
+            <Border Grid.Row="1"
+                    Margin="0,5"
+                    VerticalAlignment="Top"
+                    Canvas.ZIndex="10"
+                    Visibility="{x:Bind ViewModel.IsCommandBarVisible, Mode=OneWay}">
+                <CommandBar x:Name="stickyCommandBar"
+                            CornerRadius="4"
+                            DefaultLabelPosition="Right"
+                            Background="{ThemeResource CardBackgroundSolidColorDefault}">
+                    <CommandBar.Shadow>
+                        <ThemeShadow/>
+                    </CommandBar.Shadow>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonClearSelection" Label="Clear Selection"
+                                  Command="{x:Bind ViewModel.ClearSelectionCommand}">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEA98;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonPlay" Icon="Play" Label="Play Selection"
+                                  Command="{x:Bind ViewModel.PlaySelectedCommand}">
+                        <AppBarButton.Resources>
+                            <StaticResource x:Key="AppBarButtonBackground" ResourceKey="AccentButtonBackground"/>
+                            <StaticResource x:Key="AppBarButtonForeground" ResourceKey="AccentButtonForeground"/>
+                            <StaticResource x:Key="AppBarButtonBackgroundPointerOver" ResourceKey="AccentButtonBackgroundPointerOver"/>
+                            <StaticResource x:Key="AppBarButtonForegroundPointerOver" ResourceKey="AccentButtonForegroundPointerOver"/>
+                            <StaticResource x:Key="AppBarButtonBackgroundPressed" ResourceKey="AccentButtonBackgroundPressed"/>
+                            <StaticResource x:Key="AppBarButtonForegroundPressed" ResourceKey="AccentButtonForegroundPressed"/>
+                        </AppBarButton.Resources>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonPlaySelection" Icon="MusicInfo" Label="Play Next"
+                                  Command="{x:Bind ViewModel.PlayAsNextCommand}"/>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonAddTo" x:Name="buttonAddTo" Icon="Add" Label="Add to Playlist">
+                        <AppBarButton.Flyout>
+                            <Flyout extensions:FlyoutExtensions.Parent="{x:Bind buttonAddTo}"
+                                    extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItemsForSelected}"
+                                    extensions:FlyoutExtensions.ItemTemplate="{StaticResource FlyoutItemTemplate}"  
+                                    extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}"/>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonSelectAll" Icon="SelectAll" Label="Add to Playlist"
+                                  Command="{x:Bind ViewModel.SelectAllCommand}"
+                                  Visibility="{x:Bind ViewModel.AllItemsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True, Mode=OneWay}"/>
+                    <AppBarButton x:Uid="AlbumDetailPage_ButtonUnSelectAll" Icon="ClearSelection" Label="Add to Playlist"
+                                  Command="{x:Bind ViewModel.UnSelectAllCommand}"
+                                  Visibility="{x:Bind ViewModel.AllItemsSelected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"/>
+                </CommandBar>
+            </Border>
+        </Grid>
+        <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+                      Width="40"
+                      Height="40"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"/>
     </Grid>
 </Page>

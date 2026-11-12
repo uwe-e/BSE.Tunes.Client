@@ -13,7 +13,7 @@ using System.Collections.Specialized;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public abstract partial class PlaylistBaseViewModel<TItem> : ViewModelBase
+    public abstract partial class PlaylistBaseViewModel<TItem> : ViewModelBase, IRecipient<PlaylistCreatedMessage>
     {
         public IDataService DataService { get; }
         public IImageService ImageService { get; }
@@ -70,6 +70,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public override void OnNavigatedTo(object parameter)
         {
             base.OnNavigatedTo(parameter);
+            
+            Messenger.Register<PlaylistCreatedMessage>(this);
             SelectedItems.CollectionChanged += OnSelectedItemsChanged;
 
             _ = InitializePlaylistMenusAsync();
@@ -78,6 +80,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         public override void OnNavigatedFrom()
         {
             base.OnNavigatedFrom();
+            
+            Messenger.Unregister<PlaylistCreatedMessage>(this);
             SelectedItems.CollectionChanged -= OnSelectedItemsChanged;
         }
         
@@ -325,5 +329,10 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
 
         public virtual Task AppendAllTracksToPlaylistAsync(int playlistId) 
             => AppendTracksToPlaylistAsync(playlistId, InsertMode.AddAll);
+
+        void IRecipient<PlaylistCreatedMessage>.Receive(PlaylistCreatedMessage message)
+        {
+            _ = InitializePlaylistMenusAsync();
+        }
     }
 }
