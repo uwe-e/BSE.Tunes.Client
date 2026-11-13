@@ -108,6 +108,8 @@ public partial class ShellViewModel : ObservableRecipient
         if (!string.IsNullOrEmpty(queryText))
         {
             await NavigationService.NavigateToAsync(nameof(SearchPage), queryText, false);
+
+            QueryText = string.Empty;
         }
     }
 }

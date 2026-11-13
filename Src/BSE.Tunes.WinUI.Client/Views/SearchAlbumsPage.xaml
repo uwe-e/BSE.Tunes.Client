@@ -6,13 +6,17 @@
     xmlns:local="using:BSE.Tunes.WinUI.Client.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BSE.Tunes.WinUI.Client.Models"
     xmlns:behaviors="using:BSE.Tunes.WinUI.Client.Behaviors"
+    xmlns:extensions="using:BSE.Tunes.WinUI.Client.Extensions"
+    xmlns:controls="using:BSE.Tunes.WinUI.Client.Controls"
     behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     x:Name="page"
     mc:Ignorable="d">
 
     <Grid>
-        <Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -20,5 +24,37 @@
         <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.TitleText}" Style="{ThemeResource TitleTextBlockStyle}"
             FontWeight="SemiBold"/>
 
-</Grid>
+        <GridView Grid.Row="1" ItemsSource="{x:Bind ViewModel.Albums, Mode=OneWay}"
+                  IsItemClickEnabled="True"
+                  controls:ListViewExtensions.Command="{x:Bind ViewModel.SelectItemCommand}">
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem">
+                    <Setter Property="Margin" Value="0, 5, 15, 5"/>
+                </Style>
+            </GridView.ItemContainerStyle>
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="models:CarouselItem">
+                    <Grid x:Name="gridViewItem" Width="150">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="{x:Bind ImageSource, Mode=OneWay}"
+                               Stretch="UniformToFill" Height="150" Grid.Row="0"/>
+                        <TextBlock Grid.Row="1" Text="{x:Bind Title, Mode=OneWay}"
+                                   TextTrimming="WordEllipsis" x:Name="title" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="2" Text="{x:Bind SubTitle, Mode=OneWay}"
+                                   FontWeight="SemiLight" x:Name="description" TextTrimming="WordEllipsis" FontSize="12"/>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+    <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+                  Width="40"
+                  Height="40"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"/>
+    </Grid>
 </Page>
