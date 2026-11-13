@@ -92,8 +92,12 @@ public partial class ShellViewModel : ObservableRecipient
             if (!string.IsNullOrEmpty(QueryText) && QueryText.Length >= 3)
             {
                 suggestions = await _dataService.GetSearchSuggestions(QueryText, 10);
+                SearchSuggestions = suggestions;
             }
-            SearchSuggestions = suggestions;
+        }
+        else if (reason == AutoSuggestionBoxTextChangeReason.ProgrammaticChange)
+        {
+            SearchSuggestions = null;
         }
     }
 
