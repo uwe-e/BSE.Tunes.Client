@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class FeaturedPlaylistViewModel : RefreshableViewModel, IRecipient<PlaylistChangedMessage>, IRecipient<PlaylistCreatedMessage>
+    public partial class FeaturedPlaylistViewModel : RefreshableViewModel, IRecipient<PlaylistChangedMessage>, IRecipient<PlaylistCreatedMessage>, IRecipient<PlaylistDeletedMessage>
     {
         private readonly IDataService _dataService;
         private readonly INavigationService _navigationService;
@@ -36,15 +36,15 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             
             Initialize();
 
-            Messenger.Register<FeaturedPlaylistViewModel, PlaylistDeletedMessage>(this, async (r, m) =>
-            {
-                // Remove the deleted playlist from the collection
-                var itemToRemove = r.Items.FirstOrDefault(i => i.Data is Playlist p && p.Id == m.PlaylistId);
-                if (itemToRemove != null)
-                {
-                    r.Items.Remove(itemToRemove);
-                }
-            });
+            //Messenger.Register<FeaturedPlaylistViewModel, PlaylistDeletedMessage>(this, async (r, m) =>
+            //{
+            //    // Remove the deleted playlist from the collection
+            //    var itemToRemove = r.Items.FirstOrDefault(i => i.Data is Playlist p && p.Id == m.PlaylistId);
+            //    if (itemToRemove != null)
+            //    {
+            //        r.Items.Remove(itemToRemove);
+            //    }
+            //});
 
 
         }
@@ -124,6 +124,15 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         void IRecipient<PlaylistCreatedMessage>.Receive(PlaylistCreatedMessage message)
         {
             _ = LoadDataAsync();
+        }
+
+        void IRecipient<PlaylistDeletedMessage>.Receive(PlaylistDeletedMessage message)
+        {
+            var itemToRemove = Items.FirstOrDefault(i => i.Data is Playlist p && p.Id == message.PlaylistId);
+            if (itemToRemove != null)
+            {
+                Items.Remove(itemToRemove);
+            }
         }
 
         [RelayCommand]

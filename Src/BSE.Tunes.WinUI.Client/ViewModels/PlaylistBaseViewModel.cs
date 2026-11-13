@@ -13,7 +13,7 @@ using System.Collections.Specialized;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public abstract partial class PlaylistBaseViewModel<TItem> : ViewModelBase, IRecipient<PlaylistCreatedMessage>
+    public abstract partial class PlaylistBaseViewModel<TItem> : ViewModelBase, IRecipient<PlaylistCreatedMessage>, IRecipient<PlaylistDeletedMessage>
     {
         public IDataService DataService { get; }
         public IImageService ImageService { get; }
@@ -331,6 +331,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             => AppendTracksToPlaylistAsync(playlistId, InsertMode.AddAll);
 
         void IRecipient<PlaylistCreatedMessage>.Receive(PlaylistCreatedMessage message)
+        {
+            _ = InitializePlaylistMenusAsync();
+        }
+
+        void IRecipient<PlaylistDeletedMessage>.Receive(PlaylistDeletedMessage message)
         {
             _ = InitializePlaylistMenusAsync();
         }

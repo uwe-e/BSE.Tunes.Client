@@ -15,7 +15,7 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class SearchPageViewModel : ViewModelBase
+    public partial class SearchPageViewModel : ViewModelBase, IRecipient<PlaylistDeletedMessage>
     {
         private const int AlbumResultsLimit = 1;
         private const int TrackResultsLimit = 5;
@@ -96,10 +96,17 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
                 _ = ManagePlaylistMenuItemsAsync();
 
             }
-            
+
+            Messenger.Register<PlaylistDeletedMessage>(this);
             base.OnNavigatedTo(parameter);
         }
-        
+
+        public override void OnNavigatedFrom()
+        {
+            Messenger.Unregister<PlaylistDeletedMessage>(this);
+            base.OnNavigatedFrom();
+        }
+
         private async Task ManagePlaylistMenuItemsAsync()
         {
             PlaylistMenuItems?.Clear();
@@ -277,6 +284,11 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
              * is sent without creating strong references that could lead to memory leaks.
              */
             WeakReferenceMessenger.Default.Send(new PlaylistChangedMessage(playlistId));
+        }
+
+        void IRecipient<PlaylistDeletedMessage>.Receive(PlaylistDeletedMessage message)
+        {
+            _ = ManagePlaylistMenuItemsAsync();
         }
 
         [RelayCommand]
