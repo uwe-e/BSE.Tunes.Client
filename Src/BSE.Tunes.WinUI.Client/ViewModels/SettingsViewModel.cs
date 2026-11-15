@@ -68,13 +68,13 @@ public partial class SettingsViewModel : ObservableRecipient
             PageKey = "PersonalizationSettingsPage"
         });
 
-        SettingsItems.Add(new SettingsItem
-        {
-            Title = _resourceService.GetString("SettingsPage_About_Title"),
-            Description = _resourceService.GetString("SettingsPage_About_Description"),
-            Glyph = "\uE946", // Info
-            PageKey = "AboutSettingsPage"
-        });
+        //SettingsItems.Add(new SettingsItem
+        //{
+        //    Title = _resourceService.GetString("SettingsPage_About_Title"),
+        //    Description = _resourceService.GetString("SettingsPage_About_Description"),
+        //    Glyph = "\uE946", // Info
+        //    PageKey = "AboutSettingsPage"
+        //});
     }
 
     [RelayCommand]

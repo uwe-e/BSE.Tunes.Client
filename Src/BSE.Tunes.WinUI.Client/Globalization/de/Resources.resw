@@ -154,7 +154,7 @@
     <value>Das Konto für dein aktuelles BSEtunes</value>
   </data>
   <data name="RemoveLoginSettingsPage_Warning.Text" xml:space="preserve">
-    <value>Du wirst abgemeldet, wenn Du Dein Konto löschst und musst Dich anschließend erneut anmelden.</value>
+    <value>Du wirst abgemeldet und musst Dich anschließend erneut anmelden.</value>
   </data>
   <data name="RemoveLoginSettingsPage_DeleteButton.Content" xml:space="preserve">
     <value>Konto löschen</value>
@@ -163,7 +163,7 @@
     <value>BSEtunes-Konto löschen?</value>
   </data>
   <data name="RemoveLoginSettingsPage_Dialog_Message" xml:space="preserve">
-    <value>Wenn Du Dein Konto löschst, wirst Du abgemeldet. Deine aktuelle BSEtunes-Adresse bleibt erhalten. Möchtest du fortfahren?</value>
+    <value>Beim Löschen des Kontos wirst Du abgemeldet. Deine aktuelle BSEtunes-Adresse bleibt erhalten. Möchtest du fortfahren?</value>
   </data>
   <data name="RemoveLoginSettingsPage_Dialog_Delete" xml:space="preserve">
     <value>Löschen</value>
@@ -352,7 +352,7 @@
     <value>Speicherdaten löschen?</value>
   </data>
   <data name="CacheSettingsPage_Dialog_Message" xml:space="preserve">
-    <value>Durch das Leeren des Speichers werden alle heruntergeladenen Bilder und Audiodateien gelöscht. Möchtest du die zwischengespeicherten Dateien wirklich löschen?</value>
+    <value>Beim Leeren des Speichers werden alle heruntergeladenen Bilder und Audiodateien gelöscht. Möchtest du die zwischengespeicherten Dateien wirklich löschen?</value>
   </data>
   <data name="CacheSettingsPage_Dialog_Delete" xml:space="preserve">
     <value>Löschen</value>
@@ -404,5 +404,32 @@
   </data>
   <data name="SearchTracksPage_Header.Text" xml:space="preserve">
     <value>Songs</value>
+  </data>
+  <data name="CacheSettingsPage_Warning.Text" xml:space="preserve">
+    <value>Beim Leeren des Caches werden alle heruntergeladenen Bilder und Audiodateien gelöscht.</value>
+  </data>
+  <data name="CacheSettingsPage_Info_Description.Text" xml:space="preserve">
+    <value>Im Cache werden heruntergeladene Inhalte für die Offline-Wiedergabe und zum schnelleren Laden gespeichert. Die App verwaltet die Cache-Größe automatisch, Sie können den Cache jedoch bei Bedarf manuell leeren.</value>
+  </data>
+  <data name="CacheSettingsPage_DeleteButton_Text.Text" xml:space="preserve">
+    <value>Cache löschen</value>
+  </data>
+  <data name="CacheSettingsPage_Info_Title.Text" xml:space="preserve">
+    <value>Über den Cache</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Dialog_Description" xml:space="preserve">
+    <value>Das Löschen der Adresse löscht auch deine Kontoinformationen. Möchtest du wirklich fortfahren?</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Title.Text" xml:space="preserve">
+    <value>Personalisierung</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Header.Text" xml:space="preserve">
+    <value>Modus</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Description.Text" xml:space="preserve">
+    <value>Wähle den App-Modus </value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Default.Content" xml:space="preserve">
+    <value>Einstellungen von Windows</value>
   </data>
 </root>

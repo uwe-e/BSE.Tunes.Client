@@ -26,10 +26,9 @@
                 Margin="0,0,0,24"/>-->
 
             <!-- Settings List -->
-            <ListView
-                ItemsSource="{x:Bind ViewModel.SettingsItems, Mode=OneWay}"
-                SelectionMode="None"
-                IsItemClickEnabled="True">
+            <ListView ItemsSource="{x:Bind ViewModel.SettingsItems, Mode=OneWay}"
+                      SelectionMode="None"
+                      IsItemClickEnabled="True">
                 <i:Interaction.Behaviors>
                     <behaviors:ListViewItemClickBehavior Command="{x:Bind ViewModel.NavigateToSettingCommand}"/>
                 </i:Interaction.Behaviors>
@@ -43,10 +42,9 @@
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:SettingsItem">
-                        <Grid 
-                            Padding="0,12,16,12"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            ColumnSpacing="16">
+                        <Grid Padding="0,12,16,12"
+                              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                              ColumnSpacing="16">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -54,43 +52,69 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- Icon -->
-                            <Grid 
-                                Grid.Column="0"
-                                Width="40"
-                                Height="40"
-                                CornerRadius="4"
-                                Background="Transparent">
-                                <FontIcon 
-                                    Glyph="{x:Bind Glyph}"
-                                    FontSize="20"/>
+                            <Grid Grid.Column="0"
+                                  Width="40"
+                                  Height="40"
+                                  CornerRadius="4"
+                                  Background="Transparent">
+                                <FontIcon Glyph="{x:Bind Glyph}" FontSize="20"/>
                             </Grid>
 
                             <!-- Title and Description -->
-                            <StackPanel 
-                                Grid.Column="1"
-                                VerticalAlignment="Center"
-                                Spacing="2">
-                                <TextBlock 
-                                    Text="{x:Bind Title}"
-                                    Style="{ThemeResource BodyStrongTextBlockStyle}"/>
-                                <TextBlock 
-                                    Text="{x:Bind Description}"
-                                    Style="{ThemeResource CaptionTextBlockStyle}"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                    TextWrapping="Wrap"/>
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Spacing="2">
+                                <TextBlock Text="{x:Bind Title}"
+                                           Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock Text="{x:Bind Description}"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           TextWrapping="Wrap"/>
                             </StackPanel>
 
                             <!-- Chevron -->
-                            <FontIcon 
-                                Grid.Column="2"
-                                Glyph="&#xE76C;"
-                                FontSize="12"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                VerticalAlignment="Center"/>
+                            <FontIcon Grid.Column="2"
+                                      Glyph="&#xE76C;"
+                                      FontSize="12"
+                                      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                      VerticalAlignment="Center"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Grid Padding="0,12,16,12"
+                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                  ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon -->
+                <Grid Grid.Column="0" Width="40"
+                      Height="40"
+                      CornerRadius="4"
+                      Background="Transparent">
+                    <Image Source="/Assets/StoreLogo.png" Stretch="UniformToFill"/>
+                </Grid>
+
+                <!-- Title and Description -->
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Spacing="2">
+                    <TextBlock Text="BSEtunes" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                    <TextBlock Text="Audio Streaming Client" Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- Chevron -->
+                <FontIcon Grid.Column="2"
+              Glyph="&#xE76C;"
+              FontSize="12"
+              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+              VerticalAlignment="Center"/>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </Page>

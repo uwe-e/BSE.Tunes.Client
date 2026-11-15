@@ -405,4 +405,31 @@
   <data name="SearchTracksPage_Header.Text" xml:space="preserve">
     <value>Songs</value>
   </data>
+  <data name="CacheSettingsPage_Warning.Text" xml:space="preserve">
+    <value>Clearing cache will remove all downloaded images and audio files.</value>
+  </data>
+  <data name="CacheSettingsPage_Info_Description.Text" xml:space="preserve">
+    <value>Cache stores downloaded content for offline playback and faster loading. The app automatically manages cache size, but you can manually clear it if needed.</value>
+  </data>
+  <data name="CacheSettingsPage_DeleteButton_Text.Text" xml:space="preserve">
+    <value>Clear Cache</value>
+  </data>
+  <data name="CacheSettingsPage_Info_Title.Text" xml:space="preserve">
+    <value>About Cache</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Dialog_Description" xml:space="preserve">
+    <value>Removing the addess will also clear your account data. Are you sure?</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Title.Text" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Header.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Description.Text" xml:space="preserve">
+    <value>Choose the app theme</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Default.Content" xml:space="preserve">
+    <value>Use system settings</value>
+  </data>
 </root>

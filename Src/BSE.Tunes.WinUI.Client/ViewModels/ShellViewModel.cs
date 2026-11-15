@@ -49,6 +49,8 @@ public partial class ShellViewModel : ObservableRecipient
         NavigationService.Navigated += OnNavigated;
         NavigationViewService = navigationViewService;
         _dataService = dataService;
+
+        //IsPaneOpen = true;
     }
 
     private void OnNavigated(object sender, NavigationEventArgs e)
