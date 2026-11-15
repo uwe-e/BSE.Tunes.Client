@@ -109,11 +109,7 @@
                 </StackPanel>
 
                 <!-- Chevron -->
-                <FontIcon Grid.Column="2"
-              Glyph="&#xE76C;"
-              FontSize="12"
-              Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-              VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="{x:Bind ViewModel.VersionDescription}" VerticalAlignment="Center"/>
             </Grid>
         </StackPanel>
     </ScrollViewer>
