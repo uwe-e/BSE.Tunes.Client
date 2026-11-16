@@ -13,16 +13,18 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
     public partial class AlbumDetailPageViewModel : PlaylistBaseViewModel<TrackItem>
     {
         [ObservableProperty]
-        private Album? _album;
+        public partial Album? Album { get; set; }
 
         [ObservableProperty]
-        private TrackItem? _selectedTrack;
+        public partial TrackItem? SelectedTrack { get; set; }
 
         [ObservableProperty]
-        private bool _hasFurtherAlbums;
+        public partial bool HasFurtherAlbums { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<CarouselItem> _furtherAlbums = [];
+        
+        internal partial FuncIncrementalLoadingCollection<CarouselItem> FurtherAlbums { get; set; } = default!;
+
         private readonly INavigationService _navigationService;
 
         public AlbumDetailPageViewModel(
@@ -85,75 +87,44 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
         }
         private async Task LoadFurtherAlbumsAsync()
         {
-            FurtherAlbums.Clear();
+            FurtherAlbums?.Clear();
 
             const int pageSize = 3;
-            int pageNumber = 1;
 
-            var result = await DataService.GetPagedAlbums(
-                null,
-                Album.Artist.Id,
-                null,
-                null,
-                null,
-                pageNumber,
-                pageSize,
-                AlbumSortOption.Title);
-
-            uint totalCount = (uint)(result?.TotalCount ?? 0);
-            HasFurtherAlbums = totalCount > 1;
-
-            FurtherAlbums = new IncrementalObservableCollection<CarouselItem>(
-                totalCount,
-                (uint count) =>
+            FurtherAlbums = new FuncIncrementalLoadingCollection<CarouselItem>(
+                async (pageIndex, pageSize, cancellationToken) =>
                 {
-                    async Task<Microsoft.UI.Xaml.Data.LoadMoreItemsResult> loadFunc()
+                    var result = await DataService.GetPagedAlbums(
+                        null,
+                        Album?.Artist?.Id,
+                        null,
+                        null,
+                        null,
+                        pageIndex + 1,
+                        pageSize,
+                        AlbumSortOption.Title);
+                    
+                    if (result?.Items is not { Count: > 0 } items)
                     {
-                        var result = await DataService.GetPagedAlbums(
-                            null, Album.Artist.Id, null, null, null,
-                            pageNumber, pageSize, AlbumSortOption.Title);
+                        return [];
+                    }
 
-                        uint itemCount = 0;
-                        if (result?.Items is { Count: > 0 } items)
+                    var carouselItems = new List<CarouselItem>(items.Count);
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        var album = items[i];
+                        if (album != null && album.AlbumId != Album.AlbumId)
                         {
-                            int albumCount = items.Count;
-                            itemCount = (uint)albumCount;
-
-                            for (int i = 0; i < albumCount; i++)
-                            {
-                                var album = items[i];
-                                if (album != null)
-                                {
-                                    FurtherAlbums.Add(CreateCarouselItem(album));
-                                }
-                            }
+                            carouselItems.Add(CreateCarouselItem(album));
                         }
-
-                        pageNumber++;
-
-                        return new Microsoft.UI.Xaml.Data.LoadMoreItemsResult
-                        {
-                            Count = itemCount
-                        };
                     }
-                    return loadFunc().AsAsyncOperation();
-                });
 
-            // Add the first page results
-            if (result?.Items is { Count: > 0 } items)
-            {
-                int albumCount = items.Count;
+                    return carouselItems;
+                }, pageSize);
 
-                for (int i = 0; i < albumCount; i++)
-                {
-                    var album = items[i];
-                    if (album != null)
-                    {
-                        FurtherAlbums.Add(CreateCarouselItem(album));
-                    }
-                }
-                pageNumber++;
-            }
+            await FurtherAlbums.LoadMoreItemsAsync((uint)pageSize);
+
+            HasFurtherAlbums = FurtherAlbums.Count > 0;
         }
 
         public override void PlayTrack(object? listItemData)

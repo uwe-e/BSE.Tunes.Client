@@ -2,6 +2,7 @@
 using BSE.Tunes.WinUI.Client.Contracts.ViewModels;
 using BSE.Tunes.WinUI.Client.Extensions;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System.Diagnostics.CodeAnalysis;
 
@@ -161,8 +162,12 @@ public class NavigationService : INavigationService
             System.Diagnostics.Debug.WriteLine($"NavigationService: Navigating to {pageType.Name} in frame '{targetFrameKey}'");
 
             // Navigate
-            var navigated = Frame.Navigate(pageType, parameter);
-
+            //var navigated = Frame.Navigate(pageType, parameter);
+            /*
+             * The transition between pages had unsightly effects when entering the page. 
+             * This is the reason for using ContinuumNavigationTransitionInfo instead of the default transition.
+             */
+            var navigated = Frame.Navigate(pageType, parameter, new ContinuumNavigationTransitionInfo());
             if (navigated)
             {
                 _lastParametersUsed[targetFrameKey] = parameter;

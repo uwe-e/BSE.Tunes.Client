@@ -2,6 +2,7 @@
 using BSE.Tunes.WinUI.Client.Extensions;
 using BSE.Tunes.WinUI.Client.Helpers;
 using BSE.Tunes.WinUI.Client.Models;
+using BSE.Tunes.WinUI.Client.Services;
 using BSE.Tunes.WinUI.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,20 +17,25 @@ public partial class SettingsViewModel : ObservableRecipient
     private readonly INavigationService _navigationService;
     private readonly IResourceService _resourceService;
     private readonly ISettingsService _settingsService;
+    private readonly IVersionService _versionService;
+    
     [ObservableProperty]
-    private string _versionDescription;
+    public partial string VersionDescription { get; set; }
 
-    public ObservableCollection<SettingsItem> SettingsItems { get; } = [];
+    public ObservableCollection<SettingsItem> SettingsItems { get; } = new();
 
     public SettingsViewModel(
         INavigationService navigationService,
         IResourceService resourceService,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        IVersionService versionService)
     {
         _navigationService = navigationService;
         _resourceService = resourceService;
         _settingsService = settingsService;
-        _versionDescription = GetVersionDescription();
+        _versionService = versionService;
+
+        VersionDescription = _versionService.GetVersion();
 
         InitializeSettingsItems();
     }
@@ -68,13 +74,13 @@ public partial class SettingsViewModel : ObservableRecipient
             PageKey = "PersonalizationSettingsPage"
         });
 
-        SettingsItems.Add(new SettingsItem
-        {
-            Title = _resourceService.GetString("SettingsPage_About_Title"),
-            Description = _resourceService.GetString("SettingsPage_About_Description"),
-            Glyph = "\uE946", // Info
-            PageKey = "AboutSettingsPage"
-        });
+        //SettingsItems.Add(new SettingsItem
+        //{
+        //    Title = _resourceService.GetString("SettingsPage_About_Title"),
+        //    Description = _resourceService.GetString("SettingsPage_About_Description"),
+        //    Glyph = "\uE946", // Info
+        //    PageKey = "AboutSettingsPage"
+        //});
     }
 
     [RelayCommand]

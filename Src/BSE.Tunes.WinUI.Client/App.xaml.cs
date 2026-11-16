@@ -63,7 +63,7 @@ public partial class App : Application
             services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddTransient<INavigationViewService, NavigationViewService>();
-
+            services.AddSingleton<IVersionService, VersionService>();
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
@@ -111,6 +111,9 @@ public partial class App : Application
             services.AddTransientForNavigation<PlaylistsPageViewModel, PlaylistsPage>();
             services.AddTransientForNavigation<PlaylistDetailPageViewModel, PlaylistDetailPage>();
             services.AddTransientForNavigation<CacheSettingsPageViewModel, CacheSettingsPage>();
+            services.AddTransientForNavigation<SearchPageViewModel, SearchPage>();
+            services.AddTransientForNavigation<SearchAlbumsPageViewModel, SearchAlbumsPage>();
+            services.AddTransientForNavigation<SearchTracksPageViewModel, SearchTracksPage>();
 
             // ShellPage and ViewModel (not used for navigation)
             services.AddTransient<ShellPage>();

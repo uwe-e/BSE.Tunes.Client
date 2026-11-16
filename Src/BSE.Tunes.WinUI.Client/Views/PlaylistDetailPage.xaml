@@ -16,20 +16,6 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-
-        <DataTemplate x:Key="PlaylistFlyoutItemTemplate" x:DataType="models:FlyoutItem">
-            <Grid>
-                <controls:MenuFlyoutItem IsIconEnabled="True"
-                                      Text="{Binding Text}"
-                                      Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=true}">
-                    <controls:MenuFlyoutItem.Icon>
-                        <FontIcon Glyph="{Binding Glyph}"/>
-                    </controls:MenuFlyoutItem.Icon>
-                </controls:MenuFlyoutItem>
-                <MenuFlyoutSeparator Visibility="{Binding IsSeparator, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=false}"/>
-            </Grid>
-        </DataTemplate>
-
         <DataTemplate x:Key="EntryItemTemplate" x:DataType="models:PlaylistEntryItem">
             <UserControl>
                 <Grid x:Name="listViewItem" Height="44">
@@ -243,7 +229,7 @@
                                 <Button.Flyout>
                                     <Flyout extensions:FlyoutExtensions.Parent="{x:Bind buttonAddAllTo}"
                                             extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItemsForAll}"
-                                            extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
+                                            extensions:FlyoutExtensions.ItemTemplate="{StaticResource FlyoutItemTemplate}"
                                             extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}" />
                                 </Button.Flyout>
                             </Button>
@@ -337,7 +323,7 @@
                         <AppBarButton.Flyout>
                             <Flyout extensions:FlyoutExtensions.Parent="{x:Bind buttonAddTo}"
                                     extensions:FlyoutExtensions.ItemsSource="{x:Bind ViewModel.PlaylistMenuItemsForSelected}"
-                                    extensions:FlyoutExtensions.ItemTemplate="{StaticResource PlaylistFlyoutItemTemplate}"
+                                    extensions:FlyoutExtensions.ItemTemplate="{StaticResource FlyoutItemTemplate}"
                                     extensions:FlyoutExtensions.ItemCommand="{x:Bind ViewModel.MenuItemClickedCommand}"/>
                         </AppBarButton.Flyout>
                     </AppBarButton>

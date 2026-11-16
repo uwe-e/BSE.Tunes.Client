@@ -65,7 +65,17 @@ namespace BSE.Tunes.WinUI.Client.Collections
                 {
                     // Suppress during app shutdown - WinRT interop cleanup timing issue
                     return new LoadMoreItemsResult { Count = 0 };
-                }       
+                }
+                catch (ExecutionEngineException)
+                {
+                    return new LoadMoreItemsResult { Count = 0 };
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception as needed
+                    System.Diagnostics.Debug.WriteLine($"Error loading more items: {ex.Message}");
+                    return new LoadMoreItemsResult { Count = 0 };
+                }
                 finally
                 {
                     _loadSemaphore.Release();
