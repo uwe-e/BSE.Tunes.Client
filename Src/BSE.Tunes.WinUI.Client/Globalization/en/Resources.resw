@@ -360,4 +360,76 @@
   <data name="CacheSettingsPage_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="SearchPage_Title_Text" xml:space="preserve">
+    <value>Search results for "{0}"</value>
+  </data>
+  <data name="SearchPage_Albums_Header.Text" xml:space="preserve">
+    <value>Albums</value>
+  </data>
+  <data name="SearchPage_Tracks_Header.Text" xml:space="preserve">
+    <value>Songs</value>
+  </data>
+  <data name="SearchPage_NoResults_Text.Text" xml:space="preserve">
+    <value>No results found.</value>
+  </data>
+  <data name="ShellPage_AutoSuggestBox.PlaceholderText" xml:space="preserve">
+    <value>Find</value>
+  </data>
+  <data name="SearchPage_MenuItem_Play.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="SearchPage_MenuItem_PlayAsNext.Text" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="SearchPage_MenuItem_AddToPlaylist.Text" xml:space="preserve">
+    <value>Add to</value>
+  </data>
+  <data name="SearchPage_MenuItem_ShowAlbum.Text" xml:space="preserve">
+    <value>Show album</value>
+  </data>
+  <data name="SearchPage_Albums_ViewAll_Button.Content" xml:space="preserve">
+    <value>View all</value>
+  </data>
+  <data name="SearchPage_Tracks_ViewAll_Button.Content" xml:space="preserve">
+    <value>View all</value>
+  </data>
+  <data name="SearchAlbumsPage_Title_Text" xml:space="preserve">
+    <value>Search results for "{0}"</value>
+  </data>
+  <data name="SearchTracksPage_Title_Text" xml:space="preserve">
+    <value>Song results for "{0}"</value>
+  </data>
+  <data name="CreatePlaylistDialog_TextBlock_Error.Text" xml:space="preserve">
+    <value>Please enter a name for the playlist</value>
+  </data>
+  <data name="SearchTracksPage_Header.Text" xml:space="preserve">
+    <value>Songs</value>
+  </data>
+  <data name="CacheSettingsPage_Warning.Text" xml:space="preserve">
+    <value>Clearing cache will remove all downloaded images and audio files.</value>
+  </data>
+  <data name="CacheSettingsPage_Info_Description.Text" xml:space="preserve">
+    <value>Cache stores downloaded content for offline playback and faster loading. The app automatically manages cache size, but you can manually clear it if needed.</value>
+  </data>
+  <data name="CacheSettingsPage_DeleteButton_Text.Text" xml:space="preserve">
+    <value>Clear Cache</value>
+  </data>
+  <data name="CacheSettingsPage_Info_Title.Text" xml:space="preserve">
+    <value>About Cache</value>
+  </data>
+  <data name="RemoveEndpointSettingsPage_Dialog_Description" xml:space="preserve">
+    <value>Removing the addess will also clear your account data. Are you sure?</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Title.Text" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Header.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Description.Text" xml:space="preserve">
+    <value>Choose the app theme</value>
+  </data>
+  <data name="PersonalizationSettingsPage_Theme_Default.Content" xml:space="preserve">
+    <value>Use system settings</value>
+  </data>
 </root>

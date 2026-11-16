@@ -29,7 +29,7 @@ public partial class RemoveEndpointSettingsPageViewModel : BaseSettingsViewModel
     {
         var result = await DialogService.ShowConfirmationDialogAsync(
             ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Title"),
-            "Removing the endpoint will also clear your account data. Are you sure?",
+            ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Description"),
             ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Delete"),
             ResourceService.GetString("RemoveEndpointSettingsPage_Dialog_Cancel"));
 

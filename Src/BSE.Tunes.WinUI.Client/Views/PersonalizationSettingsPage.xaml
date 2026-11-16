@@ -12,7 +12,7 @@
         <StackPanel Spacing="8" Padding="24">
             <!-- Page Header -->
             <TextBlock 
-                x:Uid="Settings_Personalization"
+                x:Uid="PersonalizationSettingsPage_Title"
                 Text="Personalization" 
                 Style="{ThemeResource TitleTextBlockStyle}"
                 Margin="0,0,0,24"/>
@@ -20,11 +20,12 @@
             <!-- Theme Section -->
             <StackPanel Spacing="8">
                 <TextBlock 
-                    x:Uid="Settings_Theme" 
+                    x:Uid="PersonalizationSettingsPage_Theme_Header" 
                     Text="Theme"
                     Style="{ThemeResource SubtitleTextBlockStyle}" />
 
                 <TextBlock 
+                    x:Uid="PersonalizationSettingsPage_Theme_Description"
                     Text="Choose the app theme"
                     Style="{ThemeResource BodyTextBlockStyle}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -32,7 +33,7 @@
 
                 <StackPanel Spacing="8">
                     <RadioButton
-                        x:Uid="Settings_Theme_Light"
+                        x:Uid="PersonalizationSettingsPage_Theme_Light"
                         Content="Light"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
@@ -43,7 +44,7 @@
                     </RadioButton>
 
                     <RadioButton
-                        x:Uid="Settings_Theme_Dark"
+                        x:Uid="PersonalizationSettingsPage_Theme_Dark"
                         Content="Dark"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
@@ -54,7 +55,7 @@
                     </RadioButton>
 
                     <RadioButton
-                        x:Uid="Settings_Theme_Default"
+                        x:Uid="PersonalizationSettingsPage_Theme_Default"
                         Content="Use system setting"
                         Command="{x:Bind ViewModel.SwitchThemeCommand}"
                         IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"

@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels
 {
-    public partial class PlaylistDetailPageViewModel : PlaylistBaseViewModel<PlaylistEntryItem>, IRecipient<PlaylistChangedMessage>
+    public partial class PlaylistDetailPageViewModel : PlaylistBaseViewModel<PlaylistEntryItem>, IRecipient<PlaylistChangedMessage>//, IRecipient<PlaylistDeletedMessage>
     {
         private readonly INavigationService _navigationService;
         private int? _startingIndex;
@@ -48,6 +48,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             base.OnNavigatedTo(parameter);
 
             Messenger.Register<PlaylistChangedMessage>(this);
+            //Messenger.Register<PlaylistDeletedMessage>(this);
 
             if (parameter is Playlist playlist)
             {
@@ -60,6 +61,7 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             base.OnNavigatedFrom();
 
             Messenger.Unregister<PlaylistChangedMessage>(this);
+            //Messenger.Unregister<PlaylistDeletedMessage>(this);
         }
 
         private async Task LoadPlaylistAsync(int playlistId)
@@ -142,8 +144,8 @@ namespace BSE.Tunes.WinUI.Client.ViewModels
             if (result == ContentDialogResult.Primary)
             {
                 await DataService.DeletePlaylist(Playlist!.Id);
-
-                Messenger.Send(new PlaylistDeletedMessage(Playlist.Id));
+                
+                WeakReferenceMessenger.Default.Send(new PlaylistDeletedMessage(Playlist.Id));
             }
         }
 
