@@ -50,8 +50,10 @@ public sealed partial class ShellPage : Page
         _settingsMonitor.StartMonitoring(); 
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private async void OnLoaded(object sender, RoutedEventArgs e)
     {
+        await ViewModel.InitializeAsync();
+
         // Use the theme from ThemeSelectorService instead of the page's RequestedTheme
         TitleBarHelper.UpdateTitleBar(RequestedTheme);
 

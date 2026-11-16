@@ -5,24 +5,29 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using System.ComponentModel;
 
 namespace BSE.Tunes.WinUI.Client.ViewModels;
 
 public partial class ShellViewModel : ObservableRecipient
 {
+    private const string IsPaneOpenSettingsKey = "ShellNavigationPaneIsOpen";
+
     private readonly IDataService _dataService;
-    
-    [ObservableProperty]
-    private bool isBackEnabled;
+    private readonly ILocalSettingsService _localSettingsService;
+    private bool _isPaneStateInitialized;
 
     [ObservableProperty]
-    private bool isPaneOpen;
+    public partial bool IsBackEnabled { get; set; }
 
     [ObservableProperty]
-    private object? selected;
+    public partial bool IsPaneOpen { get; set; }
 
     [ObservableProperty]
-    private string? queryText;
+    public partial object? Selected { get; set; }
+
+    [ObservableProperty]
+    public partial string? QueryText { get; set; }
 
     public IList<string>? SearchSuggestions
     {
@@ -43,14 +48,16 @@ public partial class ShellViewModel : ObservableRecipient
     public ShellViewModel(
         INavigationService navigationService,
         INavigationViewService navigationViewService,
-        IDataService dataService)
+        IDataService dataService,
+        ILocalSettingsService localSettingsService)
     {
         NavigationService = navigationService;
         NavigationService.Navigated += OnNavigated;
         NavigationViewService = navigationViewService;
         _dataService = dataService;
+        _localSettingsService = localSettingsService;
 
-        //IsPaneOpen = true;
+        PropertyChanged += OnPropertyChanged;
     }
 
     private void OnNavigated(object sender, NavigationEventArgs e)
@@ -68,6 +75,32 @@ public partial class ShellViewModel : ObservableRecipient
         {
             Selected = selectedItem;
         }
+    }
+
+    public async Task InitializeAsync()
+    {
+        if (_isPaneStateInitialized)
+        {
+            return;
+        }
+
+        var isPaneOpen = await _localSettingsService.ReadSettingAsync<bool?>(IsPaneOpenSettingsKey);
+        if (isPaneOpen.HasValue)
+        {
+            IsPaneOpen = isPaneOpen.Value;
+        }
+
+        _isPaneStateInitialized = true;
+    }
+
+    private async void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (!_isPaneStateInitialized || e.PropertyName != nameof(IsPaneOpen))
+        {
+            return;
+        }
+
+        await _localSettingsService.SaveSettingAsync(IsPaneOpenSettingsKey, IsPaneOpen);
     }
 
     [RelayCommand]
